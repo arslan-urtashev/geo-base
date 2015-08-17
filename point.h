@@ -1,5 +1,7 @@
 #pragma once
 
+#include "library.h"
+#include "location.h"
 #include "typedef.h"
 
 namespace troll {
@@ -11,6 +13,12 @@ struct point_t {
 	point_t(coordinate_t x = 0, coordinate_t y = 0)
 		: x(x)
 		, y(y)
+	{
+	}
+
+	point_t(location_t const &l)
+		: x(convert_to_coordinate(l.lon))
+		, y(convert_to_coordinate(l.lat))
 	{
 	}
 

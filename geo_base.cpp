@@ -38,4 +38,15 @@ void geo_base_save(void *dat, geo_base_t *geo_base)
 #undef TROLL_DEF_ARR
 }
 
+region_id_t geo_base_lookup(geo_base_t const &geo_base, location_t const &location)
+{
+	point_t point(location);
+
+	for (index_t i = 0; i < geo_base.polygons_count; ++i)
+		if (geo_base.polygons[i].contains(point, geo_base.parts, geo_base.edge_indexes, geo_base.edges, geo_base.points))
+			return geo_base.polygons[i].region_id;
+
+	return -1;
+}
+
 }

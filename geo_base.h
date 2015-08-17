@@ -1,6 +1,7 @@
 #pragma once
 
 #include "edge.h"
+#include "location.h"
 #include "part.h"
 #include "point.h"
 #include "polygon.h"
@@ -23,6 +24,7 @@ namespace troll {
 	TROLL_DEF_ARR(point_t, points); \
 	TROLL_DEF_ARR(edge_t, edges); \
 	TROLL_DEF_ARR(index_t, edge_indexes); \
+	TROLL_DEF_ARR(part_t, parts); \
 	TROLL_DEF_ARR(polygon_t, polygons); \
 	TROLL_DEF_ARR(region_t, regions);
 
@@ -36,5 +38,7 @@ struct geo_base_t {
 
 void geo_base_map(void *dat, geo_base_t* geo_base);
 void geo_base_save(void *dat, geo_base_t* geo_base);
+
+region_id_t geo_base_lookup(geo_base_t const &geo_base, location_t const &location);
 
 }
