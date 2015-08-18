@@ -63,7 +63,7 @@ region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &locati
 }
 
 void geo_data_show(geo_data_t const &geo_data, output_t &out)
-{
+{	
 #define TROLL_DEF_VAR(var_t, var) \
 	out << #var << " = " << geo_data.var << '\n';
 

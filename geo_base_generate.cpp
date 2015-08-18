@@ -1,10 +1,10 @@
-#include "algo.h"
+#include <iostream>
+
 #include "geo_base_alloc.h"
 #include "library.h"
 #include "unordered_map.h"
 #include "vector.h"
-
-#include <iostream>
+#include "algo.h"
 
 using namespace troll;
 
@@ -128,6 +128,10 @@ static void update_context(region_id_t region_id, vector_t<location_t> const &lo
 	for (location_t const &l : locations)
 		points.push_back(point_t(l));
 
+	troll_log_debug("points for region_id = %ld", region_id);
+	for (point_t const &p : points)
+		troll_log_debug("(%d, %d)", p.x, p.y);
+
 	vector_t<edge_t> &edges = buffer->edges;
 	edges.clear();
 	for (ref_t i = 0; i < points.size(); ++i) {
@@ -137,6 +141,8 @@ static void update_context(region_id_t region_id, vector_t<location_t> const &lo
 			troll_log_warning("Detected bad edge for region_id: %ld", region_id);
 			continue;
 		}
+		if (context->points[e.beg].x > context->points[e.end].x)
+			std::swap(e.beg, e.end);
 		edges.push_back(e);
 	}
 
@@ -160,6 +166,7 @@ static void update_context(region_id_t region_id, vector_t<location_t> const &lo
 
 	vector_t<edge_t> &erase = buffer->erase;
 	for (ref_t l = 0, r = 0; l < borders.size(); l = r) {
+		r = l + 1;
 		while (r < borders.size() && borders[l].coordinate == borders[r].coordinate)
 			++r;
 
@@ -202,6 +209,15 @@ static void update_context(region_id_t region_id, vector_t<location_t> const &lo
 
 	polygon.parts_count = context->parts.size() - polygon.parts_offset;
 	context->polygons.push_back(polygon);
+
+	for (part_t const &part : context->parts) {
+		troll_log_debug("%s", "----------");
+		for (ref_t i = part.edge_refs_offset; i < part.edge_refs_count + part.edge_refs_offset; ++i) {
+			point_t const *p = context->points.data();
+			edge_t const &e = context->edges[context->edge_refs[i]];
+			troll_log_debug("(%d, %d) - (%d, %d)", p[e.beg].x, p[e.beg].y, p[e.end].x, p[e.end].y);
+		}
+	}
 }
 
 static void usage()
