@@ -2,6 +2,7 @@
 
 #include "log.h"
 
+#include <errno.h>
 #include <string.h>
 
 #include <exception>

@@ -8,7 +8,7 @@ void geo_data_map(void *dat, geo_data_t *geo_data)
 	// undef
 
 #define TROLL_DEF_PTR(ptr_t, ptr) \
-	geo_data->ptr =	(ptr_t *) (((mword_t) dat) + ((byte_t *) geo_data->ptr))
+	geo_data->ptr =	(ptr_t *) (((ptrdiff_t) dat) + ((byte_t *) geo_data->ptr))
 
 #define TROLL_DEF_ARR(arr_t, arr) \
 	TROLL_DEF_PTR(arr_t, arr);
@@ -26,7 +26,7 @@ void geo_data_save(void *dat, geo_data_t *geo_data)
 	// undef
 
 #define TROLL_DEF_PTR(ptr_t, ptr) \
-	geo_data->ptr = (ptr_t *) (((byte_t *) geo_data->ptr) - ((mword_t) dat));
+	geo_data->ptr = (ptr_t *) (((byte_t *) geo_data->ptr) - ((ptrdiff_t) dat));
 
 #define TROLL_DEF_ARR(arr_t, arr) \
 	TROLL_DEF_PTR(arr_t, arr);

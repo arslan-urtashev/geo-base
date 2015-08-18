@@ -1,4 +1,4 @@
-#include "geo_base_load.h"
+#include "generate.h"
 
 #include <iostream>
 
@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	troll::geo_base_load_t geo_base_load(argv[1]);
+	troll::generate_t generate(argv[1]);
 
 	return 0;
 }
