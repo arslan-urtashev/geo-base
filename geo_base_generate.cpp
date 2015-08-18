@@ -98,6 +98,8 @@ static void context_save(geo_base_alloc_t *alloc, context_t *context)
 #undef TROLL_DEF_VAR
 #undef TROLL_DEF_PTR
 #undef TROLL_DEF_ARR
+
+	geo_data->version = geo_data_version();
 }
 
 static bool is_bad_edge(edge_t const &e, point_t const *p)
