@@ -21,9 +21,9 @@ protected:
 		size_t length = stat.length();
 		void *addr = mmap(nullptr, length, PROT_READ, MAP_SHARED, fd(), 0);
 		if (addr == MAP_FAILED)
-			throw exception_t(strerror(errno));
+			throw exception_t("mmap_base.rd: %s", strerror(errno));
 
-		mmap_guard = mmap_guard_t(addr, length);
+		mmap_guard.guard(addr, length);
 	}
 
 	void rdwr(char const *path)
@@ -33,9 +33,9 @@ protected:
 		size_t length = MAX_MEM_LEN;
 		void *addr = mmap(nullptr, length, PROT_READ | PROT_WRITE, MAP_SHARED, fd(), 0);
 		if (addr == MAP_FAILED)
-			throw exception_t(strerror(errno));
+			throw exception_t("mmap_base.rdwr: %s", strerror(errno));
 
-		mmap_guard = mmap_guard_t(addr, length);
+		mmap_guard.guard(addr, length);
 	}
 
 public:

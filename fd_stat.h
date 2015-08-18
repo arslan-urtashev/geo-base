@@ -11,7 +11,7 @@ public:
 	fd_stat_t(int fd)
 	{
 		if (fstat(fd, &st) < 0)
-			throw exception_t(strerror(errno));
+			throw exception_t("%s", strerror(errno));
 	}
 
 	size_t length() const

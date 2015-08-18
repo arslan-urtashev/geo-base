@@ -15,16 +15,16 @@ protected:
 	{
 		int fd = open(path, O_RDONLY | O_CLOEXEC | O_NOATIME);
 		if (fd < 0)
-			throw exception_t(strerror(errno));
-		fd_guard = fd_guard_t(fd);
+			throw exception_t("%s", strerror(errno));
+		fd_guard.guard(fd);
 	}
 
 	void rdwr(char const *path)
 	{
 		int fd = open(path, O_RDWR | O_CREAT | O_CLOEXEC | O_TRUNC, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
 		if (fd < 0)
-			throw exception_t(strerror(errno));
-		fd_guard = fd_guard_t(fd);
+			throw exception_t("%s", strerror(errno));
+		fd_guard.guard(fd);
 	}
 
 public:

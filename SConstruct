@@ -39,6 +39,20 @@ geo_base_so = env.SharedLibrary(
 
 geo_base_run = env.Program(
     "geo-base-run",
-    ["geo_base_run.cpp"],
-    LIBS = [geo_base_a]
+    [
+        "geo_base_run.cpp"
+    ],
+    LIBS = [
+        geo_base_a
+    ]
+)
+
+geo_base_generate = env.Program(
+    "geo-base-generate",
+    [
+        "geo_base_generate.cpp"
+    ],
+    LIBS = [
+        geo_base_a
+    ]
 )

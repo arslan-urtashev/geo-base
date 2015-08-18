@@ -12,13 +12,35 @@ struct mmap_guard_t {
 		: addr(addr)
 		, length(length)
 	{
+		guard(addr, length);
+	}
+
+	void guard(void *addr_, size_t length_)
+	{
+		munmap();
+		addr = addr_;
+		length = length_;
+		if (addr)
+			troll_log_debug("mmap guard: %p, %lu", addr, length);
+	}
+
+	void munmap()
+	{
+		if (addr) {
+			troll_log_debug("munmap: %p, %lu", addr, length);
+			::munmap(addr, length);
+			addr = nullptr;
+			length = 0;
+		}
 	}
 
 	~mmap_guard_t()
 	{
-		if (addr)
-			munmap(addr, length);
+		munmap();
 	}
+
+	mmap_guard_t(mmap_guard_t const &) = delete;
+	mmap_guard_t &operator = (mmap_guard_t const &) = delete;
 };
 
 }

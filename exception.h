@@ -1,5 +1,7 @@
 #pragma once
 
+#include "log.h"
+
 #include <string.h>
 
 #include <exception>
@@ -13,12 +15,8 @@ public:
 	template<typename... args_t>
 	exception_t(char const *fmt, args_t... args) noexcept
 	{
+		troll_log_error(fmt, args...);
 		snprintf(message, MESSAGE_LIMIT, fmt, args...);
-	}
-
-	exception_t(char const *str) noexcept
-	{
-		strncpy(message, str, MESSAGE_LIMIT);
 	}
 
 	exception_t(exception_t const &e) noexcept
