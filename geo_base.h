@@ -1,6 +1,7 @@
 #pragma once
 
 #include "geo_data.h"
+#include "io.h"
 #include "location.h"
 #include "mem_base.h"
 
@@ -13,6 +14,11 @@ public:
 		rd(path);
 		geo_data = (geo_data_t *) addr();
 		geo_data_map(addr(), geo_data);
+	}
+
+	void show(output_t &out) const
+	{
+		geo_data_show(*geo_data, out);
 	}
 
 	region_id_t lookup(location_t const &l) const

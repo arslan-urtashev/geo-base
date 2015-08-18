@@ -1,6 +1,7 @@
 #pragma once
 
 #include "edge.h"
+#include "io.h"
 #include "location.h"
 #include "part.h"
 #include "point.h"
@@ -40,5 +41,6 @@ void geo_data_map(void *dat, geo_data_t* geo_data);
 void geo_data_save(void *dat, geo_data_t* geo_data);
 
 region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &location);
+void geo_data_show(geo_data_t const &geo_data, output_t &out);
 
 }

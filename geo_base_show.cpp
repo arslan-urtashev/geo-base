@@ -1,10 +1,10 @@
-#include "generate.h"
+#include "geo_base.h"
 
 #include <iostream>
 
 static void usage()
 {
-	std::cerr << "geo-base-generate <geo.dat>" << std::endl;
+	std::cerr << "geo-base-show <geo.dat>" << std::endl;
 }
 
 int main(int argc, char *argv[])
@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	troll::generate_t generate(argv[1]);
-	generate.save();
+	troll::geo_base_t geo_base(argv[1]);
+	geo_base.show(std::cout);
 
 	return 0;
 }
