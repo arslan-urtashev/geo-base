@@ -28,6 +28,9 @@ public:
 
 private:
 	geo_data_t *geo_data;
+
+	geo_base_t(geo_base_t const &) = delete;
+	geo_base_t& operator = (geo_base_t const &) = delete;
 };
 
 }
