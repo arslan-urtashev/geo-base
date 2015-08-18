@@ -1,0 +1,40 @@
+#pragma once
+
+#include "exception.h"
+#include "fd_guard.h"
+
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+namespace troll {
+
+class fd_base_t {
+protected:
+	void rd(char const *path)
+	{
+		int fd = open(path, O_RDONLY | O_CLOEXEC | O_NOATIME);
+		if (fd < 0)
+			throw exception_t(strerror(errno));
+		fd_guard = fd_guard_t(fd);
+	}
+
+	void rdwr(char const *path)
+	{
+		int fd = open(path, O_RDWR | O_CREAT | O_CLOEXEC | O_TRUNC, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+		if (fd < 0)
+			throw exception_t(strerror(errno));
+		fd_guard = fd_guard_t(fd);
+	}
+
+public:
+	int fd() const
+	{
+		return fd_guard.fd;
+	}
+
+private:
+	fd_guard_t fd_guard;
+};
+
+}

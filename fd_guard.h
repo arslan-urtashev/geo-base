@@ -5,14 +5,17 @@
 namespace troll {
 
 struct fd_guard_t {
-	fd_guard_t(int fd)
+	int fd;
+
+	fd_guard_t(int fd = -1)
 		: fd(fd)
 	{
 	}
 
 	~fd_guard_t()
 	{
-		close(fd);
+		if (fd != -1)
+			close(fd);
 	}
 };
 

@@ -29,6 +29,7 @@ public:
 	exception_t& operator = (exception_t const &e) noexcept
 	{
 		strcpy(message, e.message);
+		return *this;
 	}
 
 	virtual char const *what() const noexcept

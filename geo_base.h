@@ -1,44 +1,27 @@
 #pragma once
 
-#include "edge.h"
+#include "geo_data.h"
 #include "location.h"
-#include "part.h"
-#include "point.h"
-#include "polygon.h"
-#include "region.h"
-#include "typedef.h"
+#include "mem_base.h"
 
 namespace troll {
 
-#define TROLL_DEF_VAR(var_t, var) \
-	var_t var;
+class geo_base_t : public mem_base_t {
+public:
+	geo_base_t(char const *path)
+	{
+		rd(path);
+		geo_data = (geo_data_t *) addr();
+		geo_data_map(addr(), geo_data);
+	}
 
-#define TROLL_DEF_PTR(ptr_t, ptr) \
-	ptr_t *ptr;
+	region_id_t lookup(location_t const &l) const
+	{
+		return geo_data_lookup(*geo_data, l);
+	}
 
-#define TROLL_DEF_ARR(arr_t, arr) \
-	TROLL_DEF_VAR(count_t, arr##_count); \
-	TROLL_DEF_PTR(arr_t, arr);
-
-#define TROLL_DEF_GEO_BASE \
-	TROLL_DEF_ARR(point_t, points); \
-	TROLL_DEF_ARR(edge_t, edges); \
-	TROLL_DEF_ARR(index_t, edge_indexes); \
-	TROLL_DEF_ARR(part_t, parts); \
-	TROLL_DEF_ARR(polygon_t, polygons); \
-	TROLL_DEF_ARR(region_t, regions);
-
-struct geo_base_t {
-	TROLL_DEF_GEO_BASE
+private:
+	geo_data_t *geo_data;
 };
-
-#undef TROLL_DEF_VAR
-#undef TROLL_DEF_PTR
-#undef TROLL_DEF_ARR
-
-void geo_base_map(void *dat, geo_base_t* geo_base);
-void geo_base_save(void *dat, geo_base_t* geo_base);
-
-region_id_t geo_base_lookup(geo_base_t const &geo_base, location_t const &location);
 
 }

@@ -26,7 +26,7 @@ env.Append(CXXFLAGS =
 )
 
 src = [
-    "geo_base.cpp",
+    "geo_data.cpp",
 ]
 
 geo_base_a = env.Library(
@@ -35,4 +35,10 @@ geo_base_a = env.Library(
 
 geo_base_so = env.SharedLibrary(
     src
+)
+
+geo_base_run = env.Program(
+    "geo-base-run",
+    ["geo_base_run.cpp"],
+    LIBS = [geo_base_a]
 )
