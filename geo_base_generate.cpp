@@ -20,11 +20,17 @@ struct border_t {
 	coordinate_t coordinate;
 	ref_t edge_ref;
 	border_type_t type;
+
+	bool operator < (border_t const &b) const
+	{
+		return coordinate < b.coordinate;
+	}
 };
 
 struct buffer_t {
 	vector_t<point_t> points;
 	vector_t<edge_t> edges;
+	vector_t<edge_t> erase;
 	vector_t<border_t> borders;
 };
 
@@ -139,6 +145,63 @@ static void update_context(region_id_t region_id, vector_t<location_t> const &lo
 
 	for (point_t const &p : points)
 		relax_polygon_borders(&polygon, p);
+
+	polygon.region_id = region_id;
+	polygon.parts_offset = context->parts.size();
+	
+	vector_t<border_t> &borders = buffer->borders;
+	borders.clear();
+	for (ref_t i = 0; i < edges.size(); ++i) {
+		borders.push_back({context->points[edges[i].beg].x, i, border_type_t::LEFT});
+		borders.push_back({context->points[edges[i].end].x, i, border_type_t::RIGHT});
+	}
+
+	sort(borders.begin(), borders.end());
+
+	vector_t<edge_t> &erase = buffer->erase;
+	for (ref_t l = 0, r = 0; l < borders.size(); l = r) {
+		while (r < borders.size() && borders[l].coordinate == borders[r].coordinate)
+			++r;
+
+		erase.clear();
+		for (ref_t i = l; i < r; ++i)
+			if (borders[i].type == border_type_t::RIGHT)
+				erase.push_back(edges[borders[i].edge_ref]);
+
+		sort(erase.begin(), erase.end());
+
+		part_t part;
+		part.edge_refs_offset = context->edge_refs.size();
+		part.coordinate = borders[l].coordinate;
+
+		if (l > 0) {
+			part_t const &prev = context->parts.back();
+			for (ref_t i = prev.edge_refs_offset; i < prev.edge_refs_offset + prev.edge_refs_count; ++i)
+				if (!binary_search(erase.begin(), erase.end(), context->edges[context->edge_refs[i]]))
+					context->edge_refs.push_back(context->edge_refs[i]);
+		}
+
+		for (ref_t i = l; i < r; ++i)
+			if (borders[i].type == border_type_t::LEFT)
+				if (!binary_search(erase.begin(), erase.end(), edges[borders[i].edge_ref]))
+					context->edge_refs.push_back(context->edge_ref(edges[borders[i].edge_ref]));
+
+		part.edge_refs_count = context->edge_refs.size() - part.edge_refs_offset;
+
+		sort(context->edge_refs.begin() + part.edge_refs_offset, context->edge_refs.end(),
+			[&] (ref_t const &a, ref_t const &b)
+			{
+				edge_t const &e1 = context->edges[a];
+				edge_t const &e2 = context->edges[b];
+				return e1.lower(e2, context->points.data());
+			}
+		);
+
+		context->parts.push_back(part);
+	}
+
+	polygon.parts_count = context->parts.size() - polygon.parts_offset;
+	context->polygons.push_back(polygon);
 }
 
 static void usage()
@@ -176,6 +239,8 @@ int main(int argc, char *argv[])
 		}
 
 		context_save(&base, &context);
+
+		base.show(std::cout);
 
 	} catch (std::exception const &e) {
 		std::cerr << "Exception handled: " << e.what() << std::endl;

@@ -19,6 +19,11 @@ public:
 		return data;
 	}
 
+	void show(output_t &out) const
+	{
+		geo_data_show(*data, out);
+	}
+
 	~geo_base_alloc_t()
 	{
 		geo_data_save(addr(), data);

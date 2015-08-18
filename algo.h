@@ -31,11 +31,23 @@ struct hash64_t {
 	}
 };
 
+template<typename iter_t, typename x_t, typename cmp_t = less_t>
+iter_t lower_bound(iter_t beg, iter_t end, x_t const &x, cmp_t cmp = cmp_t())
+{
+	return std::lower_bound(beg, end, x, cmp);
+}
+
 template<typename x_t, typename y_t, typename cmp_t = less_t>
 x_t lower_bound(x_t x, size_t count, y_t const &y, cmp_t cmp = cmp_t())
 {
-	return std::lower_bound(x, x + count, y, cmp);
+	return lower_bound(x, x + count, y, cmp);
 }
+
+// template<typename iter_t, typename x_t, typename cmp_t = less_t>
+// bool binary_search(iter_t beg, iter_t end, x_t const &x, cmp_t cmp = cmp_t())
+// {
+// 	return std::binary_search(beg, end, x, cmp);
+// }
 
 template<typename src_t, typename dst_t>
 void copy_n(src_t src, size_t count, dst_t dst)
