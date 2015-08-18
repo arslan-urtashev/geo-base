@@ -20,14 +20,11 @@ struct mmap_guard_t {
 		munmap();
 		addr = addr_;
 		length = length_;
-		if (addr)
-			troll_log_debug("mmap guard: %p, %lu", addr, length);
 	}
 
 	void munmap()
 	{
 		if (addr) {
-			troll_log_debug("munmap: %p, %lu", addr, length);
 			::munmap(addr, length);
 			addr = nullptr;
 			length = 0;

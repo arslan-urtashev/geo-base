@@ -1,7 +1,4 @@
 #pragma once
-#include <iostream>
-
-#include "log.h"
 
 #include <unistd.h>
 
@@ -19,7 +16,6 @@ struct fd_guard_t {
 	void close()
 	{
 		if (fd != -1) {
-			troll_log_debug("fd close: %d", fd);
 			::close(fd);
 			fd = -1;
 		}
@@ -29,8 +25,6 @@ struct fd_guard_t {
 	{
 		close();
 		fd = fd_;
-		if (fd != -1)
-			troll_log_debug("fd guard: %d", fd);
 	}
 
 	~fd_guard_t()
