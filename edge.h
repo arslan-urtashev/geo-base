@@ -6,10 +6,10 @@
 namespace troll {
 
 struct edge_t {
-	index_t beg;
-	index_t end;
+	ref_t beg;
+	ref_t end;
 
-	edge_t(index_t a = 0, index_t b = 0)
+	edge_t(ref_t a = 0, ref_t b = 0)
 		: beg(a)
 		, end(b)
 	{

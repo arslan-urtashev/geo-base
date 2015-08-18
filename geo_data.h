@@ -25,7 +25,7 @@ namespace troll {
 	TROLL_DEF_VAR(version_t, version); \
 	TROLL_DEF_ARR(point_t, points); \
 	TROLL_DEF_ARR(edge_t, edges); \
-	TROLL_DEF_ARR(index_t, edge_indexes); \
+	TROLL_DEF_ARR(ref_t, edge_refs); \
 	TROLL_DEF_ARR(part_t, parts); \
 	TROLL_DEF_ARR(polygon_t, polygons); \
 	TROLL_DEF_ARR(region_t, regions);

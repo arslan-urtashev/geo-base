@@ -31,6 +31,7 @@ void geo_data_map(void *dat, geo_data_t *geo_data)
 void geo_data_save(void *dat, geo_data_t *geo_data)
 {
 	geo_data->version = geo_data_version();
+
 	troll_log_debug("Save geo_data with version: %lu", geo_data->version);
 
 #define TROLL_DEF_VAR(var_t, var)
@@ -54,8 +55,8 @@ region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &locati
 {
 	point_t point(location);
 
-	for (index_t i = 0; i < geo_data.polygons_count; ++i)
-		if (geo_data.polygons[i].contains(point, geo_data.parts, geo_data.edge_indexes, geo_data.edges, geo_data.points))
+	for (ref_t i = 0; i < geo_data.polygons_count; ++i)
+		if (geo_data.polygons[i].contains(point, geo_data.parts, geo_data.edge_refs, geo_data.edges, geo_data.points))
 			return geo_data.polygons[i].region_id;
 
 	return -1;

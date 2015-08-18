@@ -25,7 +25,7 @@ struct polygon_t {
 		return true;
 	}
 
-	bool contains(point_t const &point, part_t const *parts, index_t const *edge_indices, edge_t const *edges, point_t const *points) const
+	bool contains(point_t const &point, part_t const *parts, ref_t const *edge_refs, edge_t const *edges, point_t const *points) const
 	{
 		if (point.x < left || point.x > right || point.y < lower || point.y > upper)
 			return false;
@@ -44,7 +44,7 @@ struct polygon_t {
 			--part;
 		if (point.x < part->coordinate || point.x > (part + 1)->coordinate)
 			return false;
-		return part->contains(point, edge_indices, edges, points);
+		return part->contains(point, edge_refs, edges, points);
 	}
 };
 

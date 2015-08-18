@@ -9,15 +9,15 @@ namespace troll {
 
 struct part_t {
 	coordinate_t coordinate;
-	count_t edge_indexes_offset;
-	count_t edge_indexes_count;
+	count_t edge_refs_offset;
+	count_t edge_refs_count;
 
-	bool contains(point_t const &p, index_t const *edge_indexes, edge_t const *edges, point_t const *points) const
+	bool contains(point_t const &p, ref_t const *edge_refs, edge_t const *edges, point_t const *points) const
 	{
-		edge_indexes += edge_indexes_offset;
-		index_t const *edge_index = lower_bound(
-			edge_indexes, edge_indexes_count, p,
-			[&] (index_t const &e, point_t const &p)
+		edge_refs += edge_refs_offset;
+		ref_t const *edge_ref = lower_bound(
+			edge_refs, edge_refs_count, p,
+			[&] (ref_t const &e, point_t const &p)
 			{
 				if (edges[e].contains(p, points))
 					return false;
@@ -26,11 +26,11 @@ struct part_t {
 				return (b - a).cross(p - a) > 0;
 			}
 		);
-		if (edge_index == edge_indexes + edge_indexes_count)
+		if (edge_ref == edge_refs + edge_refs_count)
 			return false;
-		if (edges[*edge_index].contains(p, points))
+		if (edges[*edge_ref].contains(p, points))
 			return true;
-		return (edge_index - edge_indexes) % 2 == 1;
+		return (edge_ref - edge_refs) % 2 == 1;
 	}
 };
 
