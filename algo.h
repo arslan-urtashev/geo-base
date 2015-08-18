@@ -43,4 +43,16 @@ void copy_n(src_t src, size_t count, dst_t dst)
 	std::copy_n(src, count, dst);
 }
 
+template<typename x_t, typename y_t>
+auto min(x_t const &x, y_t const &y) -> decltype(x < y ? x : y)
+{
+	return x < y ? x : y;
+}
+
+template<typename x_t, typename y_t>
+auto max(x_t const &x, y_t const &y) -> decltype(x < y ? y : x)
+{
+	return x < y ? y : x;
+}
+
 }

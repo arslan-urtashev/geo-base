@@ -1,3 +1,4 @@
+#include "algo.h"
 #include "geo_base_alloc.h"
 #include "library.h"
 #include "unordered_map.h"
@@ -98,6 +99,22 @@ static bool is_bad_edge(edge_t const &e, point_t const *p)
 	return e.beg == e.end || fabs(convert_to_double(p[e.beg].x - p[e.end].x)) > 300.;
 }
 
+static void init_polygon_borders(polygon_t *polygon)
+{
+	polygon->left = convert_to_coordinate(180.0);
+	polygon->right = convert_to_coordinate(-180.0);
+	polygon->lower = convert_to_coordinate(90.0);
+	polygon->upper = convert_to_coordinate(-90.0);
+}
+
+static void relax_polygon_borders(polygon_t *polygon, point_t const &a)
+{
+	polygon->upper = max(polygon->upper, a.y);
+	polygon->lower = min(polygon->lower, a.y);
+	polygon->left = min(polygon->left, a.x);
+	polygon->right = max(polygon->right, a.x);
+}
+
 static void update_context(region_id_t region_id, vector_t<location_t> const &locations, context_t *context, buffer_t *buffer)
 {
 	vector_t<point_t> &points = buffer->points;
@@ -114,7 +131,14 @@ static void update_context(region_id_t region_id, vector_t<location_t> const &lo
 			troll_log_warning("Detected bad edge for region_id: %ld", region_id);
 			continue;
 		}
+		edges.push_back(e);
 	}
+
+	polygon_t polygon;
+	init_polygon_borders(&polygon);
+
+	for (point_t const &p : points)
+		relax_polygon_borders(&polygon, p);
 }
 
 static void usage()
