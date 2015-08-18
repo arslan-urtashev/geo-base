@@ -17,4 +17,7 @@ namespace troll {
 #define troll_log_error(fmt, ...) \
 	troll_log("error", fmt, __VA_ARGS__);
 
+#define troll_log_warning(fmt, ...) \
+	troll_log("warning", fmt, __VA_ARGS__);
+
 }

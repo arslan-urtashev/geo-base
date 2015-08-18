@@ -1,4 +1,5 @@
 #include "geo_base_alloc.h"
+#include "library.h"
 #include "unordered_map.h"
 #include "vector.h"
 
@@ -38,7 +39,7 @@ struct buffer_t {
 struct context_t {
 	TROLL_DEF_GEO_DATA
 
-	ref_t ref_point(point_t const &p)
+	ref_t point_ref(point_t const &p)
 	{
 		if (refs_point.find(p) == refs_point.end()) {
 			refs_point[p] = points.size();
@@ -47,7 +48,7 @@ struct context_t {
 		return refs_point[p];
 	}
 
-	ref_t ref_edge(edge_t const &e)
+	ref_t edge_ref(edge_t const &e)
 	{
 		if (refs_edges.find(e) == refs_edges.end()) {
 			refs_edges[e] = edges.size();
@@ -92,10 +93,28 @@ static void context_save(geo_base_alloc_t *alloc, context_t *context)
 #undef TROLL_DEF_ARR
 }
 
-// static void update_context(region_id_t region_id, vector_t<location_t> const &locations, context_t *context, buffer_t *bufer)
-static void update_context(region_id_t, vector_t<location_t> const &, context_t *, buffer_t *)
+static bool is_bad_edge(edge_t const &e, point_t const *p)
 {
+	return e.beg == e.end || fabs(convert_to_double(p[e.beg].x - p[e.end].x)) > 300.;
+}
 
+static void update_context(region_id_t region_id, vector_t<location_t> const &locations, context_t *context, buffer_t *buffer)
+{
+	vector_t<point_t> &points = buffer->points;
+	points.clear();
+	for (location_t const &l : locations)
+		points.push_back(point_t(l));
+
+	vector_t<edge_t> &edges = buffer->edges;
+	edges.clear();
+	for (ref_t i = 0; i < points.size(); ++i) {
+		ref_t j = (i + 1) % points.size();
+		edge_t e(context->point_ref(points[i]), context->point_ref(points[j]));
+		if (is_bad_edge(e, context->points.data())) {
+			troll_log_warning("Detected bad edge for region_id: %ld", region_id);
+			continue;
+		}
+	}
 }
 
 static void usage()
