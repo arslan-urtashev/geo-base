@@ -22,6 +22,7 @@ namespace troll {
 	TROLL_DEF_PTR(arr_t, arr);
 
 #define TROLL_DEF_GEO_DATA \
+	TROLL_DEF_VAR(version_t, version); \
 	TROLL_DEF_ARR(point_t, points); \
 	TROLL_DEF_ARR(edge_t, edges); \
 	TROLL_DEF_ARR(index_t, edge_indexes); \
@@ -36,6 +37,8 @@ struct geo_data_t {
 #undef TROLL_DEF_VAR
 #undef TROLL_DEF_PTR
 #undef TROLL_DEF_ARR
+
+version_t geo_data_version();
 
 void geo_data_map(void *dat, geo_data_t* geo_data);
 void geo_data_save(void *dat, geo_data_t* geo_data);
