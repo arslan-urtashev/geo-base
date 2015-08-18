@@ -27,7 +27,6 @@ env.Append(CXXFLAGS =
 )
 
 src = [
-    "generate.cpp",
     "geo_data.cpp"
 ]
 

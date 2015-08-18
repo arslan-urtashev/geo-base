@@ -30,8 +30,7 @@ void geo_data_map(void *dat, geo_data_t *geo_data)
 
 void geo_data_save(void *dat, geo_data_t *geo_data)
 {
-	geo_data->version = geo_data_version();
-	troll_log_debug("Save geo_data with version: %lu", geo_data_version());
+	troll_log_debug("Save geo_data with version: %lu", geo_data->version);
 
 #define TROLL_DEF_VAR(var_t, var)
 	// undef
