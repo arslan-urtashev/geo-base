@@ -9,6 +9,7 @@ env.Append(CXXFLAGS =
         "-Wextra",
         "-ffast-math",
         "-flto",
+        "-fno-omit-frame-pointer",
         "-funroll-loops",
         "-g",
         "-march=corei7", 
