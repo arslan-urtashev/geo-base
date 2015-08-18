@@ -2,6 +2,7 @@
 
 #include "base_alloc.h"
 #include "geo_data.h"
+#include "vector.h"
 
 namespace troll {
 
@@ -17,6 +18,8 @@ public:
 	{
 		geo_data_save(addr(), geo_data);
 	}
+
+	void update(region_id_t const &region_id, vector_t<location_t> const &locations);
 
 private:
 	geo_data_t *geo_data;
