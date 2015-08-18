@@ -3,6 +3,7 @@
 #include "exception.h"
 #include "fd_guard.h"
 
+#include <sys/file.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>

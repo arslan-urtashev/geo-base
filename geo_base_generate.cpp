@@ -155,26 +155,31 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	context_t context;
-	buffer_t buffer;
-	geo_base_alloc_t base(argv[1]);
+	try {
+		context_t context;
+		buffer_t buffer;
+		geo_base_alloc_t base(argv[1]);
 
-	region_id_t region_id;
-	count_t locations_count;
-	vector_t<location_t> locations;
+		region_id_t region_id;
+		count_t locations_count;
+		vector_t<location_t> locations;
 	
-	while (std::cin >> region_id >> locations_count) {
-		locations.resize(locations_count);
-		for (location_t &l : locations) {
-			if (!(std::cin >> l.lon >> l.lat)) {
-				std::cerr << "Wrong locations count" << std::endl;
-				return -1;
+		while (std::cin >> region_id >> locations_count) {
+			locations.resize(locations_count);
+			for (location_t &l : locations) {
+				if (!(std::cin >> l.lon >> l.lat)) {
+					std::cerr << "Wrong locations count" << std::endl;
+					return -1;
+				}
 			}
+			update_context(region_id, locations, &context, &buffer);
 		}
-		update_context(region_id, locations, &context, &buffer);
-	}
 
-	context_save(&base, &context);
+		context_save(&base, &context);
+
+	} catch (std::exception const &e) {
+		std::cerr << "Exception handled: " << e.what() << std::endl;
+	}
 
 	return 0;
 }

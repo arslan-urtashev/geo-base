@@ -9,6 +9,7 @@ namespace troll {
 		fprintf(stderr, "[%s] [%s] ", level, __func__); \
 		fprintf(stderr, fmt, __VA_ARGS__); \
 		fprintf(stderr, "\n"); \
+		fflush(stderr); \
 	} while (false);
 
 #define troll_log_debug(fmt, ...) \
