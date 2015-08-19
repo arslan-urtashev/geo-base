@@ -17,6 +17,7 @@ struct polygon_t {
 	coordinate_t right;
 	offset_t parts_offset;
 	count_t parts_count;
+	square_t square;
 
 	void init()
 	{

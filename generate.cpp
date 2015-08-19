@@ -67,10 +67,21 @@ static void generate_checkpoints(vector_t<edge_t> const &e, point_t const *p, ve
 	);
 }
 
+static square_t square(vector_t<point_t> const &p)
+{
+	square_t s = 0;
+	for (ref_t i = 0; i < p.size(); ++i) {
+		ref_t j = (i + 1 == p.size() ? 0 : i + 1);
+		s += p[i].cross(p[j]);
+	}
+	return s > 0 ? s : -s;
+}
+
 void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
 {
 	polygon_t polygon;
 	polygon.region_id = region_id;
+	polygon.square = square(points);
 	
 	polygon.init();
 	for (point_t const &p : points)
@@ -129,6 +140,23 @@ void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
 
 	polygon.parts_count = ctx.parts.size() - polygon.parts_offset;
 	ctx.polygons.push_back(polygon);
+}
+
+void generate_t::create_boxes()
+{
+	for (coordinate_t x0 = box_t::LOWER_X; x0 < box_t::UPPER_X; x0 += box_t::DELTA_X) {
+		for (coordinate_t y0 = box_t::LOWER_Y; y0 < box_t::UPPER_Y; y0 += box_t::DELTA_Y) {
+			box_t box;
+			box.polygon_refs_offset = ctx.polygon_refs.size();
+
+			for (ref_t i = 0; i < ctx.polygons.size(); ++i)
+				if (ctx.polygons[i].intersect(x0, y0, x0 + box_t::DELTA_X, y0 + box_t::DELTA_Y))
+					ctx.polygon_refs.push_back(i);
+
+			box.polygon_refs_count = ctx.polygon_refs.size() - box.polygon_refs_offset;
+			ctx.boxes.push_back(box);
+		}
+	}
 }
 
 }

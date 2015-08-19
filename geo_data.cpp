@@ -51,11 +51,26 @@ region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &locati
 {
 	point_t point(location);
 
-	for (ref_t i = 0; i < geo_data.polygons_count; ++i)
-		if (geo_data.polygons[i].contains(point, geo_data.parts, geo_data.edge_refs, geo_data.edges, geo_data.points))
-			return geo_data.polygons[i].region_id;
+	ref_t box_x = (point.x - box_t::LOWER_X) / box_t::DELTA_X;
+	ref_t box_y = (point.y - box_t::LOWER_Y) / box_t::DELTA_Y;
+	ref_t box_ref = box_x * box_t::COUNT_Y + box_y;
 
-	return -1;
+	if (box_ref >= geo_data.boxes_count)
+		return -1;
+
+	offset_t refs_offset = geo_data.boxes[box_ref].polygon_refs_offset;
+	count_t refs_count = geo_data.boxes[box_ref].polygon_refs_count;
+
+	polygon_t *answer = nullptr;
+
+	for (ref_t ref = refs_offset; ref < refs_offset + refs_count; ++ref) {
+		ref_t i = geo_data.polygon_refs[ref];
+		if (geo_data.polygons[i].contains(point, geo_data.parts, geo_data.edge_refs, geo_data.edges, geo_data.points))
+			if (!answer || answer->square > geo_data.polygons[i].square)
+				answer = &(geo_data.polygons[i]);
+	}
+
+	return answer ? answer->region_id : -1;
 }
 
 void geo_data_show(geo_data_t const &geo_data, output_t &out)

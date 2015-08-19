@@ -1,5 +1,6 @@
 #pragma once
 
+#include "box.h"
 #include "edge.h"
 #include "io.h"
 #include "location.h"
@@ -28,6 +29,8 @@ namespace troll {
 	TROLL_DEF_ARR(ref_t, edge_refs); \
 	TROLL_DEF_ARR(part_t, parts); \
 	TROLL_DEF_ARR(polygon_t, polygons); \
+	TROLL_DEF_ARR(ref_t, polygon_refs); \
+	TROLL_DEF_ARR(box_t, boxes); \
 	TROLL_DEF_ARR(region_t, regions);
 
 struct geo_data_t {

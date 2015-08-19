@@ -87,6 +87,7 @@ public:
 
 	void save()
 	{
+		create_boxes();
 		ctx.fini(&base);
 	}
 
@@ -96,6 +97,8 @@ public:
 	}
 
 private:
+	void create_boxes();
+
 	geo_base_alloc_t base;
 	geo_data_ctx_t ctx;
 };
