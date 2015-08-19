@@ -16,8 +16,13 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	troll::geo_base_t geo_base(argv[1]);
-	geo_base.show(std::cout);
+	try {
+		troll::geo_base_t geo_base(argv[1]);
+		geo_base.show(std::cout);
+
+	} catch (std::exception const &e) {
+		std::cerr << "EXCEPTION: " << e.what() << std::endl;
+	}
 
 	return 0;
 }
