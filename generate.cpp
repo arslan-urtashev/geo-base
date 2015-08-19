@@ -32,6 +32,7 @@ static bool is_bad_edge(edge_t const &e, point_t const *p) {
 
 static void generate_edges(vector_t<point_t> const &points, geo_data_ctx_t *ctx, vector_t<edge_t> &edges)
 {
+	edges.clear();
 	edges.reserve(points.size());
 	for (ref_t i = 0; i < points.size(); ++i) {
 		ref_t j = (i + 1 == points.size() ? 0 : i + 1);
@@ -46,6 +47,7 @@ static void generate_edges(vector_t<point_t> const &points, geo_data_ctx_t *ctx,
 
 static void generate_checkpoints(vector_t<edge_t> const &e, point_t const *p, vector_t<checkpoint_t> &checkpoints)
 {
+	checkpoints.clear();
 	checkpoints.reserve(2 * e.size());
 	for (ref_t i = 0; i < e.size(); ++i) {
 		checkpoints.push_back({p[e[i].beg].x, i, false});

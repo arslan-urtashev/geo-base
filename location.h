@@ -14,6 +14,16 @@ struct location_t {
 	{
 	}
 
+	bool operator == (location_t const &l) const
+	{
+		return lon == l.lon && lat == l.lat;
+	}
+	
+	bool operator != (location_t const &l) const
+	{
+		return !(*this == l);
+	}
+
 	double dist_to(location_t const &l) const
 	{
 		static double const EARTH_RADIUS = 6371000.0;

@@ -38,7 +38,10 @@ int main(int argc, char *argv[])
 				}
 			}
 			generate.update(region_id, locations);
+			std::cout << ".";
 		}
+
+		std::cout << std::endl;
 
 		generate.save();
 		generate.show_base(std::cout);
