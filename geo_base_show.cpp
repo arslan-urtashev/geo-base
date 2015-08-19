@@ -1,5 +1,6 @@
 #include "geo_base.h"
 
+#include <iomanip>
 #include <iostream>
 
 static void usage()
@@ -10,6 +11,7 @@ static void usage()
 int main(int argc, char *argv[])
 {
 	std::ios_base::sync_with_stdio(false);
+	std::cout << std::fixed << std::setprecision(2);
 
 	if (argc != 2) {
 		usage();

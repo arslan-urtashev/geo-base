@@ -60,17 +60,22 @@ region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &locati
 
 void geo_data_show(geo_data_t const &geo_data, output_t &out)
 {	
+	out << "geo_data:" << '\n';
+
 #define TROLL_DEF_VAR(var_t, var) \
-	out << #var << " = " << geo_data.var << '\n';
+	out << "  " << #var << " = " << geo_data.var << '\n';
 
 #define TROLL_DEF_PTR(ptr_t, ptr) \
 	// undef
 
 #define TROLL_DEF_ARR(arr_t, arr) \
 	out \
+		<< "  " \
 		<< #arr \
 			<< " = "  \
 		<< geo_data.arr##_count << " x " << sizeof(arr_t) \
+			<< " = " \
+		<< geo_data.arr##_count * sizeof(arr_t) \
 			<< " = " \
 		<< geo_data.arr##_count * sizeof(arr_t) / (1024. * 1024.) << " MB" << '\n' \
 	;

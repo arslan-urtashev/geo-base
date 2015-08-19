@@ -1,5 +1,6 @@
 #include "geo_base.h"
 
+#include <iomanip>
 #include <iostream>
 
 static void usage()
@@ -10,6 +11,7 @@ static void usage()
 int main(int argc, char *argv[])
 {
 	std::ios_base::sync_with_stdio(false);
+	std::cerr << std::fixed << std::setprecision(2);
 
 	if (argc != 2) {
 		usage();
@@ -18,6 +20,7 @@ int main(int argc, char *argv[])
 
 	try {
 		troll::geo_base_t geo_base(argv[1]);
+		geo_base.show(std::cerr);
 
 		double lon = 0, lat = 0;
 		while (std::cin >> lon >> lat) {
