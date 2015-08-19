@@ -70,3 +70,13 @@ geo_base_show = env.Program(
         geo_base_a
     ]
 )
+
+geo_poly_convert = env.Program(
+    "geo-osm-convert",
+    [
+        "geo_osm_convert.cpp"
+    ],
+    LIBS = [
+        geo_base_a
+    ]
+)

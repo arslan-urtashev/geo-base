@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
 
 		double total = watch.total();
 
+		std::cerr << "COUNT = " << counter << std::endl;
 		std::cerr << "SPENT TIME:" << std::endl;
 		std::cerr << "  TOTAL = " << total << " S" << std::endl;
 		std::cerr << "  AVG = " << total * 1000. / counter << " MS" << std::endl;
