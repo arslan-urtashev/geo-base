@@ -46,7 +46,7 @@ x_t lower_bound(x_t x, size_t count, y_t const &y, cmp_t cmp = cmp_t())
 // template<typename iter_t, typename x_t, typename cmp_t = less_t>
 // bool binary_search(iter_t beg, iter_t end, x_t const &x, cmp_t cmp = cmp_t())
 // {
-// 	return std::binary_search(beg, end, x, cmp);
+//  	return std::binary_search(beg, end, x, cmp);
 // }
 
 template<typename src_t, typename dst_t>
@@ -65,6 +65,12 @@ template<typename x_t, typename y_t>
 auto max(x_t const &x, y_t const &y) -> decltype(x < y ? y : x)
 {
 	return x < y ? y : x;
+}
+
+template<typename a_t, typename b_t>
+void swap(a_t &a, b_t &b)
+{
+	std::swap(a, b);
 }
 
 }

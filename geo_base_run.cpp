@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 		}
 
 	} catch (std::exception const &e) {
-		std::cerr << "Exception handler: " << e.what() << std::endl;
+		std::cerr << "EXCEPTION: " << e.what() << std::endl;
 	}
 
 	return 0;

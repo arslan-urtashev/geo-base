@@ -18,6 +18,22 @@ struct polygon_t {
 	offset_t parts_offset;
 	count_t parts_count;
 
+	void init()
+	{
+		left = convert_to_coordinate(180.0);
+		lower = convert_to_coordinate(90.0);
+		right = convert_to_coordinate(-180.0);
+		upper = convert_to_coordinate(-90.0);
+	}
+
+	void relax(point_t const &p)
+	{
+		left = min(left, p.x);
+		lower = min(lower, p.y);
+		right = max(right, p.x);
+		upper = max(upper, p.y);
+	}
+
 	bool intersect(coordinate_t x1, coordinate_t y1, coordinate_t x2, coordinate_t y2) const
 	{
 		if (x1 > right || x2 < left || y2 < lower || y1 > upper)
