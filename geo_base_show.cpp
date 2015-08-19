@@ -3,6 +3,8 @@
 #include <iomanip>
 #include <iostream>
 
+using namespace troll;
+
 static void usage()
 {
 	std::cerr << "geo-base-show <geodata.dat>" << std::endl;
@@ -19,7 +21,7 @@ int main(int argc, char *argv[])
 	}
 
 	try {
-		troll::geo_base_t geo_base(argv[1]);
+		geo_base_t geo_base(argv[1]);
 		geo_base.show(std::cout);
 
 	} catch (std::exception const &e) {

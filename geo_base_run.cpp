@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <iostream>
 
+using namespace troll;
+
 static void usage()
 {
 	std::cerr << "geo-base-run <geodata.dat>" << std::endl;
@@ -20,19 +22,19 @@ int main(int argc, char *argv[])
 	}
 
 	try {
-		troll::geo_base_t geo_base(argv[1]);
+		geo_base_t geo_base(argv[1]);
 		geo_base.show(std::cerr);
 
 		double longest = 0;
-		troll::count_t counter = 0;
+		count_t counter = 0;
 
-		troll::watch_t watch;
-		troll::location_t location;
+		watch_t watch;
+		location_t location;
 
 		while (std::cin >> location.lon >> location.lat) {
 			watch.checkpoint();
 			std::cout << geo_base.lookup(location) << '\n';
-			longest = troll::max(longest, watch.checkpoint());
+			longest = max(longest, watch.checkpoint());
 			++counter;
 		}
 

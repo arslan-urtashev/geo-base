@@ -7,6 +7,8 @@
 #include "library.h"
 #include "vector.h"
 
+using namespace troll;
+
 static void usage()
 {
 	std::cerr << "geo-base-generate <geodata.dat>" << std::endl;
@@ -23,15 +25,15 @@ int main(int argc, char *argv[])
 	}
 
 	try {
-		troll::generate_t generate(argv[1]);
+		generate_t generate(argv[1]);
 
-		troll::region_id_t region_id;
-		troll::count_t locations_count;
-		troll::vector_t<troll::location_t> locations;
+		region_id_t region_id;
+		count_t locations_count;
+		vector_t<location_t> locations;
 
 		while (std::cin >> region_id >> locations_count) {
 			locations.resize(locations_count);
-			for (troll::location_t &l : locations) {
+			for (location_t &l : locations) {
 				if (!(std::cin >> l.lon >> l.lat)) {
 					std::cerr << "Wrong locations count" << std::endl;
 					return -1;
