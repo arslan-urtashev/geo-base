@@ -4,7 +4,7 @@
 
 static void usage()
 {
-	std::cerr << "geo-base-show <geo.dat>" << std::endl;
+	std::cerr << "geo-base-show <geodata.dat>" << std::endl;
 }
 
 int main(int argc, char *argv[])

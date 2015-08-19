@@ -209,7 +209,7 @@ static void update_context(region_id_t region_id, vector_t<location_t> const &lo
 
 static void usage()
 {
-	std::cerr << "geo-base-generate <geo.dat>" << std::endl;
+	std::cerr << "geo-base-generate <geodata.dat>" << std::endl;
 }
 
 int main(int argc, char *argv[])
