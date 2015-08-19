@@ -17,6 +17,9 @@ struct checkpoint_t {
 #define TROLL_DEF_VAR(var_t, var) \
 	var_t var;
 
+#define TROLL_DEF_PTR(ptr_t, ptr) \
+	// undef
+
 #define TROLL_DEF_ARR(arr_t, arr) \
 	vector_t<arr_t> arr;
 
@@ -57,6 +60,7 @@ struct geo_data_ctx_t {
 };
 
 #undef TROLL_DEF_VAR
+#undef TROLL_DEF_PTR
 #undef TROLL_DEF_ARR
 
 class generate_t {

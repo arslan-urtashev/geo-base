@@ -11,6 +11,9 @@ void geo_data_ctx_t::fini(geo_base_alloc_t *base)
 		geo_data->var = var; \
 	} while (false);
 
+#define TROLL_DEF_PTR(ptr_t, ptr) \
+	// undef
+
 #define TROLL_DEF_ARR(arr_t, arr) \
 	do { \
 		geo_data->arr##_count = arr.size(); \
@@ -23,7 +26,10 @@ void geo_data_ctx_t::fini(geo_base_alloc_t *base)
 	TROLL_DEF_GEO_DATA
 
 #undef TROLL_DEF_VAR
+#undef TROLL_DEF_PTR
 #undef TROLL_DEF_ARR
+
+	geo_data->version = geo_data_version();
 }
 
 static bool is_bad_edge(edge_t const &e, point_t const *p) {
