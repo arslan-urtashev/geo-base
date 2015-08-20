@@ -85,12 +85,19 @@ osm_pbf_convert = env.Program(
     ]
 )
 
-location_dist = env.Program(
-    "test/location-dist",
+dist = env.Program(
+    "tools/dist",
     [
-        "test/location_dist.cpp"
+        "tools/dist.cpp"
     ],
     LIBS = [
         geo_base_a
+    ]
+)
+
+swap = env.Program(
+    "tools/swap",
+    [
+        "tools/swap.cpp",
     ]
 )
