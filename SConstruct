@@ -27,24 +27,24 @@ env.Append(CXXFLAGS =
 )
 
 src = [
-    "generate.cpp",
-    "geo_data.cpp"
+    "src/generate.cpp",
+    "src/geo_data.cpp"
 ]
 
 geo_base_a = env.Library(
-    "geo_base",
+    "lib/geo_base",
     src
 )
 
 geo_base_so = env.SharedLibrary(
-    "geo_base",
+    "lib/geo_base",
     src
 )
 
 geo_base_run = env.Program(
-    "geo-base-run",
+    "bin/geo-base-run",
     [
-        "geo_base_run.cpp"
+        "src/geo_base_run.cpp"
     ],
     LIBS = [
         geo_base_a
@@ -52,9 +52,9 @@ geo_base_run = env.Program(
 )
 
 geo_base_generate = env.Program(
-    "geo-base-generate",
+    "bin/geo-base-generate",
     [
-        "geo_base_generate.cpp"
+        "src/geo_base_generate.cpp"
     ],
     LIBS = [
         geo_base_a
@@ -62,9 +62,9 @@ geo_base_generate = env.Program(
 )
 
 geo_base_show = env.Program(
-    "geo-base-show",
+    "bin/geo-base-show",
     [
-        "geo_base_show.cpp"
+        "src/geo_base_show.cpp"
     ],
     LIBS = [
         geo_base_a
@@ -72,9 +72,9 @@ geo_base_show = env.Program(
 )
 
 geo_poly_convert = env.Program(
-    "geo-osm-convert",
+    "bin/geo-osm-convert",
     [
-        "geo_osm_convert.cpp"
+        "src/geo_osm_convert.cpp"
     ],
     LIBS = [
         geo_base_a
