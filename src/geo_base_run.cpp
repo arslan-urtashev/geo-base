@@ -1,4 +1,5 @@
 #include "geo_base.h"
+#include "log.h"
 #include "watch.h"
 
 #include <iomanip>
@@ -6,18 +7,13 @@
 
 using namespace troll;
 
-static void usage()
-{
-	std::cerr << "geo-base-run <geodata.dat>" << std::endl;
-}
-
 int main(int argc, char *argv[])
 {
 	std::ios_base::sync_with_stdio(false);
 	std::cerr << std::fixed << std::setprecision(3);
 
 	if (argc != 2) {
-		usage();
+		log_error()  << "geo-base-run <geodata.dat>";
 		return -1;
 	}
 
@@ -40,14 +36,14 @@ int main(int argc, char *argv[])
 
 		double total = watch.total();
 
-		std::cerr << "COUNT = " << counter << std::endl;
-		std::cerr << "SPENT TIME:" << std::endl;
-		std::cerr << "  TOTAL = " << total << " S" << std::endl;
-		std::cerr << "  AVG = " << total * 1000. / counter << " MS" << std::endl;
-		std::cerr << "  LONGEST = " << longest * 1000. << " MS" << std::endl;
+		log_info() << "COUNT = " << counter;
+		log_info() << "SPENT TIME:";
+		log_info() << "  TOTAL = " << total << " S";
+		log_info() << "  AVG = " << total * 1000. / counter << " MS";
+		log_info() << "  LONGEST = " << longest * 1000. << " MS";
 
 	} catch (std::exception const &e) {
-		std::cerr << "EXCEPTION: " << e.what() << std::endl;
+		log_error() << "EXCEPTION: " << e.what();
 	}
 
 	return 0;

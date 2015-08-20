@@ -1,4 +1,5 @@
 #include "location.h"
+#include "log.h"
 #include "typedef.h"
 #include "unordered_map.h"
 #include "unordered_set.h"
@@ -16,11 +17,6 @@ using namespace troll;
 using namespace CanalTP;
 
 using osm_id_t = uint64_t;
-
-static void usage()
-{
-	std::cerr << "osm-pbf-convert <geodata.osm>" << std::endl;
-}
 
 unordered_set_t<osm_id_t> need_ways;
 unordered_set_t<osm_id_t> need_nodes;
@@ -116,19 +112,19 @@ int main(int argc, char *argv[])
 	std::cout << std::fixed << std::setprecision(6);
 
 	if (argc != 2) {
-		usage();
+		log_error() << "osm-pbf-convert <geodata.osm>";
 		return -1;
 	}
 
 	need_ways_visit_t need_ways_visit;
 	Parser<need_ways_visit_t>(argv[1], need_ways_visit).parse();
 
-	std::cerr << "Need ways parsed, count = " << need_ways.size() << std::endl;
+	log_info() << "Need ways parsed, count = " << need_ways.size();
 
 	need_nodes_visit_t need_nodes_visit;
 	Parser<need_nodes_visit_t>(argv[1], need_nodes_visit).parse();
 
-	std::cerr << "Need nodes parsed, count = " << need_nodes.size() << std::endl;
+	log_info() << "Need nodes parsed, count = " << need_nodes.size();
 
 	parser_t parser;
 	Parser<parser_t>(argv[1], parser).parse();

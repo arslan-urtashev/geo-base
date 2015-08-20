@@ -5,14 +5,10 @@
 #include "generate.h"
 #include "geo_base_alloc.h"
 #include "library.h"
+#include "log.h"
 #include "vector.h"
 
 using namespace troll;
-
-static void usage()
-{
-	std::cerr << "geo-base-generate <geodata.dat>" << std::endl;
-}
 
 int main(int argc, char *argv[])
 {
@@ -20,7 +16,7 @@ int main(int argc, char *argv[])
 	std::cout << std::fixed << std::setprecision(2);
 
 	if (argc != 2) {
-		usage();
+		log_error() << "geo-base-generate <geodata.dat>";
 		return -1;
 	}
 
@@ -35,7 +31,7 @@ int main(int argc, char *argv[])
 			locations.resize(locations_count);
 			for (location_t &l : locations) {
 				if (!(std::cin >> l.lon >> l.lat)) {
-					std::cerr << "Wrong locations count" << std::endl;
+					log_error() << "Wrong locations count";
 					return -1;
 				}
 			}
@@ -49,7 +45,7 @@ int main(int argc, char *argv[])
 		generate.show_base(std::cout);
 
 	} catch (std::exception const &e) {
-		std::cerr << "EXCEPTION: " << e.what() << std::endl;
+		log_error() << "EXCEPTION: " << e.what();
 	}
 
 	return 0;

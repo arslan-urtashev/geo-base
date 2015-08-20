@@ -1,14 +1,10 @@
 #include "geo_base.h"
+#include "log.h"
 
 #include <iomanip>
 #include <iostream>
 
 using namespace troll;
-
-static void usage()
-{
-	std::cerr << "geo-base-show <geodata.dat>" << std::endl;
-}
 
 int main(int argc, char *argv[])
 {
@@ -16,7 +12,7 @@ int main(int argc, char *argv[])
 	std::cout << std::fixed << std::setprecision(2);
 
 	if (argc != 2) {
-		usage();
+		log_error() << "geo-base-show <geodata.dat>";
 		return -1;
 	}
 
@@ -25,7 +21,7 @@ int main(int argc, char *argv[])
 		geo_base.show(std::cout);
 
 	} catch (std::exception const &e) {
-		std::cerr << "EXCEPTION: " << e.what() << std::endl;
+		log_error() << "EXCEPTION: " << e.what();
 	}
 
 	return 0;
