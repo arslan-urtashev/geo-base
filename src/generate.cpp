@@ -40,7 +40,7 @@ static bool is_bad_edge(edge_t const &e, point_t const *p) {
 
 static output_t &operator << (output_t &out, point_t const &p)
 {
-	out << "(" << convert_to_double(p.x) << ", " << convert_to_double(p.y) << ")";
+	out << "(" << convert_to_double(p.y) << " " << convert_to_double(p.x) << ")";
 	return out;
 }
 
@@ -179,8 +179,10 @@ void generate_t::update(region_id_t region_id, vector_t<location_t> const &locat
 		while (r < locations.size() && locations[l] != locations[r])
 			++r;
 
-		if (r != locations.size() || l > 0)
-			log_warning("generate", region_id) << "self-intersections detected " << l << " - " << r;
+		if (r != locations.size() || l > 0) {
+			point_t p(locations[l]);
+			log_warning("generate", region_id) << "self-intersections detected " << l << " - " << r << ", " << p;
+		}
 
 		double real_dist = 0;
 		location_t prev;

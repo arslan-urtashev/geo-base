@@ -1,5 +1,11 @@
 env = Environment()
 
+if ARGUMENTS.get("log-boundary", "false") == "true":
+    env.Append(CXXFLAGS = ["-DTROLL_LOG_BOUNDARY"])
+
+if ARGUMENTS.get("log-color", "true") == "false":
+    env.Append(CXXFLAGS = ["-DTROLL_LOG_NO_COLOR"])
+
 env.Append(CXXFLAGS = 
     [
         "-O3",

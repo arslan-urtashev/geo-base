@@ -22,6 +22,7 @@ protected:
 	~log_output_t()
 	{
 		out << std::endl;
+		out.flush();
 	}
 
 	output_t &out;
@@ -29,10 +30,13 @@ protected:
 
 class log_color_t : public log_output_t {
 protected:
-	log_color_t(output_t &out, int color)
+	log_color_t(output_t &out, int color1)
 		: log_output_t(out)
-		, color(color)
+		, color(color1)
 	{
+#ifdef TROLL_LOG_NO_COLOR
+		color = 0;
+#endif
 		if (color != 0)
 			(*this) << "\033[" << color << "m";
 	}

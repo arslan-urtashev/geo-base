@@ -13,7 +13,9 @@ using namespace troll;
 int main(int argc, char *argv[])
 {
 	std::ios_base::sync_with_stdio(false);
+
 	std::cout << std::fixed << std::setprecision(2);
+	std::cerr << std::fixed << std::setprecision(6);
 
 	if (argc != 2) {
 		log_error() << "geo-base-generate <geodata.dat>";
