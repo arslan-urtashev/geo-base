@@ -1,5 +1,7 @@
 #include "generate.h"
 
+#include "log.h"
+
 namespace troll {
 
 void geo_data_ctx_t::fini(geo_base_alloc_t *base)
@@ -36,17 +38,39 @@ static bool is_bad_edge(edge_t const &e, point_t const *p) {
 	return e.beg == e.end || fabs(convert_to_double(p[e.beg].x - p[e.end].x)) > 300.0;
 }
 
-static void generate_edges(vector_t<point_t> const &points, geo_data_ctx_t *ctx, vector_t<edge_t> &edges)
+static output_t &operator << (output_t &out, point_t const &p)
+{
+	out << "(" << convert_to_double(p.x) << ", " << convert_to_double(p.y) << ")";
+	return out;
+}
+
+#ifdef TROLL_LOG_BOUNDARY
+static output_t &operator << (output_t &out, vector_t<point_t> const &p)
+{
+	out << "[";
+	for (ref_t i = 0; i < p.size(); ++i)
+		out << p[i] << (i + 1 == p.size() ? "" : ", ");
+	out << "]";
+	return out;
+}
+#endif
+
+static void generate_edges(region_id_t region_id, vector_t<point_t> const &points, geo_data_ctx_t *ctx, vector_t<edge_t> &edges)
 {
 	edges.clear();
 	edges.reserve(points.size());
 	for (ref_t i = 0; i < points.size(); ++i) {
 		ref_t j = (i + 1 == points.size() ? 0 : i + 1);
 		edge_t e(ctx->push_point(points[i]), ctx->push_point(points[j]));
-		if (is_bad_edge(e, ctx->points.data()))
-			continue;
+		
 		if (ctx->points[e.beg].x > ctx->points[e.end].x)
 			swap(e.beg, e.end);
+
+		if (is_bad_edge(e, ctx->points.data())) {
+			log_warning("generate", region_id) <<  "bad edge detected = " << ctx->points[e.beg] << " -> " << ctx->points[e.end];
+			continue;
+		}
+		
 		edges.push_back(e);
 	}
 }
@@ -90,7 +114,7 @@ void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
 	polygon.parts_offset = ctx.parts.size();
 	
 	vector_t<edge_t> &edges = ctx.buf.edges;
-	generate_edges(points, &ctx, edges);
+	generate_edges(region_id, points, &ctx, edges);
 
 	vector_t<checkpoint_t> &checkpoints = ctx.buf.checkpoints;
 	generate_checkpoints(edges, ctx.points.data(), checkpoints);
@@ -146,12 +170,17 @@ void generate_t::update(region_id_t region_id, vector_t<location_t> const &locat
 {
 	static double const MAX_ERROR = 0.01;
 
+	count_t polygons_size = ctx.polygons.size();
+
 	vector_t<point_t> &points = ctx.buf.points;
 	points.clear();
 	for (ref_t l = 0, r = 0; l < locations.size(); l = r + 1) {
 		r = l + 1;
 		while (r < locations.size() && locations[l] != locations[r])
 			++r;
+
+		if (r != locations.size() || l > 0)
+			log_warning("generate", region_id) << "self-intersections detected " << l << " - " << r;
 
 		double real_dist = 0;
 		location_t prev;
@@ -171,9 +200,15 @@ void generate_t::update(region_id_t region_id, vector_t<location_t> const &locat
 				prev = locations[i];
 			}
 		}
+		
+#if TROLL_LOG_BOUNDARY
+		log_debug("generate", region_id) << points;
+#endif
 
 		update(region_id, points);
 	}
+
+	log_info("generate", region_id) << ctx.polygons.size() - polygons_size << " polygons generated";
 }
 
 void generate_t::create_boxes()

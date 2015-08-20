@@ -56,34 +56,60 @@ protected:
 	}
 };
 
-class log_error : public log_level_t {
+class log_context_t : public log_level_t {
+protected:
+	template<typename... args_t>
+	log_context_t(output_t &out, int color, char const *level, args_t... args)
+		: log_level_t(out, color, level)
+	{
+		context(args...);
+	}
+
+private:
+	void context()
+	{
+	}
+
+	template<typename arg_t, typename... args_t>
+	void context(arg_t const &arg, args_t... args)
+	{
+		(*this) << "[" << arg << "] ";
+		context(args...);
+	}
+};
+
+class log_error : public log_context_t {
 public:
-	log_error()
-		: log_level_t(std::cerr, 31, "error")
+	template<typename... args_t>
+	log_error(args_t... args)
+		: log_context_t(std::cerr, 31, "error", args...)
 	{
 	}
 };
 
-class log_info : public log_level_t {
+class log_info : public log_context_t {
 public:
-	log_info()
-		: log_level_t(std::cerr, 32, "info")
+	template<typename... args_t>
+	log_info(args_t... args)
+		: log_context_t(std::cerr, 32, "info", args...)
 	{
 	}
 };
 
-class log_warning : public log_level_t {
+class log_warning : public log_context_t {
 public:
-	log_warning()
-		: log_level_t(std::cerr, 33, "warning")
+	template<typename... args_t>
+	log_warning(args_t... args)
+		: log_context_t(std::cerr, 33, "warning", args...)
 	{
 	}
 };
 
-class log_debug : public log_level_t {
+class log_debug : public log_context_t {
 public:
-	log_debug()
-		: log_level_t(std::cerr, 37, "debug")
+	template<typename... args_t>
+	log_debug(args_t... args)
+		: log_context_t(std::cerr, 37, "debug", args...)
 	{
 	}
 };
