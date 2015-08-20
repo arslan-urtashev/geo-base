@@ -19,6 +19,11 @@ protected:
 	{
 	}
 
+	~log_output_t()
+	{
+		out << std::endl;
+	}
+
 	output_t &out;
 };
 
@@ -29,13 +34,13 @@ protected:
 		, color(color)
 	{
 		if (color != 0)
-			out << "\033[" << color << "m";
+			(*this) << "\033[" << color << "m";
 	}
 
 	~log_color_t()
 	{
 		if (color != 0)
-			out << "\033[0m" << std::endl;
+			(*this) << "\033[0m";
 	}
 
 private:
@@ -47,7 +52,7 @@ protected:
 	log_level_t(output_t &out, int color, char const *level)
 		: log_color_t(out, color)
 	{
-		out << "[" << level << "] ";
+		(*this) << "[" << level << "] ";
 	}
 };
 
