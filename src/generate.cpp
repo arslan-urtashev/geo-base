@@ -142,6 +142,40 @@ void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
 	ctx.polygons.push_back(polygon);
 }
 
+void generate_t::update(region_id_t region_id, vector_t<location_t> const &locations)
+{
+	static double const MAX_ERROR = 1.0;
+
+	vector_t<point_t> &points = ctx.buf.points;
+	points.clear();
+	for (ref_t l = 0, r = 0; l < locations.size(); l = r + 1) {
+		r = l + 1;
+		while (r < locations.size() && locations[l] != locations[r])
+			++r;
+
+		double real_dist = 0;
+		location_t prev;
+		
+		points.clear();
+		for (ref_t i = l; i < r; ++i) {
+			double error = 0;
+			
+			if (!points.empty()) {
+				real_dist += locations[i - 1].dist_to(locations[i]);
+				error = fabs(real_dist - prev.dist_to(locations[i]));
+			}
+
+			if (points.empty() || error >= MAX_ERROR || i + 1 == locations.size()) {
+				real_dist = 0;
+				points.push_back(point_t(locations[i]));
+				prev = locations[i];
+			}
+		}
+
+		update(region_id, points);
+	}
+}
+
 void generate_t::create_boxes()
 {
 	for (coordinate_t x0 = box_t::LOWER_X; x0 < box_t::UPPER_X; x0 += box_t::DELTA_X) {

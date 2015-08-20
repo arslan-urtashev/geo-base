@@ -21,8 +21,9 @@ env.Append(CXXFLAGS =
         "-g"
     ],
     CPPPATH = [
-        "src",
-        "."
+        ".",
+        "contrib",
+        "src"
     ]
 )
 
@@ -71,10 +72,23 @@ geo_base_show = env.Program(
     ]
 )
 
-geo_poly_convert = env.Program(
-    "bin/geo-osm-convert",
+osm_pbf_convert = env.Program(
+    "bin/osm-pbf-convert",
     [
-        "src/geo_osm_convert.cpp"
+        "src/osm_pbf_convert.cpp"
+    ],
+    LIBS = [
+        geo_base_a,
+        "osmpbf",
+        "protobuf",
+        "z"
+    ]
+)
+
+location_dist = env.Program(
+    "test/location-dist",
+    [
+        "test/location_dist.cpp"
     ],
     LIBS = [
         geo_base_a

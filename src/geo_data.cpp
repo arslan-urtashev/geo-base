@@ -1,6 +1,7 @@
 #include "geo_data.h"
 
 #include "exception.h"
+#include "io.h"
 
 namespace troll {
 

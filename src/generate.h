@@ -72,18 +72,7 @@ public:
 
 	void update(region_id_t region_id, vector_t<point_t> const &points);
 
-	void update(region_id_t region_id, vector_t<location_t> const &locations)
-	{
-		vector_t<point_t> &points = ctx.buf.points;
-		points.clear();
-		for (ref_t l = 0, r = 0; l < locations.size(); l = r + 1) {
-			r = l + 1;
-			while (r < locations.size() && locations[l] != locations[r])
-				++r;
-			points.assign(locations.begin() + l, locations.begin() + r);
-			update(region_id, points);
-		}
-	}
+	void update(region_id_t region_id, vector_t<location_t> const &locations);
 
 	void save()
 	{
