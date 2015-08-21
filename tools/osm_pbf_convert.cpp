@@ -120,6 +120,9 @@ struct need_nodes_visit_t {
 struct parser_t {
 	vector_t<location_t> locations;
 
+	unordered_map_t<osm_id_t, vector_t<osm_id_t>> graph;
+	unordered_set_t<osm_id_t> used;
+
 	void node_callback(osm_id_t osm_id, double lon, double lat, const Tags &)
 	{
 		if (need_nodes.find(osm_id) != need_nodes.end())
@@ -130,18 +133,55 @@ struct parser_t {
 	{
 	}
 
+	void save_locations(osm_id_t osm_id, bool reversed = false)
+	{
+		used.insert(osm_id);
+
+		if (ways[osm_id].empty())
+			return;
+
+		count_t locations_count = locations.size();
+		for (osm_id_t node_id : ways[osm_id])
+			locations.push_back(nodes[node_id]);
+		if (reversed)
+			reverse(locations.begin() + locations_count, locations.end());
+
+		location_t location = locations.back();
+
+		osm_id_t node_id = (reversed ? ways[osm_id].front() : ways[osm_id].back());
+
+		for (osm_id_t next_id : graph[node_id])
+			if (used.find(next_id) == used.end() && !ways[next_id].empty()) {
+				if (nodes[ways[next_id].front()] == location) {
+					save_locations(next_id, false);
+				} else if (nodes[ways[next_id].back()] == location) {
+					save_locations(next_id, true);
+				}
+			}
+	}
+
 	void relation_callback(osm_id_t osm_id, Tags const &tags, References const &refs)
 	{
 		bool boundary = is_boundary(tags);
 
 		if (boundary) {
 			locations.clear();
+
+			graph.clear();
+			used.clear();
+
 			for (Reference const &r : refs) {
-				if (is_way_ref(r)) {
-					for (osm_id_t node_id : ways[r.member_id])
-						locations.push_back(nodes[node_id]);
+				if (is_way_ref(r) && !ways[r.member_id].empty()) {
+					graph[ways[r.member_id].front()].push_back(r.member_id);
+					graph[ways[r.member_id].back()].push_back(r.member_id);
 				}
 			}
+
+			for (Reference const &r : refs) {
+				if (is_way_ref(r) && used.find(r.member_id) == used.end())
+					save_locations(r.member_id);
+			}
+
 			if (!locations.empty()) {
 				std::cout << osm_id << ' ' << locations.size() << '\n';
 				for (location_t const &l : locations)

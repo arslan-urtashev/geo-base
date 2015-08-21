@@ -73,4 +73,10 @@ void swap(a_t &a, b_t &b)
 	std::swap(a, b);
 }
 
+// template<typename iter_t>
+// void reverse(iter_t begin, iter_t end)
+// {
+// 	std::reverse(begin, end);
+// }
+
 }

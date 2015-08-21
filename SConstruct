@@ -6,9 +6,11 @@ if ARGUMENTS.get("log-boundary", "false") == "true":
 if ARGUMENTS.get("log-color", "true") == "false":
     env.Append(CXXFLAGS = ["-DTROLL_LOG_NO_COLOR"])
 
+opt = ARGUMENTS.get("opt", "3")
+
 env.Append(CXXFLAGS = 
     [
-        "-O3",
+        "-O" + opt,
         "-W",
         "-Wall",
         "-Werror",
