@@ -168,7 +168,9 @@ void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
 
 void generate_t::update(region_id_t region_id, vector_t<location_t> const &locations)
 {
-	static double const MAX_ERROR = 0.01;
+	static double const MAX_ERROR = 1.0;
+
+	log_info(region_id) << "Process locations count = " << locations.size();
 
 	count_t polygons_size = ctx.polygons.size();
 

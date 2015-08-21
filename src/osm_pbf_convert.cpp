@@ -23,6 +23,40 @@ unordered_set_t<osm_id_t> need_nodes;
 unordered_map_t<osm_id_t, location_t> nodes;
 unordered_map_t<osm_id_t, vector_t<osm_id_t>> ways;
 
+static bool is_boundary(Tags const &tags)
+{
+	for (auto const &p : tags)
+		if (
+			p.first == "admin_level"
+			|| (
+				p.first == "boundary" && p.second == "administrative"
+			)
+			|| (
+				p.first == "place" && p.second == "city"
+			)
+		)
+			return true;
+	return false;
+}
+
+static bool is_way_ref(Reference const &r)
+{
+	if (
+		r.member_type == OSMPBF::Relation::WAY
+		&& (
+			r.role == "outer"
+			|| r.role.empty()
+		)
+	)
+		return true;
+	return false;
+}
+
+static bool is_debug_osm_id(osm_id_t osm_id)
+{
+	return osm_id == 2555133 || osm_id == 60189;
+}
+
 struct need_ways_visit_t {
 	void node_callback(osm_id_t, double , double , const Tags &)
 	{
@@ -32,17 +66,26 @@ struct need_ways_visit_t {
 	{
 	}
 
-	void relation_callback(osm_id_t, Tags const &tags, References const &refs)
+	void relation_callback(osm_id_t osm_id, Tags const &tags, References const &refs)
 	{
-		bool boundary = false;
-		for (auto const &p : tags)
-			if (p.first == "admin_level" || (p.first == "boundary" && p.second == "administrative"))
-				boundary = true;
+		bool boundary = is_boundary(tags);
 
 		if (boundary) {
-			for (Reference const &r : refs) 
-				if (r.member_type == OSMPBF::Relation::WAY && r.role == "outer")
+			for (Reference const &r : refs) {
+				if (is_way_ref(r))
 					need_ways.insert(r.member_id);
+				
+				if (r.member_id == 124028227)
+					log_warning(osm_id) << r.member_id << " - " << r.role << " : " << (need_ways.find(r.member_id) != need_ways.end());
+			}
+		}
+
+		if (is_debug_osm_id(osm_id)) {
+			for (auto const &p : tags)
+				log_info(osm_id) << p.first << " = " << p.second;
+			log_info(osm_id) << "refs.size() == " << refs.size();
+			if (!boundary)
+				log_error(osm_id) << "Not a boundary!";
 		}
 	}
 };
@@ -75,26 +118,22 @@ struct parser_t {
 			nodes[osm_id] = location_t(lon, lat);
 	}
 
-	void way_callback(osm_id_t osm_id, Tags const &, std::vector<osm_id_t> const &nodes)
+	void way_callback(osm_id_t, Tags const &, std::vector<osm_id_t> const &)
 	{
-		if (need_ways.find(osm_id) != need_ways.end())
-			for (osm_id_t osm_id : nodes)
-				need_nodes.insert(osm_id);
 	}
 
 	void relation_callback(osm_id_t osm_id, Tags const &tags, References const &refs)
 	{
-		bool boundary = false;
-		for (auto const &p : tags)
-			if (p.first == "admin_level" || (p.first == "boundary" && p.second == "administrative"))
-				boundary = true;
+		bool boundary = is_boundary(tags);
 
 		if (boundary) {
 			locations.clear();
 			for (Reference const &r : refs)
-				if (r.member_type == OSMPBF::Relation::WAY && r.role == "outer")
+				if (is_way_ref(r))
 					for (osm_id_t node_id : ways[r.member_id])
 						locations.push_back(nodes[node_id]);
+			if (is_debug_osm_id(osm_id))
+				log_info(osm_id, "sizes") << refs.size() << ' ' << locations.size();
 			if (!locations.empty()) {
 				std::cout << osm_id << ' ' << locations.size() << '\n';
 				for (location_t const &l : locations)
