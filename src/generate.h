@@ -50,6 +50,7 @@ struct geo_data_ctx_t {
 		vector_t<checkpoint_t> checkpoints;
 		vector_t<edge_t> edges;
 		vector_t<edge_t> erase;
+		vector_t<location_t> locations;
 		vector_t<point_t> points;
 	} buf;
 

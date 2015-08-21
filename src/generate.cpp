@@ -166,9 +166,15 @@ void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
 	ctx.polygons.push_back(polygon);
 }
 
-void generate_t::update(region_id_t region_id, vector_t<location_t> const &locations)
+void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_locations)
 {
 	static double const MAX_ERROR = 1.0;
+
+	vector_t<location_t> &locations = ctx.buf.locations;
+	locations.clear();
+	for (location_t const &l : raw_locations)
+		if (locations.empty() || locations.back() != l)
+			locations.push_back(l);
 
 	log_info(region_id) << "Process locations count = " << locations.size();
 
@@ -181,10 +187,8 @@ void generate_t::update(region_id_t region_id, vector_t<location_t> const &locat
 		while (r < locations.size() && locations[l] != locations[r])
 			++r;
 
-		if (r != locations.size() || l > 0) {
-			point_t p(locations[l]);
-			log_warning("generate", region_id) << "self-intersections detected " << l << " - " << r << ", " << p;
-		}
+		if (r != locations.size() || l > 0)
+			log_warning("generate", region_id) << "self-intersections detected " << l << " - " << r;
 
 		double real_dist = 0;
 		location_t prev;

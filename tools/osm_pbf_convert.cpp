@@ -29,10 +29,22 @@ static bool is_boundary(Tags const &tags)
 		if (
 			p.first == "admin_level"
 			|| (
-				p.first == "boundary" && p.second == "administrative"
+				p.first == "boundary"
+				&& p.second == "administrative"
 			)
 			|| (
-				p.first == "place" && p.second == "city"
+				p.first == "place"
+				&& (
+					p.second == "city"
+					|| p.second == "country"
+					|| p.second == "state"
+					|| p.second == "region"
+					|| p.second == "province"
+					|| p.second == "district"
+					|| p.second == "municipality"
+					|| p.second == "suburb"
+					|| p.second == "quarter"
+				)
 			)
 		)
 			return true;
@@ -54,7 +66,11 @@ static bool is_way_ref(Reference const &r)
 
 static bool is_debug_osm_id(osm_id_t osm_id)
 {
-	return osm_id == 2555133 || osm_id == 60189;
+	return
+		osm_id == 2555133
+		|| osm_id == 60189
+		|| osm_id == 124028227
+		|| osm_id == 123959239;
 }
 
 struct need_ways_visit_t {
@@ -74,9 +90,6 @@ struct need_ways_visit_t {
 			for (Reference const &r : refs) {
 				if (is_way_ref(r))
 					need_ways.insert(r.member_id);
-				
-				if (r.member_id == 124028227)
-					log_warning(osm_id) << r.member_id << " - " << r.role << " : " << (need_ways.find(r.member_id) != need_ways.end());
 			}
 		}
 
@@ -89,6 +102,13 @@ struct need_ways_visit_t {
 		}
 	}
 };
+
+static output_t &operator << (output_t &out, vector_t<location_t> const &l)
+{
+	for (size_t i = 0; i < l.size(); ++i)
+		out << '(' << l[i].lat << ' ' << l[i].lon << ')' << (i + 1 == l.size() ? "" : ", ");
+	return out;
+}
 
 struct need_nodes_visit_t {
 	void node_callback(osm_id_t, double , double , const Tags &)
@@ -128,10 +148,22 @@ struct parser_t {
 
 		if (boundary) {
 			locations.clear();
-			for (Reference const &r : refs)
-				if (is_way_ref(r))
+			for (Reference const &r : refs) {
+				if (is_way_ref(r)) {
+					count_t count = locations.size();
+
 					for (osm_id_t node_id : ways[r.member_id])
 						locations.push_back(nodes[node_id]);
+
+					count = locations.size() - count;
+
+					if (is_debug_osm_id(r.member_id))
+						log_debug(osm_id)
+							<< r.member_id << " - " << r.role
+								<< " = "
+							<< vector_t<location_t>(locations.begin() + count, locations.end());
+				}
+			}
 			if (is_debug_osm_id(osm_id))
 				log_info(osm_id, "sizes") << refs.size() << ' ' << locations.size();
 			if (!locations.empty()) {

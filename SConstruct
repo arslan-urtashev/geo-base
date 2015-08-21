@@ -79,9 +79,9 @@ geo_base_show = env.Program(
 )
 
 osm_pbf_convert = env.Program(
-    "bin/osm-pbf-convert",
+    "tools/osm-pbf-convert",
     [
-        "src/osm_pbf_convert.cpp"
+        "tools/osm_pbf_convert.cpp"
     ],
     LIBS = [
         geo_base_a,
@@ -105,5 +105,15 @@ swap = env.Program(
     "tools/swap",
     [
         "tools/swap.cpp",
+    ]
+)
+
+geo_base_grep = env.Program(
+    "tools/geo-base-grep",
+    [
+        "tools/geo_base_grep.cpp"
+    ],
+    LIBS = [
+        geo_base_a
     ]
 )
