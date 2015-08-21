@@ -133,31 +133,14 @@ struct parser_t {
 	{
 	}
 
-	void save_locations(osm_id_t osm_id, bool reversed = false)
+	void save_locations(osm_id_t osm_id)
 	{
 		used.insert(osm_id);
+		locations.push_back(nodes[osm_id]);
 
-		if (ways[osm_id].empty())
-			return;
-
-		count_t locations_count = locations.size();
-		for (osm_id_t node_id : ways[osm_id])
-			locations.push_back(nodes[node_id]);
-		if (reversed)
-			reverse(locations.begin() + locations_count, locations.end());
-
-		location_t location = locations.back();
-
-		osm_id_t node_id = (reversed ? ways[osm_id].front() : ways[osm_id].back());
-
-		for (osm_id_t next_id : graph[node_id])
-			if (used.find(next_id) == used.end() && !ways[next_id].empty()) {
-				if (nodes[ways[next_id].front()] == location) {
-					save_locations(next_id, false);
-				} else if (nodes[ways[next_id].back()] == location) {
-					save_locations(next_id, true);
-				}
-			}
+		for (osm_id_t node_id : graph[osm_id])
+			if (used.find(node_id) == used.end())
+				save_locations(node_id);
 	}
 
 	void relation_callback(osm_id_t osm_id, Tags const &tags, References const &refs)
@@ -171,15 +154,24 @@ struct parser_t {
 			used.clear();
 
 			for (Reference const &r : refs) {
-				if (is_way_ref(r) && !ways[r.member_id].empty()) {
-					graph[ways[r.member_id].front()].push_back(r.member_id);
-					graph[ways[r.member_id].back()].push_back(r.member_id);
+				if (is_way_ref(r)) {
+					vector_t<osm_id_t> const &w = ways[r.member_id];
+					for (size_t i = 0; i + 1 < w.size(); ++i) {
+						graph[w[i]].push_back(w[i + 1]);
+						graph[w[i + 1]].push_back(w[i]);
+					}
 				}
 			}
 
 			for (Reference const &r : refs) {
-				if (is_way_ref(r) && used.find(r.member_id) == used.end())
-					save_locations(r.member_id);
+				if (is_way_ref(r)) {
+					vector_t<osm_id_t> const &w = ways[r.member_id];
+					for (size_t i = 0; i < w.size(); ++i)
+						if (used.find(w[i]) == used.end()) {
+							save_locations(w[i]);
+							locations.push_back(nodes[w[i]]);
+						}
+				}
 			}
 
 			if (!locations.empty()) {

@@ -168,8 +168,6 @@ void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
 
 void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_locations)
 {
-	static double const MAX_ERROR = 1.0;
-
 	vector_t<location_t> &locations = ctx.buf.locations;
 	locations.clear();
 	for (location_t const &l : raw_locations)
@@ -190,25 +188,8 @@ void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_l
 		if (r != locations.size() || l > 0)
 			log_warning("generate", region_id) << "self-intersections detected " << l << " - " << r;
 
-		double real_dist = 0;
-		location_t prev;
-		
-		points.clear();
-		for (ref_t i = l; i < r; ++i) {
-			double error = 0;
-			
-			if (!points.empty()) {
-				real_dist += locations[i - 1].dist_to(locations[i]);
-				error = fabs(real_dist - prev.dist_to(locations[i]));
-			}
+		points.assign(locations.begin() + l, locations.begin() + r);
 
-			if (points.empty() || error >= MAX_ERROR || i + 1 == locations.size()) {
-				real_dist = 0;
-				points.push_back(point_t(locations[i]));
-				prev = locations[i];
-			}
-		}
-		
 #if TROLL_LOG_BOUNDARY
 		log_debug("generate", region_id) << points;
 #endif
