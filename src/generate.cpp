@@ -200,7 +200,7 @@ void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_l
 		if (locations.empty() || locations.back() != l)
 			locations.push_back(l);
 
-	log_info(region_id) << "Process locations count = " << locations.size();
+	log_info("generate", region_id) << "Process locations count = " << locations.size();
 
 	count_t polygons_size = ctx.polygons.size();
 

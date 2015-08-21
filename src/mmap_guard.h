@@ -2,6 +2,8 @@
 
 #include <sys/mman.h>
 
+#include "log.h"
+
 namespace troll {
 
 struct mmap_guard_t {
@@ -20,11 +22,14 @@ struct mmap_guard_t {
 		munmap();
 		addr = addr_;
 		length = length_;
+		if (addr)
+			log_debug("mmap_guard_t") << "guard addr = " << addr << ", length = " << length;
 	}
 
 	void munmap()
 	{
 		if (addr) {
+			log_debug("mmap_guard_t") << "munmap addr = " << addr << ", length = " << length;
 			::munmap(addr, length);
 			addr = nullptr;
 			length = 0;

@@ -2,6 +2,8 @@
 
 #include <unistd.h>
 
+#include "log.h"
+
 namespace troll {
 
 struct fd_guard_t {
@@ -16,6 +18,7 @@ struct fd_guard_t {
 	void close()
 	{
 		if (fd != -1) {
+			log_debug("fd_guard_t") << "close fd = " << fd;
 			::close(fd);
 			fd = -1;
 		}
@@ -25,6 +28,8 @@ struct fd_guard_t {
 	{
 		close();
 		fd = fd_;
+		if (fd != -1)
+			log_debug("fd_guard_t") << "guard fd = " << fd;
 	}
 
 	~fd_guard_t()
