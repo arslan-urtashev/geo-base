@@ -127,3 +127,13 @@ geo_base_rand = env.Program(
         geo_base_a
     ]
 )
+
+geo_base_repeat = env.Program(
+    "tools/geo-base-repeat",
+    [
+        "tools/geo_base_repeat.cpp",
+    ],
+    LIBS = [
+        geo_base_a
+    ]
+)
