@@ -101,8 +101,34 @@ static square_t square(vector_t<point_t> const &p)
 	return s > 0 ? s : -s;
 }
 
+static uint64_t get_hash(byte_t const *bytes, count_t count, uint64_t base)
+{
+	uint64_t hash = 0, power = 1;
+	for (count_t i = 0; i < count; ++i) {
+		hash += (bytes[i] + 1) * power;
+		power *= base;
+	}
+	return hash;
+}
+
+static uint64_t get_hash(region_id_t region_id, vector_t<point_t> const &points)
+{
+	uint64_t hash = 0;
+	hash ^= get_hash((byte_t const *) &region_id, sizeof(region_id), 373);
+	hash ^= get_hash((byte_t const *) &(points[0]), sizeof(point_t) * points.size(), 337);
+	return hash;
+}
+
 void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
 {
+	uint64_t hash = get_hash(region_id, points);
+	if (ctx.processed.find(hash) != ctx.processed.end()) {
+		log_error("generate", region_id) << "Region is already processed!";
+		return;
+	} else {
+		ctx.processed.insert(hash);
+	}
+
 	polygon_t polygon;
 	polygon.region_id = region_id;
 	polygon.square = square(points);

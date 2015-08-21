@@ -4,6 +4,7 @@
 #include "geo_data.h"
 #include "typedef.h"
 #include "unordered_map.h"
+#include "unordered_set.h"
 #include "vector.h"
 
 namespace troll {
@@ -58,6 +59,8 @@ struct geo_data_ctx_t {
 		unordered_map_t<edge_t, ref_t> edges;
 		unordered_map_t<point_t, ref_t> points;
 	} saved;
+
+	unordered_set_t<uint64_t> processed;
 };
 
 #undef TROLL_DEF_VAR
