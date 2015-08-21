@@ -91,20 +91,20 @@ osm_pbf_convert = env.Program(
     ]
 )
 
-dist = env.Program(
-    "tools/dist",
+geo_base_dist = env.Program(
+    "tools/geo-base-dist",
     [
-        "tools/dist.cpp"
+        "tools/geo_base_dist.cpp"
     ],
     LIBS = [
         geo_base_a
     ]
 )
 
-swap = env.Program(
-    "tools/swap",
+geo_base_swap = env.Program(
+    "tools/geo-base-swap",
     [
-        "tools/swap.cpp",
+        "tools/geo_base_swap.cpp",
     ]
 )
 
@@ -112,6 +112,16 @@ geo_base_grep = env.Program(
     "tools/geo-base-grep",
     [
         "tools/geo_base_grep.cpp"
+    ],
+    LIBS = [
+        geo_base_a
+    ]
+)
+
+geo_base_rand = env.Program(
+    "tools/geo-base-rand",
+    [
+        "tools/geo_base_rand.cpp"
     ],
     LIBS = [
         geo_base_a
