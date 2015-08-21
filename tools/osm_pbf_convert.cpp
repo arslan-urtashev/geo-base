@@ -64,15 +64,6 @@ static bool is_way_ref(Reference const &r)
 	return false;
 }
 
-static bool is_debug_osm_id(osm_id_t osm_id)
-{
-	return
-		osm_id == 2555133
-		|| osm_id == 60189
-		|| osm_id == 124028227
-		|| osm_id == 123959239;
-}
-
 struct need_ways_visit_t {
 	void node_callback(osm_id_t, double , double , const Tags &)
 	{
@@ -82,7 +73,7 @@ struct need_ways_visit_t {
 	{
 	}
 
-	void relation_callback(osm_id_t osm_id, Tags const &tags, References const &refs)
+	void relation_callback(osm_id_t, Tags const &tags, References const &refs)
 	{
 		bool boundary = is_boundary(tags);
 
@@ -92,23 +83,8 @@ struct need_ways_visit_t {
 					need_ways.insert(r.member_id);
 			}
 		}
-
-		if (is_debug_osm_id(osm_id)) {
-			for (auto const &p : tags)
-				log_info(osm_id) << p.first << " = " << p.second;
-			log_info(osm_id) << "refs.size() == " << refs.size();
-			if (!boundary)
-				log_error(osm_id) << "Not a boundary!";
-		}
 	}
 };
-
-static output_t &operator << (output_t &out, vector_t<location_t> const &l)
-{
-	for (size_t i = 0; i < l.size(); ++i)
-		out << '(' << l[i].lat << ' ' << l[i].lon << ')' << (i + 1 == l.size() ? "" : ", ");
-	return out;
-}
 
 struct need_nodes_visit_t {
 	void node_callback(osm_id_t, double , double , const Tags &)
@@ -150,22 +126,10 @@ struct parser_t {
 			locations.clear();
 			for (Reference const &r : refs) {
 				if (is_way_ref(r)) {
-					count_t count = locations.size();
-
 					for (osm_id_t node_id : ways[r.member_id])
 						locations.push_back(nodes[node_id]);
-
-					count = locations.size() - count;
-
-					if (is_debug_osm_id(r.member_id))
-						log_debug(osm_id)
-							<< r.member_id << " - " << r.role
-								<< " = "
-							<< vector_t<location_t>(locations.begin() + count, locations.end());
 				}
 			}
-			if (is_debug_osm_id(osm_id))
-				log_info(osm_id, "sizes") << refs.size() << ' ' << locations.size();
 			if (!locations.empty()) {
 				std::cout << osm_id << ' ' << locations.size() << '\n';
 				for (location_t const &l : locations)
