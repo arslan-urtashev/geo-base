@@ -168,7 +168,7 @@ void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
 
 void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_locations)
 {
-	static double const MAX_ERROR = 10.0;
+	static double const MAX_ERROR = 1.0;
 
 	vector_t<location_t> &locations = ctx.buf.locations;
 	locations.clear();

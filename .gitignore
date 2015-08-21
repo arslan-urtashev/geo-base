@@ -3,3 +3,4 @@
 *.a
 *.os
 /.sconsign.dblite
+/bin/*

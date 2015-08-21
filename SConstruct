@@ -79,7 +79,7 @@ geo_base_show = env.Program(
 )
 
 osm_pbf_convert = env.Program(
-    "tools/osm-pbf-convert",
+    "bin/osm-pbf-convert",
     [
         "tools/osm_pbf_convert.cpp"
     ],
@@ -92,7 +92,7 @@ osm_pbf_convert = env.Program(
 )
 
 geo_base_dist = env.Program(
-    "tools/geo-base-dist",
+    "bin/geo-base-dist",
     [
         "tools/geo_base_dist.cpp"
     ],
@@ -102,14 +102,14 @@ geo_base_dist = env.Program(
 )
 
 geo_base_swap = env.Program(
-    "tools/geo-base-swap",
+    "bin/geo-base-swap",
     [
         "tools/geo_base_swap.cpp",
     ]
 )
 
 geo_base_grep = env.Program(
-    "tools/geo-base-grep",
+    "bin/geo-base-grep",
     [
         "tools/geo_base_grep.cpp"
     ],
@@ -119,7 +119,7 @@ geo_base_grep = env.Program(
 )
 
 geo_base_rand = env.Program(
-    "tools/geo-base-rand",
+    "bin/geo-base-rand",
     [
         "tools/geo_base_rand.cpp"
     ],
@@ -129,7 +129,7 @@ geo_base_rand = env.Program(
 )
 
 geo_base_repeat = env.Program(
-    "tools/geo-base-repeat",
+    "bin/geo-base-repeat",
     [
         "tools/geo_base_repeat.cpp",
     ],

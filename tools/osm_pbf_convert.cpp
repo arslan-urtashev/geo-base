@@ -18,6 +18,7 @@ using namespace CanalTP;
 
 using osm_id_t = uint64_t;
 
+unordered_set_t<osm_id_t> debug_osm_ids;
 unordered_set_t<osm_id_t> need_ways;
 unordered_set_t<osm_id_t> need_nodes;
 unordered_map_t<osm_id_t, location_t> nodes;
@@ -77,7 +78,7 @@ struct need_ways_visit_t {
 	{
 	}
 
-	void relation_callback(osm_id_t, Tags const &tags, References const &refs)
+	void relation_callback(osm_id_t osm_id, Tags const &tags, References const &refs)
 	{
 		bool boundary = is_boundary(tags);
 
@@ -86,6 +87,13 @@ struct need_ways_visit_t {
 				if (is_way_ref(r))
 					need_ways.insert(r.member_id);
 			}
+		}
+
+		if (debug_osm_ids.find(osm_id) != debug_osm_ids.end()) {
+			for (auto const &tag : tags)
+				log_info(osm_id) << tag.first << " = " << tag.second;
+			if (!boundary)
+				log_error(osm_id) << "Not a boundary!";
 		}
 	}
 };
@@ -143,17 +151,18 @@ struct parser_t {
 	}
 };
 
-
-
 int main(int argc, char *argv[])
 {
 	std::ios_base::sync_with_stdio(false);
 	std::cout << std::fixed << std::setprecision(6);
 
-	if (argc != 2) {
-		log_error() << "osm-pbf-convert <geodata.osm.txt>";
+	if (argc < 2) {
+		log_error() << "osm-pbf-convert <geodata.osm.pbf>";
 		return -1;
 	}
+
+	for (int i = 2; i < argc; ++i)
+		debug_osm_ids.insert(atoll(argv[i]));
 
 	need_ways_visit_t need_ways_visit;
 	Parser<need_ways_visit_t>(argv[1], need_ways_visit).parse();
