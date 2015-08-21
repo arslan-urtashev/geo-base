@@ -44,6 +44,10 @@ static bool is_boundary(Tags const &tags)
 					|| p.second == "municipality"
 					|| p.second == "suburb"
 					|| p.second == "quarter"
+					|| p.second == "neighbourhood"
+					|| p.second == "city_block"
+					|| p.second == "town"
+					|| p.second == "village"
 				)
 			)
 		)
@@ -147,7 +151,7 @@ int main(int argc, char *argv[])
 	std::cout << std::fixed << std::setprecision(6);
 
 	if (argc != 2) {
-		log_error() << "osm-pbf-convert <geodata.osm>";
+		log_error() << "osm-pbf-convert <geodata.osm.txt>";
 		return -1;
 	}
 

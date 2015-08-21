@@ -68,19 +68,19 @@ template<typename Visitor>
 void read_osm_pbf(const std::string & filename, Visitor & visitor);
 
 struct warn {
-	warn() {std::cerr << "\033[33m[WARN] ";}
+	warn() {std::cerr << "\033[33m[warning] ";}
 	template<typename T>warn & operator<<(const T & t){ std::cerr << t; return *this;}
 	~warn() {std::cerr << "\033[0m" << std::endl;}
 };
 
 struct info {
-	info() {std::cerr << "\033[32m[INFO] ";}
+	info() {std::cerr << "\033[32m[info] ";}
 	template<typename T>info & operator<<(const T & t){ std::cerr << t; return *this;}
 	~info() {std::cerr << "\033[0m" << std::endl;}
 };
 
 struct fatal {
-	fatal() {std::cerr << "\033[31m[FATAL] ";}
+	fatal() {std::cerr << "\033[31m[fatal] ";}
 	template<typename T>fatal & operator<<(const T & t){ std::cerr << t; return *this;}
 	~fatal() {std::cerr << "\033[0m" << std::endl; exit(1);}
 };
