@@ -7,6 +7,7 @@
 #include "library.h"
 #include "log.h"
 #include "vector.h"
+#include "watch.h"
 
 using namespace troll;
 
@@ -29,6 +30,8 @@ int main(int argc, char *argv[])
 		count_t locations_count;
 		vector_t<location_t> locations;
 
+		watch_t watch;
+
 		while (std::cin >> region_id >> locations_count) {
 			locations.resize(locations_count);
 			for (location_t &l : locations) {
@@ -42,6 +45,8 @@ int main(int argc, char *argv[])
 
 		generate.save();
 		generate.show_base(std::cout);
+
+		log_info("geo-base-generate") << "Generated for " << watch.total() / 60. << "minutes";
 
 	} catch (std::exception const &e) {
 		log_error() << "EXCEPTION: " << e.what();

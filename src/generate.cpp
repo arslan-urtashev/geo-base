@@ -20,7 +20,7 @@ void geo_data_ctx_t::fini(geo_base_alloc_t *base)
 	do { \
 		geo_data->arr##_count = arr.size(); \
 		geo_data->arr = (arr_t *) base->alloc(sizeof(arr_t) * arr.size()); \
-		copy_n(arr.begin(), arr.size(), geo_data->arr); \
+		copy_n(arr.data(), arr.size(), geo_data->arr); \
 		arr.clear(); \
 		arr.shrink_to_fit(); \
 	} while (false);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "log.h"
 #include "mem_base.h"
 #include "typedef.h"
 
@@ -9,12 +10,15 @@ namespace troll {
 
 class base_alloc_t : public mem_base_t {
 public:
-	static size_t const ALIGN = 16;
+	static size_t const ALIGN = 64;
 
 	base_alloc_t(char const *path)
 		: offset(0)
 	{
 		rdwr(path);
+
+		if ((((ptrdiff_t) addr()) % ALIGN) != 0)
+			log_warning("base_alloc") << "Mapped memory not aligned!";
 	}
 
 	void *alloc(size_t count)
