@@ -121,6 +121,11 @@ static uint64_t get_hash(region_id_t region_id, vector_t<point_t> const &points)
 
 void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
 {
+	if (points.size() <= 2) {
+		log_warning("generate", region_id) << "Polygon to small!";
+		return;
+	}
+
 	uint64_t hash = get_hash(region_id, points);
 	if (ctx.processed.find(hash) != ctx.processed.end()) {
 		log_error("generate", region_id) << "Region is already processed!";
@@ -211,7 +216,7 @@ void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_l
 		while (r < locations.size() && locations[l] != locations[r])
 			++r;
 
-		if (r != locations.size() || l > 0)
+		if (r + 1 < locations.size() || l > 0)
 			log_warning("generate", region_id) << "self-intersections detected " << l << " - " << r;
 
 		points.assign(locations.begin() + l, locations.begin() + r);
