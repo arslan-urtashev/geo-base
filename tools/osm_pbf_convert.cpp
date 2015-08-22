@@ -166,18 +166,20 @@ struct parser_t {
 			for (Reference const &r : refs) {
 				if (is_way_ref(r)) {
 					vector_t<osm_id_t> const &w = ways[r.member_id];
-					for (size_t i = 0; i < w.size(); ++i)
+					for (size_t i = 0; i < w.size(); ++i) {
 						if (used.find(w[i]) == used.end()) {
 							save_locations(w[i]);
 							locations.push_back(nodes[w[i]]);
 						}
+					}
 				}
 			}
 
 			if (!locations.empty()) {
-				std::cout << osm_id << ' ' << locations.size() << '\n';
+				std::cout << osm_id << ' ' << locations.size() << std::endl;
 				for (location_t const &l : locations)
-					std::cout << l.lon << ' ' << l.lat << '\n';
+					std::cout << l.lon << ' ' << l.lat << std::endl;
+				std::cout.flush();
 			}
 		}
 	}

@@ -5,7 +5,7 @@
 
 namespace troll {
 
-using region_id_t = int64_t;
+using region_id_t = uint64_t;
 using polygon_id_t = int64_t;
 using coordinate_t = int32_t;
 using ref_t = uint32_t;
