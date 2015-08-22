@@ -233,6 +233,8 @@ void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_l
 
 void generate_t::create_boxes()
 {
+	log_info("generate") << "Creating boxes...";
+
 	for (coordinate_t x0 = box_t::LOWER_X; x0 < box_t::UPPER_X; x0 += box_t::DELTA_X) {
 		for (coordinate_t y0 = box_t::LOWER_Y; y0 < box_t::UPPER_Y; y0 += box_t::DELTA_Y) {
 			box_t box;
@@ -246,6 +248,8 @@ void generate_t::create_boxes()
 			ctx.boxes.push_back(box);
 		}
 	}
+
+	log_info("generate") << "Boxes created";
 }
 
 }
