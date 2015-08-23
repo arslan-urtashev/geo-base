@@ -66,9 +66,18 @@ region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &locati
 
 	for (ref_t ref = refs_offset; ref < refs_offset + refs_count; ++ref) {
 		ref_t i = geo_data.polygon_refs[ref];
-		if (geo_data.polygons[i].contains(point, geo_data.parts, geo_data.edge_refs, geo_data.edges, geo_data.points))
-			if (!answer || answer->square > geo_data.polygons[i].square)
+
+		if (geo_data.polygons[i].contains(point, geo_data.parts, geo_data.edge_refs, geo_data.edges, geo_data.points)) {
+			if (!answer || answer->square > geo_data.polygons[i].square) {
 				answer = &(geo_data.polygons[i]);
+
+			} else if (answer->square == geo_data.polygons[i].square) {
+				region_t const *r1 = find(geo_data.regions, geo_data.regions_count, answer->region_id);
+				region_t const *r2 = find(geo_data.regions, geo_data.regions_count, geo_data.polygons[i].region_id);
+				if (r1->square > r2->square)
+					answer = &(geo_data.polygons[i]);
+			}
+		}
 	}
 
 	return answer ? answer->region_id : -1;

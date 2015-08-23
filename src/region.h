@@ -8,6 +8,7 @@ struct region_t {
 	region_id_t region_id;
 	offset_t kvs_offset;
 	count_t kvs_count;
+	square_t square;
 
 	bool operator == (region_t const &r) const
 	{

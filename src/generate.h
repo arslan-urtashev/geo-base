@@ -90,13 +90,7 @@ public:
 
 	void update(region_id_t region_id, vector_t<location_t> const &locations, vector_t<blob_t> const &blobs);
 
-	void save()
-	{
-		create_boxes();
-		sort(ctx.regions.begin(), ctx.regions.end());
-
-		ctx.fini(&base);
-	}
+	void save();
 
 	void show_base(output_t &out)
 	{

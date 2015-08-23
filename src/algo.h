@@ -33,9 +33,9 @@ x_t lower_bound(x_t x, size_t count, y_t const &y, cmp_t cmp = cmp_t())
 }
 
 template<typename x_t, typename y_t, typename cmp_t = less_t>
-x_t const *find(x_t const *x, size_t count, y_t const &y, cmp_t cmp = cmp_t())
+x_t find(x_t x, size_t count, y_t const &y, cmp_t cmp = cmp_t())
 {
-	x_t const *ret = lower_bound(x, count, y, cmp);
+	x_t ret = lower_bound(x, count, y, cmp);
 	return (ret >= x && ret < x + count && !cmp(*ret, y) && !cmp(y, *ret)) ? ret : nullptr;
 }
 

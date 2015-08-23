@@ -253,4 +253,21 @@ void generate_t::create_boxes()
 	log_info("generate") << "Boxes created";
 }
 
+void generate_t::save()
+{
+	create_boxes();
+
+	sort(ctx.regions.begin(), ctx.regions.end());
+	for (region_t &r : ctx.regions)
+		r.square = 0;
+
+	for (polygon_t const &p : ctx.polygons) {
+		region_t *region = find(ctx.regions.data(), ctx.regions.size(), p.region_id);
+		if (region)
+			region->square += p.square;
+	}
+	
+	ctx.fini(&base);
+}
+
 }
