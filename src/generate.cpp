@@ -1,5 +1,6 @@
 #include "generate.h"
 
+#include "hash.h"
 #include "log.h"
 
 namespace troll {
@@ -101,21 +102,11 @@ static square_t square(vector_t<point_t> const &p)
 	return s > 0 ? s : -s;
 }
 
-static uint64_t get_hash(byte_t const *bytes, count_t count, uint64_t base)
-{
-	uint64_t hash = 0, power = 1;
-	for (count_t i = 0; i < count; ++i) {
-		hash += (bytes[i] + 1) * power;
-		power *= base;
-	}
-	return hash;
-}
-
 static uint64_t get_hash(region_id_t region_id, vector_t<point_t> const &points)
 {
 	uint64_t hash = 0;
-	hash ^= get_hash((byte_t const *) &region_id, sizeof(region_id), 373);
-	hash ^= get_hash((byte_t const *) &(points[0]), sizeof(point_t) * points.size(), 337);
+	hash ^= rolling_hash_t<373>()(region_id);
+	hash ^= rolling_hash_t<337>()(points);
 	return hash;
 }
 

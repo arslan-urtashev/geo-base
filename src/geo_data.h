@@ -1,14 +1,15 @@
 #pragma once
 
 #include "box.h"
+#include "common.h"
 #include "edge.h"
 #include "io.h"
+#include "kv.h"
 #include "location.h"
 #include "part.h"
 #include "point.h"
 #include "polygon.h"
 #include "region.h"
-#include "common.h"
 
 namespace troll {
 
@@ -31,6 +32,8 @@ namespace troll {
 	TROLL_DEF_ARR(polygon_t, polygons); \
 	TROLL_DEF_ARR(ref_t, polygon_refs); \
 	TROLL_DEF_ARR(box_t, boxes); \
+	TROLL_DEF_ARR(byte_t, blobs); \
+	TROLL_DEF_ARR(kv_t, kvs); \
 	TROLL_DEF_ARR(region_t, regions);
 
 struct geo_data_t {

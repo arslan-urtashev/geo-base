@@ -187,11 +187,11 @@ struct parser_t {
 			}
 
 			if (!locations.empty()) {
-				std::cout << osm_id << ' ' << locations.size() << ' ' << tags.size() << std::endl;
+				std::cout << osm_id << ' ' << locations.size() << ' ' << 2 * tags.size() << std::endl;
 				for (location_t const &l : locations)
 					std::cout << l.lon << ' ' << l.lat << std::endl;
 				for (auto const &p : tags)
-					std::cout << '"' << p.first << '"' << ' ' << '"' << p.second << '"' << std::endl;
+					std::cout << p.first << std::endl << p.second << std::endl;
 				std::cout.flush();
 			}
 		}

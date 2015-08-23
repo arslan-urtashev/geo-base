@@ -1,8 +1,9 @@
 #pragma once
 
+#include "common.h"
 #include "geo_base_alloc.h"
 #include "geo_data.h"
-#include "common.h"
+#include "hash.h"
 #include "unordered_map.h"
 #include "unordered_set.h"
 #include "vector.h"
@@ -45,6 +46,15 @@ struct geo_data_ctx_t {
 		return saved.edges[e];
 	}
 
+	ref_t push_region(region_t const &r)
+	{
+		if (saved.regions.find(r) == saved.regions.end()) {
+			saved.regions[r] = regions.size();
+			regions.push_back(r);
+		}
+		return saved.regions[r];
+	}
+
 	void fini(geo_base_alloc_t *base);
 
 	struct {
@@ -58,6 +68,8 @@ struct geo_data_ctx_t {
 	struct {
 		unordered_map_t<edge_t, ref_t> edges;
 		unordered_map_t<point_t, ref_t> points;
+		unordered_map_t<blob_t, offset_t, blob_hash_t> blobs;
+		unordered_map_t<region_t, ref_t, rolling_hash_t<>> regions;
 	} saved;
 
 	unordered_set_t<uint64_t> processed;

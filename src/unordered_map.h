@@ -1,6 +1,7 @@
 #pragma once
 
 #include "algo.h"
+#include "hash.h"
 
 #include <unordered_map>
 

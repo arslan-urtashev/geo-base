@@ -20,17 +20,6 @@ struct equal_t {
 	}
 };
 
-struct hash64_t {
-	std::hash<uint64_t> hash;
-
-	template<typename x_t>
-	uint64_t operator () (x_t const &x) const
-	{
-		static_assert(sizeof(x) == sizeof(uint64_t), "sizeof(x) != sizeof(uint64_t)");
-		return hash(*((uint64_t const *) &x));
-	}
-};
-
 template<typename iter_t, typename x_t, typename cmp_t = less_t>
 iter_t lower_bound(iter_t beg, iter_t end, x_t const &x, cmp_t cmp = cmp_t())
 {

@@ -60,6 +60,8 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 			s.append(curstr.data(), curstr.length());
 		}
 
+		if (blobs.size() % 2 != 0)
+			throw exception_t("Wrong kv count for %ld on %u", region_id, region_line);
 
 		callback(region_id, locations, blobs);
 	}
