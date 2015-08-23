@@ -47,13 +47,9 @@ struct polygon_t {
 		if (point.x < left || point.x > right || point.y < lower || point.y > upper)
 			return false;
 		parts += parts_offset;
-		part_t const *part = lower_bound(
-			parts, parts_count, point,
-			[&] (part_t const &a, point_t const &p)
-			{
-				return a.coordinate <= p.x;
-			}
-		);
+		part_t const *part = lower_bound(parts, parts_count, point, [&] (part_t const &a, point_t const &p) {
+			return a.coordinate <= p.x;
+		});
 		if (part == parts)
 			return false;
 		--part;

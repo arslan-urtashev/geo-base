@@ -36,21 +36,15 @@ int main(int argc, char *argv[])
 		vector_t<location_t> locations;
 		vector_t<location_t> polygon;
 
-		geo_read_txt(std::cin,
-			[&] (region_id_t region_id, vector_t<location_t> const &raw_locations, vector_t<kv_t> const &)
-			{
-				if (grep.find(region_id) != grep.end()) {
-					process_locations(raw_locations, locations,
-						[&] (vector_t<location_t> const &locations)
-						{
-							if (grep.size() != 1)
-								std::cout << region_id << " = ";
-							std::cout << locations << std::endl;
-						}
-					);
-				}
+		geo_read_txt(std::cin, [&] (region_id_t region_id, vector_t<location_t> const &raw_locations, vector_t<blob_t> const &) {
+			if (grep.find(region_id) != grep.end()) {
+				process_locations(raw_locations, locations, [&] (vector_t<location_t> const &locations) {
+					if (grep.size() != 1)
+						std::cout << region_id << " = ";
+					std::cout << locations << std::endl;
+				});
 			}
-		);
+		});
 
 	} catch (std::exception const &e) {
 		log_error("geo-base-grep", "EXCEPTION") << e.what();

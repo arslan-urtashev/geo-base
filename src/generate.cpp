@@ -119,7 +119,7 @@ static uint64_t get_hash(region_id_t region_id, vector_t<point_t> const &points)
 	return hash;
 }
 
-void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
+void generate_t::update(region_id_t region_id, vector_t<point_t> const &points, vector_t<blob_t> const &)
 {
 	if (points.size() <= 2) {
 		log_warning("generate", region_id) << "Polygon to small!";
@@ -197,7 +197,7 @@ void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
 	ctx.polygons.push_back(polygon);
 }
 
-void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_locations)
+void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_locations, vector_t<blob_t> const &blobs)
 {
 	log_info("generate", region_id) << "Process locations count = " << raw_locations.size();
 
@@ -206,17 +206,14 @@ void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_l
 
 	vector_t<point_t> &points = ctx.buf.points;
 
-	process_locations(raw_locations, ctx.buf.locations,
-		[&] (vector_t<location_t> const &locations)
-		{
-			points.assign(locations.begin(), locations.end());
+	process_locations(raw_locations, ctx.buf.locations, [&] (vector_t<location_t> const &locations) {
+		points.assign(locations.begin(), locations.end());
 #ifdef TROLL_LOG_BOUNDARY
-			log_debug("generate", region_id) << points;
+		log_debug("generate", region_id) << points;
 #endif
-			update(region_id, points);
-			++update_count;
-		}
-	);
+		update(region_id, points, blobs);
+		++update_count;
+	});
 
 	if (update_count == 0)
 		log_error("generate", region_id) << "There is no polygons!";

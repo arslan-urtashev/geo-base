@@ -23,13 +23,9 @@ int main(int argc, char *argv[])
 	try {
 		generate_t generate(argv[1]);
 
-		geo_read_txt(
-			std::cin,
-			[&] (region_id_t region_id, vector_t<location_t> const &locations, vector_t<kv_t> const &)
-			{
-				generate.update(region_id, locations);
-			}
-		);
+		geo_read_txt(std::cin, [&] (region_id_t region_id, vector_t<location_t> const &locations, vector_t<blob_t> const &blobs) {
+			generate.update(region_id, locations, blobs);
+		});
 
 		generate.save();
 		generate.show_base(std::cout);

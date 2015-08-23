@@ -74,9 +74,9 @@ public:
 	{
 	}
 
-	void update(region_id_t region_id, vector_t<point_t> const &points);
+	void update(region_id_t region_id, vector_t<point_t> const &points, vector_t<blob_t> const &blobs);
 
-	void update(region_id_t region_id, vector_t<location_t> const &locations);
+	void update(region_id_t region_id, vector_t<location_t> const &locations, vector_t<blob_t> const &blobs);
 
 	void save()
 	{

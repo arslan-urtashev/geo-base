@@ -1,4 +1,5 @@
 #include "util.h"
+#include "blob.h"
 
 namespace troll {
 
@@ -9,11 +10,10 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 
 	region_id_t region_id;
 	count_t locations_count;
-	count_t kv_count;
+	count_t blobs_count;
 
 	vector_t<location_t> locations;
-	std::string kv_buffer;
-	vector_t<kv_t> kv;
+	vector_t<blob_t> blobs;
 
 	count_t lines_count = 0;
 	watch_t watch;
@@ -31,12 +31,9 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 		if (!(strin >> locations_count))
 			throw exception_t("Can't read locations count on %u: \"%s\"", lines_count, curstr.c_str());
 
-		if (!(strin >> kv_count))
-			throw exception_t("Can't read kv data count on %u: \"%s\"", lines_count, curstr.c_str());
+		if (!(strin >> blobs_count))
+			throw exception_t("Can't read blobs data count on %u: \"%s\"", lines_count, curstr.c_str());
 		
-		if (kv_count != 0)
-			throw exception_t("kv count > 0 not supported now, %u: \"%s\"", lines_count, curstr.c_str());
-
 		locations.resize(locations_count);
 
 		for (location_t &l : locations) {
@@ -52,7 +49,19 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 				throw exception_t("Can't read locations on %u: \"%s\"", lines_count, curstr.c_str());
 		}
 
-		callback(region_id, locations, kv);
+		blobs.resize(blobs_count);
+		for (blob_t &s : blobs) {
+			++lines_count;
+
+			if (!(std::getline(in, curstr)))
+				throw exception_t("Wrong blobs count for %ld on %u", region_id, region_line);
+
+			s.clear();
+			s.append(curstr.data(), curstr.length());
+		}
+
+
+		callback(region_id, locations, blobs);
 	}
 
 	log_info("geo_read_txt") << "Processed lines count = " << lines_count;
