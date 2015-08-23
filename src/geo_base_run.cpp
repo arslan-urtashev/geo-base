@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
 			std::cout << region_id << '\n';
 			geo_base.kv_each(region_id, [&] (char const *k, char const *v) {
-				std::cout << k << " = " << v << '\n';
+				std::cout << "  " << k << " = " << v << '\n';
 			});
 
 			++counter;

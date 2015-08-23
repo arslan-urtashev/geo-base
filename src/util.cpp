@@ -22,42 +22,29 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 		++lines_count;
 		count_t region_line = lines_count;
 
-		strin.clear();
-		strin << curstr;
+		if (sscanf(curstr.c_str(), "%lu %u %u", &region_id, &locations_count, &blobs_count) != 3)
+			throw exception_t("Can't read counts on %u: \"%s\"", lines_count, curstr.c_str());
 
-		if (!(strin >> region_id))
-			throw exception_t("Can't read region_id on %u: \"%s\"", lines_count, curstr.c_str());
-
-		if (!(strin >> locations_count))
-			throw exception_t("Can't read locations count on %u: \"%s\"", lines_count, curstr.c_str());
-
-		if (!(strin >> blobs_count))
-			throw exception_t("Can't read blobs data count on %u: \"%s\"", lines_count, curstr.c_str());
-		
 		locations.resize(locations_count);
-
-		for (location_t &l : locations) {
+		for (ref_t i = 0; i < locations_count; ++i) {
 			++lines_count;
 			
 			if (!std::getline(in, curstr))
 				throw exception_t("Wrong locations count for %ld on %u", region_id, region_line);
 
-			strin.clear();
-			strin << curstr;
-
-			if (!(strin >> l.lon >> l.lat))
+			if (sscanf(curstr.c_str(), "%lf %lf", &locations[i].lon, &locations[i].lat) != 2)
 				throw exception_t("Can't read locations on %u: \"%s\"", lines_count, curstr.c_str());
 		}
 
 		blobs.resize(blobs_count);
-		for (blob_t &s : blobs) {
+		for (ref_t i = 0; i < blobs_count; ++i) {
 			++lines_count;
 
 			if (!(std::getline(in, curstr)))
 				throw exception_t("Wrong blobs count for %ld on %u", region_id, region_line);
 
-			s.clear();
-			s.append(curstr.data(), curstr.length());
+			blobs[i].clear();
+			blobs[i].append(curstr.data(), curstr.length());
 		}
 
 		if (blobs.size() % 2 != 0)
