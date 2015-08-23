@@ -199,34 +199,30 @@ void generate_t::update(region_id_t region_id, vector_t<point_t> const &points)
 
 void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_locations)
 {
-	vector_t<location_t> &locations = ctx.buf.locations;
-	locations.clear();
-	for (location_t const &l : raw_locations)
-		if (locations.empty() || locations.back() != l)
-			locations.push_back(l);
+	log_info("generate", region_id) << "Process locations count = " << raw_locations.size();
 
-	log_info("generate", region_id) << "Process locations count = " << locations.size();
-
+	count_t update_count = 0;
 	count_t polygons_size = ctx.polygons.size();
 
 	vector_t<point_t> &points = ctx.buf.points;
-	points.clear();
-	for (ref_t l = 0, r = 0; l < locations.size(); l = r + 1) {
-		r = l + 1;
-		while (r < locations.size() && locations[l] != locations[r])
-			++r;
 
-		if (r + 1 < locations.size() || l > 0)
-			log_warning("generate", region_id) << "self-intersections detected " << l << " - " << r;
-
-		points.assign(locations.begin() + l, locations.begin() + r);
-
-#if TROLL_LOG_BOUNDARY
-		log_debug("generate", region_id) << points;
+	process_locations(raw_locations, ctx.buf.locations,
+		[&] (vector_t<location_t> const &locations)
+		{
+			points.assign(locations.begin(), locations.end());
+#ifdef TROLL_LOG_BOUNDARY
+			log_debug("generate", region_id) << points;
 #endif
+			update(region_id, points);
+			++update_count;
+		}
+	);
 
-		update(region_id, points);
-	}
+	if (update_count == 0)
+		log_error("generate", region_id) << "There is no polygons!";
+
+	if (update_count > 1)
+		log_warning("generate", region_id) << "Multipolygon detected";
 
 	log_info("generate", region_id) << ctx.polygons.size() - polygons_size << " polygons generated";
 }

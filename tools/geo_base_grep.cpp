@@ -1,4 +1,3 @@
-#include "geo_read_txt.h"
 #include "location.h"
 #include "log.h"
 #include "unordered_set.h"
@@ -37,29 +36,18 @@ int main(int argc, char *argv[])
 		vector_t<location_t> locations;
 		vector_t<location_t> polygon;
 
-		geo_read_txt(
-			std::cin,
+		geo_read_txt(std::cin,
 			[&] (region_id_t region_id, vector_t<location_t> const &raw_locations)
 			{
 				if (grep.find(region_id) != grep.end()) {
-					locations.clear();
-					for (location_t const &l : raw_locations)
-						if (locations.empty() || locations.back() != l)
-							locations.push_back(l);
-
-					for (ref_t l = 0, r = 0; l < locations.size(); l = r + 1) {
-						r = l + 1;
-						while (r < locations.size() && locations[l] != locations[r])
-							++r;
-
-						polygon.clear();
-						for (ref_t i = l; i < r; ++i)
-							polygon.push_back(locations[i]);
-
-						if (grep.size() != 1)
-							std::cout << region_id << " = ";
-						std::cout << polygon << std::endl;
-					}
+					process_locations(raw_locations, locations,
+						[&] (vector_t<location_t> const &locations)
+						{
+							if (grep.size() != 1)
+								std::cout << region_id << " = ";
+							std::cout << locations << std::endl;
+						}
+					);
 				}
 			}
 		);

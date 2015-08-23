@@ -3,7 +3,6 @@
 #include <sstream>
 
 #include "generate.h"
-#include "geo_read_txt.h"
 #include "log.h"
 #include "vector.h"
 

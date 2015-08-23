@@ -63,4 +63,23 @@ void geo_read_txt(input_t &in, callback_t callback)
 	log_info("geo_read_txt") << "Generated for " << watch.total() / 60. << " minutes";
 }
 
+template<typename callback_t>
+void process_locations(vector_t<location_t> const &raw_locations, vector_t<location_t> &locations, callback_t callback)
+{
+	locations.clear();
+	for (location_t const &l : raw_locations) {
+		if (locations.empty() || locations.back() != l)
+			locations.push_back(l);
+
+		if (locations.size() > 3 && locations.front() == locations.back()) {
+			locations.pop_back();
+			callback(locations);
+			locations.clear();
+		}
+	}
+
+	if (locations.size() > 2)
+		callback(locations);
+}
+
 }
