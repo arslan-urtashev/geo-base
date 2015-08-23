@@ -28,9 +28,17 @@ int main(int argc, char *argv[])
 		location_t location;
 
 		while (std::cin >> location.lon >> location.lat) {
+			region_id_t region_id = -1;
+
 			watch.checkpoint();
-			std::cout << geo_base.lookup(location) << '\n';
+			region_id = geo_base.lookup(location);
 			longest = max(longest, watch.checkpoint());
+
+			std::cout << region_id << '\n';
+			geo_base.kv_each(region_id, [&] (char const *k, char const *v) {
+				std::cout << k << " = " << v << '\n';
+			});
+
 			++counter;
 		}
 

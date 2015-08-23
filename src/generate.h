@@ -46,13 +46,16 @@ struct geo_data_ctx_t {
 		return saved.edges[e];
 	}
 
-	ref_t push_region(region_t const &r)
+	offset_t push_blob(blob_t const &b)
 	{
-		if (saved.regions.find(r) == saved.regions.end()) {
-			saved.regions[r] = regions.size();
-			regions.push_back(r);
+		if (saved.blobs.find(b) == saved.blobs.end()) {
+			offset_t off = blobs.size();
+			for (char c : b)
+				blobs.push_back(c);
+			blobs.push_back('\0');
+			saved.blobs[b] = off;
 		}
-		return saved.regions[r];
+		return saved.blobs[b];
 	}
 
 	void fini(geo_base_alloc_t *base);
@@ -69,7 +72,6 @@ struct geo_data_ctx_t {
 		unordered_map_t<edge_t, ref_t> edges;
 		unordered_map_t<point_t, ref_t> points;
 		unordered_map_t<blob_t, offset_t, blob_hash_t> blobs;
-		unordered_map_t<region_t, ref_t, rolling_hash_t<>> regions;
 	} saved;
 
 	unordered_set_t<uint64_t> processed;
@@ -86,13 +88,13 @@ public:
 	{
 	}
 
-	void update(region_id_t region_id, vector_t<point_t> const &points, vector_t<blob_t> const &blobs);
-
 	void update(region_id_t region_id, vector_t<location_t> const &locations, vector_t<blob_t> const &blobs);
 
 	void save()
 	{
 		create_boxes();
+		sort(ctx.regions.begin(), ctx.regions.end());
+
 		ctx.fini(&base);
 	}
 
@@ -102,6 +104,8 @@ public:
 	}
 
 private:
+	void update(region_id_t region_id, vector_t<point_t> const &points, vector_t<blob_t> const &blobs);
+
 	void create_boxes();
 
 	geo_base_alloc_t base;

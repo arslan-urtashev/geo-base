@@ -13,6 +13,21 @@ struct region_t {
 	{
 		return region_id == r.region_id;
 	}
+
+	bool operator < (region_t const &r) const
+	{
+		return region_id < r.region_id;
+	}
+
+	bool operator < (region_id_t const &r) const
+	{
+		return region_id < r;
+	}
+
+	friend bool operator < (region_id_t const &region_id, region_t const &r)
+	{
+		return region_id < r.region_id;
+	}
 };
 
 }

@@ -206,6 +206,23 @@ void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_l
 		++update_count;
 	});
 
+	region_t region;
+	region.region_id = region_id;
+	region.kvs_offset = ctx.kvs.size();
+
+	for (ref_t i = 0; i < blobs.size(); i += 2) {
+		kv_t kv;
+		kv.k = ctx.push_blob(blobs[i]);
+		kv.v = ctx.push_blob(blobs[i + 1]);
+		ctx.kvs.push_back(kv);
+	}
+
+	region.kvs_count = ctx.kvs.size() - region.kvs_offset;
+	if (region.kvs_count == 0)
+		log_error("generate", region_id) << "No kvs!";
+
+	ctx.regions.push_back(region);
+
 	if (update_count == 0)
 		log_error("generate", region_id) << "There is no polygons!";
 

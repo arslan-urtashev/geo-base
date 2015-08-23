@@ -26,6 +26,12 @@ public:
 		return geo_data_lookup(geo_data, l);
 	}
 
+	template<typename callback_t>
+	void kv_each(region_id_t const &region_id, callback_t callback) const
+	{
+		geo_data_kv_each(geo_data, region_id, callback);
+	}
+
 private:
 	geo_data_t geo_data;
 
