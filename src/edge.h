@@ -1,7 +1,7 @@
 #pragma once
 
 #include "point.h"
-#include "typedef.h"
+#include "common.h"
 
 namespace troll {
 

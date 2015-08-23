@@ -1,8 +1,8 @@
 #pragma once
 
-#include "library.h"
+#include "util.h"
 #include "location.h"
-#include "typedef.h"
+#include "common.h"
 
 namespace troll {
 

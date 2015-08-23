@@ -3,7 +3,7 @@
 #include "algo.h"
 #include "edge.h"
 #include "point.h"
-#include "typedef.h"
+#include "common.h"
 
 namespace troll {
 

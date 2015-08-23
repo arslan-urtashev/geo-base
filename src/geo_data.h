@@ -8,7 +8,7 @@
 #include "point.h"
 #include "polygon.h"
 #include "region.h"
-#include "typedef.h"
+#include "common.h"
 
 namespace troll {
 

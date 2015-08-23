@@ -2,7 +2,7 @@
 
 #include "log.h"
 #include "mem_base.h"
-#include "typedef.h"
+#include "common.h"
 
 #include <unistd.h>
 

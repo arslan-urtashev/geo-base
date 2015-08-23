@@ -1,6 +1,6 @@
+#include "common.h"
 #include "location.h"
 #include "log.h"
-#include "typedef.h"
 #include "unordered_map.h"
 #include "unordered_set.h"
 #include "vector.h"

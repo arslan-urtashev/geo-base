@@ -1,15 +1,17 @@
 #pragma once
 
+#include "common.h"
 #include "exception.h"
 #include "io.h"
 #include "location.h"
 #include "log.h"
-#include "typedef.h"
 #include "vector.h"
 #include "watch.h"
 
 #include <sstream>
 #include <string>
+
+#include <math.h>
 
 namespace troll {
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "library.h"
+#include "common.h"
 
 #include <math.h>
 

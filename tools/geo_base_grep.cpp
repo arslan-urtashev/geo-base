@@ -3,6 +3,7 @@
 #include "log.h"
 #include "unordered_set.h"
 #include "vector.h"
+#include "util.h"
 
 #include <iomanip>
 #include <iostream>

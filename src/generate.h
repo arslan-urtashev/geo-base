@@ -2,7 +2,7 @@
 
 #include "geo_base_alloc.h"
 #include "geo_data.h"
-#include "typedef.h"
+#include "common.h"
 #include "unordered_map.h"
 #include "unordered_set.h"
 #include "vector.h"
