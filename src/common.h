@@ -32,4 +32,6 @@ inline double constexpr convert_to_radian(double x)
 	return x * M_PI / 180.0;
 }
 
+region_id_t const UNKNOWN_REGION_ID = -1;
+
 }

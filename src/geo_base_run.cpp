@@ -34,6 +34,11 @@ int main(int argc, char *argv[])
 			region_id = geo_base.lookup(location);
 			longest = max(longest, watch.checkpoint());
 
+			if (region_id == UNKNOWN_REGION_ID) {
+				std::cout << -1 << '\n';
+				continue;
+			}
+
 			std::cout << region_id << '\n';
 			geo_base.kv_each(region_id, [&] (char const *k, char const *v) {
 				std::cout << k << " = " << v << '\n';
