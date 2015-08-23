@@ -62,7 +62,7 @@ region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &locati
 	offset_t refs_offset = geo_data.boxes[box_ref].polygon_refs_offset;
 	count_t refs_count = geo_data.boxes[box_ref].polygon_refs_count;
 
-	polygon_t *answer = nullptr;
+	polygon_t const *answer = nullptr;
 
 	for (ref_t ref = refs_offset; ref < refs_offset + refs_count; ++ref) {
 		ref_t i = geo_data.polygon_refs[ref];
