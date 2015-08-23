@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
 		geo_read_txt(
 			std::cin,
-			[&] (region_id_t region_id, vector_t<location_t> const &locations)
+			[&] (region_id_t region_id, vector_t<location_t> const &locations, vector_t<kv_t> const &)
 			{
 				generate.update(region_id, locations);
 			}

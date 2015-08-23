@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 		vector_t<location_t> polygon;
 
 		geo_read_txt(std::cin,
-			[&] (region_id_t region_id, vector_t<location_t> const &raw_locations)
+			[&] (region_id_t region_id, vector_t<location_t> const &raw_locations, vector_t<kv_t> const &)
 			{
 				if (grep.find(region_id) != grep.end()) {
 					process_locations(raw_locations, locations,

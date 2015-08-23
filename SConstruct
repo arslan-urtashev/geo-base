@@ -37,7 +37,8 @@ env.Append(CXXFLAGS =
 
 src = [
     "src/generate.cpp",
-    "src/geo_data.cpp"
+    "src/geo_data.cpp",
+    "src/util.cpp"
 ]
 
 geo_base_a = env.Library(

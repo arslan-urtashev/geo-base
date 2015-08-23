@@ -26,6 +26,7 @@ unordered_map_t<osm_id_t, vector_t<osm_id_t>> ways;
 
 static bool is_boundary(Tags const &tags)
 {
+	bool ok = false;
 	for (auto const &p : tags)
 		if (
 			p.first == "admin_level"
@@ -51,9 +52,19 @@ static bool is_boundary(Tags const &tags)
 					|| p.second == "village"
 				)
 			)
-		)
-			return true;
-	return false;
+		) {
+			ok = true;
+			break;
+		}
+	if (!ok)
+		return false;
+	ok = false;
+	for (auto const &p : tags)
+		if (p.first.find("name") == 0LLU) {
+			ok = true;
+			break;
+		}
+	return ok;
 }
 
 static bool is_way_ref(Reference const &r)
@@ -176,9 +187,11 @@ struct parser_t {
 			}
 
 			if (!locations.empty()) {
-				std::cout << osm_id << ' ' << locations.size() << std::endl;
+				std::cout << osm_id << ' ' << locations.size() << ' ' << tags.size() << std::endl;
 				for (location_t const &l : locations)
 					std::cout << l.lon << ' ' << l.lat << std::endl;
+				for (auto const &p : tags)
+					std::cout << '"' << p.first << '"' << ' ' << '"' << p.second << '"' << std::endl;
 				std::cout.flush();
 			}
 		}
