@@ -84,11 +84,14 @@ region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &locati
 }
 
 void geo_data_show(geo_data_t const &geo_data, output_t &out)
-{	
+{
+	size_t total = 0;
+
 	out << "geo_data:" << '\n';
 
 #define TROLL_DEF_VAR(var_t, var) \
-	out << "  " << #var << " = " << geo_data.var << '\n';
+	out << "  " << #var << " = " << geo_data.var << '\n'; \
+	total += sizeof(var_t);
 
 #define TROLL_DEF_PTR(ptr_t, ptr) \
 	// undef
@@ -103,13 +106,16 @@ void geo_data_show(geo_data_t const &geo_data, output_t &out)
 		<< geo_data.arr##_count * sizeof(arr_t) \
 			<< " = " \
 		<< geo_data.arr##_count * sizeof(arr_t) / (1024. * 1024.) << " MB" << '\n' \
-	;
+	; \
+	total += sizeof(arr_t) * geo_data.arr##_count;
 
 	TROLL_DEF_GEO_DATA
 
 #undef TROLL_DEF_VAR
 #undef TROLL_DEF_PTR
 #undef TROLL_DEF_ARR
+
+	out << "Total = " << total * 1.0 / (1024. * 1024. * 1024.) << " GB" << '\n';
 }
 
 static void update_version(char const *str, version_t *version)
