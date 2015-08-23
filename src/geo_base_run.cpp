@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 	std::cerr << std::fixed << std::setprecision(3);
 
 	if (argc != 2) {
-		log_error()  << "geo-base-run <geodata.dat>";
+		log_error("geo-base-run")  << "geo-base-run <geodata.dat>";
 		return -1;
 	}
 
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 		log_info() << "  LONGEST = " << longest * 1000. << " MS";
 
 	} catch (std::exception const &e) {
-		log_error() << "EXCEPTION: " << e.what();
+		log_error("geo-base-run", "EXCEPTION") << e.what();
 	}
 
 	return 0;

@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 	std::cout << std::fixed << std::setprecision(2);
 
 	if (argc != 2) {
-		log_error() << "geo-base-show <geodata.dat>";
+		log_error("geo-base-show") << "geo-base-show <geodata.dat>";
 		return -1;
 	}
 
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 		geo_base.show(std::cout);
 
 	} catch (std::exception const &e) {
-		log_error() << "EXCEPTION: " << e.what();
+		log_error("geo-base-show", "EXCEPTION") << e.what();
 	}
 
 	return 0;

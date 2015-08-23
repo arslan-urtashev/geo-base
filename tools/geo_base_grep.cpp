@@ -1,3 +1,4 @@
+#include "geo_read_txt.h"
 #include "location.h"
 #include "log.h"
 #include "unordered_set.h"
@@ -23,7 +24,7 @@ int main(int argc, char *argv[])
 	std::cout << std::fixed << std::setprecision(6);
 
 	if (argc < 2) {
-		log_error() << "geo-base-grep <region_id>";
+		log_error("geo-base-grep") << "geo-base-grep <region_id>";
 		return -1;
 	}
 
@@ -31,40 +32,39 @@ int main(int argc, char *argv[])
 	for (int i = 1; i < argc; ++i)
 		grep.insert(atoll(argv[i]));
 
-	region_id_t region_id;
-	count_t locations_count;
+	try {
+		vector_t<location_t> locations;
+		vector_t<location_t> polygon;
 
-	while (std::cin >> region_id >> locations_count)
-	{
-		if (grep.find(region_id) != grep.end()) {
-			vector_t<location_t> raw_locations(locations_count);
-			for (location_t &l : raw_locations)
-				std::cin >> l.lon >> l.lat;
+		geo_read_txt(
+			std::cin,
+			[&] (region_id_t region_id, vector_t<location_t> const &raw_locations)
+			{
+				if (grep.find(region_id) != grep.end()) {
+					locations.clear();
+					for (location_t const &l : raw_locations)
+						if (locations.empty() || locations.back() != l)
+							locations.push_back(l);
 
-			vector_t<location_t> locations;
-			for (location_t &l : raw_locations)
-				if (locations.empty() || locations.back() != l)
-					locations.push_back(l);
+					for (ref_t l = 0, r = 0; l < locations.size(); l = r + 1) {
+						r = l + 1;
+						while (r < locations.size() && locations[l] != locations[r])
+							++r;
 
-			for (ref_t l = 0, r = 0; l < locations.size(); l = r + 1) {
-				r = l + 1;
-				while (r < locations.size() && locations[l] != locations[r])
-					++r;
+						polygon.clear();
+						for (ref_t i = l; i < r; ++i)
+							polygon.push_back(locations[i]);
 
-				vector_t<location_t> polygon;
-				for (ref_t i = l; i < r; ++i)
-					polygon.push_back(locations[i]);
-
-				if (grep.size() != 1)
-					std::cout << region_id << " = ";
-				std::cout << polygon << std::endl;
+						if (grep.size() != 1)
+							std::cout << region_id << " = ";
+						std::cout << polygon << std::endl;
+					}
+				}
 			}
+		);
 
-		} else {
-			location_t l;
-			while (locations_count--)
-				std::cin >> l.lon >> l.lat;
-		}
+	} catch (std::exception const &e) {
+		log_error("geo-base-grep", "EXCEPTION") << e.what();
 	}
 
 	return 0;

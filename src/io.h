@@ -5,5 +5,6 @@
 namespace troll {
 
 using output_t = std::ostream;
+using input_t = std::istream;
 
 }
