@@ -46,18 +46,41 @@ struct polygon_t {
 	{
 		if (point.x < left || point.x > right || point.y < lower || point.y > upper)
 			return false;
+
 		parts += parts_offset;
 		part_t const *part = lower_bound(parts, parts_count, point, [&] (part_t const &a, point_t const &p) {
 			return a.coordinate <= p.x;
 		});
+
 		if (part == parts)
 			return false;
+
 		--part;
 		if (part + 1 == parts + parts_count)
 			--part;
+
 		if (point.x < part->coordinate || point.x > (part + 1)->coordinate)
 			return false;
-		return part->contains(point, edge_refs, edges, points);
+
+		edge_refs += part->edge_refs_offset;
+		count_t edge_refs_count = (part + 1)->edge_refs_offset - part->edge_refs_offset;
+
+		ref_t const *edge_ref =
+			lower_bound(edge_refs, edge_refs_count, point, [&] (ref_t const &e, point_t const &p) {
+				if (edges[e].contains(p, points))
+					return false;
+				point_t const &a = points[edges[e].beg];
+				point_t const &b = points[edges[e].end];
+				return (b - a).cross(p - a) > 0;
+			});
+
+		if (edge_ref == edge_refs + edge_refs_count)
+			return false;
+
+		if (edges[*edge_ref].contains(point, points))
+			return true;
+
+		return (edge_ref - edge_refs) % 2 == 1;
 	}
 };
 

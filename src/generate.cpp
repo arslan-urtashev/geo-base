@@ -167,7 +167,7 @@ void generate_t::update(region_id_t region_id, vector_t<point_t> const &points, 
 
 		if (l > 0) {
 			part_t const &prev = ctx.parts.back();
-			for (ref_t i = prev.edge_refs_offset; i < prev.edge_refs_offset + prev.edge_refs_count; ++i)
+			for (ref_t i = prev.edge_refs_offset; i < part.edge_refs_offset; ++i)
 				if (!binary_search(erase.begin(), erase.end(), ctx.edges[ctx.edge_refs[i]]))
 					ctx.edge_refs.push_back(ctx.edge_refs[i]);
 		}
@@ -176,8 +176,6 @@ void generate_t::update(region_id_t region_id, vector_t<point_t> const &points, 
 			if (!checkpoints[i].erase)
 				if (!binary_search(erase.begin(), erase.end(), edges[checkpoints[i].cur_edge_ref]))
 					ctx.edge_refs.push_back(ctx.push_edge(edges[checkpoints[i].cur_edge_ref]));
-
-		part.edge_refs_count = ctx.edge_refs.size() - part.edge_refs_offset;
 
 		sort(ctx.edge_refs.begin() + part.edge_refs_offset, ctx.edge_refs.end(),
 			[&] (ref_t const &a, ref_t const &b)
@@ -273,6 +271,11 @@ void generate_t::save()
 		if (region)
 			region->square += p.square;
 	}
+
+	part_t fake_part;
+	fake_part.coordinate = 0;
+	fake_part.edge_refs_offset = ctx.edge_refs.size();
+	ctx.parts.push_back(fake_part);
 	
 	ctx.fini(&base);
 }
