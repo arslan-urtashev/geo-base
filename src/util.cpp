@@ -18,7 +18,7 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 	vector_t<blob_t> blobs;
 
 	count_t lines_count = 0;
-	watch_t watch;
+	stopwatch_t watch;
 
 	while (std::getline(in, curstr)) {
 		++lines_count;

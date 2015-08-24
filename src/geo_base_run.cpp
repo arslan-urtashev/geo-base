@@ -1,6 +1,6 @@
 #include "geo_base.h"
 #include "log.h"
-#include "watch.h"
+#include "stopwatch.h"
 
 #include <iomanip>
 #include <iostream>
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 		double longest = 0;
 		count_t counter = 0;
 
-		watch_t watch;
+		stopwatch_t watch;
 		location_t location;
 
 		while (std::cin >> location.lon >> location.lat) {
