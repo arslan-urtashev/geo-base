@@ -21,6 +21,11 @@ public:
 		geo_data_show(geo_data, out);
 	}
 
+	void stat(output_t &out) const
+	{
+		geo_data_stat(geo_data, out);
+	}
+
 	region_id_t lookup(location_t const &l) const
 	{
 		return geo_data_lookup(geo_data, l);

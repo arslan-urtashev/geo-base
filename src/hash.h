@@ -27,7 +27,7 @@ struct blob_hash_t {
 };
 
 template<uint64_t const BASE = 337>
-struct rolling_hash_t {
+struct poly_hash_t {
 	uint64_t operator () (byte_t const *bytes, count_t count) const
 	{
 		uint64_t hash = 0, power = 1;

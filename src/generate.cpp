@@ -112,8 +112,8 @@ static square_t square(vector_t<point_t> const &p)
 static uint64_t get_hash(region_id_t region_id, vector_t<point_t> const &points)
 {
 	uint64_t hash = 0;
-	hash ^= rolling_hash_t<373>()(region_id);
-	hash ^= rolling_hash_t<337>()(points);
+	hash ^= poly_hash_t<373>()(region_id);
+	hash ^= poly_hash_t<337>()(points);
 	return hash;
 }
 

@@ -18,7 +18,11 @@ int main(int argc, char *argv[])
 
 	try {
 		geo_base_t geo_base(argv[1]);
+
 		geo_base.show(std::cout);
+		std::cout.flush();
+
+		geo_base.stat(std::cout);
 
 	} catch (std::exception const &e) {
 		log_error("geo-base-show", "EXCEPTION") << e.what();

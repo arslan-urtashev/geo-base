@@ -2,6 +2,7 @@
 
 #include "exception.h"
 #include "io.h"
+#include "unordered_map.h"
 
 namespace troll {
 
@@ -147,6 +148,26 @@ version_t geo_data_version()
 #undef TROLL_DEF_ARR
 
 	return version;
+}
+
+void geo_data_stat(geo_data_t const &geo_data, output_t &out)
+{
+	unordered_map_t<uint64_t, uint64_t> edge_refs;
+	for (ref_t i = 0; i + 1 < geo_data.parts_count; ++i) {
+		ref_t const *refs = geo_data.edge_refs + geo_data.parts[i].edge_refs_offset;
+		count_t refs_count = geo_data.parts[i + 1].edge_refs_offset - geo_data.parts[i].edge_refs_offset;
+
+		uint64_t hash = poly_hash_t<>()((byte_t const *) refs, refs_count * sizeof(ref_t));
+		uint64_t bytes = refs_count * sizeof(ref_t);
+
+		edge_refs[hash] = bytes;
+	}
+
+	uint64_t total = 0;
+	for (auto const &p : edge_refs)
+		total += p.second;
+
+	out << "Real edge refs = " << total * 1.0 / (1024. * 1024.) << " MB" << '\n';
 }
 
 }
