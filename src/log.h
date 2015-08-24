@@ -1,6 +1,7 @@
 #pragma once
 
 #include "io.h"
+#include "watch.h"
 
 namespace troll {
 
@@ -60,11 +61,20 @@ protected:
 	}
 };
 
-class log_context_t : public log_level_t {
+class log_time_t : public log_level_t {
+protected:
+	log_time_t(output_t &out, int color, char const *level)
+		: log_level_t(out, color, level)
+	{
+		(*this) << "[" << watch_t() << "] ";
+	}
+};
+
+class log_context_t : public log_time_t {
 protected:
 	template<typename... args_t>
 	log_context_t(output_t &out, int color, char const *level, args_t... args)
-		: log_level_t(out, color, level)
+		: log_time_t(out, color, level)
 	{
 		context(args...);
 	}
@@ -115,6 +125,19 @@ public:
 	log_debug(args_t... args)
 		: log_context_t(std::cerr, 37, "debug", args...)
 	{
+	}
+};
+
+struct log_null {
+	template<typename... args_t>
+	log_null(args_t...)
+	{
+	}
+
+	template<typename val_t>
+	log_null &operator << (val_t const &)
+	{
+		return *this;
 	}
 };
 

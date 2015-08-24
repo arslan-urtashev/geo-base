@@ -6,6 +6,9 @@ if ARGUMENTS.get("log-boundary", "false") == "true":
 if ARGUMENTS.get("log-color", "true") == "false":
     env.Append(CXXFLAGS = ["-DTROLL_LOG_NO_COLOR"])
 
+if ARGUMENTS.get("log-generate", "false") == "true":
+    env.Append(CXXFLAGS = ["-DTROLL_GENERATE_LOG_ENABLE"])
+
 opt = ARGUMENTS.get("opt", "3")
 
 env.Append(CXXFLAGS = 
@@ -38,7 +41,8 @@ env.Append(CXXFLAGS =
 src = [
     "src/generate.cpp",
     "src/geo_data.cpp",
-    "src/util.cpp"
+    "src/util.cpp",
+    "src/watch.cpp"
 ]
 
 geo_base_a = env.Library(

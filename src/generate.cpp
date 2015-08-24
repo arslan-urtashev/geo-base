@@ -5,6 +5,13 @@
 
 namespace troll {
 
+#ifndef TROLL_GENERATE_LOG_ENABLE
+#	define log_debug log_null
+#	define log_error log_null
+#	define log_info log_null
+#	define log_warning log_null
+#endif
+
 void geo_data_ctx_t::fini(geo_base_alloc_t *base)
 {
 	geo_data_t *geo_data = base->geo_data();
