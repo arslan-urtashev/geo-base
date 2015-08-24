@@ -1,5 +1,7 @@
-#include "util.h"
+#include "algo.h"
 #include "blob.h"
+#include "point.h"
+#include "util.h"
 
 namespace troll {
 
@@ -57,6 +59,18 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 	log_info("geo_read_txt") << "Generated for " << watch.total() / 60. << " minutes";
 }
 
+#ifdef TROLL_CHECK_POINTS_ON_ONE_LINE
+static bool last_points_on_one_line(vector_t<location_t> const &l)
+{
+	if (l.size() < 3)
+		return false;
+	point_t a(l[l.size() - 3]);
+	point_t b(l[l.size() - 2]);
+	point_t c(l[l.size() - 1]);
+	return (c - a).cross(c - b) == 0;
+}
+#endif
+
 void process_locations(vector_t<location_t> const &raw_locations, vector_t<location_t> &locations,
 	process_locations_visitor_t callback)
 {
@@ -64,6 +78,13 @@ void process_locations(vector_t<location_t> const &raw_locations, vector_t<locat
 	for (location_t const &l : raw_locations) {
 		if (locations.empty() || locations.back() != l)
 			locations.push_back(l);
+
+#ifdef TROLL_CHECK_POINTS_ON_ONE_LINE
+		if (last_points_on_one_line(locations)) {
+			swap(locations[locations.size() - 2], locations[locations.size() - 1]);
+			locations.pop_back();
+		}
+#endif
 
 		if (locations.size() > 3 && locations.front() == locations.back()) {
 			locations.pop_back();

@@ -85,8 +85,10 @@ struct need_ways_visit_t {
 	{
 	}
 
-	void way_callback(osm_id_t, Tags const &, std::vector<osm_id_t> const &)
+	void way_callback(osm_id_t osm_id, Tags const &tags, std::vector<osm_id_t> const &refs)
 	{
+		if (is_boundary(tags) && refs.front() == refs.back())
+			need_ways.insert(osm_id);
 	}
 
 	void relation_callback(osm_id_t osm_id, Tags const &tags, References const &refs)
@@ -140,8 +142,15 @@ struct parser_t {
 			nodes[osm_id] = location_t(lon, lat);
 	}
 
-	void way_callback(osm_id_t, Tags const &, std::vector<osm_id_t> const &)
+	void way_callback(osm_id_t osm_id, Tags const &tags, std::vector<osm_id_t> const &refs)
 	{
+		if (is_boundary(tags) && refs.back() == refs.front()) {
+			std::cout << osm_id << ' ' << refs.size() << ' ' << 2 * tags.size() << '\n';
+			for (osm_id_t osm_id : refs)
+				std::cout << nodes[osm_id].lon << ' ' << nodes[osm_id].lat << '\n';
+			for (auto const &p : tags)
+				std::cout << p.first << '\n' << p.second << std::endl;
+		}
 	}
 
 	void save_locations(osm_id_t osm_id)
