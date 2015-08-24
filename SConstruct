@@ -27,7 +27,7 @@ env.Append(CXXFLAGS =
         "-std=c++0x"
     ],
     LINKFLAGS = [
-        "-O3",
+        "-O" + opt,
         "-flto",
         "-g"
     ],
