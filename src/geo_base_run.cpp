@@ -27,7 +27,11 @@ int main(int argc, char *argv[])
 		stopwatch_t watch;
 		location_t location;
 
-		while (std::cin >> location.lon >> location.lat) {
+		while (std::cin >> location.lat) {
+			std::cin.ignore();
+			if (!(std::cin >> location.lon))
+				break;
+
 			region_id_t region_id = -1;
 
 			watch.checkpoint();

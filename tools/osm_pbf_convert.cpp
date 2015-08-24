@@ -147,7 +147,7 @@ struct parser_t {
 		if (is_boundary(tags) && refs.back() == refs.front()) {
 			std::cout << osm_id << ' ' << refs.size() << ' ' << 2 * tags.size() << '\n';
 			for (osm_id_t osm_id : refs)
-				std::cout << nodes[osm_id].lon << ' ' << nodes[osm_id].lat << '\n';
+				std::cout << nodes[osm_id].lat << ' ' << nodes[osm_id].lon << '\n';
 			for (auto const &p : tags)
 				std::cout << p.first << '\n' << p.second << std::endl;
 		}
@@ -198,7 +198,7 @@ struct parser_t {
 			if (!locations.empty()) {
 				std::cout << osm_id << ' ' << locations.size() << ' ' << 2 * tags.size() << std::endl;
 				for (location_t const &l : locations)
-					std::cout << l.lon << ' ' << l.lat << std::endl;
+					std::cout << l.lat << ' ' << l.lon << std::endl;
 				for (auto const &p : tags)
 					std::cout << p.first << std::endl << p.second << std::endl;
 				std::cout.flush();

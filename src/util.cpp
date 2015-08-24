@@ -34,7 +34,7 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 			if (!std::getline(in, curstr))
 				throw exception_t("Wrong locations count for %ld on %u", region_id, region_line);
 
-			if (sscanf(curstr.c_str(), "%lf %lf", &locations[i].lon, &locations[i].lat) != 2)
+			if (sscanf(curstr.c_str(), "%lf %lf", &locations[i].lat, &locations[i].lon) != 2)
 				throw exception_t("Can't read locations on %u: \"%s\"", lines_count, curstr.c_str());
 		}
 
