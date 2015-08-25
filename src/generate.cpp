@@ -237,9 +237,16 @@ void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_l
 	log_info("generate", region_id) << ctx.polygons.size() - polygons_size << " polygons generated";
 }
 
+#ifndef TROLL_GENERATE_LOG_ENABLE
+#	undef log_debug
+#	undef log_error
+#	undef log_info
+#	undef log_warning
+#endif
+
 void generate_t::create_boxes()
 {
-	log_info("generate") << "Creating boxes...";
+	log_info("generate") << "Generate boxes...";
 
 	for (coordinate_t x0 = box_t::LOWER_X; x0 < box_t::UPPER_X; x0 += box_t::DELTA_X) {
 		for (coordinate_t y0 = box_t::LOWER_Y; y0 < box_t::UPPER_Y; y0 += box_t::DELTA_Y) {
@@ -255,7 +262,7 @@ void generate_t::create_boxes()
 		}
 	}
 
-	log_info("generate") << "Boxes created";
+	log_info("generate") << "Boxes generated";
 }
 
 void generate_t::save()
