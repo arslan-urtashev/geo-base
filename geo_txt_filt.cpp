@@ -70,10 +70,11 @@ static output_t &operator << (output_t &out, worker_t const &w)
 	return out;
 }
 
-static output_t &operator << (output_t &out, vector_t<worker_t> const &w)
+static output_t &operator << (output_t &out, vector_t<worker_t> const &workers)
 {
-	for (worker_t const &worker : w)
-		out << worker << " ";
+	for (worker_t const &w : workers)
+		if (w.offset != w.points_offset + w.points_count)
+			out << w << " ";
 	return out;
 }
 
@@ -108,7 +109,7 @@ int main(int argc, char *argv[])
 				if (workers[i].offset != workers[i].points_offset + workers[i].points_count)
 					completed = false;
 
-			log_status("geo-txt-filt", "status") << workers;
+			log_status() << workers;
 
 			if (completed)
 				break;
