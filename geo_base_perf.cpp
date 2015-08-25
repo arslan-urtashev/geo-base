@@ -16,6 +16,11 @@ static input_t &operator >> (input_t &in, location_t &l)
 	return in;
 }
 
+static int convert_to_mks(double x)
+{
+	return x * 1000000;
+}
+
 int main(int argc, char *argv[])
 {
 	std::ios_base::sync_with_stdio(false);
@@ -39,7 +44,7 @@ int main(int argc, char *argv[])
 			geo_base.lookup(location);
 			double t = sw.checkpoint();
 
-			checkpoints.push_back(1000 * t);
+			checkpoints.push_back(convert_to_mks(t));
 		}
 
 		sort(checkpoints.begin(), checkpoints.end());
@@ -49,7 +54,7 @@ int main(int argc, char *argv[])
 			while (r < checkpoints.size() && checkpoints[r] == checkpoints[l])
 				++r;
 
-			log_info("geo-base-perf") << r * 100.0 / checkpoints.size() << "% <= " << checkpoints[l];
+			log_info("geo-base-perf") << r * 100.0 / checkpoints.size() << "% <= " << checkpoints[l] << "µs";
 		}
 
 	} catch (std::exception const &e) {
