@@ -14,7 +14,7 @@ using namespace troll;
 static double const LOOKUP_RADIUS = 0.001;
 
 static uint32_t const THREADS_COUNT = 2;
-static uint32_t const LOOKUP_COUNT = 400;
+static uint32_t const LOOKUP_COUNT = 1000;
 
 struct worker_t {
 	geo_base_t const *geo_base;
