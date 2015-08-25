@@ -7,8 +7,7 @@ namespace troll {
 class stopwatch_t {
 public:
 	stopwatch_t()
-		: start(clock())
-		, point(clock())
+		: point(clock())
 	{
 	}
 
@@ -19,14 +18,7 @@ public:
 		return ret;
 	}
 
-	double total()
-	{
-		double ret = (clock() - start) * 1.0 / CLOCKS_PER_SEC;
-		return ret;
-	}
-
 private:
-	clock_t start;
 	clock_t point;
 };
 

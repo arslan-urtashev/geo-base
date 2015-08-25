@@ -47,6 +47,9 @@ int main(int argc, char *argv[])
 	}
 
 	try {
+		stopwatch_t stopwatch;
+		stopwatch.checkpoint();
+
 		geo_base_generate_t generate(argv[1]);
 
 		log_info("geo-base-generate") << "Run generate...";
@@ -56,18 +59,19 @@ int main(int argc, char *argv[])
 
 		while (!reader.readed) {
 			geo_data_ctx_t const &ctx = generate.context();
-			log_info("geo-base-generate", "status") << "Polygons = " << ctx.polygons.size() << ", " << ctx.memory() << " MB";
+			log_status("geo-base-generate") << "Polygons = " << ctx.polygons.size() << ", " << ctx.memory() << " MB";
 			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
 
 		thread.join();
+		log_status_clear();
 
 		log_info("geo-base-generate") << "Save geodata...";
 
 		generate.save();
 		generate.show_base(std::cout);
 
-		log_info("geo-base-generate") << "Done";
+		log_info("geo-base-generate") << "Done, spent = " << stopwatch.checkpoint() * 1.0 / 60. << " MIN";
 
 	} catch (std::exception const &e) {
 		log_error("geo-base-generate", "EXCEPTION") << e.what();
