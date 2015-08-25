@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 	std::cerr << std::fixed << std::setprecision(2);
 
 	if (argc < 2) {
-		log_error("geo-base-filt") << "geo-base-filt <geodata.dat>";
+		log_error("geo-txt-filt") << "geo-txt-filt <geodata.dat>";
 		return -1;
 	}
 
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 				if (workers[i].offset != workers[i].points_offset + workers[i].points_count)
 					completed = false;
 
-			log_info("geo-base-filt", "status") << workers;
+			log_info("geo-txt-filt", "status") << workers;
 
 			if (completed)
 				break;
@@ -137,20 +137,20 @@ int main(int argc, char *argv[])
 					std::cout << b << '\n';
 			} else {
 #if 0
-				log_info("geo-base-filt") << "Filtered region = " << region_id;
+				log_info("geo-txt-filt") << "Filtered region = " << region_id;
 				for (blob_t const &b : blobs)
-					log_info("geo-base-filt") << "\t" << b;
+					log_info("geo-txt-filt") << "\t" << b;
 #endif
 				++filt_count;
 			}
 			++count;
 		});
 
-		log_info("geo-base-filt") << "Processed count = " << count;
-		log_info("geo-base-filt") << "Filtered count = " << filt_count;
+		log_info("geo-txt-filt") << "Processed count = " << count;
+		log_info("geo-txt-filt") << "Filtered count = " << filt_count;
 
 	} catch (std::exception const &e) {
-		log_error("geo-base-filt", "EXCEPTION") << e.what();
+		log_error("geo-txt-filt", "EXCEPTION") << e.what();
 	}
 	
 	return 0;

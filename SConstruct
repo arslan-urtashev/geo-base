@@ -121,3 +121,13 @@ geo_txt_filt = env.Program(
         geo_base_a
     ]
 )
+
+geo_base_perf = env.Program(
+    "geo-base-perf",
+    [
+        "geo_base_perf.cpp"
+    ],
+    LIBS = [
+        geo_base_a
+    ]
+)
