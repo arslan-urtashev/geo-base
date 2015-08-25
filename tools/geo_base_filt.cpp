@@ -11,7 +11,7 @@
 
 using namespace troll;
 
-static uint32_t const THREADS_COUNT = 20;
+static uint32_t const THREADS_COUNT = 2;
 static uint32_t const LOOKUP_COUNT = 4000000000ULL;
 
 struct worker_t {
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 			bool completed = true;
 
 			for (size_t i = 0; i < workers.size(); ++i)
-				if (workers[i].counter + 1 != LOOKUP_COUNT)
+				if (workers[i].counter != LOOKUP_COUNT)
 					completed = false;
 
 			log_info("geo-base-filt", "status") << workers;
