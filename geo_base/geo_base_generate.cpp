@@ -42,6 +42,29 @@ void geo_data_ctx_t::fini(geo_base_alloc_t *base)
 	geo_data->version = geo_data_version();
 }
 
+double geo_data_ctx_t::memory() const
+{
+	double total = 0;
+
+#define TROLL_DEF_VAR(var_t, var) \
+	total += sizeof(var_t);
+
+#define TROLL_DEF_PTR(ptr_t, ptr) \
+	// undef
+
+#define TROLL_DEF_ARR(arr_t, arr) \
+	total += sizeof(count_t); \
+	total += sizeof(arr_t) * arr.size();
+
+	TROLL_DEF_GEO_DATA
+
+#undef TROLL_DEF_VAR
+#undef TROLL_DEF_PTR
+#undef TROLL_DEF_ARR
+
+	return total * 1.0 / (1024. * 1024.);
+}
+
 static bool is_bad_edge(edge_t const &e, point_t const *p) {
 	return e.beg == e.end || fabs(convert_to_double(p[e.beg].x - p[e.end].x)) > 300.0;
 }

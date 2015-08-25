@@ -60,6 +60,8 @@ struct geo_data_ctx_t {
 
 	void fini(geo_base_alloc_t *base);
 
+	double memory() const;
+
 	struct {
 		vector_t<checkpoint_t> checkpoints;
 		vector_t<edge_t> edges;
@@ -92,9 +94,14 @@ public:
 
 	void save();
 
-	void show_base(output_t &out)
+	void show_base(output_t &out) const
 	{
 		base.show(out);
+	}
+
+	geo_data_ctx_t const &context() const
+	{
+		return ctx;
 	}
 
 private:
