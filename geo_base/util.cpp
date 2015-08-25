@@ -5,16 +5,6 @@
 
 namespace troll {
 
-static input_t &getline(input_t &in, std::string &s)
-{
-	s.clear();
-	while (true) {
-		input_t &ret = std::getline(in, s);
-		if (!ret || !s.empty())
-			return ret;
-	}
-}
-
 void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 {
 	std::string curstr;
@@ -29,7 +19,7 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 
 	count_t lines_count = 0;
 
-	while (getline(in, curstr)) {
+	while (std::getline(in, curstr)) {
 		++lines_count;
 		count_t region_line = lines_count;
 
@@ -43,7 +33,7 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 		for (ref_t i = 0; i < locations_count; ++i) {
 			++lines_count;
 			
-			if (!getline(in, curstr))
+			if (!std::getline(in, curstr))
 				throw exception_t("Wrong locations count for %ld on %u", region_id, region_line);
 
 			if (sscanf(curstr.c_str(), "%lf %lf", &locations[i].lat, &locations[i].lon) != 2)
@@ -54,7 +44,7 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 		for (ref_t i = 0; i < blobs_count; ++i) {
 			++lines_count;
 
-			if (!(getline(in, curstr)))
+			if (!(std::getline(in, curstr)))
 				throw exception_t("Wrong blobs count for %ld on %u", region_id, region_line);
 
 			blobs[i].clear();
