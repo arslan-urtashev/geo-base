@@ -73,11 +73,7 @@ static output_t &operator << (output_t &out, worker_t const &w)
 static output_t &operator << (output_t &out, vector_t<worker_t> const &workers)
 {
 	for (worker_t const &w : workers)
-		if (w.offset != w.points_offset + w.points_count) {
-			out << w << " ";
-		} else {
-			out << "\b\b\b\b\b\b\b\b";
-		}
+		out << w << " ";
 	return out;
 }
 
