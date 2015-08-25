@@ -2,7 +2,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "generate.h"
+#include "geo_base_generate.h"
 #include "log.h"
 #include "vector.h"
 
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	}
 
 	try {
-		generate_t generate(argv[1]);
+		geo_base_generate_t generate(argv[1]);
 
 		log_info("geo-base-generate") << "Run generate...";
 

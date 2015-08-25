@@ -81,9 +81,9 @@ struct geo_data_ctx_t {
 #undef TROLL_DEF_PTR
 #undef TROLL_DEF_ARR
 
-class generate_t {
+class geo_base_generate_t {
 public:
-	generate_t(char const *path)
+	geo_base_generate_t(char const *path)
 		: base(path)
 	{
 	}

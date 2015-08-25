@@ -1,4 +1,4 @@
-#include "generate.h"
+#include "geo_base_generate.h"
 
 #include "hash.h"
 #include "log.h"
@@ -117,7 +117,7 @@ static uint64_t get_hash(region_id_t region_id, vector_t<point_t> const &points)
 	return hash;
 }
 
-void generate_t::update(region_id_t region_id, vector_t<point_t> const &points, vector_t<blob_t> const &)
+void geo_base_generate_t::update(region_id_t region_id, vector_t<point_t> const &points, vector_t<blob_t> const &)
 {
 	if (points.size() <= 2) {
 		log_warning("generate", region_id) << "Polygon to small!";
@@ -193,7 +193,7 @@ void generate_t::update(region_id_t region_id, vector_t<point_t> const &points, 
 	ctx.polygons.push_back(polygon);
 }
 
-void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_locations, vector_t<blob_t> const &blobs)
+void geo_base_generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_locations, vector_t<blob_t> const &blobs)
 {
 	log_info("generate", region_id) << "Process locations count = " << raw_locations.size();
 
@@ -244,7 +244,7 @@ void generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_l
 #	undef log_warning
 #endif
 
-void generate_t::create_boxes()
+void geo_base_generate_t::create_boxes()
 {
 	log_info("generate") << "Generate boxes...";
 
@@ -265,7 +265,7 @@ void generate_t::create_boxes()
 	log_info("generate") << "Boxes generated";
 }
 
-void generate_t::save()
+void geo_base_generate_t::save()
 {
 	create_boxes();
 

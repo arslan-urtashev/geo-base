@@ -38,31 +38,31 @@ env.Append(CXXFLAGS =
     CPPPATH = [
         ".",
         "contrib",
-        "src"
+        "geo_base"
     ]
 )
 
 src = [
-    "src/generate.cpp",
-    "src/geo_data.cpp",
-    "src/util.cpp",
-    "src/watch.cpp"
+    "geo_base/geo_base_generate.cpp",
+    "geo_base/geo_data.cpp",
+    "geo_base/util.cpp",
+    "geo_base/watch.cpp"
 ]
 
 geo_base_a = env.Library(
-    "lib/geo_base",
+    "geo-base",
     src
 )
 
 geo_base_so = env.SharedLibrary(
-    "lib/geo_base",
+    "geo-base",
     src
 )
 
 geo_base_run = env.Program(
-    "bin/geo-base-run",
+    "geo-base-run",
     [
-        "src/geo_base_run.cpp"
+        "geo_base_run.cpp"
     ],
     LIBS = [
         geo_base_a
@@ -70,9 +70,9 @@ geo_base_run = env.Program(
 )
 
 geo_base_generate = env.Program(
-    "bin/geo-base-generate",
+    "geo-base-generate",
     [
-        "src/geo_base_generate.cpp"
+        "geo_base_generate.cpp"
     ],
     LIBS = [
         geo_base_a
@@ -80,9 +80,9 @@ geo_base_generate = env.Program(
 )
 
 geo_base_show = env.Program(
-    "bin/geo-base-show",
+    "geo-base-show",
     [
-        "src/geo_base_show.cpp"
+        "geo_base_show.cpp"
     ],
     LIBS = [
         geo_base_a
@@ -90,7 +90,7 @@ geo_base_show = env.Program(
 )
 
 osm_pbf_convert = env.Program(
-    "bin/osm-pbf-convert",
+    "osm-pbf-convert",
     [
         "tools/osm_pbf_convert.cpp"
     ],
@@ -103,7 +103,7 @@ osm_pbf_convert = env.Program(
 )
 
 geo_base_dist = env.Program(
-    "bin/geo-base-dist",
+    "geo-base-dist",
     [
         "tools/geo_base_dist.cpp"
     ],
@@ -113,14 +113,14 @@ geo_base_dist = env.Program(
 )
 
 geo_base_swap = env.Program(
-    "bin/geo-base-swap",
+    "geo-base-swap",
     [
         "tools/geo_base_swap.cpp",
     ]
 )
 
 geo_base_grep = env.Program(
-    "bin/geo-base-grep",
+    "geo-base-grep",
     [
         "tools/geo_base_grep.cpp"
     ],
@@ -130,7 +130,7 @@ geo_base_grep = env.Program(
 )
 
 geo_base_rand = env.Program(
-    "bin/geo-base-rand",
+    "geo-base-rand",
     [
         "tools/geo_base_rand.cpp"
     ],
@@ -140,7 +140,7 @@ geo_base_rand = env.Program(
 )
 
 geo_base_repeat = env.Program(
-    "bin/geo-base-repeat",
+    "geo-base-repeat",
     [
         "tools/geo_base_repeat.cpp"
     ],
@@ -150,7 +150,7 @@ geo_base_repeat = env.Program(
 )
 
 geo_base_filt = env.Program(
-    "bin/geo-base-filt",
+    "geo-base-filt",
     [
         "tools/geo_base_filt.cpp"
     ],
