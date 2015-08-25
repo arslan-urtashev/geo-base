@@ -89,10 +89,10 @@ geo_base_show = env.Program(
     ]
 )
 
-osm_pbf_convert = env.Program(
-    "osm-pbf-convert",
+geo_osm_txt = env.Program(
+    "geo-osm-txt",
     [
-        "tools/osm_pbf_convert.cpp"
+        "geo_osm_txt.cpp"
     ],
     LIBS = [
         geo_base_a,
@@ -102,57 +102,20 @@ osm_pbf_convert = env.Program(
     ]
 )
 
-geo_base_dist = env.Program(
-    "geo-base-dist",
+geo_txt_grep = env.Program(
+    "geo-txt-grep",
     [
-        "tools/geo_base_dist.cpp"
+        "geo_txt_grep.cpp"
     ],
     LIBS = [
         geo_base_a
     ]
 )
 
-geo_base_swap = env.Program(
-    "geo-base-swap",
+geo_txt_filt = env.Program(
+    "geo-txt-filt",
     [
-        "tools/geo_base_swap.cpp",
-    ]
-)
-
-geo_base_grep = env.Program(
-    "geo-base-grep",
-    [
-        "tools/geo_base_grep.cpp"
-    ],
-    LIBS = [
-        geo_base_a
-    ]
-)
-
-geo_base_rand = env.Program(
-    "geo-base-rand",
-    [
-        "tools/geo_base_rand.cpp"
-    ],
-    LIBS = [
-        geo_base_a
-    ]
-)
-
-geo_base_repeat = env.Program(
-    "geo-base-repeat",
-    [
-        "tools/geo_base_repeat.cpp"
-    ],
-    LIBS = [
-        geo_base_a
-    ]
-)
-
-geo_base_filt = env.Program(
-    "geo-base-filt",
-    [
-        "tools/geo_base_filt.cpp"
+        "geo_txt_filt.cpp"
     ],
     LIBS = [
         geo_base_a
