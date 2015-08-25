@@ -24,12 +24,16 @@ env.Append(CXXFLAGS =
         "-funroll-loops",
         "-g",
         "-march=corei7", 
-        "-std=c++0x"
+        "-pthread",
+        "-std=c++0x",
+        "-Wl,--no-as-needed"
     ],
     LINKFLAGS = [
         "-O" + opt,
         "-flto",
-        "-g"
+        "-g",
+        "-pthread",
+        "-Wl,--no-as-needed"
     ],
     CPPPATH = [
         ".",
@@ -138,7 +142,17 @@ geo_base_rand = env.Program(
 geo_base_repeat = env.Program(
     "bin/geo-base-repeat",
     [
-        "tools/geo_base_repeat.cpp",
+        "tools/geo_base_repeat.cpp"
+    ],
+    LIBS = [
+        geo_base_a
+    ]
+)
+
+geo_base_filt = env.Program(
+    "bin/geo-base-filt",
+    [
+        "tools/geo_base_filt.cpp"
     ],
     LIBS = [
         geo_base_a
