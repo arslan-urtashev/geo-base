@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 				if (workers[i].offset != workers[i].points_offset + workers[i].points_count)
 					completed = false;
 
-			log_info("geo-txt-filt", "status") << workers;
+			log_status("geo-txt-filt", "status") << workers;
 
 			if (completed)
 				break;
@@ -118,6 +118,7 @@ int main(int argc, char *argv[])
 
 		for (size_t i = 0; i < threads.size(); ++i)
 			threads[i].join();
+		log_status_clear();
 
 		unordered_set_t<region_id_t> regions;
 		for (size_t i = 0; i < workers.size(); ++i) {

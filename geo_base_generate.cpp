@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
 		while (!reader.readed) {
 			geo_data_ctx_t const &ctx = generate.context();
-			log_status("geo-base-generate") << "Polygons = " << ctx.polygons.size() << ", " << ctx.memory() << " MB";
+			log_status("geo-base-generate", "status") << "Polygons = " << ctx.polygons.size() << ", " << ctx.memory() << " MB";
 			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
 
