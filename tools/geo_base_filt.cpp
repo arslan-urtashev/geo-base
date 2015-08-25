@@ -11,34 +11,30 @@
 
 using namespace troll;
 
+static double const LOOKUP_RADIUS = 0.001;
+
 static uint32_t const THREADS_COUNT = 2;
-static uint32_t const LOOKUP_COUNT = 4000000000ULL;
+static uint32_t const LOOKUP_COUNT = 400;
 
 struct worker_t {
 	geo_base_t const *geo_base;
-	unordered_set_t<region_id_t> regions;
 	std::mt19937 generator;
-	std::atomic<uint32_t> counter;
+	unordered_set_t<region_id_t> regions;
+	count_t points_offset;
+	count_t points_count;
+	std::atomic<count_t> offset;
 
 	double get_rand()
 	{
-		return generator() * 1.0 / (generator.max() - generator.min());
+		return -1.0 + generator() * 2.0 / (generator.max() - generator.min());
 	}
 
-	double get_rand_lat()
-	{
-		return -90.0 + get_rand() * 180.0;
-	}
-
-	double get_rand_lon()
-	{
-		return -180.0 + get_rand() * 360.0;
-	}
-
-	worker_t(geo_base_t const *g = nullptr, uint32_t seed = 0)
+	worker_t(geo_base_t const *g = nullptr, offset_t points_offset = 0, count_t points_count = 0, uint32_t seed = 0)
 		: geo_base(g)
 		, generator(seed)
-		, counter(0)
+		, points_offset(points_offset)
+		, points_count(points_count)
+		, offset(points_offset)
 	{
 	}
 
@@ -47,15 +43,22 @@ struct worker_t {
 		geo_base = w.geo_base;
 		regions = w.regions;
 		generator = w.generator;
-		counter = 0;
+		points_offset = w.points_offset;
+		points_count = w.points_count;
+		offset = points_offset;
 		return *this;
 	}
 
 	void operator () ()
 	{
-		for (counter = 0; counter < LOOKUP_COUNT; ++counter) {
-			location_t l(get_rand_lon(), get_rand_lat());
-			region_id_t region_id = geo_base->lookup(l);
+		for (offset = points_offset; offset < points_offset + points_count; ++offset) {
+			point_t const &p = geo_base->geo_data()->points[offset];
+
+			double lon = convert_to_double(p.x) + get_rand() * LOOKUP_RADIUS;
+			double lat = convert_to_double(p.y) + get_rand() * LOOKUP_RADIUS;
+
+			region_id_t region_id = geo_base->lookup(location_t(lon, lat));
+
 			regions.insert(region_id);
 		}
 	}
@@ -63,7 +66,7 @@ struct worker_t {
 
 static output_t &operator << (output_t &out, worker_t const &w)
 {
-	out << w.counter * 100.0 / LOOKUP_COUNT << "%";
+	out << (w.offset - w.points_offset) * 100.0 / w.points_count << "%";
 	return out;
 }
 
@@ -87,9 +90,12 @@ int main(int argc, char *argv[])
 	try {
 		geo_base_t geo_base(argv[1]);
 
+		count_t points_count = geo_base.geo_data()->points_count;
+		count_t one_thread_count = points_count / THREADS_COUNT + 1;
+
 		vector_t<worker_t> workers(THREADS_COUNT);
-		for (size_t i = 0; i < THREADS_COUNT; ++i)
-			workers[i] = worker_t(&geo_base, i);
+		for (size_t i = 0, offset = 0; i < THREADS_COUNT && offset < points_count; ++i, offset += one_thread_count)
+			workers[i] = worker_t(&geo_base, offset, min(one_thread_count, points_count - offset), i);
 
 		vector_t<std::thread> threads(THREADS_COUNT);
 		for (size_t i = 0; i < threads.size(); ++i)
@@ -99,7 +105,7 @@ int main(int argc, char *argv[])
 			bool completed = true;
 
 			for (size_t i = 0; i < workers.size(); ++i)
-				if (workers[i].counter != LOOKUP_COUNT)
+				if (workers[i].offset != workers[i].points_offset + workers[i].points_count)
 					completed = false;
 
 			log_info("geo-base-filt", "status") << workers;
