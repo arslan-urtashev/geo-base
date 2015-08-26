@@ -83,12 +83,15 @@ static output_t &operator << (output_t &out, vector_t<worker_t> const &workers)
 
 static output_t &operator << (output_t &out, vector_t<worker_t> const &workers)
 {
-	double count = 0;
-	for (worker_t const &w : workers)
-		count += (w.offset - w.points_offset) * 100.0 / w.points_count;
+	double count = 0, total = 0;
+	for (worker_t const &w : workers) {
+		count += (w.offset - w.points_offset);
+		total += w.points_count;
+	}
+	count_t result = count * 100.0 / total;
 	out << "[";
 	for (count_t i = 1; i <= 100; ++i)
-		out << (i <= count ? "#" : " ");
+		out << (i <= result ? "#" : " ");
 	out << "]";
 	return out;
 }
