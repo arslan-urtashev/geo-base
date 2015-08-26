@@ -16,6 +16,9 @@ enum class log_level_t {
 log_level_t log_level();
 log_level_t log_level(log_level_t level);
 
+bool log_color();
+bool log_color(bool b);
+
 class log_output_t {
 public:
 	template<typename val_t>
@@ -54,16 +57,13 @@ protected:
 		: log_output_t(out, begin, end, level)
 		, color(color1)
 	{
-#ifdef TROLL_LOG_NO_COLOR
-		color = 0;
-#endif
-		if (color != 0)
+		if (log_color())
 			(*this) << "\033[" << color << "m";
 	}
 
 	~log_color_t()
 	{
-		if (color != 0)
+		if (log_color())
 			(*this) << "\033[0m";
 	}
 

@@ -3,9 +3,6 @@ env = Environment()
 if ARGUMENTS.get("log-boundary", "false") == "true":
     env.Append(CXXFLAGS = ["-DTROLL_LOG_BOUNDARY"])
 
-if ARGUMENTS.get("log-color", "true") == "false":
-    env.Append(CXXFLAGS = ["-DTROLL_LOG_NO_COLOR"])
-
 if ARGUMENTS.get("log-generate", "false") == "true":
     env.Append(CXXFLAGS = ["-DTROLL_GENERATE_LOG_ENABLE"])
 
