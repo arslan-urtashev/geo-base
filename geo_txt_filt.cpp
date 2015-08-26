@@ -83,7 +83,7 @@ static output_t &operator << (output_t &out, vector_t<worker_t> const &workers)
 
 static output_t &operator << (output_t &out, vector_t<worker_t> const &workers)
 {
-	double count = 0, total = 0;
+	count_t count = 0, total = 0;
 	for (worker_t const &w : workers) {
 		count += (w.offset - w.points_offset);
 		total += w.points_count;
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
 				if (workers[i].offset != workers[i].points_offset + workers[i].points_count)
 					completed = false;
 
-			log_status() << workers;
+			log_status("monte-carlo done") << workers;
 
 			if (completed)
 				break;
