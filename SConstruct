@@ -34,33 +34,25 @@ env.Append(CXXFLAGS =
     ],
     CPPPATH = [
         ".",
-        "contrib",
-        "geo_base"
+        "include",
+        "contrib"
     ]
 )
 
-src = [
-    "geo_base/geo_base_generate.cpp",
-    "geo_base/geo_data.cpp",
-    "geo_base/util.cpp",
-    "geo_base/watch.cpp",
-    "geo_base/log.cpp"
-]
-
 geo_base_a = env.Library(
     "geo-base",
-    src
+    Glob("src/*.cpp")
 )
 
 geo_base_so = env.SharedLibrary(
     "geo-base",
-    src
+    Glob("src/*.cpp")
 )
 
 geo_base_run = env.Program(
-    "geo-base-run",
+    "bin/geo-base-run",
     [
-        "geo_base_run.cpp"
+        "tools/geo_base_run.cpp"
     ],
     LIBS = [
         geo_base_a
@@ -68,9 +60,9 @@ geo_base_run = env.Program(
 )
 
 geo_base_generate = env.Program(
-    "geo-base-generate",
+    "bin/geo-base-generate",
     [
-        "geo_base_generate.cpp"
+        "tools/geo_base_generate.cpp"
     ],
     LIBS = [
         geo_base_a
@@ -78,9 +70,9 @@ geo_base_generate = env.Program(
 )
 
 geo_base_show = env.Program(
-    "geo-base-show",
+    "bin/geo-base-show",
     [
-        "geo_base_show.cpp"
+        "tools/geo_base_show.cpp"
     ],
     LIBS = [
         geo_base_a
@@ -88,9 +80,9 @@ geo_base_show = env.Program(
 )
 
 geo_osm_txt = env.Program(
-    "geo-osm-txt",
+    "bin/geo-osm-txt",
     [
-        "geo_osm_txt.cpp"
+        "tools/geo_osm_txt.cpp"
     ],
     LIBS = [
         geo_base_a,
@@ -101,9 +93,9 @@ geo_osm_txt = env.Program(
 )
 
 geo_txt_grep = env.Program(
-    "geo-txt-grep",
+    "bin/geo-txt-grep",
     [
-        "geo_txt_grep.cpp"
+        "tools/geo_txt_grep.cpp"
     ],
     LIBS = [
         geo_base_a
@@ -111,9 +103,9 @@ geo_txt_grep = env.Program(
 )
 
 geo_txt_filt = env.Program(
-    "geo-txt-filt",
+    "bin/geo-txt-filt",
     [
-        "geo_txt_filt.cpp"
+        "tools/geo_txt_filt.cpp"
     ],
     LIBS = [
         geo_base_a
@@ -121,9 +113,9 @@ geo_txt_filt = env.Program(
 )
 
 geo_base_perf = env.Program(
-    "geo-base-perf",
+    "bin/geo-base-perf",
     [
-        "geo_base_perf.cpp"
+        "tools/geo_base_perf.cpp"
     ],
     LIBS = [
         geo_base_a
