@@ -47,18 +47,18 @@ int main(int argc, char *argv[])
 				char const *n3 = nullptr;
 				geo_base.kv_each(region_id, [&] (char const *k, char const *v) {
 					log_debug("geo-base-run", "kv_each") << '"' << k << '"' << ' ' << '"' << v << '"';
-					if (!strcmp(k, "name")) {
-						n1 = v;
-					} else if (!strcmp(k, "name:en")) {
-						n2 = v;
-					} else if (strstr(k, "name") && !n3) {
+					if (strstr(k, "name")) {
 						n3 = v;
+						if (!strcmp(k, "name"))
+							n1 = v;
+						else if (!strcmp(k, "name:en"))
+							n2 = v;
 					}
 				});
 				std::cout << region_id << " ";
-				std::cout << get(n1, n2, n3);
+				std::cout << '"' << get(n1, n2, n3) << '"';
 				if (n2)
-					std::cout << " (" << n2 << ")";
+					std::cout << " (\"" << n2 << "\")";
 				std::cout << '\n';
 			} else {
 				std::cout << -1 << '\n';
