@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
 				if (workers[i].offset != workers[i].points_offset + workers[i].points_count)
 					completed = false;
 
-			log_status("monte-carlo done") << workers;
+			log_status("geo-txt-filt", "monte-carlo") << workers;
 
 			if (completed)
 				break;
