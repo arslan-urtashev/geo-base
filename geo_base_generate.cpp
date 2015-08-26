@@ -47,8 +47,8 @@ int main(int argc, char *argv[])
 	}
 
 	try {
-		stopwatch_t stopwatch;
-		stopwatch.checkpoint();
+		stop_watch_t stop_watch;
+		stop_watch.checkpoint();
 
 		geo_base_generate_t generate(argv[1]);
 
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 		generate.save();
 		generate.show_base(std::cout);
 
-		log_info("geo-base-generate") << "Done, spent = " << stopwatch.checkpoint() * 1.0 / 60. << " MIN";
+		log_info("geo-base-generate") << "Done, spent = " << stop_watch.checkpoint() * 1.0 / 60. << " MIN";
 
 	} catch (std::exception const &e) {
 		log_error("geo-base-generate", "EXCEPTION") << e.what();

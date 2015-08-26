@@ -7,7 +7,7 @@
 #include "location.h"
 #include "log.h"
 #include "vector.h"
-#include "stopwatch.h"
+#include "stop_watch.h"
 
 #include <sstream>
 #include <string>

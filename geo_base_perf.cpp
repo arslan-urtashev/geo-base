@@ -1,7 +1,7 @@
 #include "geo_base.h"
 #include "location.h"
 #include "log.h"
-#include "stopwatch.h"
+#include "stop_watch.h"
 
 #include <iomanip>
 #include <iostream>
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 		vector_t<uint32_t> checkpoints;
 
 		while (std::cin >> location) {
-			stopwatch_t sw;
+			stop_watch_t sw;
 
 			sw.checkpoint();
 			geo_base.lookup(location);

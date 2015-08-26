@@ -4,9 +4,9 @@
 
 namespace troll {
 
-class stopwatch_t {
+class stop_watch_t {
 public:
-	stopwatch_t()
+	stop_watch_t()
 		: point(clock())
 	{
 	}
