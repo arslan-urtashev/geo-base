@@ -59,12 +59,12 @@ int main(int argc, char *argv[])
 
 		while (!reader.readed) {
 			geo_data_ctx_t const &ctx = generate.context();
-			log_status("geo-base-generate", "status") << "Polygons = " << ctx.polygons.size() << ", " << ctx.memory() << " MB";
+			status("geo-base-generate", "status") << "Polygons = " << ctx.polygons.size() << ", " << ctx.memory() << " MB";
 			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
 
 		thread.join();
-		log_status_clear();
+		status::clear();
 
 		log_info("geo-base-generate") << "Save geodata...";
 

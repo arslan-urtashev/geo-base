@@ -133,20 +133,17 @@ public:
 	}
 };
 
-class log_status : public log_context_t {
+class status : public log_context_t {
 public:
 	template<typename... args_t>
-	log_status(args_t... args)
+	status(args_t... args)
 		: log_context_t(std::cerr, 32, "info", '\r', ' ', args...)
 	{
 	}
-};
 
-class log_status_clear : public log_output_t {
-public:
-	log_status_clear()
-		: log_output_t(std::cerr, ' ', '\n')
+	static void clear()
 	{
+		std::cerr << '\n';
 	}
 };
 
