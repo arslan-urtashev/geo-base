@@ -29,6 +29,8 @@ int main(int argc, char *argv[])
 {
 	std::ios_base::sync_with_stdio(false);
 
+	log_level(log_level_t::error);
+
 	if (argc != 2) {
 		log_error("geo-base-run")  << "geo-base-run <geodata.dat>";
 		return -1;

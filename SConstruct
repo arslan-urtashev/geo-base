@@ -46,7 +46,8 @@ src = [
     "geo_base/geo_base_generate.cpp",
     "geo_base/geo_data.cpp",
     "geo_base/util.cpp",
-    "geo_base/watch.cpp"
+    "geo_base/watch.cpp",
+    "geo_base/log.cpp"
 ]
 
 geo_base_a = env.Library(
