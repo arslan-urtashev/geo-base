@@ -5,7 +5,7 @@
 #include "point.h"
 #include "common.h"
 
-namespace troll {
+namespace geo_base {
 
 struct part_t {
 	coordinate_t coordinate;

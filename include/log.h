@@ -3,7 +3,7 @@
 #include "io.h"
 #include "watch.h"
 
-namespace troll {
+namespace geo_base {
 
 enum class log_level_t {
 	null = -1,

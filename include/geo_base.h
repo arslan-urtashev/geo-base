@@ -5,7 +5,7 @@
 #include "location.h"
 #include "mem_base.h"
 
-namespace troll {
+namespace geo_base {
 
 class geo_base_t : public mem_base_t {
 public:

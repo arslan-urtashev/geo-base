@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace troll {
+namespace geo_base {
 
 typedef std::ostream output_t;
 typedef std::istream input_t;

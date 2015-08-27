@@ -6,7 +6,7 @@
 
 #include <unistd.h>
 
-namespace troll {
+namespace geo_base {
 
 class base_alloc_t : public mem_base_t {
 public:

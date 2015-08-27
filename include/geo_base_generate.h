@@ -8,7 +8,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
-namespace troll {
+namespace geo_base {
 
 struct checkpoint_t {
 	coordinate_t coordinate;

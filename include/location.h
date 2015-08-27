@@ -4,7 +4,7 @@
 
 #include <math.h>
 
-namespace troll {
+namespace geo_base {
 
 struct location_t {
 	double lon;

@@ -2,7 +2,7 @@
 
 #include "common.h"
 
-namespace troll {
+namespace geo_base {
 
 struct kv_t {
 	count_t k;

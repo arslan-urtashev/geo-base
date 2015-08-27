@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
-using namespace troll;
+using namespace geo_base;
 
 int main(int argc, char *argv[])
 {

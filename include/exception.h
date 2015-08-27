@@ -6,7 +6,7 @@
 
 #include <exception>
 
-namespace troll {
+namespace geo_base {
 
 class exception_t : public std::exception {
 public:

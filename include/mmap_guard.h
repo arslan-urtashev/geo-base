@@ -4,7 +4,7 @@
 
 #include "log.h"
 
-namespace troll {
+namespace geo_base {
 
 struct mmap_guard_t {
 	void *addr;

@@ -11,7 +11,7 @@
 #include "polygon.h"
 #include "region.h"
 
-namespace troll {
+namespace geo_base {
 
 #define TROLL_DEF_VAR(var_t, var) \
 	var_t var;

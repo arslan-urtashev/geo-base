@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-using namespace troll;
+using namespace geo_base;
 
 static double const LOOKUP_RADIUS = 0.001;
 

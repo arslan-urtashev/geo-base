@@ -4,7 +4,7 @@
 
 #include "log.h"
 
-namespace troll {
+namespace geo_base {
 
 struct fd_guard_t {
 	int fd;

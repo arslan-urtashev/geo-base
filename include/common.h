@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-namespace troll {
+namespace geo_base {
 
 typedef uint64_t region_id_t;
 typedef int32_t coordinate_t;

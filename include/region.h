@@ -2,7 +2,7 @@
 
 #include "common.h"
 
-namespace troll {
+namespace geo_base {
 
 struct region_t {
 	region_id_t region_id;

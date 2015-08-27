@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-namespace troll {
+namespace geo_base {
 
 class fd_stat_t {
 public:

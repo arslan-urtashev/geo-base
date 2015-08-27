@@ -8,7 +8,7 @@
 #include "io.h"
 #include "log.h"
 
-using namespace troll;
+using namespace geo_base;
 
 typedef std::vector<location_t> locations_t;
 typedef std::vector<std::string> blobs_t;

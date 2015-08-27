@@ -3,7 +3,7 @@
 #include "util.h"
 #include "common.h"
 
-namespace troll {
+namespace geo_base {
 
 struct box_t {
 	static coordinate_t const LOWER_X = convert_to_coordinate(-180.0);

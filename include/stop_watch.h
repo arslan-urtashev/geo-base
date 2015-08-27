@@ -2,7 +2,7 @@
 
 #include <time.h>
 
-namespace troll {
+namespace geo_base {
 
 class stop_watch_t {
 public:

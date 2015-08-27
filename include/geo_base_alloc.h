@@ -3,7 +3,7 @@
 #include "base_alloc.h"
 #include "geo_data.h"
 
-namespace troll {
+namespace geo_base {
 
 class geo_base_alloc_t : public base_alloc_t {
 public:

@@ -1,6 +1,6 @@
 #include "log.h"
 
-namespace troll {
+namespace geo_base {
 
 static log_level_t level = log_level_t::null;
 static bool color = true;

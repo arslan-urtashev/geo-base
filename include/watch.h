@@ -2,7 +2,7 @@
 
 #include "io.h"
 
-namespace troll {
+namespace geo_base {
 
 struct watch_t {
 	int day;

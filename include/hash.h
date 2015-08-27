@@ -2,7 +2,7 @@
 
 #include "algo.h"
 
-namespace troll {
+namespace geo_base {
 
 struct hash64_t {
 	std::hash<uint64_t> hash;

@@ -6,7 +6,7 @@
 #include <iostream>
 #include <unordered_set>
 
-using namespace troll;
+using namespace geo_base;
 
 static output_t &operator << (output_t &out, std::vector<location_t> const &l)
 {

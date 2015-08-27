@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-namespace troll {
+namespace geo_base {
 
 class fd_base_t {
 protected:

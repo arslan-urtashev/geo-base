@@ -1,6 +1,6 @@
 #include "watch.h"
 
-namespace troll {
+namespace geo_base {
 
 watch_t::watch_t()
 {

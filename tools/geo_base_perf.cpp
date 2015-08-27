@@ -6,7 +6,7 @@
 #include <iomanip>
 #include <iostream>
 
-using namespace troll;
+using namespace geo_base;
 
 static input_t &operator >> (input_t &in, location_t &l)
 {

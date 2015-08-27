@@ -3,7 +3,7 @@
 #include "exception.h"
 #include "io.h"
 
-namespace troll {
+namespace geo_base {
 
 void geo_data_map(void *dat, geo_data_t *geo_data)
 {

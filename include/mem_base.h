@@ -6,7 +6,7 @@
 
 #include <sys/mman.h>
 
-namespace troll {
+namespace geo_base {
 
 class mem_base_t : public fd_base_t {
 protected:

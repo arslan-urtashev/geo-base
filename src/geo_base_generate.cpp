@@ -3,7 +3,7 @@
 #include "hash.h"
 #include "log.h"
 
-namespace troll {
+namespace geo_base {
 
 #ifndef TROLL_GENERATE_LOG_ENABLE
 #	define log_debug log_null

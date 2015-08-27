@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-using namespace troll;
+using namespace geo_base;
 using namespace CanalTP;
 
 typedef uint64_t osm_id_t;

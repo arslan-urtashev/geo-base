@@ -14,7 +14,7 @@
 
 #include <math.h>
 
-namespace troll {
+namespace geo_base {
 
 typedef std::function<void (region_id_t, std::vector<location_t> const &, std::vector<std::string> const &blobs)> read_txt_visitor_t;
 typedef std::function<void (std::vector<location_t> const &)> process_locations_visitor_t;

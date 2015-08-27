@@ -2,7 +2,7 @@
 #include "point.h"
 #include "util.h"
 
-namespace troll {
+namespace geo_base {
 
 void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 {

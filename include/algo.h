@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-namespace troll {
+namespace geo_base {
 
 struct less_t {
 	template<typename a_t, typename b_t>
