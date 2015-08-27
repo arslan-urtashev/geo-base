@@ -5,8 +5,8 @@
 namespace troll {
 
 struct kv_t {
-	offset_t k;
-	offset_t v;
+	count_t k;
+	count_t v;
 };
 
 }

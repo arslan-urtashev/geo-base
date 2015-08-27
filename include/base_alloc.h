@@ -26,7 +26,7 @@ public:
 		size_t new_offset = align(offset + count);
 		if (ftruncate(fd(), new_offset) < 0)
 			throw exception_t("%s", strerror(errno));
-		void *memory = ((byte_t *) addr()) + offset;
+		void *memory = ((char *) addr()) + offset;
 		offset = new_offset;
 		return memory;
 	}

@@ -15,7 +15,7 @@ struct box_t {
 	static coordinate_t const COUNT_X = (UPPER_X - LOWER_X) / DELTA_X;
 	static coordinate_t const COUNT_Y = (UPPER_Y - LOWER_Y) / DELTA_Y;
 
-	offset_t polygon_refs_offset;
+	count_t polygon_refs_offset;
 	count_t polygon_refs_count;
 };
 

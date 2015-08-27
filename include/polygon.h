@@ -10,12 +10,11 @@ namespace troll {
 
 struct polygon_t {
 	region_id_t region_id;
-	polygon_id_t polygon_id;
 	coordinate_t upper;
 	coordinate_t lower;
 	coordinate_t left;
 	coordinate_t right;
-	offset_t parts_offset;
+	count_t parts_offset;
 	count_t parts_count;
 	square_t square;
 

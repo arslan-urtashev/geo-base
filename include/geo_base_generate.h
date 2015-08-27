@@ -46,10 +46,10 @@ struct geo_data_ctx_t {
 		return saved.edges[e];
 	}
 
-	offset_t push_blob(blob_t const &b)
+	count_t push_blob(blob_t const &b)
 	{
 		if (saved.blobs.find(b) == saved.blobs.end()) {
-			offset_t off = blobs.size();
+			count_t off = blobs.size();
 			for (char c : b)
 				blobs.push_back(c);
 			blobs.push_back('\0');
@@ -73,7 +73,7 @@ struct geo_data_ctx_t {
 	struct {
 		unordered_map_t<edge_t, ref_t> edges;
 		unordered_map_t<point_t, ref_t> points;
-		unordered_map_t<blob_t, offset_t, blob_hash_t> blobs;
+		unordered_map_t<blob_t, count_t, blob_hash_t> blobs;
 	} saved;
 
 	unordered_set_t<uint64_t> processed;

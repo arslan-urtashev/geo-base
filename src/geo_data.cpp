@@ -13,7 +13,7 @@ void geo_data_map(void *dat, geo_data_t *geo_data)
 
 #define TROLL_DEF_PTR(ptr_t, ptr) \
 	if (geo_data->ptr) \
-		geo_data->ptr =	(ptr_t *) (((ptrdiff_t) dat) + ((byte_t *) geo_data->ptr))
+		geo_data->ptr =	(ptr_t *) (((ptrdiff_t) dat) + ((char *) geo_data->ptr))
 
 #define TROLL_DEF_ARR(arr_t, arr) \
 	TROLL_DEF_PTR(arr_t, arr);
@@ -37,7 +37,7 @@ void geo_data_save(void *dat, geo_data_t *geo_data)
 
 #define TROLL_DEF_PTR(ptr_t, ptr) \
 	if (geo_data->ptr) \
-		geo_data->ptr = (ptr_t *) (((byte_t *) geo_data->ptr) - ((ptrdiff_t) dat));
+		geo_data->ptr = (ptr_t *) (((char *) geo_data->ptr) - ((ptrdiff_t) dat));
 
 #define TROLL_DEF_ARR(arr_t, arr) \
 	TROLL_DEF_PTR(arr_t, arr);
@@ -60,7 +60,7 @@ region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &locati
 	if (box_ref >= geo_data.boxes_count)
 		return -1;
 
-	offset_t refs_offset = geo_data.boxes[box_ref].polygon_refs_offset;
+	count_t refs_offset = geo_data.boxes[box_ref].polygon_refs_offset;
 	count_t refs_count = geo_data.boxes[box_ref].polygon_refs_count;
 
 	polygon_t const *answer = nullptr;

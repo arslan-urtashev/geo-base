@@ -32,7 +32,7 @@ namespace troll {
 	TROLL_DEF_ARR(polygon_t, polygons); \
 	TROLL_DEF_ARR(ref_t, polygon_refs); \
 	TROLL_DEF_ARR(box_t, boxes); \
-	TROLL_DEF_ARR(byte_t, blobs); \
+	TROLL_DEF_ARR(char, blobs); \
 	TROLL_DEF_ARR(kv_t, kvs); \
 	TROLL_DEF_ARR(region_t, regions);
 
@@ -57,7 +57,7 @@ void geo_data_kv_each(geo_data_t const &geo_data, region_id_t region_id, callbac
 {
 	region_t const *region = find(geo_data.regions, geo_data.regions_count, region_id);
 	while (region && region - geo_data.regions < geo_data.regions_count && region->region_id == region_id) {
-		for (offset_t i = region->kvs_offset; i < region->kvs_count + region->kvs_offset; ++i) {
+		for (count_t i = region->kvs_offset; i < region->kvs_count + region->kvs_offset; ++i) {
 			char const *k = (char const *) geo_data.blobs + geo_data.kvs[i].k;
 			char const *v = (char const *) geo_data.blobs + geo_data.kvs[i].v;
 			callback(k, v);

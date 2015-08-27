@@ -28,7 +28,7 @@ struct blob_hash_t {
 
 template<uint64_t const BASE = 337>
 struct poly_hash_t {
-	uint64_t operator () (byte_t const *bytes, count_t count) const
+	uint64_t operator () (char const *bytes, count_t count) const
 	{
 		uint64_t hash = 0, power = 1;
 		for (count_t i = 0; i < count; ++i) {
@@ -41,13 +41,13 @@ struct poly_hash_t {
 	template<typename val_t>
 	uint64_t operator () (val_t const &val) const
 	{
-		return (*this)((byte_t const *) &val, sizeof(val_t));
+		return (*this)((char const *) &val, sizeof(val_t));
 	}
 
 	template<typename val_t>
 	uint64_t operator () (vector_t<val_t> const &a) const
 	{
-		return (*this)((byte_t const *) &(a[0]), sizeof(val_t) * a.size());
+		return (*this)((char const *) &(a[0]), sizeof(val_t) * a.size());
 	}
 };
 

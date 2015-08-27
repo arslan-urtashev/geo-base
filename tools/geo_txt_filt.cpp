@@ -29,7 +29,7 @@ struct worker_t {
 		return -1.0 + generator() * 2.0 / (generator.max() - generator.min());
 	}
 
-	worker_t(geo_base_t const *g = nullptr, offset_t points_offset = 0, count_t points_count = 0, uint32_t seed = 0)
+	worker_t(geo_base_t const *g = nullptr, count_t points_offset = 0, count_t points_count = 0, uint32_t seed = 0)
 		: geo_base(g)
 		, generator(seed)
 		, points_offset(points_offset)
