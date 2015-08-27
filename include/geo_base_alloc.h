@@ -2,7 +2,6 @@
 
 #include "base_alloc.h"
 #include "geo_data.h"
-#include "vector.h"
 
 namespace troll {
 

@@ -1,5 +1,4 @@
 #include "geo_base.h"
-#include "unordered_set.h"
 #include "log.h"
 
 #include <atomic>
@@ -8,6 +7,8 @@
 #include <iostream>
 #include <random>
 #include <thread>
+#include <unordered_map>
+#include <unordered_set>
 
 using namespace troll;
 
@@ -19,7 +20,7 @@ static uint32_t const LOOKUP_COUNT = 1000;
 struct worker_t {
 	geo_base_t const *geo_base;
 	std::mt19937 generator;
-	unordered_set_t<region_id_t> regions;
+	std::unordered_set<region_id_t> regions;
 	count_t points_offset;
 	count_t points_count;
 	std::atomic<count_t> offset;
@@ -72,7 +73,7 @@ static output_t &operator << (output_t &out, worker_t const &w)
 	return out;
 }
 
-static output_t &operator << (output_t &out, vector_t<worker_t> const &workers)
+static output_t &operator << (output_t &out, std::vector<worker_t> const &workers)
 {
 	for (worker_t const &w : workers)
 		out << w << " ";
@@ -81,7 +82,7 @@ static output_t &operator << (output_t &out, vector_t<worker_t> const &workers)
 
 #else
 
-static output_t &operator << (output_t &out, vector_t<worker_t> const &workers)
+static output_t &operator << (output_t &out, std::vector<worker_t> const &workers)
 {
 	count_t count = 0, total = 0;
 	for (worker_t const &w : workers) {
@@ -111,14 +112,14 @@ int main(int argc, char *argv[])
 	try {
 		geo_base_t geo_base(argv[1]);
 
-		count_t points_count = geo_base.geo_data()->points_count;
-		count_t one_thread_count = points_count / THREADS_COUNT + 1;
+		size_t points_count = geo_base.geo_data()->points_count;
+		size_t one_thread_count = points_count / THREADS_COUNT + 1;
 
-		vector_t<worker_t> workers(THREADS_COUNT);
+		std::vector<worker_t> workers(THREADS_COUNT);
 		for (size_t i = 0, offset = 0; i < THREADS_COUNT && offset < points_count; ++i, offset += one_thread_count)
-			workers[i] = worker_t(&geo_base, offset, min(one_thread_count, points_count - offset), i);
+			workers[i] = worker_t(&geo_base, offset, std::min(one_thread_count, points_count - offset), i);
 
-		vector_t<std::thread> threads(THREADS_COUNT);
+		std::vector<std::thread> threads(THREADS_COUNT);
 		for (size_t i = 0; i < threads.size(); ++i)
 			threads[i] = std::thread(std::ref(workers[i]));
 
@@ -141,7 +142,7 @@ int main(int argc, char *argv[])
 			threads[i].join();
 		status::clear();
 
-		unordered_set_t<region_id_t> regions;
+		std::unordered_set<region_id_t> regions;
 		for (size_t i = 0; i < workers.size(); ++i) {
 			regions.insert(workers[i].regions.begin(), workers[i].regions.end());
 			workers[i].regions.clear();
@@ -150,17 +151,17 @@ int main(int argc, char *argv[])
 		size_t count = 0;
 		size_t filt_count = 0;
 
-		geo_read_txt(std::cin, [&] (region_id_t region_id, vector_t<location_t> const &locations, vector_t<blob_t> const &blobs) {
+		geo_read_txt(std::cin, [&] (region_id_t region_id, std::vector<location_t> const &locations, std::vector<std::string> const &blobs) {
 			if (regions.find(region_id) != regions.end()) {
 				std::cout << region_id << ' ' << locations.size() << ' ' << blobs.size() << '\n';
 				for (location_t const &l : locations)
 					std::cout << l.lat << ' ' << l.lon << '\n';
-				for (blob_t const &b : blobs)
+				for (std::string const &b : blobs)
 					std::cout << b << '\n';
 			} else {
 #if 0
 				log_info("geo-txt-filt") << "Filtered region = " << region_id;
-				for (blob_t const &b : blobs)
+				for (std::string const &b : blobs)
 					log_info("geo-txt-filt") << "\t" << b;
 #endif
 				++filt_count;

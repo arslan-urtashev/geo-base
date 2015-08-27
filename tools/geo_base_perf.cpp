@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 		geo_base_t geo_base(argv[1]);
 
 		location_t location;
-		vector_t<uint32_t> checkpoints;
+		std::vector<uint32_t> checkpoints;
 
 		while (std::cin >> location) {
 			stop_watch_t sw;

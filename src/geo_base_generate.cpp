@@ -76,7 +76,7 @@ static output_t &operator << (output_t &out, point_t const &p)
 }
 
 #ifdef TROLL_LOG_BOUNDARY
-static output_t &operator << (output_t &out, vector_t<point_t> const &p)
+static output_t &operator << (output_t &out, std::vector<point_t> const &p)
 {
 	out << "[";
 	for (ref_t i = 0; i < p.size(); ++i)
@@ -86,7 +86,7 @@ static output_t &operator << (output_t &out, vector_t<point_t> const &p)
 }
 #endif
 
-static void generate_edges(region_id_t region_id, vector_t<point_t> const &points, geo_data_ctx_t *ctx, vector_t<edge_t> &edges)
+static void generate_edges(region_id_t region_id, std::vector<point_t> const &points, geo_data_ctx_t *ctx, std::vector<edge_t> &edges)
 {
 	edges.clear();
 	edges.reserve(points.size());
@@ -95,7 +95,7 @@ static void generate_edges(region_id_t region_id, vector_t<point_t> const &point
 		edge_t e(ctx->push_point(points[i]), ctx->push_point(points[j]));
 		
 		if (ctx->points[e.beg].x > ctx->points[e.end].x)
-			swap(e.beg, e.end);
+			std::swap(e.beg, e.end);
 
 		if (is_bad_edge(e, ctx->points.data())) {
 			log_warning("generate", region_id) <<  "bad edge detected = " << ctx->points[e.beg] << " -> " << ctx->points[e.end];
@@ -106,7 +106,7 @@ static void generate_edges(region_id_t region_id, vector_t<point_t> const &point
 	}
 }
 
-static void generate_checkpoints(vector_t<edge_t> const &e, point_t const *p, vector_t<checkpoint_t> &checkpoints)
+static void generate_checkpoints(std::vector<edge_t> const &e, point_t const *p, std::vector<checkpoint_t> &checkpoints)
 {
 	checkpoints.clear();
 	checkpoints.reserve(2 * e.size());
@@ -122,7 +122,7 @@ static void generate_checkpoints(vector_t<edge_t> const &e, point_t const *p, ve
 	);
 }
 
-static square_t square(vector_t<point_t> const &p)
+static square_t square(std::vector<point_t> const &p)
 {
 	square_t s = 0;
 	for (ref_t i = 0; i < p.size(); ++i) {
@@ -132,7 +132,7 @@ static square_t square(vector_t<point_t> const &p)
 	return s > 0 ? s : -s;
 }
 
-static uint64_t get_hash(region_id_t region_id, vector_t<point_t> const &points)
+static uint64_t get_hash(region_id_t region_id, std::vector<point_t> const &points)
 {
 	uint64_t hash = 0;
 	hash ^= poly_hash_t<373>()(region_id);
@@ -140,7 +140,7 @@ static uint64_t get_hash(region_id_t region_id, vector_t<point_t> const &points)
 	return hash;
 }
 
-void geo_base_generate_t::update(region_id_t region_id, vector_t<point_t> const &points, vector_t<blob_t> const &)
+void geo_base_generate_t::update(region_id_t region_id, std::vector<point_t> const &points, std::vector<std::string> const &)
 {
 	if (points.size() <= 2) {
 		log_warning("generate", region_id) << "Polygon to small!";
@@ -165,13 +165,13 @@ void geo_base_generate_t::update(region_id_t region_id, vector_t<point_t> const 
 
 	polygon.parts_offset = ctx.parts.size();
 	
-	vector_t<edge_t> &edges = ctx.buf.edges;
+	std::vector<edge_t> &edges = ctx.buf.edges;
 	generate_edges(region_id, points, &ctx, edges);
 
-	vector_t<checkpoint_t> &checkpoints = ctx.buf.checkpoints;
+	std::vector<checkpoint_t> &checkpoints = ctx.buf.checkpoints;
 	generate_checkpoints(edges, ctx.points.data(), checkpoints);
 
-	vector_t<edge_t> &erase = ctx.buf.erase;
+	std::vector<edge_t> &erase = ctx.buf.erase;
 	for (ref_t l = 0, r = 0; l < checkpoints.size(); l = r) {
 		r = l + 1;
 		while (r < checkpoints.size() && checkpoints[l].coordinate == checkpoints[r].coordinate)
@@ -216,16 +216,16 @@ void geo_base_generate_t::update(region_id_t region_id, vector_t<point_t> const 
 	ctx.polygons.push_back(polygon);
 }
 
-void geo_base_generate_t::update(region_id_t region_id, vector_t<location_t> const &raw_locations, vector_t<blob_t> const &blobs)
+void geo_base_generate_t::update(region_id_t region_id, std::vector<location_t> const &raw_locations, std::vector<std::string> const &blobs)
 {
 	log_info("generate", region_id) << "Process locations count = " << raw_locations.size();
 
 	count_t update_count = 0;
 	count_t polygons_size = ctx.polygons.size();
 
-	vector_t<point_t> &points = ctx.buf.points;
+	std::vector<point_t> &points = ctx.buf.points;
 
-	process_locations(raw_locations, ctx.buf.locations, [&] (vector_t<location_t> const &locations) {
+	process_locations(raw_locations, ctx.buf.locations, [&] (std::vector<location_t> const &locations) {
 		points.assign(locations.begin(), locations.end());
 #ifdef TROLL_LOG_BOUNDARY
 		log_debug("generate", region_id) << points;

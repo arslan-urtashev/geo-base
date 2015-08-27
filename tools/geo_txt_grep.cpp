@@ -1,15 +1,14 @@
 #include "location.h"
 #include "log.h"
-#include "unordered_set.h"
-#include "vector.h"
 #include "util.h"
 
 #include <iomanip>
 #include <iostream>
+#include <unordered_set>
 
 using namespace troll;
 
-static output_t &operator << (output_t &out, vector_t<location_t> const &l)
+static output_t &operator << (output_t &out, std::vector<location_t> const &l)
 {
 	out << '[';
 	for (size_t i = 0; i < l.size(); ++i)
@@ -28,17 +27,17 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	unordered_set_t<region_id_t> grep;
+	std::unordered_set<region_id_t> grep;
 	for (int i = 1; i < argc; ++i)
 		grep.insert(atoll(argv[i]));
 
 	try {
-		vector_t<location_t> locations;
-		vector_t<location_t> polygon;
+		std::vector<location_t> locations;
+		std::vector<location_t> polygon;
 
-		geo_read_txt(std::cin, [&] (region_id_t region_id, vector_t<location_t> const &raw_locations, vector_t<blob_t> const &) {
+		geo_read_txt(std::cin, [&] (region_id_t region_id, std::vector<location_t> const &raw_locations, std::vector<std::string> const &) {
 			if (grep.find(region_id) != grep.end()) {
-				process_locations(raw_locations, locations, [&] (vector_t<location_t> const &locations) {
+				process_locations(raw_locations, locations, [&] (std::vector<location_t> const &locations) {
 					if (grep.size() != 1)
 						std::cout << region_id << " = ";
 					std::cout << locations << std::endl;

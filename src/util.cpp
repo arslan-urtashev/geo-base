@@ -1,5 +1,4 @@
 #include "algo.h"
-#include "blob.h"
 #include "point.h"
 #include "util.h"
 
@@ -14,8 +13,8 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 	count_t locations_count;
 	count_t blobs_count;
 
-	vector_t<location_t> locations;
-	vector_t<blob_t> blobs;
+	std::vector<location_t> locations;
+	std::vector<std::string> blobs;
 
 	count_t lines_count = 0;
 
@@ -59,7 +58,7 @@ void geo_read_txt(input_t &in, read_txt_visitor_t callback)
 }
 
 #ifdef TROLL_CHECK_POINTS_ON_ONE_LINE
-static bool last_points_on_one_line(vector_t<location_t> const &l)
+static bool last_points_on_one_line(std::vector<location_t> const &l)
 {
 	if (l.size() < 3)
 		return false;
@@ -70,7 +69,7 @@ static bool last_points_on_one_line(vector_t<location_t> const &l)
 }
 #endif
 
-void process_locations(vector_t<location_t> const &raw_locations, vector_t<location_t> &locations,
+void process_locations(std::vector<location_t> const &raw_locations, std::vector<location_t> &locations,
 	process_locations_visitor_t callback)
 {
 	locations.clear();

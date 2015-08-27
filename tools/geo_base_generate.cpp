@@ -7,12 +7,11 @@
 #include "geo_base_generate.h"
 #include "io.h"
 #include "log.h"
-#include "vector.h"
 
 using namespace troll;
 
-using locations_t = vector_t<location_t>;
-using blobs_t = vector_t<blob_t>;
+using locations_t = std::vector<location_t>;
+using blobs_t = std::vector<std::string>;
 
 struct reader_t {
 	geo_base_generate_t *generate;

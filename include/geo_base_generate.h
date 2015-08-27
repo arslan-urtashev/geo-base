@@ -4,9 +4,9 @@
 #include "geo_base_alloc.h"
 #include "geo_data.h"
 #include "hash.h"
-#include "unordered_map.h"
-#include "unordered_set.h"
-#include "vector.h"
+
+#include <unordered_set>
+#include <unordered_map>
 
 namespace troll {
 
@@ -23,7 +23,7 @@ struct checkpoint_t {
 	// undef
 
 #define TROLL_DEF_ARR(arr_t, arr) \
-	vector_t<arr_t> arr;
+	std::vector<arr_t> arr;
 
 struct geo_data_ctx_t {
 	TROLL_DEF_GEO_DATA
@@ -46,7 +46,7 @@ struct geo_data_ctx_t {
 		return saved.edges[e];
 	}
 
-	count_t push_blob(blob_t const &b)
+	count_t push_blob(std::string const &b)
 	{
 		if (saved.blobs.find(b) == saved.blobs.end()) {
 			count_t off = blobs.size();
@@ -63,20 +63,20 @@ struct geo_data_ctx_t {
 	double memory() const;
 
 	struct {
-		vector_t<checkpoint_t> checkpoints;
-		vector_t<edge_t> edges;
-		vector_t<edge_t> erase;
-		vector_t<location_t> locations;
-		vector_t<point_t> points;
+		std::vector<checkpoint_t> checkpoints;
+		std::vector<edge_t> edges;
+		std::vector<edge_t> erase;
+		std::vector<location_t> locations;
+		std::vector<point_t> points;
 	} buf;
 
 	struct {
-		unordered_map_t<edge_t, ref_t> edges;
-		unordered_map_t<point_t, ref_t> points;
-		unordered_map_t<blob_t, count_t, blob_hash_t> blobs;
+		std::unordered_map<edge_t, ref_t, hash64_t> edges;
+		std::unordered_map<point_t, ref_t, hash64_t> points;
+		std::unordered_map<std::string, count_t> blobs;
 	} saved;
 
-	unordered_set_t<uint64_t> processed;
+	std::unordered_set<uint64_t> processed;
 };
 
 #undef TROLL_DEF_VAR
@@ -90,7 +90,7 @@ public:
 	{
 	}
 
-	void update(region_id_t region_id, vector_t<location_t> const &locations, vector_t<blob_t> const &blobs);
+	void update(region_id_t region_id, std::vector<location_t> const &locations, std::vector<std::string> const &blobs);
 
 	void save();
 
@@ -105,7 +105,7 @@ public:
 	}
 
 private:
-	void update(region_id_t region_id, vector_t<point_t> const &points, vector_t<blob_t> const &blobs);
+	void update(region_id_t region_id, std::vector<point_t> const &points, std::vector<std::string> const &blobs);
 
 	void create_boxes();
 

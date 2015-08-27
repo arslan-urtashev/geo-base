@@ -28,10 +28,10 @@ struct polygon_t {
 
 	void relax(point_t const &p)
 	{
-		left = min(left, p.x);
-		lower = min(lower, p.y);
-		right = max(right, p.x);
-		upper = max(upper, p.y);
+		left = std::min(left, p.x);
+		lower = std::min(lower, p.y);
+		right = std::max(right, p.x);
+		upper = std::max(upper, p.y);
 	}
 
 	bool intersect(coordinate_t x1, coordinate_t y1, coordinate_t x2, coordinate_t y2) const

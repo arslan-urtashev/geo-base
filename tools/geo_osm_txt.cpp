@@ -1,9 +1,6 @@
 #include "common.h"
 #include "location.h"
 #include "log.h"
-#include "unordered_map.h"
-#include "unordered_set.h"
-#include "vector.h"
 
 #include "osmpbfreader/osmpbfreader.h"
 
@@ -12,27 +9,29 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <unordered_map>
+#include <unordered_set>
 
 using namespace troll;
 using namespace CanalTP;
 
 using osm_id_t = uint64_t;
 
-unordered_set_t<osm_id_t> debug_osm_ids;
-unordered_set_t<osm_id_t> need_ways;
-unordered_set_t<osm_id_t> need_nodes;
-unordered_map_t<osm_id_t, location_t> nodes;
-unordered_map_t<osm_id_t, vector_t<osm_id_t>> ways;
+std::unordered_set<osm_id_t> debug_osm_ids;
+std::unordered_set<osm_id_t> need_ways;
+std::unordered_set<osm_id_t> need_nodes;
+std::unordered_map<osm_id_t, location_t> nodes;
+std::unordered_map<osm_id_t, std::vector<osm_id_t>> ways;
 
 static bool is_boundary(Tags const &tags)
 {
 	bool ok = false;
 	for (auto const &p : tags)
 		if (
-			p.first == "admin_level"
+			p.first == "adstd::min_level"
 			|| (
 				p.first == "boundary"
-				&& p.second == "administrative"
+				&& p.second == "adstd::ministrative"
 			)
 			|| (
 				p.first == "place"
@@ -131,10 +130,10 @@ struct need_nodes_visit_t {
 };
 
 struct parser_t {
-	vector_t<location_t> locations;
+	std::vector<location_t> locations;
 
-	unordered_map_t<osm_id_t, vector_t<osm_id_t>> graph;
-	unordered_set_t<osm_id_t> used;
+	std::unordered_map<osm_id_t, std::vector<osm_id_t>> graph;
+	std::unordered_set<osm_id_t> used;
 
 	void node_callback(osm_id_t osm_id, double lon, double lat, const Tags &)
 	{
@@ -175,7 +174,7 @@ struct parser_t {
 
 			for (Reference const &r : refs) {
 				if (is_way_ref(r)) {
-					vector_t<osm_id_t> const &w = ways[r.member_id];
+					std::vector<osm_id_t> const &w = ways[r.member_id];
 					for (size_t i = 0; i + 1 < w.size(); ++i) {
 						graph[w[i]].push_back(w[i + 1]);
 						graph[w[i + 1]].push_back(w[i]);
@@ -185,7 +184,7 @@ struct parser_t {
 
 			for (Reference const &r : refs) {
 				if (is_way_ref(r)) {
-					vector_t<osm_id_t> const &w = ways[r.member_id];
+					std::vector<osm_id_t> const &w = ways[r.member_id];
 					for (size_t i = 0; i < w.size(); ++i) {
 						if (used.find(w[i]) == used.end()) {
 							save_locations(w[i]);

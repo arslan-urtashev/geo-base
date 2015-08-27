@@ -2,7 +2,6 @@
 
 #include "exception.h"
 #include "io.h"
-#include "unordered_map.h"
 
 namespace troll {
 

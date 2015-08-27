@@ -1,8 +1,6 @@
 #pragma once
 
 #include "algo.h"
-#include "blob.h"
-#include "vector.h"
 
 namespace troll {
 
@@ -14,15 +12,6 @@ struct hash64_t {
 	{
 		static_assert(sizeof(x) == sizeof(uint64_t), "sizeof(x) != sizeof(uint64_t)");
 		return hash(*((uint64_t const *) &x));
-	}
-};
-
-struct blob_hash_t {
-	std::hash<blob_t> hash;
-
-	uint64_t operator () (blob_t const &b) const
-	{
-		return hash(b);
 	}
 };
 
@@ -45,7 +34,7 @@ struct poly_hash_t {
 	}
 
 	template<typename val_t>
-	uint64_t operator () (vector_t<val_t> const &a) const
+	uint64_t operator () (std::vector<val_t> const &a) const
 	{
 		return (*this)((char const *) &(a[0]), sizeof(val_t) * a.size());
 	}
