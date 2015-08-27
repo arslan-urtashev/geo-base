@@ -10,8 +10,8 @@
 
 using namespace troll;
 
-using locations_t = std::vector<location_t>;
-using blobs_t = std::vector<std::string>;
+typedef std::vector<location_t> locations_t;
+typedef std::vector<std::string> blobs_t;
 
 struct reader_t {
 	geo_base_generate_t *generate;

@@ -4,7 +4,7 @@
 
 namespace troll {
 
-using output_t = std::ostream;
-using input_t = std::istream;
+typedef std::ostream output_t;
+typedef std::istream input_t;
 
 }

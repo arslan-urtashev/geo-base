@@ -15,7 +15,7 @@
 using namespace troll;
 using namespace CanalTP;
 
-using osm_id_t = uint64_t;
+typedef uint64_t osm_id_t;
 
 std::unordered_set<osm_id_t> debug_osm_ids;
 std::unordered_set<osm_id_t> need_ways;

@@ -48,16 +48,20 @@ const int lonlat_resolution = 1000 * 1000 * 1000;
 namespace CanalTP {
 
 // Represents the key/values of an object
-typedef std::vector<std::pair<std::string const &, std::string const &>> Tags;
+typedef std::vector<std::pair<std::string, std::string>> Tags;
 
 // References of a relation
 struct Reference {
 	OSMPBF::Relation::MemberType member_type; // type de la relation
 	uint64_t member_id; // OSMID
-	std::string const &role; // le role
+	std::string role; // le role
 
 	Reference(OSMPBF::Relation::MemberType member_type, uint64_t member_id, std::string const &role) :
 		member_type(member_type), member_id(member_id), role(role)
+	{}
+
+	Reference(Reference const &r) :
+		member_type(r.member_type), member_id(r.member_id), role(r.role)
 	{}
 };
 
@@ -95,7 +99,7 @@ Tags const &get_tags(T object, const OSMPBF::PrimitiveBlock &primblock, Tags &re
 		uint64_t val = object.vals(i);
 		std::string const &key_string = primblock.stringtable().s(key);
 		std::string const &val_string = primblock.stringtable().s(val);
-		result.emplace_back(key_string, val_string);
+		result.push_back(std::pair<std::string const &, std::string const &>(key_string, val_string));
 	}
 	return result;
 }
@@ -264,8 +268,8 @@ private:
 					while (current_kv < dn.keys_vals_size() && dn.keys_vals(current_kv) != 0){
 						uint64_t key = dn.keys_vals(current_kv);
 						uint64_t val = dn.keys_vals(current_kv + 1);
-						std::string const &key_string = primblock.stringtable().s(key);
-						std::string const &val_string = primblock.stringtable().s(val);
+						std::string key_string = primblock.stringtable().s(key);
+						std::string val_string = primblock.stringtable().s(val);
 						tags.emplace_back(key_string, val_string);
 						current_kv += 2;
 					}
