@@ -10,7 +10,7 @@ namespace troll {
 
 class mem_base_t : public fd_base_t {
 protected:
-	static size_t const MAX_MEM_LEN = 8LU * (1LU << 30); // 8 GB
+	static size_t const DEFAULT_MEM_COUNT = 8LU * (1LU << 30); // 8 GB
 
 	void rd(char const *path)
 	{
@@ -26,16 +26,15 @@ protected:
 		mmap_guard.guard(addr, length);
 	}
 
-	void rdwr(char const *path)
+	void rdwr(char const *path, size_t mem_count = DEFAULT_MEM_COUNT)
 	{
 		fd_base_t::rdwr(path);
 
-		size_t length = MAX_MEM_LEN;
-		void *addr = mmap(nullptr, length, PROT_READ | PROT_WRITE, MAP_SHARED, fd(), 0);
+		void *addr = mmap(nullptr, mem_count, PROT_READ | PROT_WRITE, MAP_SHARED, fd(), 0);
 		if (addr == MAP_FAILED)
 			throw exception_t("mmap_base.rdwr: %s", strerror(errno));
 
-		mmap_guard.guard(addr, length);
+		mmap_guard.guard(addr, mem_count);
 	}
 
 public:
