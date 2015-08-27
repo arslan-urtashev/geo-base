@@ -40,12 +40,12 @@ env.Append(CXXFLAGS =
 )
 
 geo_base_a = env.Library(
-    "geo-base",
+    "lib/geo-base",
     Glob("src/*.cpp")
 )
 
 geo_base_so = env.SharedLibrary(
-    "geo-base",
+    "lib/geo-base",
     Glob("src/*.cpp")
 )
 
