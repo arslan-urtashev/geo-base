@@ -28,10 +28,10 @@ static bool is_boundary(Tags const &tags)
 	bool ok = false;
 	for (auto const &p : tags)
 		if (
-			p.first == "adstd::min_level"
+			p.first == "admin_level"
 			|| (
 				p.first == "boundary"
-				&& p.second == "adstd::ministrative"
+				&& p.second == "administrative"
 			)
 			|| (
 				p.first == "place"
