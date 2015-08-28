@@ -79,10 +79,10 @@ geo_base_show = env.Program(
     ]
 )
 
-geo_osm_txt = env.Program(
-    "bin/geo-osm-txt",
+geo_base_convert = env.Program(
+    "bin/geo-base-convert",
     [
-        "tools/geo_osm_txt.cpp"
+        "tools/geo_base_convert.cpp"
     ],
     LIBS = [
         geo_base_a,

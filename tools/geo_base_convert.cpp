@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
 	std::cout << std::fixed << std::setprecision(6);
 
 	if (argc < 2) {
-		log_error("osm-pbf-convert") << "osm-pbf-convert <geodata.osm.pbf>";
+		log_error("geo-base-convert") << "geo-base-convert <geodata.osm.pbf>";
 		return -1;
 	}
 
