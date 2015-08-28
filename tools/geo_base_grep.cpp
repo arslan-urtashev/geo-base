@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
 	std::ios_base::sync_with_stdio(false);
 	std::cout << std::fixed << std::setprecision(6);
 
+	log_level(log_level_t::debug);
+
 	if (argc < 2) {
 		log_error("geo-base-grep") << "geo-base-grep <region_id>";
 		return -1;

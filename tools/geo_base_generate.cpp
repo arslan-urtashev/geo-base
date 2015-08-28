@@ -40,6 +40,8 @@ int main(int argc, char *argv[])
 	std::cout << std::fixed << std::setprecision(2);
 	std::cerr << std::fixed << std::setprecision(2);
 
+	log_level(log_level_t::debug);
+
 	if (argc != 2) {
 		log_error("geo-base-generate") << "geo-base-generate <geodata.dat>";
 		return -1;

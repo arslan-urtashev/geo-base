@@ -104,6 +104,8 @@ int main(int argc, char *argv[])
 	std::ios_base::sync_with_stdio(false);
 	std::cerr << std::fixed << std::setprecision(2);
 
+	log_level(log_level_t::debug);
+
 	if (argc < 2) {
 		log_error("geo-txt-filt") << "geo-txt-filt <geodata.dat>";
 		return -1;
