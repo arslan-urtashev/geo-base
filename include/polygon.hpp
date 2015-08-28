@@ -1,10 +1,10 @@
 #pragma once
 
-#include "algo.h"
-#include "edge.h"
-#include "part.h"
-#include "point.h"
-#include "common.h"
+#include "algo.hpp"
+#include "edge.hpp"
+#include "part.hpp"
+#include "point.hpp"
+#include "common.hpp"
 
 namespace geo_base {
 

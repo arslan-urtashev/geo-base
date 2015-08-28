@@ -1,6 +1,6 @@
-#include "location.h"
-#include "log.h"
-#include "util.h"
+#include "location.hpp"
+#include "log.hpp"
+#include "util.hpp"
 
 #include <iomanip>
 #include <iostream>

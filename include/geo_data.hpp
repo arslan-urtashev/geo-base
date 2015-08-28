@@ -1,15 +1,15 @@
 #pragma once
 
-#include "box.h"
-#include "common.h"
-#include "edge.h"
-#include "io.h"
-#include "kv.h"
-#include "location.h"
-#include "part.h"
-#include "point.h"
-#include "polygon.h"
-#include "region.h"
+#include "box.hpp"
+#include "common.hpp"
+#include "edge.hpp"
+#include "io.hpp"
+#include "kv.hpp"
+#include "location.hpp"
+#include "part.hpp"
+#include "point.hpp"
+#include "polygon.hpp"
+#include "region.hpp"
 
 namespace geo_base {
 

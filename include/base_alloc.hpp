@@ -1,8 +1,8 @@
 #pragma once
 
-#include "log.h"
-#include "mem_base.h"
-#include "common.h"
+#include "log.hpp"
+#include "mem_base.hpp"
+#include "common.hpp"
 
 #include <unistd.h>
 

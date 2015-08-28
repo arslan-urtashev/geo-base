@@ -1,7 +1,7 @@
-#include "geo_base.h"
-#include "location.h"
-#include "log.h"
-#include "stop_watch.h"
+#include "geo_base.hpp"
+#include "location.hpp"
+#include "log.hpp"
+#include "stop_watch.hpp"
 
 #include <iomanip>
 #include <iostream>

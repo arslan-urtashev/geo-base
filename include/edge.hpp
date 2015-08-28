@@ -1,7 +1,7 @@
 #pragma once
 
-#include "point.h"
-#include "common.h"
+#include "point.hpp"
+#include "common.hpp"
 
 namespace geo_base {
 

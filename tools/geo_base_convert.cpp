@@ -1,6 +1,6 @@
-#include "common.h"
-#include "location.h"
-#include "log.h"
+#include "common.hpp"
+#include "location.hpp"
+#include "log.hpp"
 
 #include "osmpbfreader/osmpbfreader.h"
 

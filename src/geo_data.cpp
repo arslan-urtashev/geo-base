@@ -1,7 +1,7 @@
-#include "geo_data.h"
+#include "geo_data.hpp"
 
-#include "exception.h"
-#include "io.h"
+#include "exception.hpp"
+#include "io.hpp"
 
 namespace geo_base {
 

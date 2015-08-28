@@ -1,9 +1,9 @@
 #pragma once
 
-#include "algo.h"
-#include "edge.h"
-#include "point.h"
-#include "common.h"
+#include "algo.hpp"
+#include "edge.hpp"
+#include "point.hpp"
+#include "common.hpp"
 
 namespace geo_base {
 

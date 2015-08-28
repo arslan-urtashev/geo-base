@@ -1,7 +1,7 @@
 #pragma once
 
-#include "exception.h"
-#include "fd_guard.h"
+#include "exception.hpp"
+#include "fd_guard.hpp"
 
 #include <sys/file.h>
 #include <fcntl.h>

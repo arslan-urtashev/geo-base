@@ -1,9 +1,9 @@
 #pragma once
 
-#include "common.h"
-#include "geo_base_alloc.h"
-#include "geo_data.h"
-#include "hash.h"
+#include "common.hpp"
+#include "geo_base_alloc.hpp"
+#include "geo_data.hpp"
+#include "hash.hpp"
 
 #include <unordered_set>
 #include <unordered_map>

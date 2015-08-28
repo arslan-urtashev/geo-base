@@ -1,5 +1,5 @@
-#include "geo_base.h"
-#include "log.h"
+#include "geo_base.hpp"
+#include "log.hpp"
 
 #include <atomic>
 #include <cassert>

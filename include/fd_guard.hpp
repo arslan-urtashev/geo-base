@@ -2,7 +2,7 @@
 
 #include <unistd.h>
 
-#include "log.h"
+#include "log.hpp"
 
 namespace geo_base {
 

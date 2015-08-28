@@ -1,8 +1,8 @@
 #pragma once
 
-#include "fd_base.h"
-#include "fd_stat.h"
-#include "mmap_guard.h"
+#include "fd_base.hpp"
+#include "fd_stat.hpp"
+#include "mmap_guard.hpp"
 
 #include <sys/mman.h>
 

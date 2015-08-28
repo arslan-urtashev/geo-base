@@ -1,9 +1,9 @@
 #pragma once
 
-#include "geo_data.h"
-#include "io.h"
-#include "location.h"
-#include "mem_base.h"
+#include "geo_data.hpp"
+#include "io.hpp"
+#include "location.hpp"
+#include "mem_base.hpp"
 
 namespace geo_base {
 

@@ -1,6 +1,6 @@
-#include "algo.h"
-#include "point.h"
-#include "util.h"
+#include "algo.hpp"
+#include "point.hpp"
+#include "util.hpp"
 
 namespace geo_base {
 

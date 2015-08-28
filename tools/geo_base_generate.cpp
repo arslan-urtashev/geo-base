@@ -4,9 +4,9 @@
 #include <sstream>
 #include <thread>
 
-#include "geo_base_generate.h"
-#include "io.h"
-#include "log.h"
+#include "geo_base_generate.hpp"
+#include "io.hpp"
+#include "log.hpp"
 
 using namespace geo_base;
 

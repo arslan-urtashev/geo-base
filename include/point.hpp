@@ -1,8 +1,8 @@
 #pragma once
 
-#include "util.h"
-#include "location.h"
-#include "common.h"
+#include "util.hpp"
+#include "location.hpp"
+#include "common.hpp"
 
 namespace geo_base {
 

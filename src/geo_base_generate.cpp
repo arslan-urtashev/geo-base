@@ -1,7 +1,7 @@
-#include "geo_base_generate.h"
+#include "geo_base_generate.hpp"
 
-#include "hash.h"
-#include "log.h"
+#include "hash.hpp"
+#include "log.hpp"
 
 namespace geo_base {
 

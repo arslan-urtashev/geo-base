@@ -1,11 +1,11 @@
 #pragma once
 
-#include "common.h"
-#include "exception.h"
-#include "io.h"
-#include "location.h"
-#include "log.h"
-#include "stop_watch.h"
+#include "common.hpp"
+#include "exception.hpp"
+#include "io.hpp"
+#include "location.hpp"
+#include "log.hpp"
+#include "stop_watch.hpp"
 
 #include <sstream>
 #include <string>

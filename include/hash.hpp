@@ -1,6 +1,6 @@
 #pragma once
 
-#include "algo.h"
+#include "algo.hpp"
 
 namespace geo_base {
 

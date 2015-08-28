@@ -1,7 +1,7 @@
 #pragma once
 
-#include "base_alloc.h"
-#include "geo_data.h"
+#include "base_alloc.hpp"
+#include "geo_data.hpp"
 
 namespace geo_base {
 
