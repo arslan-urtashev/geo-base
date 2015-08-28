@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 	std::cout << std::fixed << std::setprecision(6);
 
 	if (argc < 2) {
-		log_error("geo-txt-grep") << "geo-txt-grep <region_id>";
+		log_error("geo-base-grep") << "geo-base-grep <region_id>";
 		return -1;
 	}
 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 		});
 
 	} catch (std::exception const &e) {
-		log_error("geo-txt-grep", "EXCEPTION") << e.what();
+		log_error("geo-base-grep", "EXCEPTION") << e.what();
 	}
 
 	return 0;

@@ -92,10 +92,10 @@ geo_base_convert = env.Program(
     ]
 )
 
-geo_txt_grep = env.Program(
-    "bin/geo-txt-grep",
+geo_base_grep = env.Program(
+    "bin/geo-base-grep",
     [
-        "tools/geo_txt_grep.cpp"
+        "tools/geo_base_grep.cpp"
     ],
     LIBS = [
         geo_base_a
