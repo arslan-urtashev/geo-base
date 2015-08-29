@@ -30,10 +30,7 @@ env.Append(CXXFLAGS =
         "-flto",
         "-g",
         "-pthread",
-        "-Wl,--no-as-needed",
-        "-static",
-        "-static-libgcc",
-        "-static-libstdc++"
+        "-Wl,--no-as-needed"
     ],
     CPPPATH = [
         ".",
@@ -52,7 +49,7 @@ geo_base_so = env.SharedLibrary(
     Glob("src/*.cpp")
 )
 
-geo_base_run = env.Program(
+env.Program(
     "bin/geo-base-run",
     [
         "tools/geo_base_run.cpp"
@@ -62,7 +59,7 @@ geo_base_run = env.Program(
     ]
 )
 
-geo_base_generate = env.Program(
+env.Program(
     "bin/geo-base-generate",
     [
         "tools/geo_base_generate.cpp"
@@ -72,7 +69,7 @@ geo_base_generate = env.Program(
     ]
 )
 
-geo_base_show = env.Program(
+env.Program(
     "bin/geo-base-show",
     [
         "tools/geo_base_show.cpp"
@@ -82,20 +79,21 @@ geo_base_show = env.Program(
     ]
 )
 
-geo_base_convert = env.Program(
-    "bin/geo-base-convert",
-    [
-        "tools/geo_base_convert.cpp"
-    ],
-    LIBS = [
-        geo_base_a,
-        "osmpbf",
-        "protobuf",
-        "z"
-    ]
-)
+if ARGUMENTS.get("geo-base-convert", "false") == "true":
+    env.Program(
+        "bin/geo-base-convert",
+        [
+            "tools/geo_base_convert.cpp"
+        ],
+        LIBS = [
+            geo_base_a,
+            "osmpbf",
+            "protobuf",
+            "z"
+        ]
+    )
 
-geo_base_grep = env.Program(
+env.Program(
     "bin/geo-base-grep",
     [
         "tools/geo_base_grep.cpp"
@@ -105,7 +103,7 @@ geo_base_grep = env.Program(
     ]
 )
 
-geo_txt_filt = env.Program(
+env.Program(
     "bin/geo-txt-filt",
     [
         "tools/geo_txt_filt.cpp"
@@ -115,7 +113,7 @@ geo_txt_filt = env.Program(
     ]
 )
 
-geo_base_perf = env.Program(
+env.Program(
     "bin/geo-base-perf",
     [
         "tools/geo_base_perf.cpp"
