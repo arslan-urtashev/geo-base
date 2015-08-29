@@ -23,7 +23,6 @@ env.Append(CXXFLAGS =
         "-march=corei7", 
         "-pthread",
         "-std=c++0x",
-        "-fvisibility=hidden",
         "-Wl,--no-as-needed"
     ],
     LINKFLAGS = [
@@ -31,8 +30,8 @@ env.Append(CXXFLAGS =
         "-flto",
         "-g",
         "-pthread",
-        "-fvisibility=hidden",
         "-Wl,--no-as-needed",
+        "-static",
         "-static-libgcc",
         "-static-libstdc++"
     ],
