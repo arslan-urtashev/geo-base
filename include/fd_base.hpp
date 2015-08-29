@@ -28,6 +28,10 @@ protected:
 		fd_guard.guard(fd);
 	}
 
+	virtual ~fd_base_t()
+	{
+	}
+
 public:
 	int fd() const
 	{
