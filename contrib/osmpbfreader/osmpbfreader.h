@@ -1,3 +1,31 @@
+/*
+Copyright (c) 2012, Canal TP
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+	* Redistributions of source code must retain the above copyright
+	  notice, this list of conditions and the following disclaimer.
+	* Redistributions in binary form must reproduce the above copyright
+	  notice, this list of conditions and the following disclaimer in the
+	  documentation and/or other materials provided with the distribution.
+	* Neither the name of the Canal TP nor the
+	  names of its contributors may be used to endorse or promote products
+	  derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL CANAL TP BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+#pragma once
+
 #include <stdint.h>
 #include <netinet/in.h>
 #include <zlib.h>
@@ -5,8 +33,19 @@
 #include <fstream>
 #include <iostream>
 
+// this describes the low-level blob storage
 #include <osmpbf/fileformat.pb.h>
+// this describes the high-level OSM objects
 #include <osmpbf/osmformat.pb.h>
+// the maximum size of a blob header in bytes
+const int max_blob_header_size = 64 * 1024; // 64 kB
+// the maximum size of an uncompressed blob in bytes
+const int max_uncompressed_blob_size = 32 * 1024 * 1024; // 32 MB
+// resolution for longitude/latitude used for conversion
+// between representation as double and as int
+const int lonlat_resolution = 1000 * 1000 * 1000; 
+
+namespace CanalTP {
 
 // Represents the key/values of an object
 typedef std::vector<std::pair<std::string, std::string>> Tags;
@@ -64,72 +103,6 @@ Tags const &get_tags(T object, const OSMPBF::PrimitiveBlock &primblock, Tags &re
 	}
 	return result;
 }
-
-class pbf_parser_t {
-public:
-	pbf_parser_t(char const *path)
-		: fd_base()
-	{
-		fd_base.rd(path);
-	}
-
-	void parse()
-	{
-		while (true) {
-			OSMPBF::BlobHeader header;
-			if (!parse_header(&header))
-				break;
-			
-			OSMPBF::Blob blob;
-			if (!parse_blob(header.datasize(), &blob))
-				break;
-		}
-	}
-
-private:
-	bool parse_header(OSMPBF::BlobHeader *header)
-	{
-		int32_t	blob_header_size = 0;
-		if (!read(&blob_header_size, sizeof(blob_header_size)))
-			return false;
-
-		blob_header_size = ntohl(blob_header_size);
-
-		buffer.resize(blob_header_size);
-		if (!read(buffer.data(), buffer.size()))
-			return false;
-
-		if (!header->ParseFromArray(buffer.data(), buffer.size())) {
-			log_error("geo-base-convert") << "Can't parse BlobHeader";
-			return false;
-		}
-
-		return true;
-	}
-
-	bool parse_blob(size_t count, OSMPBF::Blob *blob)
-	{
-		buffer.resize(count);
-		if (!read(buffer.data(), buffer.size()))
-			return false;
-
-		if (!blob->ParseFromArray(buffer.data(), buffer.size()))
-			return false;
-
-		return true;
-	}
-
-	bool read(void *ptr, size_t count)
-	{
-		ssize_t ret = read(fd_base.fd(), ptr, count);
-		if (ret < 0)
-			log_error("geo-base-convert") << strerror(errno);
-		return ret > 0 && static_cast<size_t>(ret) == count;
-	}
-
-	fd_base_t fd_base;
-	std::vector<char> buffer;
-};
 
 template<typename Visitor>
 struct Parser {
