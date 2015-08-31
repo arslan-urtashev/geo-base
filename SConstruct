@@ -79,7 +79,7 @@ env.Program(
     ]
 )
 
-if ARGUMENTS.get("geo-base-convert", "false") == "true":
+if ARGUMENTS.get("geo-base-convert", "true") == "true":
     env.Program(
         "bin/geo-base-convert",
         [

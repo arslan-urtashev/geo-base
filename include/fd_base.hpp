@@ -11,7 +11,7 @@
 namespace geo_base {
 
 class fd_base_t {
-protected:
+public:
 	void rd(char const *path)
 	{
 		int fd = open(path, O_RDONLY | O_CLOEXEC | O_NOATIME);
@@ -32,7 +32,6 @@ protected:
 	{
 	}
 
-public:
 	int fd() const
 	{
 		return fd_guard.fd;
