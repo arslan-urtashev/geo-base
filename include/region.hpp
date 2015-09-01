@@ -29,6 +29,11 @@ struct region_t {
 	{
 		return region_id < r.region_id;
 	}
+
+	bool better(region_t const &r) const
+	{
+		return square < r.square;
+	}
 };
 
 }

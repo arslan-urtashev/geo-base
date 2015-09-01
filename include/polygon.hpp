@@ -1,10 +1,11 @@
 #pragma once
 
 #include "algo.hpp"
+#include "common.hpp"
 #include "edge.hpp"
 #include "part.hpp"
 #include "point.hpp"
-#include "common.hpp"
+#include "region.hpp"
 
 namespace geo_base {
 
@@ -80,6 +81,20 @@ struct polygon_t {
 			return true;
 
 		return (edge_ref - edge_refs) % 2 == 1;
+	}
+
+	bool better(polygon_t const &p, region_t const *regions, count_t regions_count) const
+	{
+		if (square < p.square)
+			return true;
+
+		if (square == p.square) {
+			region_t const *r1 = find(regions, regions_count, region_id);
+			region_t const *r2 = find(regions, regions_count, p.region_id);
+			return r1->better(*r2);
+		}
+
+		return false;
 	}
 };
 

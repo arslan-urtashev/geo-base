@@ -48,7 +48,7 @@ void geo_data_save(void *dat, geo_data_t *geo_data)
 #undef TROLL_DEF_ARR
 }
 
-region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &location)
+region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &location, std::vector<region_id_t> *regs)
 {
 	point_t point(location);
 
@@ -64,20 +64,27 @@ region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &locati
 
 	polygon_t const *answer = nullptr;
 
+	if (regs)
+		regs->clear();
+
 	for (ref_t ref = refs_offset; ref < refs_offset + refs_count; ++ref) {
 		ref_t i = geo_data.polygon_refs[ref];
 
 		if (geo_data.polygons[i].contains(point, geo_data.parts, geo_data.edge_refs, geo_data.edges, geo_data.points)) {
-			if (!answer || answer->square > geo_data.polygons[i].square) {
+			if (!answer || !(answer->better(geo_data.polygons[i], geo_data.regions, geo_data.regions_count)))
 				answer = &(geo_data.polygons[i]);
 
-			} else if (answer->square == geo_data.polygons[i].square) {
-				region_t const *r1 = find(geo_data.regions, geo_data.regions_count, answer->region_id);
-				region_t const *r2 = find(geo_data.regions, geo_data.regions_count, geo_data.polygons[i].region_id);
-				if (r1->square > r2->square)
-					answer = &(geo_data.polygons[i]);
-			}
+			if (regs)
+				regs->push_back(geo_data.polygons[i].region_id);
 		}
+	}
+
+	if (regs) {
+		std::sort(regs->begin(), regs->end(), [&] (region_id_t const &a, region_id_t const &b) {
+			region_t const *r1 = find(geo_data.regions, geo_data.regions_count, a);
+			region_t const *r2 = find(geo_data.regions, geo_data.regions_count, b);
+			return r1->better(*r2);
+		});
 	}
 
 	return answer ? answer->region_id : -1;
