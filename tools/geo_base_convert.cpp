@@ -1,12 +1,13 @@
 #include <stdint.h>
 #include <netinet/in.h>
 
-#include <thread>
-#include <mutex>
 #include <algorithm>
-#include <vector>
-#include <unordered_set>
+#include <iomanip>
+#include <mutex>
+#include <thread>
 #include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 #include <osmpbf/osmpbf.h>
 
@@ -18,7 +19,7 @@
 
 using namespace geo_base;
 
-static size_t const DEFAULT_THREADS_COUNT = 2;
+static size_t const DEFAULT_THREADS_COUNT = 1;
 
 typedef region_id_t osm_id_t;
 
@@ -204,8 +205,8 @@ private:
 
 	bool process_groups(block_t const &block)
 	{
-		for (size_t i = 0; i < block.primitivegroup_size(); ++i) {
-			group_t const &group = block.primitivegroup(i);
+		for (size_t k = 0; k < block.primitivegroup_size(); ++k) {
+			group_t const &group = block.primitivegroup(k);
 
 			for (size_t i = 0; i < group.nodes_size(); ++i) {
 				node_t const &node = group.nodes(i);
@@ -374,7 +375,7 @@ static bool is_boundary(std::vector<kv_t> const &kvs)
 		return false;
 	ok = false;
 	for (kv_t const &kv : kvs) {
-		if (!strcmp(kv.k, "name")) {
+		if (strstr(kv.k, "name") == kv.k) {
 			ok = true;
 			break;
 		}
@@ -446,19 +447,112 @@ struct nodes_callback_t : public pbf_callback_t {
 };
 
 struct parser_t : public pbf_callback_t {
-	std::unordered_map<osm_id_t, location_t> const &nodes;
-	std::unordered_map<osm_id_t, std::vector<osm_id_t>> const &ways;
+	typedef std::unordered_map<osm_id_t, location_t> nodes_t;
+	typedef std::unordered_map<osm_id_t, std::vector<osm_id_t>> ways_t;
 
-	parser_t(std::unordered_map<osm_id_t> const &nodes, std::unordered_map<osm_id_t, std::vector<osm_id_t>> const &ways)
+	nodes_t const &nodes;
+	ways_t const &ways;
+	std::mutex &mutex;
+
+	std::vector<location_t> locations;
+	std::unordered_map<osm_id_t, std::vector<osm_id_t>> graph;
+	std::unordered_set<osm_id_t> used;
+
+	parser_t(nodes_t const &nodes, ways_t const &ways, std::mutex &mutex)
 		: nodes(nodes)
 		, ways(ways)
+		, mutex(mutex)
 	{
+	}
+
+	void way_callback(osm_id_t osm_id, std::vector<kv_t> const &kvs, std::vector<osm_id_t> const &refs)
+	{
+		if (is_boundary(kvs) && refs.back() == refs.front()) {
+			locations.clear();
+			for (osm_id_t osm_id : refs)
+				locations.push_back(nodes.at(osm_id));
+
+			std::lock_guard<std::mutex> lock(mutex);
+
+			std::cout << osm_id << ' ' << locations.size() << ' ' << 2 * kvs.size() << '\n';
+			for (location_t const &l : locations)
+				std::cout << l.lat << ' ' << l.lon << '\n';
+			for (kv_t const &kv : kvs)
+				std::cout << kv.k << '\n' << kv.v << '\n';
+		}
+	}
+	
+	void save_locations(osm_id_t osm_id)
+	{
+		used.insert(osm_id);
+		locations.push_back(nodes.at(osm_id));
+
+		for (osm_id_t node_id : graph[osm_id])
+			if (used.find(node_id) == used.end())
+				save_locations(node_id);
+	}
+
+
+	void relation_callback(osm_id_t osm_id, std::vector<kv_t> const &kvs, std::vector<reference_t> const &refs)
+	{
+		bool boundary = is_boundary(kvs);
+
+		if (boundary) {
+			locations.clear();
+
+			graph.clear();
+			used.clear();
+
+			bool found = true;
+			for (reference_t const &r : refs)
+				if (is_way_ref(r) && ways.find(r.osm_id) == ways.end())
+					found = false;
+			if (!found) {
+				log_warning("geo-base-convert", "not found", osm_id) << "Keys and values:";
+				for (kv_t const &kv : kvs)
+					log_warning("geo-base-convert", "not found", osm_id) << "  " << kv.k << ' ' << kv.v;
+				return;
+			}
+
+			for (reference_t const &r : refs) {
+				if (is_way_ref(r)) {
+					std::vector<osm_id_t> const &w = ways.at(r.osm_id);
+					for (size_t i = 0; i + 1 < w.size(); ++i) {
+						graph[w[i]].push_back(w[i + 1]);
+						graph[w[i + 1]].push_back(w[i]);
+					}
+				}
+			}
+
+			for (reference_t const &r : refs) {
+				if (is_way_ref(r)) {
+					std::vector<osm_id_t> const &w = ways.at(r.osm_id);
+					for (size_t i = 0; i < w.size(); ++i) {
+						if (used.find(w[i]) == used.end()) {
+							save_locations(w[i]);
+							locations.push_back(nodes.at(w[i]));
+						}
+					}
+				}
+			}
+
+			if (!locations.empty()) {
+				std::lock_guard<std::mutex> lock(mutex);
+
+				std::cout << osm_id << ' ' << locations.size() << ' ' << 2 * kvs.size() << '\n';
+				for (location_t const &l : locations)
+					std::cout << l.lat << ' ' << l.lon << '\n';
+				for (kv_t const &kv : kvs)
+					std::cout << kv.k << '\n' << kv.v << '\n';
+			}
+		}
 	}
 };
 
 int main(int argc, char *argv[])
 {
 	std::ios_base::sync_with_stdio(false);
+	std::cout << std::fixed << std::setprecision(6);
 	
 	log_level(log_level_t::debug);
 
@@ -469,50 +563,67 @@ int main(int argc, char *argv[])
 
 	size_t threads_count = DEFAULT_THREADS_COUNT;
 
-	std::vector<ways_callback_t> ways_callbacks(threads_count);
-	pbf_mt_parser_t<ways_callback_t>(argv[1], ways_callbacks)();
-
 	std::unordered_set<osm_id_t> ways;
-	for (ways_callback_t &w : ways_callbacks) {
-		ways.insert(w.ways.begin(), w.ways.end());
-		w.ways.clear();
+	
+	{
+		std::vector<ways_callback_t> ways_callbacks(threads_count);
+		pbf_mt_parser_t<ways_callback_t>(argv[1], ways_callbacks)();
+
+		for (ways_callback_t &w : ways_callbacks) {
+			ways.insert(w.ways.begin(), w.ways.end());
+			w.ways.clear();
+		}
 	}
 
-	log_info("geo-base-convert", "ways_callback_t") << ways.size();
-
-	std::vector<node_ids_callback_t> node_ids_callback;
-	for (size_t i = 0; i < threads_count; ++i)
-		node_ids_callback.emplace_back(ways);
-
-	pbf_mt_parser_t<node_ids_callback_t>(argv[1], node_ids_callback)();
+	log_info("geo-base-convert") << "Need ways count = " << ways.size();
 
 	std::unordered_set<osm_id_t> node_ids;
-	for (node_ids_callback_t &n : node_ids_callback) {
-		node_ids.insert(n.nodes.begin(), n.nodes.end());
-		n.nodes.clear();
-	}
-
 	std::unordered_map<osm_id_t, std::vector<osm_id_t>> way_nodes;
-	for (node_ids_callback_t &n : node_ids_callback) {
-		way_nodes.insert(n.ways.begin(), n.ways.end());
-		n.ways.clear();
+
+	{
+		std::vector<node_ids_callback_t> node_ids_callback;
+		for (size_t i = 0; i < threads_count; ++i)
+		node_ids_callback.emplace_back(ways);
+
+		pbf_mt_parser_t<node_ids_callback_t>(argv[1], node_ids_callback)();
+
+		for (node_ids_callback_t &n : node_ids_callback) {
+			node_ids.insert(n.nodes.begin(), n.nodes.end());
+			n.nodes.clear();
+		}
+
+		for (node_ids_callback_t &n : node_ids_callback) {
+			way_nodes.insert(n.ways.begin(), n.ways.end());
+			n.ways.clear();
+		}
 	}
 
-	log_info("geo-base-convert", "node_ids_callback_t") << node_ids.size();
-
-	std::vector<nodes_callback_t> nodes_callback;
-	for (size_t i = 0; i < threads_count; ++i)
-		nodes_callback.emplace_back(node_ids);
-
-	pbf_mt_parser_t<nodes_callback_t>(argv[1], nodes_callback)();
+	log_info("geo-base-convert") << "Need nodes count = " << node_ids.size();
+	log_info("geo-base-convert") << "Way nodes count = " << way_nodes.size();
 
 	std::unordered_map<osm_id_t, location_t> nodes;
-	for (nodes_callback_t &n : nodes_callback) {
-		nodes.insert(n.nodes.begin(), n.nodes.end());
-		n.nodes.clear();
+
+	{
+		std::vector<nodes_callback_t> nodes_callback;
+		for (size_t i = 0; i < threads_count; ++i)
+			nodes_callback.emplace_back(node_ids);
+
+		pbf_mt_parser_t<nodes_callback_t>(argv[1], nodes_callback)();
+
+		for (nodes_callback_t &n : nodes_callback) {
+			nodes.insert(n.nodes.begin(), n.nodes.end());
+			n.nodes.clear();
+		}
 	}
 
-	log_info("geo-base-convert", "nodes_callback_t") << nodes.size();
+	log_info("geo-base-convert") << "Nodes count = " << nodes.size();
+
+	std::vector<parser_t> parsers;
+	std::mutex mutex;
+	for (size_t i = 0; i < threads_count; ++i)
+		parsers.emplace_back(nodes, way_nodes, mutex);
+
+	pbf_mt_parser_t<parser_t>(argv[1], parsers)();
 
 	return 0;
 }
