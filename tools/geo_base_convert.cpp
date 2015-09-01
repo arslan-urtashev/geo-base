@@ -19,7 +19,7 @@
 
 using namespace geo_base;
 
-static size_t const DEFAULT_THREADS_COUNT = 1;
+static size_t const DEFAULT_THREADS_COUNT = 2;
 
 typedef region_id_t osm_id_t;
 
@@ -347,7 +347,15 @@ static bool is_boundary(std::vector<kv_t> const &kvs)
 			!strcmp("admin_level", kv.k)
 			|| (
 				!strcmp(kv.k, "boundary")
-				&& !strcmp(kv.v, "administrative")
+				&& (
+					!strcmp(kv.v, "administrative")
+					|| !strcmp(kv.v, "maritime")
+					|| !strcmp(kv.v, "political")
+					|| !strcmp(kv.v, "vice_county")
+					|| !strcmp(kv.v, "national_park")
+					|| !strcmp(kv.v, "national")
+					|| !strcmp(kv.v, "civil")
+				)
 			)
 			|| (
 				!strcmp(kv.k, "place")
@@ -365,6 +373,11 @@ static bool is_boundary(std::vector<kv_t> const &kvs)
 					|| !strcmp(kv.v, "city_block")
 					|| !strcmp(kv.v, "town")
 					|| !strcmp(kv.v, "village")
+					|| !strcmp(kv.v, "locality")
+					|| !strcmp(kv.v, "plot")
+					|| !strcmp(kv.v, "hamlet")
+					|| !strcmp(kv.v, "farm")
+					|| !strcmp(kv.v, "allotments")
 				)
 			)
 		) {
@@ -383,7 +396,7 @@ static bool is_boundary(std::vector<kv_t> const &kvs)
 	return ok;
 }
 
-static bool is_way_ref(reference_t const &r)
+static bool is_way_reference(reference_t const &r)
 {
 	if (r.member_type == member_type_t::way && (!strcmp(r.role, "outer") || !r.role))
 		return true;
@@ -403,7 +416,7 @@ struct ways_callback_t : public pbf_callback_t {
 	{
 		if (is_boundary(kvs))
 			for (reference_t const &r : refs)
-				if (is_way_ref(r))
+				if (is_way_reference(r))
 					ways.insert(r.osm_id);
 	}
 };
@@ -505,7 +518,7 @@ struct parser_t : public pbf_callback_t {
 
 			bool found = true;
 			for (reference_t const &r : refs)
-				if (is_way_ref(r) && ways.find(r.osm_id) == ways.end())
+				if (is_way_reference(r) && ways.find(r.osm_id) == ways.end())
 					found = false;
 			if (!found) {
 				log_warning("geo-base-convert", "not found", osm_id) << "Keys and values:";
@@ -515,7 +528,7 @@ struct parser_t : public pbf_callback_t {
 			}
 
 			for (reference_t const &r : refs) {
-				if (is_way_ref(r)) {
+				if (is_way_reference(r)) {
 					std::vector<osm_id_t> const &w = ways.at(r.osm_id);
 					for (size_t i = 0; i + 1 < w.size(); ++i) {
 						graph[w[i]].push_back(w[i + 1]);
@@ -525,7 +538,7 @@ struct parser_t : public pbf_callback_t {
 			}
 
 			for (reference_t const &r : refs) {
-				if (is_way_ref(r)) {
+				if (is_way_reference(r)) {
 					std::vector<osm_id_t> const &w = ways.at(r.osm_id);
 					for (size_t i = 0; i < w.size(); ++i) {
 						if (used.find(w[i]) == used.end()) {
