@@ -21,9 +21,9 @@ public:
 		geo_data_show(dat, out);
 	}
 
-	region_id_t lookup(location_t const &l) const
+	region_id_t lookup(location_t const &l, std::vector<region_id_t> *regs = nullptr) const
 	{
-		return geo_data_lookup(dat, l);
+		return geo_data_lookup(dat, l, regs);
 	}
 
 	template<typename callback_t>
