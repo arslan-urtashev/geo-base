@@ -67,6 +67,7 @@ struct geo_data_ctx_t {
 		std::vector<edge_t> edges;
 		std::vector<edge_t> erase;
 		std::vector<point_t> points;
+		std::vector<location_t> locations;
 	} buf;
 
 	struct {
@@ -89,7 +90,7 @@ public:
 	{
 	}
 
-	void update(region_id_t region_id, std::vector<location_t> const &locations, std::vector<std::string> const &blobs);
+	void update(proto::geo_data_t const &proto);
 
 	void save();
 
@@ -104,7 +105,8 @@ public:
 	}
 
 private:
-	void update(region_id_t region_id, std::vector<point_t> const &points, std::vector<std::string> const &blobs);
+	void update(region_id_t region_id, proto::polygon_t const &polygon);
+	void update(region_id_t region_id, std::vector<point_t> const &points, bool inner);
 
 	void create_boxes();
 

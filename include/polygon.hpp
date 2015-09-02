@@ -18,6 +18,7 @@ struct polygon_t {
 	count_t parts_offset;
 	count_t parts_count;
 	square_t square;
+	bool inner;
 
 	void init()
 	{

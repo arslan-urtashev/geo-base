@@ -140,7 +140,7 @@ static uint64_t get_hash(region_id_t region_id, std::vector<point_t> const &poin
 	return hash;
 }
 
-void geo_base_generate_t::update(region_id_t region_id, std::vector<point_t> const &points, std::vector<std::string> const &)
+void geo_base_generate_t::update(region_id_t region_id, std::vector<point_t> const &points, bool inner)
 {
 	if (points.size() <= 2) {
 		log_warning("generate", region_id) << "Polygon to small!";
@@ -158,6 +158,7 @@ void geo_base_generate_t::update(region_id_t region_id, std::vector<point_t> con
 	polygon_t polygon;
 	polygon.region_id = region_id;
 	polygon.square = square(points);
+	polygon.inner = inner;
 	
 	polygon.init();
 	for (point_t const &p : points)
@@ -216,48 +217,37 @@ void geo_base_generate_t::update(region_id_t region_id, std::vector<point_t> con
 	ctx.polygons.push_back(polygon);
 }
 
-void geo_base_generate_t::update(region_id_t region_id, std::vector<location_t> const &raw_locations, std::vector<std::string> const &blobs)
+void geo_base_generate_t::update(region_id_t region_id, proto::polygon_t const &polygon)
 {
-	log_info("generate", region_id) << "Process locations count = " << raw_locations.size();
-
-	count_t update_count = 0;
-	count_t polygons_size = ctx.polygons.size();
-
 	std::vector<point_t> &points = ctx.buf.points;
 
-	processor(raw_locations, [&] (std::vector<location_t> const &locations) {
+	std::vector<location_t> &locations = ctx.buf.locations;
+	locations.assign(polygon.locations().begin(), polygon.locations().end());
+
+	processor(locations, [&] (std::vector<location_t> const &locations) {
 		points.assign(locations.begin(), locations.end());
-#ifdef TROLL_LOG_BOUNDARY
-		log_debug("generate", region_id) << points;
-#endif
-		update(region_id, points, blobs);
-		++update_count;
+		update(region_id, points, polygon.inner());
 	});
+}
+
+void geo_base_generate_t::update(proto::geo_data_t const &data)
+{
+	for (proto::polygon_t const &p : data.polygons())
+		update(data.region_id(), p);
 
 	region_t region;
-	region.region_id = region_id;
+	region.region_id = data.region_id();
 	region.kvs_offset = ctx.kvs.size();
 
-	for (ref_t i = 0; i < blobs.size(); i += 2) {
+	for (proto::kv_t const &x : data.kvs()) {
 		kv_t kv;
-		kv.k = ctx.push_blob(blobs[i]);
-		kv.v = ctx.push_blob(blobs[i + 1]);
+		kv.k = ctx.push_blob(x.k());
+		kv.v = ctx.push_blob(x.v());
 		ctx.kvs.push_back(kv);
 	}
 
 	region.kvs_count = ctx.kvs.size() - region.kvs_offset;
-	if (region.kvs_count == 0)
-		log_error("generate", region_id) << "No kvs!";
-
 	ctx.regions.push_back(region);
-
-	if (update_count == 0)
-		log_error("generate", region_id) << "There is no polygons!";
-
-	if (update_count > 1)
-		log_warning("generate", region_id) << "Multipolygon detected";
-
-	log_info("generate", region_id) << ctx.polygons.size() - polygons_size << " polygons generated";
 }
 
 #ifndef TROLL_GENERATE_LOG_ENABLE
@@ -281,6 +271,14 @@ void geo_base_generate_t::create_boxes()
 					ctx.polygon_refs.push_back(i);
 
 			box.polygon_refs_count = ctx.polygon_refs.size() - box.polygon_refs_offset;
+
+			std::sort(ctx.polygon_refs.begin() + box.polygon_refs_offset, ctx.polygon_refs.end(),
+				[&] (ref_t const &a, ref_t const &b) {
+					polygon_t const *p = ctx.polygons.data();
+					return p[a].region_id < p[b].region_id || (p[a].region_id == p[b].region_id && p[a].inner);
+				}
+			);
+
 			ctx.boxes.push_back(box);
 		}
 	}

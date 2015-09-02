@@ -67,15 +67,24 @@ region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &locati
 	if (regs)
 		regs->clear();
 
-	for (ref_t ref = refs_offset; ref < refs_offset + refs_count; ++ref) {
-		ref_t i = geo_data.polygon_refs[ref];
+	for (ref_t l = refs_offset, r = 0; l < refs_offset + refs_count; l = r) {
+		ref_t const *refs = geo_data.polygon_refs;
+		polygon_t const *p = geo_data.polygons;
 
-		if (geo_data.polygons[i].contains(point, geo_data.parts, geo_data.edge_refs, geo_data.edges, geo_data.points)) {
-			if (!answer || !(answer->better(geo_data.polygons[i], geo_data.regions, geo_data.regions_count)))
-				answer = &(geo_data.polygons[i]);
+		r = l + 1;
 
-			if (regs)
-				regs->push_back(geo_data.polygons[i].region_id);
+		if (p[refs[l]].contains(point, geo_data.parts, geo_data.edge_refs, geo_data.edges, geo_data.points)) {
+			if (p[refs[l]].inner) {
+				while (r < refs_offset + refs_count && p[refs[l]].region_id == p[refs[r]].region_id)
+					++r;
+
+			} else {
+				if (!answer || !answer->better(p[refs[l]], geo_data.regions, geo_data.regions_count))
+					answer = &p[refs[l]];
+
+				if (regs)
+					regs->push_back(p[refs[l]].region_id);
+			}
 		}
 	}
 

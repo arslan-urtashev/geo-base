@@ -2,6 +2,8 @@
 
 #include "common.hpp"
 
+#include "proto/geo_data.pb.h"
+
 #include <math.h>
 
 namespace geo_base {
@@ -10,9 +12,21 @@ struct location_t {
 	double lon;
 	double lat;
 
-	location_t(double lon = 0, double lat = 0)
+	location_t()
+		: lon(0)
+		, lat(0)
+	{
+	}
+
+	location_t(double lon, double lat)
 		: lon(lon)
 		, lat(lat)
+	{
+	}
+
+	location_t(proto::location_t const &l)
+		: lon(l.lon())
+		, lat(l.lat())
 	{
 	}
 
