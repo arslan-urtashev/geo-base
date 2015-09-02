@@ -153,12 +153,24 @@ int main(int argc, char *argv[])
 		size_t filt_count = 0;
 
 		proto_writer_t writer(STDOUT_FILENO);
-		std::string buffer;
+
+		proto::geo_data_t buf_geo_data;
+		std::string buf;
 
 		proto_parser_t(STDIN_FILENO)([&] (proto::geo_data_t const &geo_data) {
 			if (regions.find(geo_data.region_id()) != regions.end()) {
-				writer.write(geo_data, buffer);
+				buf_geo_data = geo_data;
+
+				buf_geo_data.mutable_polygons()->Clear();
+				for (proto::polygon_t const &p : geo_data.polygons())
+					if (!p.inner())
+						*buf_geo_data.add_polygons() = p;
+
+				writer.write(buf_geo_data, buf);
+			} else {
+				++filt_count;
 			}
+			++count;
 		});
 
 		log_info("geo-txt-filt") << "Processed count = " << count;
