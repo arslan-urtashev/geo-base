@@ -75,8 +75,6 @@ static output_t &operator << (output_t &out, region_out_t const &r)
 
 int main(int argc, char *argv[])
 {
-	std::ios_base::sync_with_stdio(false);
-
 	log_level(log_level_t::debug);
 
 	if (argc != 2) {

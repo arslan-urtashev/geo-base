@@ -56,12 +56,12 @@ proto = env.Protoc(
 
 geo_base_a = env.Library(
     "lib/geo-base",
-    Glob("src/*.cpp")
+    Glob("src/*.cpp") + Glob("proto/*.cc")
 )
 
 geo_base_so = env.SharedLibrary(
     "lib/geo-base",
-    Glob("src/*.cpp")
+    Glob("src/*.cpp") + Glob("proto/*.cc")
 )
 
 env.Program(
@@ -70,7 +70,8 @@ env.Program(
         "tools/geo_base_run.cpp"
     ],
     LIBS = [
-        geo_base_a
+        geo_base_a,
+        "protobuf"
     ]
 )
 
@@ -80,7 +81,8 @@ env.Program(
         "tools/geo_base_generate.cpp"
     ],
     LIBS = [
-        geo_base_a
+        geo_base_a,
+        "protobuf"
     ]
 )
 
@@ -90,7 +92,8 @@ env.Program(
         "tools/geo_base_show.cpp"
     ],
     LIBS = [
-        geo_base_a
+        geo_base_a,
+        "protobuf"
     ]
 )
 
@@ -114,7 +117,8 @@ env.Program(
         "tools/geo_base_grep.cpp"
     ],
     LIBS = [
-        geo_base_a
+        geo_base_a,
+        "protobuf"
     ]
 )
 
@@ -124,7 +128,8 @@ env.Program(
         "tools/geo_txt_filt.cpp"
     ],
     LIBS = [
-        geo_base_a
+        geo_base_a,
+        "protobuf"
     ]
 )
 
@@ -134,6 +139,7 @@ env.Program(
         "tools/geo_base_perf.cpp"
     ],
     LIBS = [
-        geo_base_a
+        geo_base_a,
+        "protobuf"
     ]
 )

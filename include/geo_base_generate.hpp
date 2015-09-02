@@ -66,7 +66,6 @@ struct geo_data_ctx_t {
 		std::vector<checkpoint_t> checkpoints;
 		std::vector<edge_t> edges;
 		std::vector<edge_t> erase;
-		std::vector<location_t> locations;
 		std::vector<point_t> points;
 	} buf;
 
@@ -111,6 +110,7 @@ private:
 
 	geo_base_alloc_t base;
 	geo_data_ctx_t ctx;
+	polygon_processor_t processor;
 };
 
 }

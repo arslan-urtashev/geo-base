@@ -23,7 +23,6 @@ static int convert_to_mks(double x)
 
 int main(int argc, char *argv[])
 {
-	std::ios_base::sync_with_stdio(false);
 	std::cerr << std::fixed << std::setprecision(2);
 
 	log_level(log_level_t::debug);

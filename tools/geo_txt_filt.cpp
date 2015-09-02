@@ -101,7 +101,6 @@ static output_t &operator << (output_t &out, std::vector<worker_t> const &worker
 
 int main(int argc, char *argv[])
 {
-	std::ios_base::sync_with_stdio(false);
 	std::cerr << std::fixed << std::setprecision(2);
 
 	log_level(log_level_t::debug);
@@ -153,22 +152,13 @@ int main(int argc, char *argv[])
 		size_t count = 0;
 		size_t filt_count = 0;
 
-		geo_read_txt(std::cin, [&] (region_id_t region_id, std::vector<location_t> const &locations, std::vector<std::string> const &blobs) {
-			if (regions.find(region_id) != regions.end()) {
-				std::cout << region_id << ' ' << locations.size() << ' ' << blobs.size() << '\n';
-				for (location_t const &l : locations)
-					std::cout << l.lat << ' ' << l.lon << '\n';
-				for (std::string const &b : blobs)
-					std::cout << b << '\n';
-			} else {
-#if 0
-				log_info("geo-txt-filt") << "Filtered region = " << region_id;
-				for (std::string const &b : blobs)
-					log_info("geo-txt-filt") << "\t" << b;
-#endif
-				++filt_count;
+		proto_writer_t writer(STDOUT_FILENO);
+		std::string buffer;
+
+		proto_parser_t(STDIN_FILENO)([&] (proto::geo_data_t const &geo_data) {
+			if (regions.find(geo_data.region_id()) != regions.end()) {
+				writer.write(geo_data, buffer);
 			}
-			++count;
 		});
 
 		log_info("geo-txt-filt") << "Processed count = " << count;

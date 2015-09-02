@@ -16,6 +16,9 @@
 #include "log.hpp"
 #include "zlib.hpp"
 #include "stop_watch.hpp"
+#include "util.hpp"
+
+#include "proto/geo_data.pb.h"
 
 using namespace geo_base;
 
@@ -398,7 +401,7 @@ static bool is_boundary(std::vector<kv_t> const &kvs)
 
 static bool is_way_reference(reference_t const &r)
 {
-	if (r.member_type == member_type_t::way && (!strcmp(r.role, "outer") || !r.role))
+	if (r.member_type == member_type_t::way)
 		return true;
 	return false;
 }
@@ -465,44 +468,60 @@ struct parser_t : public pbf_callback_t {
 
 	nodes_t const &nodes;
 	ways_t const &ways;
-	std::mutex &mutex;
 
-	std::vector<location_t> locations;
+	proto::geo_data_t geo_data;
+	std::string buffer;
+	proto_writer_t &writer;
+
 	std::unordered_map<osm_id_t, std::vector<osm_id_t>> graph;
 	std::unordered_set<osm_id_t> used;
 
-	parser_t(nodes_t const &nodes, ways_t const &ways, std::mutex &mutex)
+	parser_t(nodes_t const &nodes, ways_t const &ways, proto_writer_t &writer)
 		: nodes(nodes)
 		, ways(ways)
-		, mutex(mutex)
+		, writer(writer)
 	{
 	}
 
 	void way_callback(osm_id_t osm_id, std::vector<kv_t> const &kvs, std::vector<osm_id_t> const &refs)
 	{
 		if (is_boundary(kvs) && refs.back() == refs.front()) {
-			locations.clear();
-			for (osm_id_t osm_id : refs)
-				locations.push_back(nodes.at(osm_id));
+			geo_data.Clear();
+			geo_data.set_region_id(osm_id);
 
-			std::lock_guard<std::mutex> lock(mutex);
+			proto::polygon_t *polygon = geo_data.add_polygons();
+			polygon->set_inner(false);
+			for (osm_id_t osm_id : refs) {
+				proto::location_t *l = polygon->add_locations();
+				l->set_lat(nodes.at(osm_id).lat);
+				l->set_lon(nodes.at(osm_id).lon);
+			}
 
-			std::cout << osm_id << ' ' << locations.size() << ' ' << 2 * kvs.size() << '\n';
-			for (location_t const &l : locations)
-				std::cout << l.lat << ' ' << l.lon << '\n';
-			for (kv_t const &kv : kvs)
-				std::cout << kv.k << '\n' << kv.v << '\n';
+			for (kv_t const &x : kvs) {
+				proto::kv_t *kv = geo_data.add_kvs();
+				kv->set_k(x.k);
+				kv->set_v(x.v);
+			}
+
+			writer.write(geo_data, buffer);
 		}
 	}
+
+	void push_locations(proto::polygon_t *p, osm_id_t osm_id)
+	{
+		proto::location_t *l = p->add_locations();
+		l->set_lat(nodes.at(osm_id).lat);
+		l->set_lon(nodes.at(osm_id).lon);
+	}
 	
-	void save_locations(osm_id_t osm_id)
+	void save_locations(proto::polygon_t *p, osm_id_t osm_id)
 	{
 		used.insert(osm_id);
-		locations.push_back(nodes.at(osm_id));
+		push_locations(p, osm_id);
 
 		for (osm_id_t node_id : graph[osm_id])
 			if (used.find(node_id) == used.end())
-				save_locations(node_id);
+				save_locations(p, node_id);
 	}
 
 
@@ -511,8 +530,6 @@ struct parser_t : public pbf_callback_t {
 		bool boundary = is_boundary(kvs);
 
 		if (boundary) {
-			locations.clear();
-
 			graph.clear();
 			used.clear();
 
@@ -539,26 +556,30 @@ struct parser_t : public pbf_callback_t {
 				}
 			}
 
+			geo_data.Clear();
+			geo_data.set_region_id(osm_id);
+			
 			for (reference_t const &r : refs) {
 				if (is_way_reference(r)) {
 					std::vector<osm_id_t> const &w = ways.at(r.osm_id);
 					for (size_t i = 0; i < w.size(); ++i) {
 						if (used.find(w[i]) == used.end()) {
-							save_locations(w[i]);
-							locations.push_back(nodes.at(w[i]));
+							proto::polygon_t *p = geo_data.add_polygons();
+							p->set_inner(!strcmp(r.role, "inner"));
+							save_locations(p, w[i]);
 						}
 					}
 				}
 			}
 
-			if (!locations.empty()) {
-				std::lock_guard<std::mutex> lock(mutex);
-
-				std::cout << osm_id << ' ' << locations.size() << ' ' << 2 * kvs.size() << '\n';
-				for (location_t const &l : locations)
-					std::cout << l.lat << ' ' << l.lon << '\n';
-				for (kv_t const &kv : kvs)
-					std::cout << kv.k << '\n' << kv.v << '\n';
+			if (geo_data.polygons_size() > 0) {
+				for (kv_t const &x : kvs) {
+					proto::kv_t *kv = geo_data.add_kvs();
+					kv->set_k(x.k);
+					kv->set_v(x.v);
+				}
+				
+				writer.write(geo_data, buffer);
 			}
 		}
 	}
@@ -566,9 +587,6 @@ struct parser_t : public pbf_callback_t {
 
 int main(int argc, char *argv[])
 {
-	std::ios_base::sync_with_stdio(false);
-	std::cout << std::fixed << std::setprecision(6);
-	
 	log_level(log_level_t::debug);
 
 	if (argc < 2) {
@@ -634,9 +652,9 @@ int main(int argc, char *argv[])
 	log_info("geo-base-convert") << "Nodes count = " << nodes.size();
 
 	std::vector<parser_t> parsers;
-	std::mutex mutex;
+	proto_writer_t writer(STDOUT_FILENO);
 	for (size_t i = 0; i < threads_count; ++i)
-		parsers.emplace_back(nodes, way_nodes, mutex);
+		parsers.emplace_back(nodes, way_nodes, writer);
 
 	pbf_mt_parser_t<parser_t>(argv[1], parsers)();
 

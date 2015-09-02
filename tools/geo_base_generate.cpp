@@ -25,8 +25,24 @@ struct reader_t {
 
 	void operator () ()
 	{
-		geo_read_txt(std::cin, [&] (region_id_t r, locations_t const &l, blobs_t const &b) {
-			generate->update(r, l, b);
+		std::vector<location_t> locations;
+		std::vector<std::string> blobs;
+
+		proto_parser_t(STDIN_FILENO)([&] (proto::geo_data_t const &geo_data) {
+			locations.clear();
+			for (proto::polygon_t const &p : geo_data.polygons()) {
+				for (proto::location_t const &l : p.locations())
+					locations.push_back(location_t(l.lon(), l.lat()));
+				locations.push_back(location_t(p.locations(0).lon(), p.locations(0).lat()));
+			}
+
+			blobs.clear();
+			for (proto::kv_t const &kv : geo_data.kvs()) {
+				blobs.push_back(kv.k());
+				blobs.push_back(kv.v());
+			}
+
+			generate->update(geo_data.region_id(), locations, blobs);
 		});
 
 		readed = true;
@@ -35,9 +51,6 @@ struct reader_t {
 
 int main(int argc, char *argv[])
 {
-	std::ios_base::sync_with_stdio(false);
-
-	std::cout << std::fixed << std::setprecision(2);
 	std::cerr << std::fixed << std::setprecision(2);
 
 	log_level(log_level_t::debug);

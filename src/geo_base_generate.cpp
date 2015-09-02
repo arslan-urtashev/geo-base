@@ -225,7 +225,7 @@ void geo_base_generate_t::update(region_id_t region_id, std::vector<location_t> 
 
 	std::vector<point_t> &points = ctx.buf.points;
 
-	process_locations(raw_locations, ctx.buf.locations, [&] (std::vector<location_t> const &locations) {
+	processor(raw_locations, [&] (std::vector<location_t> const &locations) {
 		points.assign(locations.begin(), locations.end());
 #ifdef TROLL_LOG_BOUNDARY
 		log_debug("generate", region_id) << points;
