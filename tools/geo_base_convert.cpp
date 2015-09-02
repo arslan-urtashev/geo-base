@@ -531,8 +531,10 @@ struct parser_t : public pbf_callback_t {
 				if (is_way_reference(r)) {
 					std::vector<osm_id_t> const &w = ways.at(r.osm_id);
 					for (size_t i = 0; i + 1 < w.size(); ++i) {
-						graph[w[i]].push_back(w[i + 1]);
-						graph[w[i + 1]].push_back(w[i]);
+						if (graph[w[i]].size() < 2 && graph[w[i + 1]].size() < 2) {
+							graph[w[i]].push_back(w[i + 1]);
+							graph[w[i + 1]].push_back(w[i]);
+						}
 					}
 				}
 			}
