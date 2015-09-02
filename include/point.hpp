@@ -32,6 +32,11 @@ struct point_t {
 		return x == p.x && y == p.y;
 	}
 
+	bool operator != (point_t const &p) const
+	{
+		return !(*this == p);
+	}
+
 	bool operator < (point_t const &p) const
 	{
 		return x < p.x || (x == p.x && y < p.y);

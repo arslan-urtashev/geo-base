@@ -6,6 +6,7 @@
 #include "location.hpp"
 #include "log.hpp"
 #include "stop_watch.hpp"
+#include "point.hpp"
 
 #include "proto/geo_data.pb.h"
 
@@ -84,7 +85,7 @@ public:
 	{
 		locations.clear();
 		for (location_t const &l : raw_locations) {
-			if (locations.empty() || locations.back() != l)
+			if (locations.empty() || point_t(locations.back()) != point_t(l))
 				locations.push_back(l);
 
 			if (locations.size() > 3 && locations.front() == locations.back()) {
