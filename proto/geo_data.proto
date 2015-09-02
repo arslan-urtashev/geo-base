@@ -1,0 +1,28 @@
+package geo_base.io;
+
+message geo_head_t {
+	required uint64 count = 1;
+}
+
+message location_t {
+	required double lon = 1;
+	required double lat = 2;
+}
+
+message polygon_t {
+	repeated location_t locations = 1;
+	required bool inner = 2;
+}
+
+message kv_t {
+	required string k = 1;
+	required string v = 2;
+}
+
+message geo_data_t {
+	required uint64 region_id = 1;
+	repeated polygon_t polygons = 2;
+	required string address = 3;
+	repeated kv_t kvs = 4;
+	repeated string blobs = 5;
+}

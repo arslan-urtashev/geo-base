@@ -1,4 +1,12 @@
-env = Environment()
+env = Environment(
+    toolpath = [
+        "scons"
+    ],
+    tools = [
+        "default",
+        "protoc"
+    ]
+)
 
 if ARGUMENTS.get("log-boundary", "false") == "true":
     env.Append(CXXFLAGS = ["-DTROLL_LOG_BOUNDARY"])
@@ -37,6 +45,13 @@ env.Append(CXXFLAGS =
         "include",
         "contrib"
     ]
+)
+
+proto = env.Protoc(
+    [
+        "proto/geo_data.proto"
+    ],
+    PROTOCOUTDIR = "."
 )
 
 geo_base_a = env.Library(
