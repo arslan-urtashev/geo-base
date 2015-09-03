@@ -10,15 +10,15 @@
 namespace geo_base {
 
 struct polygon_t {
+	bool inner;
+	count_t parts_offset;
+	count_t parts_count;
 	region_id_t region_id;
 	coordinate_t upper;
 	coordinate_t lower;
 	coordinate_t left;
 	coordinate_t right;
-	count_t parts_offset;
-	count_t parts_count;
 	square_t square;
-	bool inner;
 
 	void init()
 	{

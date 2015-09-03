@@ -401,7 +401,7 @@ static bool is_boundary(std::vector<kv_t> const &kvs)
 
 static bool is_way_reference(reference_t const &r)
 {
-	if (r.member_type == member_type_t::way)
+	if (r.member_type == member_type_t::way && (!strcmp(r.role, "outer") || !strcmp(r.role, "inner") || !r.role))
 		return true;
 	return false;
 }
