@@ -14,7 +14,7 @@ class fd_base_t {
 public:
 	void rd(char const *path)
 	{
-		int fd = open(path, O_RDONLY | O_CLOEXEC | O_NOATIME);
+		int fd = open(path, O_RDONLY | O_CLOEXEC); // | O_NOATIME);
 		if (fd < 0)
 			throw exception_t("%s", strerror(errno));
 		fd_guard.guard(fd);

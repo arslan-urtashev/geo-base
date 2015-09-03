@@ -9,8 +9,6 @@
 #include <unordered_set>
 #include <vector>
 
-#include <osmpbf/osmpbf.h>
-
 #include "fd_base.hpp"
 #include "location.hpp"
 #include "log.hpp"
@@ -18,7 +16,9 @@
 #include "stop_watch.hpp"
 #include "util.hpp"
 
+#include "proto/fileformat.pb.h"
 #include "proto/geo_data.pb.h"
+#include "proto/osmformat.pb.h"
 
 using namespace geo_base;
 
@@ -177,7 +177,7 @@ private:
 	std::vector<kv_t> const &get_tags(x_t const &obj, block_t const &block)
 	{
 		kvs.clear();
-		for (size_t i = 0; i < obj.keys_size(); ++i) {
+		for (int i = 0; i < obj.keys_size(); ++i) {
 			uint64_t k = obj.keys(i);
 			uint64_t v = obj.vals(i);
 
@@ -208,10 +208,10 @@ private:
 
 	bool process_groups(block_t const &block)
 	{
-		for (size_t k = 0; k < block.primitivegroup_size(); ++k) {
+		for (int k = 0; k < block.primitivegroup_size(); ++k) {
 			group_t const &group = block.primitivegroup(k);
 
-			for (size_t i = 0; i < group.nodes_size(); ++i) {
+			for (int i = 0; i < group.nodes_size(); ++i) {
 				node_t const &node = group.nodes(i);
 
 				location_t l;
@@ -227,9 +227,9 @@ private:
 				osm_id_t osm_id = 0;
 				location_t location;
 
-				size_t cur_kv = 0;
+				int cur_kv = 0;
 
-				for (size_t i = 0; i < nodes.id_size(); ++i) {
+				for (int i = 0; i < nodes.id_size(); ++i) {
 					osm_id += nodes.id(i);
 					location.lon += 1e-9 * (block.lon_offset() + block.granularity() * nodes.lon(i));
 					location.lat += 1e-9 * (block.lat_offset() + block.granularity() * nodes.lat(i));
@@ -253,12 +253,12 @@ private:
 				}
 			}
 
-			for (size_t i = 0; i < group.ways_size(); ++i) {
+			for (int i = 0; i < group.ways_size(); ++i) {
 				way_t const &w = group.ways(i);
 				
 				way_refs.clear();
 				osm_id_t ref = 0;
-				for (size_t j = 0; j < w.refs_size(); ++j) {
+				for (int j = 0; j < w.refs_size(); ++j) {
 					ref += w.refs(j);
 					way_refs.push_back(ref);
 				}
@@ -266,12 +266,12 @@ private:
 				callback.way_callback(w.id(), get_tags(w, block), way_refs);
 			}
 
-			for (size_t i = 0; i < group.relations_size(); ++i) {
+			for (int i = 0; i < group.relations_size(); ++i) {
 				relation_t const &r = group.relations(i);
 
 				refs.clear();
 				osm_id_t osm_id = 0;
-				for (size_t j = 0; j < r.memids_size(); ++j) {
+				for (int j = 0; j < r.memids_size(); ++j) {
 					osm_id += r.memids(j);
 					refs.push_back(make_reference(r.types(j), osm_id, block.stringtable().s(r.roles_sid(j))));
 				}

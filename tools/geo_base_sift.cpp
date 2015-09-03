@@ -54,15 +54,17 @@ struct worker_t {
 	{
 		geo_base_t::debug_t debug;
 		for (offset = points_offset; offset < points_offset + points_count; ++offset) {
-			point_t const &p = geo_base->geo_data()->points[offset];
+			for (size_t try_lookup = 0; try_lookup < LOOKUP_COUNT; ++try_lookup) {
+				point_t const &p = geo_base->geo_data()->points[offset];
 
-			double lon = convert_to_double(p.x) + get_rand() * LOOKUP_RADIUS;
-			double lat = convert_to_double(p.y) + get_rand() * LOOKUP_RADIUS;
+				double lon = convert_to_double(p.x) + get_rand() * LOOKUP_RADIUS;
+				double lat = convert_to_double(p.y) + get_rand() * LOOKUP_RADIUS;
 
-			region_id_t region_id = geo_base->lookup(location_t(lon, lat), &debug);
+				region_id_t region_id = geo_base->lookup(location_t(lon, lat), &debug);
 
-			if (region_id != UNKNOWN_REGION_ID)
-				polygons.insert(debug.polygon_id);
+				if (region_id != UNKNOWN_REGION_ID)
+					polygons.insert(debug.polygon_id);
+			}
 		}
 	}
 };

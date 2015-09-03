@@ -30,15 +30,12 @@ env.Append(CXXFLAGS =
         "-g",
         "-march=corei7", 
         "-pthread",
-        "-std=c++0x",
-        "-Wl,--no-as-needed"
+        "-std=c++0x"
     ],
     LINKFLAGS = [
         "-O" + opt,
         "-flto",
-        "-g",
-        "-pthread",
-        "-Wl,--no-as-needed"
+        "-g"
     ],
     CPPPATH = [
         ".",
@@ -48,18 +45,11 @@ env.Append(CXXFLAGS =
 )
 
 proto = env.Protoc(
-    [
-        "proto/geo_data.proto"
-    ],
+    Glob("proto/*.proto"),
     PROTOCOUTDIR = "."
 )
 
 geo_base_a = env.Library(
-    "lib/geo-base",
-    Glob("src/*.cpp") + Glob("proto/*.cc")
-)
-
-geo_base_so = env.SharedLibrary(
     "lib/geo-base",
     Glob("src/*.cpp") + Glob("proto/*.cc")
 )
@@ -105,7 +95,6 @@ if ARGUMENTS.get("geo-base-convert", "true") == "true":
         ],
         LIBS = [
             geo_base_a,
-            "osmpbf",
             "protobuf",
             "z"
         ]

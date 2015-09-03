@@ -69,23 +69,6 @@ static bool is_bad_edge(edge_t const &e, point_t const *p) {
 	return e.beg == e.end || fabs(convert_to_double(p[e.beg].x - p[e.end].x)) > 300.0;
 }
 
-static output_t &operator << (output_t &out, point_t const &p)
-{
-	out << "(" << convert_to_double(p.y) << " " << convert_to_double(p.x) << ")";
-	return out;
-}
-
-#ifdef TROLL_LOG_BOUNDARY
-static output_t &operator << (output_t &out, std::vector<point_t> const &p)
-{
-	out << "[";
-	for (ref_t i = 0; i < p.size(); ++i)
-		out << p[i] << (i + 1 == p.size() ? "" : ", ");
-	out << "]";
-	return out;
-}
-#endif
-
 static void generate_edges(region_id_t region_id, std::vector<point_t> const &points, geo_data_ctx_t *ctx, std::vector<edge_t> &edges)
 {
 	edges.clear();
