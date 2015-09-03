@@ -140,7 +140,7 @@ static uint64_t get_hash(region_id_t region_id, std::vector<point_t> const &poin
 	return hash;
 }
 
-void geo_base_generate_t::update(region_id_t region_id, std::vector<point_t> const &points, bool inner)
+void geo_base_generate_t::update(region_id_t region_id, polygon_id_t polygon_id, std::vector<point_t> const &points, bool inner)
 {
 	if (points.size() <= 2) {
 		log_warning("generate", region_id) << "Polygon to small!";
@@ -157,6 +157,7 @@ void geo_base_generate_t::update(region_id_t region_id, std::vector<point_t> con
 
 	polygon_t polygon;
 	polygon.region_id = region_id;
+	polygon.polygon_id = polygon_id;
 	polygon.square = square(points);
 	polygon.inner = inner;
 	
@@ -226,7 +227,7 @@ void geo_base_generate_t::update(region_id_t region_id, proto::polygon_t const &
 
 	processor(locations, [&] (std::vector<location_t> const &locations) {
 		points.assign(locations.begin(), locations.end());
-		update(region_id, points, polygon.inner());
+		update(region_id, polygon.polygon_id(), points, polygon.inner());
 	});
 }
 

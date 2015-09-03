@@ -9,6 +9,8 @@ namespace geo_base {
 
 class geo_base_t : public mem_base_t {
 public:
+	typedef geo_debug_t debug_t;
+
 	geo_base_t(char const *path)
 	{
 		rd(path);
@@ -21,9 +23,9 @@ public:
 		geo_data_show(dat, out);
 	}
 
-	region_id_t lookup(location_t const &l, std::vector<region_id_t> *regs = nullptr) const
+	region_id_t lookup(location_t const &l, debug_t *debug = nullptr) const
 	{
-		return geo_data_lookup(dat, l, regs);
+		return geo_data_lookup(dat, l, debug);
 	}
 
 	template<typename callback_t>

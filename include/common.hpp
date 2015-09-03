@@ -7,6 +7,7 @@
 namespace geo_base {
 
 typedef uint64_t region_id_t;
+typedef uint64_t polygon_id_t;
 typedef int32_t coordinate_t;
 typedef uint32_t ref_t;
 typedef uint32_t count_t;

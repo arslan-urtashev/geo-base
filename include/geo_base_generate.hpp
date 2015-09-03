@@ -106,7 +106,7 @@ public:
 
 private:
 	void update(region_id_t region_id, proto::polygon_t const &polygon);
-	void update(region_id_t region_id, std::vector<point_t> const &points, bool inner);
+	void update(region_id_t region_id, polygon_id_t polygon_id, std::vector<point_t> const &points, bool inner);
 
 	void create_boxes();
 

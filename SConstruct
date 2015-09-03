@@ -123,9 +123,9 @@ env.Program(
 )
 
 env.Program(
-    "bin/geo-txt-filt",
+    "bin/geo-base-sift",
     [
-        "tools/geo_txt_filt.cpp"
+        "tools/geo_base_sift.cpp"
     ],
     LIBS = [
         geo_base_a,

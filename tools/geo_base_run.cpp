@@ -86,14 +86,14 @@ int main(int argc, char *argv[])
 		geo_base_t geo_base(argv[1]);
 
 		location_t location;
-		std::vector<region_id_t> regs;
+		geo_base_t::debug_t debug;
 
 		while (std::cin >> location) {
-			region_id_t region_id = geo_base.lookup(location, &regs);
+			region_id_t region_id = geo_base.lookup(location, &debug);
 
 			if (region_id != UNKNOWN_REGION_ID) {
 				std::cout << region_out_t(region_id, geo_base) << '\n';
-				for (region_id_t const &r : regs)
+				for (region_id_t const &r : debug.regions)
 					log_debug("geo-base-run", region_id) << region_out_t(r, geo_base);
 			} else {
 				std::cout << -1 << '\n';

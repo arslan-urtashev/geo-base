@@ -6,8 +6,9 @@ message location_t {
 }
 
 message polygon_t {
-	repeated location_t locations = 1;
-	required bool inner = 2;
+	required uint64 polygon_id = 1;
+	repeated location_t locations = 2;
+	required bool inner = 3;
 }
 
 message kv_t {

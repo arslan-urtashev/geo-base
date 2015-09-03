@@ -20,7 +20,7 @@ static uint32_t const LOOKUP_COUNT = 1000;
 struct worker_t {
 	geo_base_t const *geo_base;
 	std::mt19937 generator;
-	std::unordered_set<region_id_t> regions;
+	std::unordered_set<polygon_id_t> polygons;
 	count_t points_offset;
 	count_t points_count;
 	std::atomic<count_t> offset;
@@ -42,7 +42,7 @@ struct worker_t {
 	worker_t& operator = (worker_t const &w)
 	{
 		geo_base = w.geo_base;
-		regions = w.regions;
+		polygons = w.polygons;
 		generator = w.generator;
 		points_offset = w.points_offset;
 		points_count = w.points_count;
@@ -52,15 +52,17 @@ struct worker_t {
 
 	void operator () ()
 	{
+		geo_base_t::debug_t debug;
 		for (offset = points_offset; offset < points_offset + points_count; ++offset) {
 			point_t const &p = geo_base->geo_data()->points[offset];
 
 			double lon = convert_to_double(p.x) + get_rand() * LOOKUP_RADIUS;
 			double lat = convert_to_double(p.y) + get_rand() * LOOKUP_RADIUS;
 
-			region_id_t region_id = geo_base->lookup(location_t(lon, lat));
+			region_id_t region_id = geo_base->lookup(location_t(lon, lat), &debug);
 
-			regions.insert(region_id);
+			if (region_id != UNKNOWN_REGION_ID)
+				polygons.insert(debug.polygon_id);
 		}
 	}
 };
@@ -106,7 +108,7 @@ int main(int argc, char *argv[])
 	log_level(log_level_t::debug);
 
 	if (argc < 2) {
-		log_error("geo-txt-filt") << "geo-txt-filt <geodata.dat>";
+		log_error("geo-base-sift") << "geo-base-sift <geodata.dat>";
 		return -1;
 	}
 
@@ -131,7 +133,7 @@ int main(int argc, char *argv[])
 				if (workers[i].offset != workers[i].points_offset + workers[i].points_count)
 					completed = false;
 
-			status("geo-txt-filt", "monte-carlo") << workers;
+			status("geo-base-sift", "monte-carlo") << workers;
 
 			if (completed)
 				break;
@@ -143,10 +145,10 @@ int main(int argc, char *argv[])
 			threads[i].join();
 		status::clear();
 
-		std::unordered_set<region_id_t> regions;
+		std::unordered_set<polygon_id_t> polygons;
 		for (size_t i = 0; i < workers.size(); ++i) {
-			regions.insert(workers[i].regions.begin(), workers[i].regions.end());
-			workers[i].regions.clear();
+			polygons.insert(workers[i].polygons.begin(), workers[i].polygons.end());
+			workers[i].polygons.clear();
 		}
 
 		size_t count = 0;
@@ -158,26 +160,26 @@ int main(int argc, char *argv[])
 		std::string buf;
 
 		proto_parser_t(STDIN_FILENO)([&] (proto::geo_data_t const &geo_data) {
-			if (regions.find(geo_data.region_id()) != regions.end()) {
-				buf_geo_data = geo_data;
+			buf_geo_data = geo_data;
 
-				buf_geo_data.mutable_polygons()->Clear();
-				for (proto::polygon_t const &p : geo_data.polygons())
-					if (!p.inner())
-						*buf_geo_data.add_polygons() = p;
-
-				writer.write(buf_geo_data, buf);
-			} else {
-				++filt_count;
+			buf_geo_data.mutable_polygons()->Clear();
+			for (proto::polygon_t const &p : geo_data.polygons()) {
+				if (polygons.find(p.polygon_id()) != polygons.end()) {
+					*buf_geo_data.add_polygons() = p;
+				} else {
+					++filt_count;
+				}
+				++count;
 			}
-			++count;
+
+			writer.write(buf_geo_data, buf);
 		});
 
-		log_info("geo-txt-filt") << "Processed count = " << count;
-		log_info("geo-txt-filt") << "Filtered count = " << filt_count;
+		log_info("geo-base-sift") << "All polygons count = " << count;
+		log_info("geo-base-sift") << "Sift polygons count = " << filt_count;
 
 	} catch (std::exception const &e) {
-		log_error("geo-txt-filt", "EXCEPTION") << e.what();
+		log_error("geo-base-sift", "EXCEPTION") << e.what();
 	}
 	
 	return 0;

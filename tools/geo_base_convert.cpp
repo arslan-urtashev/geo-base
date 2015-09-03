@@ -476,10 +476,22 @@ struct parser_t : public pbf_callback_t {
 	std::unordered_map<osm_id_t, std::vector<osm_id_t>> graph;
 	std::unordered_set<osm_id_t> used;
 
-	parser_t(nodes_t const &nodes, ways_t const &ways, proto_writer_t &writer)
+	uint64_t id_start;
+	uint64_t id_step;
+
+	polygon_id_t generate_id()
+	{
+		polygon_id_t result = id_start;
+		id_start += id_step;
+		return result;
+	}
+
+	parser_t(nodes_t const &nodes, ways_t const &ways, proto_writer_t &writer, uint64_t id_start, uint64_t id_step)
 		: nodes(nodes)
 		, ways(ways)
 		, writer(writer)
+		, id_start(id_start)
+		, id_step(id_step)
 	{
 	}
 
@@ -490,6 +502,7 @@ struct parser_t : public pbf_callback_t {
 			geo_data.set_region_id(osm_id);
 
 			proto::polygon_t *polygon = geo_data.add_polygons();
+			polygon->set_polygon_id(generate_id());
 			polygon->set_inner(false);
 			for (osm_id_t osm_id : refs) {
 				proto::location_t *l = polygon->add_locations();
@@ -565,6 +578,7 @@ struct parser_t : public pbf_callback_t {
 					for (size_t i = 0; i < w.size(); ++i) {
 						if (used.find(w[i]) == used.end()) {
 							proto::polygon_t *p = geo_data.add_polygons();
+							p->set_polygon_id(generate_id());
 							p->set_inner(!strcmp(r.role, "inner"));
 							save_locations(p, w[i]);
 						}
@@ -654,7 +668,7 @@ int main(int argc, char *argv[])
 	std::vector<parser_t> parsers;
 	proto_writer_t writer(STDOUT_FILENO);
 	for (size_t i = 0; i < threads_count; ++i)
-		parsers.emplace_back(nodes, way_nodes, writer);
+		parsers.emplace_back(nodes, way_nodes, writer, i, threads_count);
 
 	pbf_mt_parser_t<parser_t>(argv[1], parsers)();
 

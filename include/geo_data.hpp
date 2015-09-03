@@ -50,7 +50,12 @@ void geo_data_map(void *dat, geo_data_t* geo_data);
 void geo_data_save(void *dat, geo_data_t* geo_data);
 void geo_data_show(geo_data_t const &geo_data, output_t &out);
 
-region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &location, std::vector<region_id_t> *regs = nullptr);
+struct geo_debug_t {
+	polygon_id_t polygon_id;
+	std::vector<region_id_t> regions;
+};
+
+region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &location, geo_debug_t *debug = nullptr);
 
 template<typename callback_t>
 void geo_data_kv_each(geo_data_t const &geo_data, region_id_t region_id, callback_t callback)

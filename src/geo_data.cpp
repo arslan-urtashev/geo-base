@@ -48,7 +48,7 @@ void geo_data_save(void *dat, geo_data_t *geo_data)
 #undef TROLL_DEF_ARR
 }
 
-region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &location, std::vector<region_id_t> *regs)
+region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &location, geo_debug_t *debug)
 {
 	point_t point(location);
 
@@ -64,8 +64,8 @@ region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &locati
 
 	polygon_t const *answer = nullptr;
 
-	if (regs)
-		regs->clear();
+	if (debug)
+		debug->regions.clear();
 
 	for (ref_t l = refs_offset, r = 0; l < refs_offset + refs_count; l = r) {
 		ref_t const *refs = geo_data.polygon_refs;
@@ -82,18 +82,21 @@ region_id_t geo_data_lookup(geo_data_t const &geo_data, location_t const &locati
 				if (!answer || !answer->better(p[refs[l]], geo_data.regions, geo_data.regions_count))
 					answer = &p[refs[l]];
 
-				if (regs)
-					regs->push_back(p[refs[l]].region_id);
+				if (debug)
+					debug->regions.push_back(p[refs[l]].region_id);
 			}
 		}
 	}
 
-	if (regs) {
-		std::sort(regs->begin(), regs->end(), [&] (region_id_t const &a, region_id_t const &b) {
+	if (debug) {
+		std::sort(debug->regions.begin(), debug->regions.end(), [&] (region_id_t const &a, region_id_t const &b) {
 			region_t const *r1 = find(geo_data.regions, geo_data.regions_count, a);
 			region_t const *r2 = find(geo_data.regions, geo_data.regions_count, b);
 			return r1->better(*r2);
 		});
+
+		if (answer)
+			debug->polygon_id = answer->polygon_id;
 	}
 
 	return answer ? answer->region_id : -1;
