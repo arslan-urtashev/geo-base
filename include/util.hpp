@@ -80,6 +80,14 @@ private:
 
 class polygon_processor_t {
 public:
+	static bool on_one_line(location_t const &a, location_t const &b, location_t const &c)
+	{
+		point_t p1(a);
+		point_t p2(b);
+		point_t p3(c);
+		return (p2 - p1).cross(p3 - p1) == 0;
+	}
+
 	template<typename callback_t>
 	void operator () (std::vector<location_t> const &raw_locations, callback_t callback)
 	{
@@ -87,6 +95,14 @@ public:
 		for (location_t const &l : raw_locations) {
 			if (locations.empty() || point_t(locations.back()) != point_t(l))
 				locations.push_back(l);
+
+			if (locations.size() >= 3) {
+				size_t n = locations.size();
+				if (on_one_line(locations[n - 3], locations[n - 2], locations[n - 1])) {
+					std::swap(locations[n - 2], locations[n - 1]);
+					locations.pop_back();
+				}
+			}
 
 			if (locations.size() > 3 && locations.front() == locations.back()) {
 				locations.pop_back();

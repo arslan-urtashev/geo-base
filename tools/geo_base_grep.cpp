@@ -11,12 +11,12 @@
 
 using namespace geo_base;
 
-static output_t &operator << (output_t &out, proto::polygon_t const &p)
+static output_t &operator << (output_t &out, std::vector<location_t> const &locations)
 {
 	out << '[';
-	for (int i = 0; i < p.locations_size(); ++i) {
-		out << '(' << p.locations(i).lat() << ' ' << p.locations(i).lon() << ')';
-		out << (i + 1 == p.locations_size() ? "" : ", ");
+	for (size_t i = 0; i < locations.size(); ++i) {
+		out << '(' << locations[i].lat << ' ' << locations[i].lon << ')';
+		out << (i + 1 == locations.size() ? "" : ", ");
 	}
 	out << ']';
 	return out;
@@ -34,10 +34,17 @@ int main(int argc, char *argv[])
 		grep.insert(atoll(argv[i]));
 
 	try {
+		std::vector<location_t> locations;
+
 		proto_parser_t(STDIN_FILENO)([&] (proto::geo_data_t const &geo_data) {
-			if (grep.empty() || grep.find(geo_data.region_id()) != grep.end())
-				for (proto::polygon_t const &p : geo_data.polygons())
-					std::cout << p << std::endl;
+			if (grep.empty() || grep.find(geo_data.region_id()) != grep.end()) {
+				for (proto::polygon_t const &p : geo_data.polygons()) {
+					locations.assign(p.locations().begin(), p.locations().end());
+					polygon_processor_t()(locations, [&] (std::vector<location_t> const &l) {
+						std::cout << l << std::endl;
+					});
+				}
+			}
 		});
 
 	} catch (std::exception const &e) {
