@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <mutex>
+#include <stack>
 #include <thread>
 #include <unordered_map>
 #include <unordered_set>
@@ -22,7 +23,7 @@
 
 using namespace geo_base;
 
-static size_t const DEFAULT_THREADS_COUNT = 2;
+static size_t const DEFAULT_THREADS_COUNT = 4;
 
 typedef region_id_t osm_id_t;
 
@@ -475,6 +476,7 @@ struct parser_t : public pbf_callback_t {
 
 	std::unordered_map<osm_id_t, std::vector<osm_id_t>> graph;
 	std::unordered_set<osm_id_t> used;
+	std::stack<osm_id_t, std::vector<osm_id_t>> stack;
 
 	uint64_t id_start;
 	uint64_t id_step;
@@ -529,12 +531,18 @@ struct parser_t : public pbf_callback_t {
 	
 	void save_locations(proto::polygon_t *p, osm_id_t osm_id)
 	{
-		used.insert(osm_id);
-		push_locations(p, osm_id);
+		stack.push(osm_id);
+		while (!stack.empty()) {
+			osm_id = stack.top();
+			stack.pop();
 
-		for (osm_id_t node_id : graph[osm_id])
-			if (used.find(node_id) == used.end())
-				save_locations(p, node_id);
+			used.insert(osm_id);
+			push_locations(p, osm_id);
+
+			for (osm_id_t node_id : graph[osm_id])
+				if (used.find(node_id) == used.end())
+					stack.push(node_id);
+		}
 	}
 
 

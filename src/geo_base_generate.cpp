@@ -259,7 +259,7 @@ void geo_base_generate_t::create_boxes()
 			std::sort(ctx.polygon_refs.begin() + box.polygon_refs_offset, ctx.polygon_refs.end(),
 				[&] (ref_t const &a, ref_t const &b) {
 					polygon_t const *p = ctx.polygons.data();
-					return p[a].region_id < p[b].region_id || (p[a].region_id == p[b].region_id && p[a].inner);
+					return p[a].region_id < p[b].region_id || (p[a].region_id == p[b].region_id && p[a].inner && !p[b].inner);
 				}
 			);
 

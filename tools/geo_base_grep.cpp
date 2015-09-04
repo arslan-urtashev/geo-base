@@ -27,11 +27,7 @@ int main(int argc, char *argv[])
 	std::cout << std::fixed << std::setprecision(6);
 
 	log_level(log_level_t::debug);
-
-	if (argc < 2) {
-		log_error("geo-base-grep") << "geo-base-grep <region_id>";
-		return -1;
-	}
+	log_debug("geo-base-grep") << "geo-base-grep <region_id> [Empty for all polygons]";
 
 	std::unordered_set<region_id_t> grep;
 	for (int i = 1; i < argc; ++i)
@@ -39,7 +35,7 @@ int main(int argc, char *argv[])
 
 	try {
 		proto_parser_t(STDIN_FILENO)([&] (proto::geo_data_t const &geo_data) {
-			if (grep.find(geo_data.region_id()) != grep.end())
+			if (grep.empty() || grep.find(geo_data.region_id()) != grep.end())
 				for (proto::polygon_t const &p : geo_data.polygons())
 					std::cout << p << std::endl;
 		});

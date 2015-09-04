@@ -14,8 +14,8 @@ using namespace geo_base;
 
 static double const LOOKUP_RADIUS = 0.001;
 
-static uint32_t const THREADS_COUNT = 2;
-static uint32_t const LOOKUP_COUNT = 1000;
+static uint32_t const THREADS_COUNT = 4;
+static uint32_t const LOOKUP_COUNT = 10;
 
 struct worker_t {
 	geo_base_t const *geo_base;
