@@ -1,10 +1,12 @@
 #include "geo_base.hpp"
 #include "log.hpp"
+#include "hash.hpp"
 
 #include <iomanip>
 #include <iostream>
 #include <map>
 #include <vector>
+#include <unordered_map>
 
 using namespace geo_base;
 
@@ -30,7 +32,7 @@ int main(int argc, char *argv[])
 
 		for (count_t i = 0; i < dat->polygons_count; ++i) {
 			count_t parts_offset = dat->polygons[i].parts_offset;
-			count_t parts_count = dat->polygons[i + 1].parts_count;
+			count_t parts_count = dat->polygons[i].parts_count;
 
 			for (count_t j = parts_offset; j < parts_offset + parts_count; ++j) {
 				part_t const *p = &(dat->parts[j]);
@@ -47,12 +49,27 @@ int main(int argc, char *argv[])
 			}
 		);
 
+		std::unordered_map<uint64_t, uint64_t> uniq_parts;
+		for (count_t i = 0; i + 1 < dat->parts_count; ++i) {
+			count_t refs_offset = dat->parts[i].edge_refs_offset;
+			count_t refs_count = dat->parts[i + 1].edge_refs_offset - refs_offset;
+			uint64_t hash = poly_hash_t<337>()((char const *) (dat->edge_refs + refs_offset), refs_count);
+			uniq_parts[hash] = sizeof(ref_t) * refs_count;
+		}
+
+		size_t total_parts_memory = 0;
+		for (auto const &p : uniq_parts)
+			total_parts_memory += p.second;
+
 		log_info("geo-base-show") << "One part refs count = " << one_part_refs;
 
-		static count_t const REGIONS_COUNT = 10;
+		log_info("geo-base-show") << "Uniq parts count = " << uniq_parts.size();
+		log_info("geo-base-show") << "Uniq parts memory = " << total_parts_memory / (1024. * 1024.) << " MB";
+
+		static count_t const REGIONS_COUNT = 5;
 
 		for (count_t i = 0; i < REGIONS_COUNT; ++i)
-			log_info("geo-base-show", "memory", i + 1) << regions[i].first << " = " << regions[i].second / (1024. * 1024.);
+			log_info("geo-base-show", "memory", i + 1) << regions[i].first << " = " << regions[i].second / (1024. * 1024.) << " MB";
 
 	} catch (std::exception const &e) {
 		log_error("geo-base-show", "EXCEPTION") << e.what();
