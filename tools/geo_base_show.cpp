@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 		log_info("geo-base-show") << "Uniq parts memory = " << total_parts_memory / (1024. * 1024.) << " MB";
 
 		log_info("geo-base-show") << "Uniq pairs count = " << uniq_pairs.size();
-		log_info("geo-base-show") << "Uniq parts memory = " << uniq_pairs.size() * sizeof(uint64_t) / (1024. * 1024.) << " MB";
+		log_info("geo-base-show") << "Uniq pairs memory = " << uniq_pairs.size() * sizeof(uint64_t) / (1024. * 1024.) << " MB";
 
 		static count_t const REGIONS_COUNT = 5;
 
