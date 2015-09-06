@@ -6,6 +6,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <unordered_set>
 #include <unordered_map>
 
 using namespace geo_base;
@@ -61,10 +62,25 @@ int main(int argc, char *argv[])
 		for (auto const &p : uniq_parts)
 			total_parts_memory += p.second;
 
+		std::unordered_set<uint64_t> uniq_pairs;
+		for (count_t i = 0; i + 1 < dat->parts_count; ++i) {
+			count_t refs_offset = dat->parts[i].edge_refs_offset;
+			count_t refs_count = dat->parts[i + 1].edge_refs_offset - refs_offset;
+			if (refs_count % 2 != 0) {
+				log_warning("geo-base-show") << "Wrong part!";
+				continue;
+			}
+			for (ref_t j = refs_offset; j < refs_offset + refs_count; j += 2)
+				uniq_pairs.insert(*((uint64_t const *) (dat->edge_refs + j)));
+		}
+
 		log_info("geo-base-show") << "One part refs count = " << one_part_refs;
 
 		log_info("geo-base-show") << "Uniq parts count = " << uniq_parts.size();
 		log_info("geo-base-show") << "Uniq parts memory = " << total_parts_memory / (1024. * 1024.) << " MB";
+
+		log_info("geo-base-show") << "Uniq pairs count = " << uniq_pairs.size();
+		log_info("geo-base-show") << "Uniq parts memory = " << uniq_pairs.size() * sizeof(uint64_t) / (1024. * 1024.) << " MB";
 
 		static count_t const REGIONS_COUNT = 5;
 
