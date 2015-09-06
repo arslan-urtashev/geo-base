@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 		for (count_t i = 0; i + 1 < dat->parts_count; ++i) {
 			count_t refs_offset = dat->parts[i].edge_refs_offset;
 			count_t refs_count = dat->parts[i + 1].edge_refs_offset - refs_offset;
-			uint64_t hash = poly_hash_t<337>()((char const *) (dat->edge_refs + refs_offset), refs_count);
+			uint64_t hash = poly_hash_t<337>()((char const *) (dat->edge_refs + refs_offset), sizeof(ref_t) * refs_count);
 			uniq_parts[hash] = sizeof(ref_t) * refs_count;
 		}
 
