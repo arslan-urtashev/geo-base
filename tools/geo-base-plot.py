@@ -4,10 +4,12 @@ import matplotlib.pyplot as plt
 from sys import stdin
 from argparse import ArgumentParser
 
-parser = ArgumentParser()
-parser.add_argument("--scatter", required=False, default="False")
+def get_args():
+    parser = ArgumentParser()
+    parser.add_argument("--scatter", required=False, default="False")
+    return parser.parse_args()
 
-args = parser.parse_args()
+args = get_args()
 
 for l in stdin:
     l = l.strip()[1:-1].split(',')

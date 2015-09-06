@@ -21,6 +21,7 @@ struct worker_t {
 	geo_base_t const *geo_base;
 	std::mt19937 generator;
 	std::unordered_set<polygon_id_t> polygons;
+	std::unordered_map<region_id_t, region_id_t> parents;
 	count_t points_offset;
 	count_t points_count;
 	std::atomic<count_t> offset;
@@ -64,6 +65,9 @@ struct worker_t {
 
 				if (region_id != UNKNOWN_REGION_ID)
 					polygons.insert(debug.polygon_id);
+
+				for (size_t i = 0; i + 1 < debug.regions.size(); ++i)
+					parents[debug.regions[i]] = debug.regions[i + 1];
 			}
 		}
 	}
@@ -148,9 +152,14 @@ int main(int argc, char *argv[])
 		status::clear();
 
 		std::unordered_set<polygon_id_t> polygons;
+		std::unordered_map<region_id_t, region_id_t> parents;
+
 		for (size_t i = 0; i < workers.size(); ++i) {
 			polygons.insert(workers[i].polygons.begin(), workers[i].polygons.end());
 			workers[i].polygons.clear();
+
+			parents.insert(workers[i].parents.begin(), workers[i].parents.end());
+			workers[i].parents.clear();
 		}
 
 		size_t count = 0;
@@ -173,6 +182,9 @@ int main(int argc, char *argv[])
 				}
 				++count;
 			}
+
+			if (parents.find(buf_geo_data.region_id()) != parents.end())
+				buf_geo_data.set_parent_id(parents[buf_geo_data.region_id()]);
 
 			writer.write(buf_geo_data, buf);
 		});
