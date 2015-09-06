@@ -12,7 +12,7 @@ args = parser.parse_args()
 for l in stdin:
     l = l.strip()[1:-1].split(',')
     l.append(l[0])
-    print("Points count = ", len(l) - 1)
+    print "Points count =", len(l) - 1
     x = []
     y = []
     for s in l:
