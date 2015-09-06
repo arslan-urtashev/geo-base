@@ -49,9 +49,12 @@ proto = env.Protoc(
     PROTOCOUTDIR = "."
 )
 
-geo_base_a = env.Library(
+geo_base = env.SharedLibrary(
     "lib/geo-base",
-    Glob("src/*.cpp") + Glob("proto/*.cc")
+    Glob("src/*.cpp") + Glob("proto/*.cc"),
+    LIBS = [
+        "protobuf"
+    ]
 )
 
 env.Program(
@@ -60,7 +63,7 @@ env.Program(
         "tools/geo_base_run.cpp"
     ],
     LIBS = [
-        geo_base_a,
+        geo_base,
         "protobuf"
     ]
 )
@@ -71,7 +74,7 @@ env.Program(
         "tools/geo_base_generate.cpp"
     ],
     LIBS = [
-        geo_base_a,
+        geo_base,
         "protobuf"
     ]
 )
@@ -82,7 +85,7 @@ env.Program(
         "tools/geo_base_show.cpp"
     ],
     LIBS = [
-        geo_base_a,
+        geo_base,
         "protobuf"
     ]
 )
@@ -94,7 +97,7 @@ if ARGUMENTS.get("geo-base-convert", "true") == "true":
             "tools/geo_base_convert.cpp"
         ],
         LIBS = [
-            geo_base_a,
+            geo_base,
             "protobuf",
             "z"
         ]
@@ -106,7 +109,7 @@ env.Program(
         "tools/geo_base_grep.cpp"
     ],
     LIBS = [
-        geo_base_a,
+        geo_base,
         "protobuf"
     ]
 )
@@ -117,7 +120,7 @@ env.Program(
         "tools/geo_base_sift.cpp"
     ],
     LIBS = [
-        geo_base_a,
+        geo_base,
         "protobuf"
     ]
 )
@@ -128,7 +131,18 @@ env.Program(
         "tools/geo_base_perf.cpp"
     ],
     LIBS = [
-        geo_base_a,
+        geo_base,
+        "protobuf"
+    ]
+)
+
+env.Program(
+    "example/geo-base-lookup-c",
+    [
+        "example/geo_base_lookup.c",
+    ],
+    LIBS = [
+        geo_base,
         "protobuf"
     ]
 )
