@@ -1,0 +1,181 @@
+#include "proto/geo_data.pb.h"
+#include "util.hpp"
+
+#include <google/protobuf/descriptor.h>
+
+#include <iostream>
+
+#include <unistd.h>
+#include <stdio.h>
+
+using namespace std;
+using namespace geo_base;
+using namespace google::protobuf;
+
+static ostream& operator << (ostream &out, vector<string> const &v)
+{
+	for (size_t i = 0; i < v.size(); ++i)
+		out << (i == 0 || (v[i].front() == '[' && v[i].back() == ']') ? "" : ".") << v[i];
+	return out;
+}
+
+static void ForEach(const Message* message, vector<string> &path)
+{
+	const Descriptor* d = message->GetDescriptor();
+	const Reflection* r = message->GetReflection();
+
+	for (int i = 0; i < d->field_count(); ++i) {
+		const FieldDescriptor* fd = d->field(i);
+		path.push_back(fd->name());
+
+		if (fd->label() == FieldDescriptor::LABEL_OPTIONAL || fd->label() == FieldDescriptor::LABEL_REQUIRED) {
+			switch (fd->type()) {
+			case FieldDescriptor::TYPE_DOUBLE:
+				cout << path << "=" << r->GetDouble(*message, fd) << '\t';
+				break;
+			case FieldDescriptor::TYPE_FLOAT:
+				cout << path << "=" << r->GetFloat(*message, fd) << '\t';
+				break;
+			case FieldDescriptor::TYPE_INT64:
+				cout << path << "=" << r->GetInt64(*message, fd) << '\t';
+				break;
+			case FieldDescriptor::TYPE_UINT64:
+				cout << path << "=" << r->GetUInt64(*message, fd) << '\t';
+				break;
+			case FieldDescriptor::TYPE_INT32:
+				cout << path << "=" << r->GetInt32(*message, fd) << '\t';
+				break;
+			case FieldDescriptor::TYPE_FIXED64:
+				cout << path << "=" << r->GetUInt64(*message, fd) << '\t';
+				break;
+			case FieldDescriptor::TYPE_FIXED32:
+				cout << path << "=" << r->GetUInt32(*message, fd) << '\t';
+				break;
+			case FieldDescriptor::TYPE_BOOL:
+				cout << path << "=" << r->GetBool(*message, fd) << '\t';
+				break;
+			case FieldDescriptor::TYPE_STRING:
+			{
+				string scratch;
+				cout << path << "=" << "\"" << r->GetStringReference(*message, fd, &scratch) << "\"" << '\t';
+			}
+				break;
+			case FieldDescriptor::TYPE_GROUP:
+				assert(false);
+				break;
+			case FieldDescriptor::TYPE_MESSAGE:
+				ForEach(&(r->GetMessage(*message, fd)), path);
+				break;
+			case FieldDescriptor::TYPE_BYTES:
+			{
+				string scratch;
+				cout << path << "=" << "\"" << r->GetStringReference(*message, fd, &scratch) << "\"" << '\t';
+			}
+				break;
+			case FieldDescriptor::TYPE_UINT32:
+				cout << path << "=" << r->GetUInt32(*message, fd) << '\t';
+				break;
+			case FieldDescriptor::TYPE_ENUM:
+				cout << path << "=" << "UNKNOWN_ENUM" << '\t';
+				break;
+			case FieldDescriptor::TYPE_SFIXED32:
+				cout << path << "=" << r->GetUInt32(*message, fd) << '\t';
+				break;
+			case FieldDescriptor::TYPE_SFIXED64:
+				cout << path << "=" << r->GetUInt64(*message, fd) << '\t';
+				break;
+			case FieldDescriptor::TYPE_SINT32:
+				cout << path << "=" << r->GetInt32(*message, fd) << '\t';
+				break;
+			case FieldDescriptor::TYPE_SINT64:
+				cout << path << "=" << r->GetInt64(*message, fd) << '\t';
+				break;
+			default:
+				break;
+			}
+		} else if (fd->label() == FieldDescriptor::LABEL_REPEATED) {
+			int count = r->FieldSize(*message, fd);
+			for (int i = 0; i < count; ++i) {
+				path.push_back("[" + to_string(i) + "]");
+				switch (fd->type()) {
+				case FieldDescriptor::TYPE_DOUBLE:
+					cout << " = " << r->GetRepeatedDouble(*message, fd, i) << '\t';
+					break;
+				case FieldDescriptor::TYPE_FLOAT:
+					cout << " = " << r->GetRepeatedFloat(*message, fd, i) << '\t';
+					break;
+				case FieldDescriptor::TYPE_INT64:
+					cout << " = " << r->GetRepeatedInt64(*message, fd, i) << '\t';
+					break;
+				case FieldDescriptor::TYPE_UINT64:
+					cout << " = " << r->GetRepeatedUInt64(*message, fd, i) << '\t';
+					break;
+				case FieldDescriptor::TYPE_INT32:
+					cout << " = " << r->GetRepeatedInt32(*message, fd, i) << '\t';
+					break;
+				case FieldDescriptor::TYPE_FIXED64:
+					cout << " = " << r->GetRepeatedUInt64(*message, fd, i) << '\t';
+					break;
+				case FieldDescriptor::TYPE_FIXED32:
+					cout << " = " << r->GetRepeatedUInt32(*message, fd, i) << '\t';
+					break;
+				case FieldDescriptor::TYPE_BOOL:
+					cout << " = " << r->GetRepeatedBool(*message, fd, i) << '\t';
+					break;
+				case FieldDescriptor::TYPE_STRING:
+				{
+					string scratch;
+					cout << " = " << "\"" << r->GetRepeatedStringReference(*message, fd, i, &scratch) << "\"" << '\t';
+				}
+					break;
+				case FieldDescriptor::TYPE_GROUP:
+					assert(false);
+					break;
+				case FieldDescriptor::TYPE_MESSAGE:
+					ForEach(&(r->GetRepeatedMessage(*message, fd, i)), path);
+					break;
+				case FieldDescriptor::TYPE_BYTES:
+				{
+					string scratch;
+					cout << " = " << "\"" << r->GetRepeatedStringReference(*message, fd, i, &scratch) << "\"" << '\t';
+				}
+					break;
+				case FieldDescriptor::TYPE_UINT32:
+					cout << " = " << r->GetRepeatedUInt32(*message, fd, i) << '\t';
+					break;
+				case FieldDescriptor::TYPE_ENUM:
+					cout << " = " << "UNKNOWN_ENUM" << '\t';
+					break;
+				case FieldDescriptor::TYPE_SFIXED32:
+					cout << " = " << r->GetRepeatedUInt32(*message, fd, i) << '\t';
+					break;
+				case FieldDescriptor::TYPE_SFIXED64:
+					cout << " = " << r->GetRepeatedUInt64(*message, fd, i) << '\t';
+					break;
+				case FieldDescriptor::TYPE_SINT32:
+					cout << " = " << r->GetRepeatedInt32(*message, fd, i) << '\t';
+					break;
+				case FieldDescriptor::TYPE_SINT64:
+					cout << " = " << r->GetRepeatedInt64(*message, fd, i) << '\t';
+					break;
+				default:
+					break;
+				}
+				path.pop_back();
+			}
+		}
+
+		path.pop_back();
+	}
+}
+
+int main()
+{
+	vector<string> path;
+	proto_parser_t(STDIN_FILENO)([&] (proto::geo_data_t const &geo_data) {
+		ForEach(&geo_data, path);
+		cout << endl;
+	});
+
+	return 0;
+}

@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 		geo_data_t const *dat = geo_base.geo_data();
 
 		count_t one_part_refs = 0;
-		std::map<region_id_t, count_t> counter;
+		std::unordered_map<region_id_t, count_t> counter;
 
 		for (count_t i = 0; i < dat->polygons_count; ++i) {
 			count_t parts_offset = dat->polygons[i].parts_offset;

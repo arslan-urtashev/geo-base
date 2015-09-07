@@ -57,6 +57,9 @@ geo_base = env.SharedLibrary(
     ]
 )
 
+for script in ["geo-base-plot.py", "geo-base-generate.pl"]:
+    env.Command("bin/" + script, "tools/" + script, "cp $SOURCE $TARGET")
+
 env.Program(
     "bin/geo-base-run",
     [
@@ -136,13 +139,25 @@ env.Program(
     ]
 )
 
-env.Program(
-    "example/geo-base-lookup-c",
-    [
-        "example/geo_base_lookup.c",
-    ],
-    LIBS = [
-        geo_base,
-        "protobuf"
-    ]
-)
+if ARGUMENTS.get("example", "true") == "true":
+    env.Program(
+        "bin/geo-base-lookup-c",
+        [
+            "example/geo_base_lookup.c",
+        ],
+        LIBS = [
+            geo_base,
+            "protobuf"
+        ]
+    )
+
+    env.Program(
+        "bin/geo-base-proto",
+        [
+            "example/geo_base_proto.cpp"
+        ],
+        LIBS = [
+            geo_base,
+            "protobuf"
+        ]
+    )
