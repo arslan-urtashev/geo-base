@@ -505,7 +505,7 @@ struct parser_t : public pbf_callback_t {
 
 			proto::polygon_t *polygon = geo_data.add_polygons();
 			polygon->set_polygon_id(generate_id());
-			polygon->set_inner(false);
+			polygon->set_type(proto::polygon_t::TYPE_OUTER);
 			for (osm_id_t osm_id : refs) {
 				proto::location_t *l = polygon->add_locations();
 				l->set_lat(nodes.at(osm_id).lat);
@@ -587,7 +587,7 @@ struct parser_t : public pbf_callback_t {
 						if (used.find(w[i]) == used.end()) {
 							proto::polygon_t *p = geo_data.add_polygons();
 							p->set_polygon_id(generate_id());
-							p->set_inner(!strcmp(r.role, "inner"));
+							p->set_type(!strcmp(r.role, "inner") ? proto::polygon_t::TYPE_INNER : proto::polygon_t::TYPE_OUTER);
 							save_locations(p, w[i]);
 						}
 					}

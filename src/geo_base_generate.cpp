@@ -210,7 +210,7 @@ void geo_base_generate_t::update(region_id_t region_id, proto::polygon_t const &
 
 	processor(locations, [&] (std::vector<location_t> const &locations) {
 		points.assign(locations.begin(), locations.end());
-		update(region_id, polygon.polygon_id(), points, polygon.inner());
+		update(region_id, polygon.polygon_id(), points, polygon.type() == proto::polygon_t::TYPE_INNER);
 	});
 }
 

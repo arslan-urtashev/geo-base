@@ -1,4 +1,10 @@
+import "google/protobuf/descriptor.proto";
+
 package geo_base.proto;
+
+extend google.protobuf.EnumValueOptions {
+    optional string SQL = 5000;
+}
 
 message location_t {
 	required double lon = 1;
@@ -6,9 +12,14 @@ message location_t {
 }
 
 message polygon_t {
+    enum type_t {
+        TYPE_INNER = 1 [(SQL) = "inner"];
+        TYPE_OUTER = 2 [(SQL) = "outer"];
+    };
+
 	required uint64 polygon_id = 1;
 	repeated location_t locations = 2;
-	required bool inner = 3;
+	required type_t type = 3;
 }
 
 message kv_t {

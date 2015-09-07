@@ -46,7 +46,8 @@ env.Append(CXXFLAGS =
 
 proto = env.Protoc(
     Glob("proto/*.proto"),
-    PROTOCOUTDIR = "."
+    PROTOCOUTDIR = ".",
+    PROTOCPROTOPATH = [".", "/usr/local/include"],
 )
 
 geo_base = env.SharedLibrary(

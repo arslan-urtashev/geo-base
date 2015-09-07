@@ -55,10 +55,7 @@ static void ForEach(const Message* message, vector<string> &path)
 				cout << path << "=" << r->GetBool(*message, fd) << '\t';
 				break;
 			case FieldDescriptor::TYPE_STRING:
-			{
-				string scratch;
-				cout << path << "=" << "\"" << r->GetStringReference(*message, fd, &scratch) << "\"" << '\t';
-			}
+				cout << path << "=" << "\"" << r->GetStringReference(*message, fd, NULL) << "\"" << '\t';
 				break;
 			case FieldDescriptor::TYPE_GROUP:
 				assert(false);
@@ -67,16 +64,17 @@ static void ForEach(const Message* message, vector<string> &path)
 				ForEach(&(r->GetMessage(*message, fd)), path);
 				break;
 			case FieldDescriptor::TYPE_BYTES:
-			{
-				string scratch;
-				cout << path << "=" << "\"" << r->GetStringReference(*message, fd, &scratch) << "\"" << '\t';
-			}
+				cout << path << "=" << "\"" << r->GetStringReference(*message, fd, NULL) << "\"" << '\t';
 				break;
 			case FieldDescriptor::TYPE_UINT32:
 				cout << path << "=" << r->GetUInt32(*message, fd) << '\t';
 				break;
 			case FieldDescriptor::TYPE_ENUM:
-				cout << path << "=" << "UNKNOWN_ENUM" << '\t';
+			{
+				const EnumValueDescriptor *ed = r->GetEnum(*message, fd);
+				string sql = ed->options().GetExtension(proto::SQL);
+				cout << path << "=" << sql << '\t';
+			}
 				break;
 			case FieldDescriptor::TYPE_SFIXED32:
 				cout << path << "=" << r->GetUInt32(*message, fd) << '\t';
@@ -123,10 +121,7 @@ static void ForEach(const Message* message, vector<string> &path)
 					cout << " = " << r->GetRepeatedBool(*message, fd, i) << '\t';
 					break;
 				case FieldDescriptor::TYPE_STRING:
-				{
-					string scratch;
-					cout << " = " << "\"" << r->GetRepeatedStringReference(*message, fd, i, &scratch) << "\"" << '\t';
-				}
+					cout << " = " << "\"" << r->GetRepeatedStringReference(*message, fd, i, NULL) << "\"" << '\t';
 					break;
 				case FieldDescriptor::TYPE_GROUP:
 					assert(false);
@@ -135,10 +130,7 @@ static void ForEach(const Message* message, vector<string> &path)
 					ForEach(&(r->GetRepeatedMessage(*message, fd, i)), path);
 					break;
 				case FieldDescriptor::TYPE_BYTES:
-				{
-					string scratch;
-					cout << " = " << "\"" << r->GetRepeatedStringReference(*message, fd, i, &scratch) << "\"" << '\t';
-				}
+					cout << " = " << "\"" << r->GetRepeatedStringReference(*message, fd, i, NULL) << "\"" << '\t';
 					break;
 				case FieldDescriptor::TYPE_UINT32:
 					cout << " = " << r->GetRepeatedUInt32(*message, fd, i) << '\t';
@@ -171,6 +163,8 @@ static void ForEach(const Message* message, vector<string> &path)
 
 int main()
 {
+	log_level(log_level_t::debug);
+
 	vector<string> path;
 	proto_parser_t(STDIN_FILENO)([&] (proto::geo_data_t const &geo_data) {
 		ForEach(&geo_data, path);
