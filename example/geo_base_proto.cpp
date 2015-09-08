@@ -28,7 +28,26 @@ static void ForEach(const Message* message, vector<string> &path)
 		const FieldDescriptor* fd = d->field(i);
 		path.push_back(fd->name());
 
-		if (fd->label() == FieldDescriptor::LABEL_OPTIONAL || fd->label() == FieldDescriptor::LABEL_REQUIRED) {
+		if (!fd->options().GetExtension(proto::ENUM).empty()) {
+			const EnumDescriptor *ed = d->FindEnumTypeByName(fd->options().GetExtension(proto::ENUM));
+			assert(fd);
+
+			cout << path << "=";
+
+			uint64_t set = (fd->type() == FieldDescriptor::TYPE_UINT64 ? r->GetUInt64(*message, fd) : r->GetUInt32(*message, fd));
+			bool sep = false;
+			for (int i = 0; i < ed->value_count(); ++i) {
+				if (set & (1ULL << i)) {
+					if (sep)
+						cout << ",";
+					const EnumValueDescriptor *vd = ed->value(i);
+					cout << vd->options().GetExtension(proto::JSON);
+					sep = true;
+				}
+			}
+			cout << "\t";
+
+		} else if (fd->label() == FieldDescriptor::LABEL_OPTIONAL || fd->label() == FieldDescriptor::LABEL_REQUIRED) {
 			switch (fd->type()) {
 			case FieldDescriptor::TYPE_DOUBLE:
 				cout << path << "=" << r->GetDouble(*message, fd) << '\t';
@@ -72,7 +91,7 @@ static void ForEach(const Message* message, vector<string> &path)
 			case FieldDescriptor::TYPE_ENUM:
 			{
 				const EnumValueDescriptor *ed = r->GetEnum(*message, fd);
-				string sql = ed->options().GetExtension(proto::SQL);
+				string sql = ed->options().GetExtension(proto::JSON);
 				cout << path << "=" << sql << '\t';
 			}
 				break;
@@ -91,6 +110,7 @@ static void ForEach(const Message* message, vector<string> &path)
 			default:
 				break;
 			}
+
 		} else if (fd->label() == FieldDescriptor::LABEL_REPEATED) {
 			int count = r->FieldSize(*message, fd);
 			for (int i = 0; i < count; ++i) {

@@ -3,7 +3,11 @@ import "google/protobuf/descriptor.proto";
 package geo_base.proto;
 
 extend google.protobuf.EnumValueOptions {
-    optional string SQL = 5000;
+	optional string JSON = 5000;
+}
+
+extend google.protobuf.FieldOptions {
+	optional string ENUM = 5001;
 }
 
 message location_t {
@@ -12,13 +16,14 @@ message location_t {
 }
 
 message polygon_t {
-    enum type_t {
-        TYPE_INNER = 1 [(SQL) = "inner"];
-        TYPE_OUTER = 2 [(SQL) = "outer"];
-    };
-
 	required uint64 polygon_id = 1;
 	repeated location_t locations = 2;
+
+	enum type_t {
+		TYPE_INNER = 1 [(JSON) = "inner"];
+		TYPE_OUTER = 2 [(JSON) = "outer"];
+	}
+
 	required type_t type = 3;
 }
 
@@ -33,4 +38,37 @@ message geo_data_t {
 	repeated polygon_t polygons = 3;
 	repeated kv_t kvs = 4;
 	repeated string blobs = 5;
+
+	enum option_t {
+        OPTION_ZERO = 0 [(JSON) = "ZERO"];
+
+		BOUNDARY_ADMINISTRATIVE = 1 [(JSON) = "administrative"];
+		BOUNDARY_MARITIME = 2 [(JSON) = "maritime"];
+		BOUNDARY_POLICAL = 3 [(JSON) = "political"];
+		BOUNDARY_VICE_COUNTRY = 4 [(JSON) = "vice_county"];
+		BOUNDARY_NATIONAL_PARK = 5 [(JSON) = "national_park"];
+		BOUNDARY_NATIONAL = 6 [(JSON) = "national"];
+		BOUNDARY_CIVIL = 7 [(JSON) = "civil"];
+
+		PLACE_ALLOTMENTS = 8 [(JSON) = "allotments"];
+		PLACE_CITY = 9 [(JSON) = "city"];
+		PLACE_CITY_BLOCK = 10 [(JSON) = "city_block"];
+		PLACE_COUNTRY = 11 [(JSON) = "country"];
+		PLACE_DISTRICT = 12 [(JSON) = "district"];
+		PLACE_FARM = 13 [(JSON) = "farm"];
+		PLACE_HAMLET = 14 [(JSON) = "hamlet"];
+		PLACE_LOCALITY = 15 [(JSON) = "locality"];
+		PLACE_MINUCUPALITY = 16 [(JSON) = "municipality"];
+		PLACE_NEIGHBOURHOOD = 17 [(JSON) = "neighbourhood"];
+		PLACE_PLOT = 18 [(JSON) = "plot"];
+		PLACE_PROVINCE = 19 [(JSON) = "province"];
+		PLACE_QUARTER = 20 [(JSON) = "quarter"];
+		PLACE_REGION = 21 [(JSON) = "region"];
+		PLACE_STATE = 22 [(JSON) = "state"];
+		PLACE_SUBURB = 23 [(JSON) = "suburb"];
+		PLACE_TOWN = 24 [(JSON) = "town"];
+		PLACE_VILLAGE = 25 [(JSON) = "village"];
+	}
+
+	required uint64 options = 6 [(ENUM) = "option_t"];
 }

@@ -343,61 +343,76 @@ public:
 	}
 };
 
-static bool is_boundary(std::vector<kv_t> const &kvs)
+static uint64_t get_options(std::vector<kv_t> const &kvs)
 {
-	bool ok = false;
-	for (kv_t const &kv : kvs)
-		if (
-			!strcmp("admin_level", kv.k)
-			|| (
-				!strcmp(kv.k, "boundary")
-				&& (
-					!strcmp(kv.v, "administrative")
-					|| !strcmp(kv.v, "maritime")
-					|| !strcmp(kv.v, "political")
-					|| !strcmp(kv.v, "vice_county")
-					|| !strcmp(kv.v, "national_park")
-					|| !strcmp(kv.v, "national")
-					|| !strcmp(kv.v, "civil")
-				)
-			)
-			|| (
-				!strcmp(kv.k, "place")
-				&& (
-					!strcmp(kv.v, "city")
-					|| !strcmp(kv.v, "country")
-					|| !strcmp(kv.v, "state")
-					|| !strcmp(kv.v, "region")
-					|| !strcmp(kv.v, "province")
-					|| !strcmp(kv.v, "district")
-					|| !strcmp(kv.v, "municipality")
-					|| !strcmp(kv.v, "suburb")
-					|| !strcmp(kv.v, "quarter")
-					|| !strcmp(kv.v, "neighbourhood")
-					|| !strcmp(kv.v, "city_block")
-					|| !strcmp(kv.v, "town")
-					|| !strcmp(kv.v, "village")
-					|| !strcmp(kv.v, "locality")
-					|| !strcmp(kv.v, "plot")
-					|| !strcmp(kv.v, "hamlet")
-					|| !strcmp(kv.v, "farm")
-					|| !strcmp(kv.v, "allotments")
-				)
-			)
-		) {
-			ok = true;
-			break;
-		}
-	if (!ok)
-		return false;
-	ok = false;
+	uint64_t options = 0;
 	for (kv_t const &kv : kvs) {
-		if (strstr(kv.k, "name") == kv.k) {
-			ok = true;
-			break;
+		if (!strcmp(kv.k, "boundary")) {
+			if (!strcmp(kv.v, "administrative"))
+				options |= (1ULL << proto::geo_data_t::BOUNDARY_ADMINISTRATIVE);
+			else if (!strcmp(kv.v, "maritime"))
+				options |= (1ULL << proto::geo_data_t::BOUNDARY_MARITIME);
+			else if (!strcmp(kv.v, "political"))
+				options |= (1ULL << proto::geo_data_t::BOUNDARY_POLICAL);
+			else if (!strcmp(kv.v, "vice_county"))
+				options |= (1ULL << proto::geo_data_t::BOUNDARY_VICE_COUNTRY);
+			else if (!strcmp(kv.v, "national_park"))
+				options |= (1ULL << proto::geo_data_t::BOUNDARY_NATIONAL_PARK);
+			else if (!strcmp(kv.v, "national"))
+				options |= (1ULL << proto::geo_data_t::BOUNDARY_NATIONAL);
+			else if (!strcmp(kv.v, "civil"))
+				options |= (1ULL << proto::geo_data_t::BOUNDARY_CIVIL);
+
+		} else if (!strcmp(kv.k, "place")) {
+			if (!strcmp(kv.v, "allotments"))
+				options |= (1ULL << proto::geo_data_t::PLACE_ALLOTMENTS);
+			else if (!strcmp(kv.v, "city"))
+				options |= (1ULL << proto::geo_data_t::PLACE_CITY);
+			else if (!strcmp(kv.v, "city_block"))
+				options |= (1ULL << proto::geo_data_t::PLACE_CITY_BLOCK);
+			else if (!strcmp(kv.v, "country"))
+				options |= (1ULL << proto::geo_data_t::PLACE_COUNTRY);
+			else if (!strcmp(kv.v, "district"))
+				options |= (1ULL << proto::geo_data_t::PLACE_DISTRICT);
+			else if (!strcmp(kv.v, "farm"))
+				options |= (1ULL << proto::geo_data_t::PLACE_FARM);
+			else if (!strcmp(kv.v, "hamlet"))
+				options |= (1ULL << proto::geo_data_t::PLACE_HAMLET);
+			else if (!strcmp(kv.v, "locality"))
+				options |= (1ULL << proto::geo_data_t::PLACE_LOCALITY);
+			else if (!strcmp(kv.v, "municipality"))
+				options |= (1ULL << proto::geo_data_t::PLACE_MINUCUPALITY);
+			else if (!strcmp(kv.v, "neighbourhood"))
+				options |= (1ULL << proto::geo_data_t::PLACE_NEIGHBOURHOOD);
+			else if (!strcmp(kv.v, "plot"))
+				options |= (1ULL << proto::geo_data_t::PLACE_PLOT);
+			else if (!strcmp(kv.v, "province"))
+				options |= (1ULL << proto::geo_data_t::PLACE_PROVINCE);
+			else if (!strcmp(kv.v, "quarter"))
+				options |= (1ULL << proto::geo_data_t::PLACE_QUARTER);
+			else if (!strcmp(kv.v, "region"))
+				options |= (1ULL << proto::geo_data_t::PLACE_REGION);
+			else if (!strcmp(kv.v, "state"))
+				options |= (1ULL << proto::geo_data_t::PLACE_STATE);
+			else if (!strcmp(kv.v, "suburb"))
+				options |= (1ULL << proto::geo_data_t::PLACE_SUBURB);
+			else if (!strcmp(kv.v, "town"))
+				options |= (1ULL << proto::geo_data_t::PLACE_TOWN);
+			else if (!strcmp(kv.v, "village"))
+				options |= (1ULL << proto::geo_data_t::PLACE_VILLAGE);
 		}
 	}
-	return ok;
+	return options;
+}
+
+static bool is_boundary(std::vector<kv_t> const &kvs)
+{
+	if (get_options(kvs) == 0)
+		return false;
+	for (kv_t const &kv : kvs)
+		if (strstr(kv.k, "name") == kv.k)
+			return true;
+	return false;
 }
 
 static bool is_way_reference(reference_t const &r)
@@ -502,6 +517,7 @@ struct parser_t : public pbf_callback_t {
 		if (is_boundary(kvs) && refs.back() == refs.front()) {
 			geo_data.Clear();
 			geo_data.set_region_id(osm_id);
+			geo_data.set_options(get_options(kvs));
 
 			proto::polygon_t *polygon = geo_data.add_polygons();
 			polygon->set_polygon_id(generate_id());
@@ -579,6 +595,7 @@ struct parser_t : public pbf_callback_t {
 
 			geo_data.Clear();
 			geo_data.set_region_id(osm_id);
+			geo_data.set_options(get_options(kvs));
 			
 			for (reference_t const &r : refs) {
 				if (is_way_reference(r)) {
