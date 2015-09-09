@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 
 		count_t one_part_refs = 0;
 		std::unordered_map<region_id_t, count_t> counter;
+		std::vector<count_t> part_refs;
 
 		for (count_t i = 0; i < dat->polygons_count; ++i) {
 			count_t parts_offset = dat->polygons[i].parts_offset;
@@ -40,7 +41,18 @@ int main(int argc, char *argv[])
 				count_t refs_count = ((p + 1)->edge_refs_offset - p->edge_refs_offset);
 				counter[dat->polygons[i].region_id] += sizeof(ref_t) * refs_count;
 				one_part_refs = std::max(one_part_refs, refs_count);
+				part_refs.push_back(refs_count);
 			}
+		}
+
+		log_info("geo-base-show") << "One part refs count = " << one_part_refs;
+
+		std::sort(part_refs.begin(), part_refs.end());
+		for (count_t l = 0, r = 0; l < part_refs.size(); l = r) {
+			r = l + 1;
+			while (r < part_refs.size() && part_refs[l] == part_refs[r])
+				++r;
+			log_info("geo-base-show", "refs count stat") << r * 100.0 / part_refs.size() << "% <= " << part_refs[l];
 		}
 		
 		std::vector<std::pair<region_id_t, count_t>> regions(counter.begin(), counter.end());
@@ -73,8 +85,6 @@ int main(int argc, char *argv[])
 			for (ref_t j = refs_offset; j < refs_offset + refs_count; j += 2)
 				uniq_pairs.insert(*((uint64_t const *) (dat->edge_refs + j)));
 		}
-
-		log_info("geo-base-show") << "One part refs count = " << one_part_refs;
 
 		log_info("geo-base-show") << "Uniq parts count = " << uniq_parts.size();
 		log_info("geo-base-show") << "Uniq parts memory = " << total_parts_memory / (1024. * 1024.) << " MB";
