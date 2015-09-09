@@ -48,11 +48,15 @@ int main(int argc, char *argv[])
 		log_info("geo-base-show") << "One part refs count = " << one_part_refs;
 
 		std::sort(part_refs.begin(), part_refs.end());
+		count_t part_refs_memory = 0;
 		for (count_t l = 0, r = 0; l < part_refs.size(); l = r) {
-			r = l + 1;
-			while (r < part_refs.size() && part_refs[l] == part_refs[r])
+			r = l;
+			while (r < part_refs.size() && part_refs[l] == part_refs[r]) {
+				part_refs_memory += sizeof(ref_t) * part_refs[r];
 				++r;
-			log_info("geo-base-show", "refs count stat") << r * 100.0 / part_refs.size() << "% <= " << part_refs[l];
+			}
+			log_info("geo-base-show", "refs count stat") << r * 100.0 / part_refs.size() << "% <= " << part_refs[l]
+					<< " (" << part_refs_memory / (1024. * 1024.) << " MB)";
 		}
 		
 		std::vector<std::pair<region_id_t, count_t>> regions(counter.begin(), counter.end());
