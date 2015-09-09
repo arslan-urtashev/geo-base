@@ -11,6 +11,50 @@
 
 using namespace geo_base;
 
+template<typename callback_t>
+static void for_each_polygon(geo_data_t const *dat, callback_t callback)
+{
+	for (count_t i = 0; i < dat->polygons_count; ++i)
+		callback(&(dat->polygons[i]));
+}
+
+template<typename callback_t>
+static void for_each_part(geo_data_t const *dat, polygon_t const *p, callback_t callback)
+{
+	for (count_t i = p->parts_offset; i < p->parts_offset + p->parts_count; ++i)
+		callback(&(dat->parts[i]));
+}
+
+template<typename callback_t>
+static void for_each_ref(geo_data_t const *dat, part_t const *part, callback_t callback)
+{
+	for (count_t i = part->edge_refs_offset; i < (part + 1)->edge_refs_offset - part->edge_refs_offset; ++i)
+		callback(dat, dat->edge_refs[i]);
+}
+
+template<typename callback>
+static void for_each(geo_data_t const *dat)
+{
+	for_each_polygon(dat, [&] (polygon_t const *polygon) {
+		for_each_part(dat, polygon, [&] (part_t const *part) {
+			for_each_ref(dat, part, [&] (ref_t const &ref) {
+				callback(polygon, part, ref);
+			});
+		});
+	});
+}
+
+template<typename vector_t, typename callback_t>
+static void for_each_uniq(vector_t const &a, callback_t callback)
+{
+	for (count_t l = 0, r = 0; l < a.size(); l = r) {
+		r = l;
+		while (r < a.size() && a[l] == a[r])
+			++r;
+		callback(l, r);
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	std::cout << std::fixed << std::setprecision(2);
@@ -28,78 +72,59 @@ int main(int argc, char *argv[])
 
 		geo_data_t const *dat = geo_base.geo_data();
 
-		count_t one_part_refs = 0;
-		std::unordered_map<region_id_t, count_t> counter;
-		std::vector<count_t> part_refs;
+		{
+			std::vector<count_t> part_refs;
+			for_each_polygon(dat, [&] (polygon_t const *polygon) {
+				for_each_part(dat, polygon, [&] (part_t const *part) {
+					part_refs.push_back((part + 1)->edge_refs_offset - part->edge_refs_offset);
+				});
+			});
 
-		for (count_t i = 0; i < dat->polygons_count; ++i) {
-			count_t parts_offset = dat->polygons[i].parts_offset;
-			count_t parts_count = dat->polygons[i].parts_count;
+			std::sort(part_refs.begin(), part_refs.end());
+			count_t part_refs_memory = 0;
 
-			for (count_t j = parts_offset; j < parts_offset + parts_count; ++j) {
-				part_t const *p = &(dat->parts[j]);
-				count_t refs_count = ((p + 1)->edge_refs_offset - p->edge_refs_offset);
-				counter[dat->polygons[i].region_id] += sizeof(ref_t) * refs_count;
-				one_part_refs = std::max(one_part_refs, refs_count);
-				part_refs.push_back(refs_count);
-			}
+			for_each_uniq(part_refs, [&] (count_t l, count_t r) {
+				for (count_t i = l; i < r; ++i)
+					part_refs_memory += part_refs[i] * sizeof(i);
+
+				double percent = r * 100.0 / part_refs.size();
+				double memory = part_refs_memory / (1024. * 1024.0);
+
+				log_info("geo-base-show", "refs count stat") << percent << "% <= " << part_refs[l] << " (" << memory << " MB)";
+			});
 		}
 
-		log_info("geo-base-show") << "One part refs count = " << one_part_refs;
+		{
+			struct region_memory_t {
+				region_id_t region_id;
+				count_t memory;
 
-		std::sort(part_refs.begin(), part_refs.end());
-		count_t part_refs_memory = 0;
-		for (count_t l = 0, r = 0; l < part_refs.size(); l = r) {
-			r = l;
-			while (r < part_refs.size() && part_refs[l] == part_refs[r]) {
-				part_refs_memory += sizeof(ref_t) * part_refs[r];
-				++r;
+				region_memory_t(std::pair<region_id_t, count_t> const &p)
+					: region_id(p.first)
+					, memory(p.second)
+				{
+				}
+			};
+
+			std::unordered_map<region_id_t, count_t> region_memory;
+			for_each_polygon(dat, [&] (polygon_t const *polygon) {
+				for_each_part(dat, polygon, [&] (part_t const *part) {
+					region_memory[polygon->region_id] += ((part + 1)->edge_refs_offset - part->edge_refs_offset) * sizeof(ref_t);
+				});
+			});
+
+			std::vector<region_memory_t> regions(region_memory.begin(), region_memory.end());
+			std::sort(regions.begin(), regions.end(), [&] (region_memory_t const &a, region_memory_t const &b) {
+				return a.memory > b.memory;
+			});	
+
+			static count_t const REGIONS_COUNT = 5;
+
+			for (count_t i = 0; i < REGIONS_COUNT; ++i) {
+				double memory = regions[i].memory / (1024. * 1024.);
+				log_info("geo-base-show", "region memory", i + 1) << regions[i].region_id << " = " << memory << " MB";
 			}
-			log_info("geo-base-show", "refs count stat") << r * 100.0 / part_refs.size() << "% <= " << part_refs[l]
-					<< " (" << part_refs_memory / (1024. * 1024.) << " MB)";
 		}
-		
-		std::vector<std::pair<region_id_t, count_t>> regions(counter.begin(), counter.end());
-		std::sort(regions.begin(), regions.end(),
-			[&] (std::pair<region_id_t, count_t> const &a, std::pair<region_id_t, count_t> const &b) {
-				return a.second > b.second;
-			}
-		);
-
-		std::unordered_map<uint64_t, uint64_t> uniq_parts;
-		for (count_t i = 0; i + 1 < dat->parts_count; ++i) {
-			count_t refs_offset = dat->parts[i].edge_refs_offset;
-			count_t refs_count = dat->parts[i + 1].edge_refs_offset - refs_offset;
-			uint64_t hash = poly_hash_t<337>()((char const *) (dat->edge_refs + refs_offset), sizeof(ref_t) * refs_count);
-			uniq_parts[hash] = sizeof(ref_t) * refs_count;
-		}
-
-		size_t total_parts_memory = 0;
-		for (auto const &p : uniq_parts)
-			total_parts_memory += p.second;
-
-		std::unordered_set<uint64_t> uniq_pairs;
-		for (count_t i = 0; i + 1 < dat->parts_count; ++i) {
-			count_t refs_offset = dat->parts[i].edge_refs_offset;
-			count_t refs_count = dat->parts[i + 1].edge_refs_offset - refs_offset;
-			if (refs_count % 2 != 0) {
-				log_warning("geo-base-show") << "Wrong part!";
-				continue;
-			}
-			for (ref_t j = refs_offset; j < refs_offset + refs_count; j += 2)
-				uniq_pairs.insert(*((uint64_t const *) (dat->edge_refs + j)));
-		}
-
-		log_info("geo-base-show") << "Uniq parts count = " << uniq_parts.size();
-		log_info("geo-base-show") << "Uniq parts memory = " << total_parts_memory / (1024. * 1024.) << " MB";
-
-		log_info("geo-base-show") << "Uniq pairs count = " << uniq_pairs.size();
-		log_info("geo-base-show") << "Uniq pairs memory = " << uniq_pairs.size() * sizeof(uint64_t) / (1024. * 1024.) << " MB";
-
-		static count_t const REGIONS_COUNT = 5;
-
-		for (count_t i = 0; i < REGIONS_COUNT; ++i)
-			log_info("geo-base-show", "memory", i + 1) << regions[i].first << " = " << regions[i].second / (1024. * 1024.) << " MB";
 
 	} catch (std::exception const &e) {
 		log_error("geo-base-show", "EXCEPTION") << e.what();
