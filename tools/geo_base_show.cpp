@@ -28,8 +28,8 @@ static void for_each_part(geo_data_t const *dat, polygon_t const *p, callback_t 
 template<typename callback_t>
 static void for_each_ref(geo_data_t const *dat, part_t const *part, callback_t callback)
 {
-	for (count_t i = part->edge_refs_offset; i < (part + 1)->edge_refs_offset - part->edge_refs_offset; ++i)
-		callback(dat, dat->edge_refs[i]);
+	for (count_t i = part->edge_refs_offset; i < (part + 1)->edge_refs_offset; ++i)
+		callback(dat->edge_refs[i]);
 }
 
 template<typename callback>
@@ -124,6 +124,40 @@ int main(int argc, char *argv[])
 				double memory = regions[i].memory / (1024. * 1024.);
 				log_info("geo-base-show", "region memory", i + 1) << regions[i].region_id << " = " << memory << " MB";
 			}
+		}
+
+		{
+			double compressed_memory = 0;
+			for_each_polygon(dat, [&] (polygon_t const *polygon) {	
+				ref_t base_ref = dat->edges_count + 1;
+				for_each_part(dat, polygon, [&] (part_t const *part) {
+					for_each_ref(dat, part, [&] (ref_t const &r) {
+						base_ref = std::min(base_ref, r);
+					});
+				});
+
+				count_t bit = 1;
+				for_each_part(dat, polygon, [&] (part_t const *part) {
+					for_each_ref(dat, part, [&] (ref_t const &r) {
+						ref_t x = r - base_ref;
+						while (((1LLU << bit) - 1) < x)
+							++bit;
+					});
+				});
+
+				log_debug("geo-base-show", "compress") << "Max bits count = " << bit;
+
+				count_t count = 0;
+				for_each_part(dat, polygon, [&] (part_t const *part) {
+					for_each_ref(dat, part, [&] (ref_t const &) {
+						++count;
+					});
+				});
+
+				compressed_memory += 1.0 * count * bit / 8.0;
+			});
+
+			log_info("geo-base-show") << "Bits compressed memory = " << compressed_memory / (1024. * 1024.) << " MB";
 		}
 
 	} catch (std::exception const &e) {
