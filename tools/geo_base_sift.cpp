@@ -97,11 +97,12 @@ static output_t &operator << (output_t &out, std::vector<worker_t> const &worker
 		count += (w.offset - w.points_offset);
 		total += w.points_count;
 	}
-	count_t result = count * 100.0 / total;
+	count_t result = count * 20.0 / total;
 	out << "[";
-	for (count_t i = 1; i <= 100; ++i)
+	for (count_t i = 1; i <= 20; ++i)
 		out << (i <= result ? "#" : " ");
-	out << "]";
+	out << "] ";
+	out << count * 100.0 / total;
 	return out;
 }
 
