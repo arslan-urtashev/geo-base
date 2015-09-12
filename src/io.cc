@@ -29,27 +29,27 @@
 namespace geo_base {
 
 bool Read(int fd, char *ptr, size_t count) {
-	while (count > 0) {
-		ssize_t ret = read(fd, ptr, count);
-		if (ret < 0)
-			throw Exception("%s", strerror(errno));
-		if (ret == 0)
-			return false;
-		ptr += ret;
-		count -= ret;
-	}
-	return true;
+  while (count > 0) {
+    ssize_t ret = read(fd, ptr, count);
+    if (ret < 0)
+      throw Exception("%s", strerror(errno));
+    if (ret == 0)
+      return false;
+    ptr += ret;
+    count -= ret;
+  }
+  return true;
 }
 
 bool Write(int fd, const char* ptr, size_t count) {
-	while (count > 0) {
-		ssize_t ret = write(fd, ptr, count);
-		if (ret <= 0)
-			throw Exception("%s", strerror(errno));
-		ptr += ret;
-		count -= ret;
-	}
-	return true;
+  while (count > 0) {
+    ssize_t ret = write(fd, ptr, count);
+    if (ret <= 0)
+      throw Exception("%s", strerror(errno));
+    ptr += ret;
+    count -= ret;
+  }
+  return true;
 }
 
 } // namespace geo_base

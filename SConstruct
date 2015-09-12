@@ -139,26 +139,3 @@ env.Program(
         "protobuf"
     ]
 )
-
-# if ARGUMENTS.get("example", "true") == "true":
-#     env.Program(
-#         "bin/geo-base-lookup-c",
-#         [
-#             "example/geo_base_lookup.c",
-#         ],
-#         LIBS = [
-#             geo_base,
-#             "protobuf"
-#         ]
-#     )
-# 
-#     env.Program(
-#         "bin/geo-base-proto",
-#         [
-#             "example/geo_base_proto.cpp"
-#         ],
-#         LIBS = [
-#             geo_base,
-#             "protobuf"
-#         ]
-#     )
