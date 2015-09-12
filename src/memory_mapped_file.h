@@ -35,7 +35,7 @@ namespace geo_base {
 // correct map/unmap memory mapped data using RAII.
 class MemoryMappedFile : public File {
  protected:
-  static size_t const kDefaultMemorySize = 8LU * (1LU << 30); // 8 GB
+  static const size_t kDefaultMemorySize = 8LU * (1LU << 30); // 8 GB
 
   void ReadOnlyOpen(const char* path) {
     File::ReadOnlyOpen(path);
