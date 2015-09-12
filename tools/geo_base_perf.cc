@@ -25,6 +25,7 @@
 #include "log.h"
 #include "stop_watch.h"
 
+#include <algorithm>
 #include <iomanip>
 #include <iostream>
 
