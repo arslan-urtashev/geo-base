@@ -40,7 +40,7 @@ env.Append(CXXFLAGS =
     CPPPATH = [
         ".",
         "include",
-        "contrib"
+        "src"
     ]
 )
 
@@ -52,7 +52,7 @@ proto = env.Protoc(
 
 geo_base = env.SharedLibrary(
     "lib/geo-base",
-    Glob("src/*.cpp") + Glob("proto/*.cc"),
+    Glob("src/*.cc") + Glob("proto/*.cc"),
     LIBS = [
         "protobuf"
     ]
@@ -64,7 +64,7 @@ for script in ["geo-base-plot.py", "geo-base-generate.pl"]:
 env.Program(
     "bin/geo-base-run",
     [
-        "tools/geo_base_run.cpp"
+        "tools/geo_base_run.cc"
     ],
     LIBS = [
         geo_base,
@@ -75,7 +75,7 @@ env.Program(
 env.Program(
     "bin/geo-base-generate",
     [
-        "tools/geo_base_generate.cpp"
+        "tools/geo_base_generate.cc"
     ],
     LIBS = [
         geo_base,
@@ -86,7 +86,7 @@ env.Program(
 env.Program(
     "bin/geo-base-show",
     [
-        "tools/geo_base_show.cpp"
+        "tools/geo_base_show.cc"
     ],
     LIBS = [
         geo_base,
@@ -98,7 +98,7 @@ if ARGUMENTS.get("geo-base-convert", "true") == "true":
     env.Program(
         "bin/geo-base-convert",
         [
-            "tools/geo_base_convert.cpp"
+            "tools/geo_base_convert.cc"
         ],
         LIBS = [
             geo_base,
@@ -110,7 +110,7 @@ if ARGUMENTS.get("geo-base-convert", "true") == "true":
 env.Program(
     "bin/geo-base-grep",
     [
-        "tools/geo_base_grep.cpp"
+        "tools/geo_base_grep.cc"
     ],
     LIBS = [
         geo_base,
@@ -121,7 +121,7 @@ env.Program(
 env.Program(
     "bin/geo-base-sift",
     [
-        "tools/geo_base_sift.cpp"
+        "tools/geo_base_sift.cc"
     ],
     LIBS = [
         geo_base,
@@ -132,7 +132,7 @@ env.Program(
 env.Program(
     "bin/geo-base-perf",
     [
-        "tools/geo_base_perf.cpp"
+        "tools/geo_base_perf.cc"
     ],
     LIBS = [
         geo_base,
@@ -140,25 +140,25 @@ env.Program(
     ]
 )
 
-if ARGUMENTS.get("example", "true") == "true":
-    env.Program(
-        "bin/geo-base-lookup-c",
-        [
-            "example/geo_base_lookup.c",
-        ],
-        LIBS = [
-            geo_base,
-            "protobuf"
-        ]
-    )
-
-    env.Program(
-        "bin/geo-base-proto",
-        [
-            "example/geo_base_proto.cpp"
-        ],
-        LIBS = [
-            geo_base,
-            "protobuf"
-        ]
-    )
+# if ARGUMENTS.get("example", "true") == "true":
+#     env.Program(
+#         "bin/geo-base-lookup-c",
+#         [
+#             "example/geo_base_lookup.c",
+#         ],
+#         LIBS = [
+#             geo_base,
+#             "protobuf"
+#         ]
+#     )
+# 
+#     env.Program(
+#         "bin/geo-base-proto",
+#         [
+#             "example/geo_base_proto.cpp"
+#         ],
+#         LIBS = [
+#             geo_base,
+#             "protobuf"
+#         ]
+#     )
