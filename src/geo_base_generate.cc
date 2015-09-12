@@ -100,8 +100,9 @@ static void GenerateEdges(RegionID region_id, const std::vector<Point>& points,
       std::swap(e.beg, e.end);
 
     if (IsBadEdge(e, ctx->points.data())) {
-      LogWarning("generate", region_id) <<  "bad edge detected = "
-          << ctx->points[e.beg] << " -> " << ctx->points[e.end];
+      if (e.beg != e.end)
+        LogWarning("generate", region_id) <<  "bad edge detected = "
+            << ctx->points[e.beg] << " -> " << ctx->points[e.end];
       continue;
     }
     
