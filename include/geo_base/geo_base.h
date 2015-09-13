@@ -58,7 +58,7 @@ class GeoBase {
   explicit GeoBase(const char* path);
     
   // All memory will be touched, so no lookups will be slow. Be careful, all
-  // memory of data file will be loaded from disk. Returns crc32.
+  // memory of data file will be loaded from disk. Returns simple checksum.
   uint32_t TouchMemory() const;
 
   // Lookup RegionID by Location.

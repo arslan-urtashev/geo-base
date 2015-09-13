@@ -66,6 +66,8 @@ public:
     return geo_base::GetCRC32(addr(), SizeOfOpenFile());
   }
 
+  uint8_t GetSimpleChecksum() const;
+
   void *addr() const {
     return mmap_guard.addr;
   }

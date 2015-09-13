@@ -79,7 +79,7 @@ class GeoBase::Impl {
   }
 
   uint32_t TouchMemory() const {
-    return wrapper.GetCRC32();
+    return wrapper.GetSimpleChecksum();
   }
 
  private:
