@@ -78,6 +78,8 @@ class GeoBase {
   GeoBase& operator = (const GeoBase&) = delete;
 };
 
+typedef std::unique_ptr<GeoBase> GeoBasePtr;
+
 } // namespace geo_base
 
 #endif // GEO_BASE_GEO_BASE_H

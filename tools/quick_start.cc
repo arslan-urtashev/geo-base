@@ -1,10 +1,7 @@
-#include <iostream>
-#include <memory>
 #include <exception>
+#include <iostream>
 
 #include <geo_base/geo_base.h>
-
-typedef std::unique_ptr<geo_base::GeoBase> GeoBasePtr;
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
@@ -12,9 +9,9 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  GeoBasePtr geo_base = NULL;
+  geo_base::GeoBasePtr geo_base = NULL;
   try {
-    geo_base = GeoBasePtr(new geo_base::GeoBase(argv[1]));
+    geo_base = geo_base::GeoBasePtr(new geo_base::GeoBase(argv[1]));
   } catch (const std::exception& e) {
     std::cerr << "EXCEPTION: " << e.what() << std::endl;
     return -1;
