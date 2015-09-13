@@ -78,6 +78,10 @@ class GeoBase::Impl {
     }
   }
 
+  uint32_t TouchMemory() const {
+    return wrapper.GetCRC32();
+  }
+
  private:
   GeoDataWrapper wrapper;
 };
@@ -100,6 +104,10 @@ const char* GeoBase::LookupValueByKey(RegionID region_id, const char* key) const
 
 void GeoBase::ForEachKeyValue(RegionID region_id, KeyValueVisitor visitor) const {
   return impl->ForEachKeyValue(region_id, visitor);
+}
+
+uint32_t GeoBase::TouchMemory() const {
+  return impl->TouchMemory();
 }
 
 } // namespace geo_base

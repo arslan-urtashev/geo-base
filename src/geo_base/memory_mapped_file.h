@@ -23,6 +23,7 @@
 #ifndef GEO_BASE_MEMORY_MAPPED_FILE_H_
 #define GEO_BASE_MEMORY_MAPPED_FILE_H_
 
+#include "crc32.h"
 #include "file.h"
 #include "mmap_guard.h"
 
@@ -61,6 +62,10 @@ class MemoryMappedFile : public File {
   }
 
 public:
+  uint32_t GetCRC32() const {
+    return geo_base::GetCRC32(addr(), SizeOfOpenFile());
+  }
+
   void *addr() const {
     return mmap_guard.addr;
   }

@@ -56,6 +56,10 @@ class GeoBase {
    // Call open and mmap on file, stored on disk by path.
    // Throws exception with strerror(errno) if open or mmap returns error.
   explicit GeoBase(const char* path);
+    
+  // All memory will be touched, so no lookups will be slow. Be careful, all
+  // memory of data file will be loaded from disk. Returns crc32.
+  uint32_t TouchMemory() const;
 
   // Lookup RegionID by Location.
   RegionID Lookup(const Location& location, Debug* debug = NULL) const;
