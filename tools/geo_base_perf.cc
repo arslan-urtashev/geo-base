@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 
   try {
     GeoBase geo_base(argv[1]);
-    geo_base.TouchMemory();
+    LogInfo("geo-base-perf") << "CRC32 = " << geo_base.TouchMemory();
 
     Location location;
     std::vector<Count> checkpoints;
