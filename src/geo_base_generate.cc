@@ -237,7 +237,7 @@ void GeoBaseGenerate::Update(RegionID region_id,
   processor(locations, [&] (const std::vector<Location>& locations) {
     points.clear();
     for (const Location& l : locations)
-      points.push_back(Point(l.lon, l.lat));
+      points.push_back(Point(l));
     Update(region_id, polygon.polygon_id(), points, IsInnerPolygon(polygon));
   });
 }
