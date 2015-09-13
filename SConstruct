@@ -52,11 +52,18 @@ proto = env.Protoc(
     PROTOCPROTOPATH = [".", "/usr/local/include"],
 )
 
-geo_base = env.SharedLibrary(
+libgeo_base = env.SharedLibrary(
     "lib/geo-base",
     Glob("src/geo_base/*.cc") + Glob("proto/*.cc"),
     LIBS = [
         "protobuf"
+    ]
+)
+
+libgeo_base_tool = env.StaticLibrary(
+    "lib/geo-base-tool",
+    [
+        "tools/get_opt.cc"
     ]
 )
 
@@ -69,7 +76,8 @@ env.Program(
         "tools/geo_base_run.cc"
     ],
     LIBS = [
-        geo_base,
+        libgeo_base,
+        libgeo_base_tool,
         "protobuf"
     ]
 )
@@ -80,7 +88,8 @@ env.Program(
         "tools/geo_base_generate.cc"
     ],
     LIBS = [
-        geo_base,
+        libgeo_base,
+        libgeo_base_tool,
         "protobuf"
     ]
 )
@@ -91,7 +100,8 @@ env.Program(
         "tools/geo_base_show.cc"
     ],
     LIBS = [
-        geo_base,
+        libgeo_base,
+        libgeo_base_tool,
         "protobuf"
     ]
 )
@@ -103,7 +113,8 @@ if ARGUMENTS.get("geo-base-convert", "true") == "true":
             "tools/geo_base_convert.cc"
         ],
         LIBS = [
-            geo_base,
+            libgeo_base,
+            libgeo_base_tool,
             "protobuf",
             "z"
         ]
@@ -115,7 +126,8 @@ env.Program(
         "tools/geo_base_grep.cc"
     ],
     LIBS = [
-        geo_base,
+        libgeo_base,
+        libgeo_base_tool,
         "protobuf"
     ]
 )
@@ -126,7 +138,8 @@ env.Program(
         "tools/geo_base_sift.cc"
     ],
     LIBS = [
-        geo_base,
+        libgeo_base,
+        libgeo_base_tool,
         "protobuf"
     ]
 )
@@ -137,7 +150,8 @@ env.Program(
         "tools/geo_base_perf.cc"
     ],
     LIBS = [
-        geo_base,
+        libgeo_base,
+        libgeo_base_tool,
         "protobuf"
     ]
 )
@@ -148,7 +162,8 @@ env.Program(
         "tools/quick_start.cc"
     ],
     LIBS = [
-        geo_base,
+        libgeo_base,
+        libgeo_base_tool,
         "protobuf"
     ]
 )

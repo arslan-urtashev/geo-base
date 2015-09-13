@@ -22,6 +22,7 @@
 
 #include "geo_data.h"
 #include "geo_data_wrapper.h"
+#include "get_opt.h"
 #include "log.h"
 
 #include <atomic>
@@ -36,7 +37,6 @@
 using namespace geo_base;
 
 static const double kLookupRadius = 0.001;
-static const uint32_t kThreadsCount = 4;
 static const uint32_t kLookupCount = 10;
 
 struct Worker {
@@ -119,17 +119,20 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
+  std::vector<std::string> args;
+  geo_base::Options opts = geo_base::GetOpts(argc, argv, &args);
+
   try {
-    GeoDataWrapper wrapper(argv[1]);
+    GeoDataWrapper wrapper(args[0].c_str());
 
     Count points_count = wrapper.geo_data()->points_count;
-    Count one_thread_count = points_count / kThreadsCount + 1;
+    Count one_thread_count = points_count / opts.jobs + 1;
 
-    std::vector<Worker> workers(kThreadsCount);
-    for (Count i = 0, offset = 0; i < kThreadsCount && offset < points_count; ++i, offset += one_thread_count)
+    std::vector<Worker> workers(opts.jobs);
+    for (Count i = 0, offset = 0; i < opts.jobs && offset < points_count; ++i, offset += one_thread_count)
       workers[i] = Worker(&wrapper, offset, std::min(one_thread_count, points_count - offset), i);
 
-    std::vector<std::thread> threads(kThreadsCount);
+    std::vector<std::thread> threads(opts.jobs);
     for (size_t i = 0; i < threads.size(); ++i)
       threads[i] = std::thread(std::ref(workers[i]));
 

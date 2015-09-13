@@ -39,14 +39,13 @@
 #include "stop_watch.h"
 #include "util.h"
 #include "zlib_wrapper.h"
+#include "get_opt.h"
 
 #include "proto/fileformat.pb.h"
 #include "proto/osmformat.pb.h"
 #include "proto/region.pb.h"
 
 using namespace geo_base;
-
-static const size_t kDefaultThreadsCount = 4;
 
 typedef RegionID OSMID;
 
@@ -269,8 +268,8 @@ class ProtobufParser {
 template<typename Callback>
 class MTProtobufParser {
  public:
-  MTProtobufParser(const char* path, std::vector<Callback>& callbacks) :
-      reader(path),
+  MTProtobufParser(const std::string& path, std::vector<Callback>& callbacks) :
+      reader(path.c_str()),
       pbf_path(path),
       callbacks(callbacks) {
   }
@@ -602,26 +601,18 @@ int main(int argc, char *argv[]) {
   LogInit(std::cerr, Log::LEVEL_DEBUG, Log::COLOR_ENABLE);
 
   if (argc < 2) {
-    LogError("geo-base-convert") << "geo-base-convert <OSM.pbf> [threads_count]";
+    LogError("geo-base-convert") << "geo-base-convert <OSM.pbf>";
     return -1;
   }
 
-  Count threads_count = kDefaultThreadsCount;
-  if (argc >= 3) {
-    char *endptr = NULL;
-    Count count = strtoul(argv[2], &endptr, 10);
-    if (*endptr) {
-      LogError("geo-base-convert") << "Wrong threads_count!";
-      return -1;
-    }
-    threads_count = count;
-  }
+  std::vector<std::string> args;
+  geo_base::Options opts = geo_base::GetOpts(argc, argv, &args);
 
   std::unordered_set<OSMID> ways;
   
   {
-    std::vector<WaysCallback> ways_callbacks(threads_count);
-    MTProtobufParser<WaysCallback>(argv[1], ways_callbacks)();
+    std::vector<WaysCallback> ways_callbacks(opts.jobs);
+    MTProtobufParser<WaysCallback>(args[0], ways_callbacks)();
 
     for (WaysCallback& w : ways_callbacks) {
       ways.insert(w.ways.begin(), w.ways.end());
@@ -636,10 +627,10 @@ int main(int argc, char *argv[]) {
 
   {
     std::vector<NodeIDsCallback> node_ids_callback;
-    for (size_t i = 0; i < threads_count; ++i)
+    for (size_t i = 0; i < opts.jobs; ++i)
       node_ids_callback.emplace_back(ways);
 
-    MTProtobufParser<NodeIDsCallback>(argv[1], node_ids_callback)();
+    MTProtobufParser<NodeIDsCallback>(args[0], node_ids_callback)();
 
     for (NodeIDsCallback& n : node_ids_callback) {
       node_ids.insert(n.nodes.begin(), n.nodes.end());
@@ -659,10 +650,10 @@ int main(int argc, char *argv[]) {
 
   {
     std::vector<NodesCallback> nodes_callback;
-    for (size_t i = 0; i < threads_count; ++i)
+    for (size_t i = 0; i < opts.jobs; ++i)
       nodes_callback.emplace_back(node_ids);
 
-    MTProtobufParser<NodesCallback>(argv[1], nodes_callback)();
+    MTProtobufParser<NodesCallback>(args[0], nodes_callback)();
 
     for (NodesCallback& n : nodes_callback) {
       nodes.insert(n.nodes.begin(), n.nodes.end());
@@ -674,10 +665,10 @@ int main(int argc, char *argv[]) {
 
   std::vector<Parser> parsers;
   ProtoWriter writer(STDOUT_FILENO);
-  for (size_t i = 0; i < threads_count; ++i)
-    parsers.emplace_back(nodes, way_nodes, writer, i, threads_count);
+  for (size_t i = 0; i < opts.jobs; ++i)
+    parsers.emplace_back(nodes, way_nodes, writer, i, opts.jobs);
 
-  MTProtobufParser<Parser>(argv[1], parsers)();
+  MTProtobufParser<Parser>(args[0], parsers)();
 
   return 0;
 }
