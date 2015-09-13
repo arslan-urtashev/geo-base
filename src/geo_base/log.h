@@ -103,14 +103,18 @@ class LogOutput {
       begin(begin),
       end(end),
       level(level) {
-    Log::GetInst().Lock();
-    (*this) << begin;
+    if (static_cast<int>(level) <= static_cast<int>(Log::GetInst().level())) {
+      Log::GetInst().Lock();
+      (*this) << begin;
+    }
   }
 
   ~LogOutput() {
-    (*this) << end;
-    Log::GetInst().out().flush();
-    Log::GetInst().Unlock();
+    if (static_cast<int>(level) <= static_cast<int>(Log::GetInst().level())) {
+      (*this) << end;
+      Log::GetInst().out().flush();
+      Log::GetInst().Unlock();
+    }
   }
 
   char begin;

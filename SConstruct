@@ -40,7 +40,9 @@ env.Append(CXXFLAGS =
     CPPPATH = [
         ".",
         "include",
-        "src"
+        "include/geo_base",
+        "src",
+        "src/geo_base"
     ]
 )
 
@@ -52,7 +54,7 @@ proto = env.Protoc(
 
 geo_base = env.SharedLibrary(
     "lib/geo-base",
-    Glob("src/*.cc") + Glob("proto/*.cc"),
+    Glob("src/geo_base/*.cc") + Glob("proto/*.cc"),
     LIBS = [
         "protobuf"
     ]
@@ -133,6 +135,17 @@ env.Program(
     "bin/geo-base-perf",
     [
         "tools/geo_base_perf.cc"
+    ],
+    LIBS = [
+        geo_base,
+        "protobuf"
+    ]
+)
+
+env.Program(
+    "bin/quick-start",
+    [
+        "tools/quick_start.cc"
     ],
     LIBS = [
         geo_base,
