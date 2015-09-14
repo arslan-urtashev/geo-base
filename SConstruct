@@ -30,7 +30,7 @@ env.Append(CXXFLAGS =
         "-g",
         "-march=corei7", 
         "-pthread",
-        "-std=c++0x"
+        "-std=c++11"
     ],
     LINKFLAGS = [
         "-O" + opt,

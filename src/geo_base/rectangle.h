@@ -70,4 +70,4 @@ struct Rectangle {
 
 } // namespace geo_base
 
-#endif
+#endif // GEO_BASE_RECTANGLE_H_

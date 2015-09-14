@@ -44,4 +44,4 @@ class GeoDataWrapper : public MemoryMappedFile {
   GeoData geo_data_;
 };
 
-}
+} // namespace geo_base

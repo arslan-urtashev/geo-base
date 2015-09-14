@@ -53,6 +53,6 @@ class StopWatch {
   double point;
 };
 
-}
+} // namespace geo_base
 
-#endif
+#endif // GEO_BASE_STOP_WATCH_H_
