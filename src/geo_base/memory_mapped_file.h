@@ -27,8 +27,6 @@
 #include "file.h"
 #include "mmap_guard.h"
 
-#include <sys/mman.h>
-
 namespace geo_base {
 
 // MemoryMappedFile is a handler of file memory. Can PROT_READ and 
@@ -38,30 +36,15 @@ class MemoryMappedFile : public File {
  protected:
   static const size_t kDefaultMemorySize = 8LU * (1LU << 30); // 8 GB
 
-  void ReadOnlyOpen(const char* path) {
-    File::ReadOnlyOpen(path);
-    
-    size_t length = SizeOfOpenFile();
-    void *addr = mmap(NULL, length, PROT_READ, MAP_SHARED, fd(), 0);
-    if (addr == MAP_FAILED)
-      throw Exception("MemoryMappedFile.ReadOnlyOpen: %s", strerror(errno));
+  // Open file for reading and map file data with PROT_READ and MAP_SHARED
+  // options.
+  void ReadOnlyOpen(const char* path);
 
-    mmap_guard.Guard(addr, length);
-  }
+  // Open file for writing and map file data with PROTO_READ|PROT_WRITE and
+  // MAP_SHARED options.
+  void ReadWriteOpen(const char* path, size_t memory_size = kDefaultMemorySize);
 
-  void ReadWriteOpen(const char* path, size_t memory_size = kDefaultMemorySize) {
-    File::ReadWriteOpen(path);
-
-    void *addr = mmap(NULL, memory_size, PROT_READ | PROT_WRITE,
-        MAP_SHARED, fd(), 0);
-
-    if (addr == MAP_FAILED)
-      throw Exception("MemoryMappedFile.ReadWriteOpen: %s", strerror(errno));
-
-    mmap_guard.Guard(addr, memory_size);
-  }
-
-public:
+ public:
   uint32_t GetCRC32() const {
     return geo_base::GetCRC32(addr(), SizeOfOpenFile());
   }
@@ -76,7 +59,7 @@ public:
     return mmap_guard.length;
   }
 
-private:
+ private:
   MMapGuard mmap_guard;
 };
 

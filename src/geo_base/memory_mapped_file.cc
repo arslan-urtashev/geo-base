@@ -22,9 +22,37 @@
 
 #include "memory_mapped_file.h"
 
+#include "exception.h"
+
 #include <cassert>
 
+#include <sys/mman.h>
+
 namespace geo_base {
+
+void MemoryMappedFile::ReadOnlyOpen(const char* path) {
+  File::ReadOnlyOpen(path);
+  
+  size_t length = SizeOfOpenFile();
+  void *addr = mmap(NULL, length, PROT_READ, MAP_SHARED, fd(), 0);
+  if (addr == MAP_FAILED)
+    throw Exception("MemoryMappedFile.ReadOnlyOpen: %s", strerror(errno));
+
+  mmap_guard.Guard(addr, length);
+}
+
+void MemoryMappedFile::ReadWriteOpen(const char* path,
+    size_t memory_size /* = kDefaultMemorySize */) {
+  File::ReadWriteOpen(path);
+
+  void *addr = mmap(NULL, memory_size, PROT_READ | PROT_WRITE,
+      MAP_SHARED, fd(), 0);
+
+  if (addr == MAP_FAILED)
+    throw Exception("MemoryMappedFile.ReadWriteOpen: %s", strerror(errno));
+
+  mmap_guard.Guard(addr, memory_size);
+}
 
 uint8_t MemoryMappedFile::GetSimpleChecksum() const {
   assert(SizeOfOpenFile() % (2 * sizeof(uint64_t)) == 0);
@@ -35,7 +63,7 @@ uint8_t MemoryMappedFile::GetSimpleChecksum() const {
   uint8_t result = 0;
 
   for (uint64_t i = 0; i < length; ++i) {
-    result += *ptr;
+    result = static_cast<uint64_t>(result) + *ptr;
     ++ptr;
   }
 

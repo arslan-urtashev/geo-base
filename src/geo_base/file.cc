@@ -20,39 +20,37 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef GEO_BASE_FILE_H_
-#define GEO_BASE_FILE_H_
+#include "file.h"
 
-#include "fd_guard.h"
+#include "exception.h"
+
+#include <sys/file.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
 
 namespace geo_base {
 
-// File is a handler of file descriptor. Needed for simple working
-// with file descriptor in MemoryMappedFile. See memory_mapped_file.h.
-// Coorect open/close file using RAII.
-class File {
- public:
-  // Open file for reading with O_RDONLY|O_CLOEXEC flags.
-  void ReadOnlyOpen(const char* path);
+void File::ReadOnlyOpen(const char* path) {
+  int fd = open(path, O_RDONLY | O_CLOEXEC); // | O_NOATIME);
+  if (fd < 0)
+    throw Exception("%s", strerror(errno));
+  fd_guard.Guard(fd);
+}
 
-  // Open file for reading and writing with O_RFWR|O_CREAT|O_CLOEXEC|O_TRUNC
-  // flags and S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH permissions.
-  void ReadWriteOpen(const char* path);
+void File::ReadWriteOpen(const char* path) {
+  int fd = open(path, O_RDWR | O_CREAT | O_CLOEXEC | O_TRUNC,
+      S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+  if (fd < 0)
+    throw Exception("%s", strerror(errno));
+  fd_guard.Guard(fd);
+}
 
-  // Return length of an open file in bytes. Throws exception if file is not
-  // opened. Needed for right memory mapping in MemoryMappedFile
-  size_t SizeOfOpenFile() const;
-
-  virtual ~File() { }
-
-  int fd() const {
-    return fd_guard.fd;
-  }
-
-private:
-  FDGuard fd_guard;
-};
-
+size_t File::SizeOfOpenFile() const {
+  struct stat st;
+  if (fstat(fd(), &st) < 0)
+    throw Exception("%s", strerror(errno));
+  return st.st_size;
+}
+ 
 } // namespace geo_base
-
-#endif // GEO_BASE_FILE_H_

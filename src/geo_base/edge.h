@@ -52,40 +52,13 @@ struct Edge {
     return beg < e.beg || (beg == e.beg && end < e.end);
   }
 
-  // Checks that current edge (this) is lying lower then other edge.
-  // Both edges must have a common X valuee, otherwise the behavior 
-  // is undefined and doesn't make sense.
-  bool Lower(const Edge& e, const Point *points) const {
-    if (*this == e)
-      return false;
+  // Checks that current edge is lying lower then other edge.
+  // Both edges must have a common X values, otherwise the behavior 
+  // is undefined.
+  bool Lower(const Edge& e, const Point *points) const;
 
-    const Point& a1 = points[beg];
-    const Point& a2 = points[end];
-    const Point& b1 = points[e.beg];
-    const Point& b2 = points[e.end];
-
-    if (a1 == b1) {
-      return (a2 - a1).CrossProduct(b2 - a1) > 0;
-    } else if (b1.x >= a1.x && b1.x <= a2.x) {
-      return (a2 - a1).CrossProduct(b1 - a1) > 0;
-    } else if (b2.x >= a1.x && b2.x <= a2.x) {
-      return (a2 - a1).CrossProduct(b2 - a1) > 0;
-    } else if (a1.x >= b1.x && a1.x <= b2.x) {
-      return (a1 - b1).CrossProduct(b2 - b1) > 0;
-    } else if (a2.x >= b1.x && a2.x <= b2.x) {
-      return (a2 - b1).CrossProduct(b2 - b1) > 0;
-    } else {
-      return false;
-    }
-  }
-
-  bool Contains(const Point& p, const Point* points) const {
-    const Point& a = points[beg];
-    const Point& b = points[end];
-    if (p.x < a.x || p.x > b.x)
-      return false;
-    return (b - a).CrossProduct(p - a) == 0;
-  }
+  // Checks that current edge contains given point.
+  bool Contains(const Point& p, const Point* points) const;
 };
 
 } // namespace geo_base

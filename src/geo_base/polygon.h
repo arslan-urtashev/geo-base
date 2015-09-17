@@ -57,65 +57,11 @@ struct Polygon {
   // Fast point in polygon test using persistent scanline. You can see how
   // this data structure generated in GeoBaseGenerate.
   bool Contains(const Point& point, const Part* parts, const Ref* edge_refs,
-      const Edge* edges, const Point* points) const {
-    if (!rectangle.Contains(point))
-      return false;
+      const Edge* edges, const Point* points) const;
 
-    // Find lower bound part, which can contains given point.
-    parts += parts_offset;
-    const Part* part = LowerBound(parts, parts_count, point,
-      [&] (const Part& a, const Point& b) {
-        return a.coordinate < b.x;
-      }
-    );
-
-    if (part == parts)
-      return false;
-
-    --part;
-    if (part + 1 == parts + parts_count)
-      return false;
-
-    if (point.x < part->coordinate || point.x > (part + 1)->coordinate)
-      return false;
-
-    edge_refs += part->edge_refs_offset;
-    Count edge_refs_count = (part + 1)->edge_refs_offset - part->edge_refs_offset;
-
-    // Find lower bound edge, which lying below given point.
-    const Ref* edge_ref = LowerBound(edge_refs, edge_refs_count, point,
-      [&] (const Ref& e, const Point& p) {
-        if (edges[e].Contains(p, points))
-          return false;
-        const Point& a = points[edges[e].beg];
-        const Point& b = points[edges[e].end];
-        return (b - a).CrossProduct(p - a) > 0;
-      }
-    );
-
-    if (edge_ref == edge_refs + edge_refs_count)
-      return false;
-
-    if (edges[*edge_ref].Contains(point, points))
-      return true;
-
-    // If the point is on the inside of the polygon then it will intersect the
-    // edge an odd number of times.
-    return (edge_ref - edge_refs) % 2 == 1;
-  };
-
-  bool Better(const Polygon& p, const Region* regions, Count regions_count) const {
-    if (square < p.square)
-      return true;
-
-    if (square == p.square) {
-      const Region* r1 = Find(regions, regions_count, region_id);
-      const Region* r2 = Find(regions, regions_count, p.region_id);
-      return r1->Better(*r2);
-    }
-
-    return false;
-  }
+  // Check that current polygon better then given polygon, which means that
+  // current polygons lying deeper then given in polygons hierarchy.
+  bool Better(const Polygon& p, const Region* regions, Count regions_count) const;
 };
 
 } // namespace geo_base

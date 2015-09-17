@@ -32,19 +32,19 @@ namespace geo_base {
 
 class Exception : public std::exception {
 public:
-  static const size_t MESSAGE_LIMIT = 128;
+  static const size_t kMaxMessageLength = 128;
 
   template<typename... Args>
   Exception(const char* fmt, Args... args) noexcept {
-    snprintf(message, MESSAGE_LIMIT, fmt, args...);
+    snprintf(message_, kMaxMessageLength, fmt, args...);
   }
 
   virtual const char* what() const noexcept {
-    return message;
+    return message_;
   }
   
 private:
-  char message[MESSAGE_LIMIT];
+  char message_[kMaxMessageLength];
 };
 
 } // namespace geo_base

@@ -62,32 +62,14 @@ struct CheckPoint {
 struct GenerateContext {
   GEO_BASE_DEF_GEO_DATA
 
-  Ref AddPoint(const Point& p) {
-    if (saved.points.find(p) == saved.points.end()) {
-      saved.points[p] = points.size();
-      points.push_back(p);
-    }
-    return saved.points[p];
-  }
+  // Save point in GeoData without duplicates.
+  Ref AddPoint(const Point& p);
 
-  Ref AddEdge(const Edge& e) {
-    if (saved.edges.find(e) == saved.edges.end()) {
-      saved.edges[e] = edges.size();
-      edges.push_back(e);
-    }
-    return saved.edges[e];
-  }
+  // Save edge in GeoData without duplacates.
+  Ref AddEdge(const Edge& e);
 
-  Count AddBlob(const std::string& b) {
-    if (saved.blobs.find(b) == saved.blobs.end()) {
-      Count off = blobs.size();
-      for (char c : b)
-        blobs.push_back(c);
-      blobs.push_back('\0');
-      saved.blobs[b] = off;
-    }
-    return saved.blobs[b];
-  }
+  // Save blob in GeoData withtout duplicates.
+  Count AddBlob(const std::string& b);
 
   void Fini(GeoBaseAllocator *base);
 

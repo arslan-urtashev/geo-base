@@ -20,39 +20,40 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef GEO_BASE_FILE_H_
-#define GEO_BASE_FILE_H_
-
-#include "fd_guard.h"
+#include "edge.h"
 
 namespace geo_base {
 
-// File is a handler of file descriptor. Needed for simple working
-// with file descriptor in MemoryMappedFile. See memory_mapped_file.h.
-// Coorect open/close file using RAII.
-class File {
- public:
-  // Open file for reading with O_RDONLY|O_CLOEXEC flags.
-  void ReadOnlyOpen(const char* path);
+bool Edge::Lower(const Edge& e, const Point* points) const {
+  if (*this == e)
+    return false;
 
-  // Open file for reading and writing with O_RFWR|O_CREAT|O_CLOEXEC|O_TRUNC
-  // flags and S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH permissions.
-  void ReadWriteOpen(const char* path);
+  const Point& a1 = points[beg];
+  const Point& a2 = points[end];
+  const Point& b1 = points[e.beg];
+  const Point& b2 = points[e.end];
 
-  // Return length of an open file in bytes. Throws exception if file is not
-  // opened. Needed for right memory mapping in MemoryMappedFile
-  size_t SizeOfOpenFile() const;
-
-  virtual ~File() { }
-
-  int fd() const {
-    return fd_guard.fd;
+  if (a1 == b1) {
+    return (a2 - a1).CrossProduct(b2 - a1) > 0;
+  } else if (b1.x >= a1.x && b1.x <= a2.x) {
+    return (a2 - a1).CrossProduct(b1 - a1) > 0;
+  } else if (b2.x >= a1.x && b2.x <= a2.x) {
+    return (a2 - a1).CrossProduct(b2 - a1) > 0;
+  } else if (a1.x >= b1.x && a1.x <= b2.x) {
+    return (a1 - b1).CrossProduct(b2 - b1) > 0;
+  } else if (a2.x >= b1.x && a2.x <= b2.x) {
+    return (a2 - b1).CrossProduct(b2 - b1) > 0;
+  } else {
+    return false;
   }
+}
 
-private:
-  FDGuard fd_guard;
-};
+bool Edge::Contains(const Point& p, const Point* points) const {
+  const Point& a = points[beg];
+  const Point& b = points[end];
+  if (p.x < a.x || p.x > b.x)
+    return false;
+  return (b - a).CrossProduct(p - a) == 0;
+}
 
 } // namespace geo_base
-
-#endif // GEO_BASE_FILE_H_
