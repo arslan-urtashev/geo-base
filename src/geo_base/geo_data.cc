@@ -84,7 +84,7 @@ static bool AnswerIsBetter(const Polygon& answer, const Polygon& polygon,
 }
 
 RegionID GeoDataLookup(const GeoData& geo_data, const Location& location,
-    LookupDebug *debug) {
+    LookupInfo *info) {
   const Point point(location);
 
   // Determine in what AreaBox is the point.
@@ -100,8 +100,8 @@ RegionID GeoDataLookup(const GeoData& geo_data, const Location& location,
 
   const Polygon* answer = NULL;
 
-  if (debug)
-    debug->regions.clear();
+  if (info)
+    info->regions.clear();
 
   for (Ref l = refs_offset, r = 0; l < refs_end; l = r) {
     const Ref *refs = geo_data.polygon_refs;
@@ -120,14 +120,14 @@ RegionID GeoDataLookup(const GeoData& geo_data, const Location& location,
         if (!answer || !AnswerIsBetter(*answer, p[refs[l]], geo_data))
           answer = &p[refs[l]];
 
-        if (debug)
-          debug->regions.push_back(p[refs[l]].region_id);
+        if (info)
+          info->regions.push_back(p[refs[l]].region_id);
       }
     }
   }
 
-  if (debug) {
-    std::sort(debug->regions.begin(), debug->regions.end(),
+  if (info) {
+    std::sort(info->regions.begin(), info->regions.end(),
       [&] (const RegionID& a, const RegionID& b) {
         const Region* r1 = Find(geo_data.regions, geo_data.regions_count, a);
         const Region* r2 = Find(geo_data.regions, geo_data.regions_count, b);
@@ -136,7 +136,7 @@ RegionID GeoDataLookup(const GeoData& geo_data, const Location& location,
     );
 
     if (answer)
-      debug->polygon_id = answer->polygon_id;
+      info->polygon_id = answer->polygon_id;
   }
 
   return answer ? answer->region_id : -1;

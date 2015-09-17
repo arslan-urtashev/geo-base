@@ -39,7 +39,7 @@ struct FDGuard {
 
   void close() {
     if (fd != -1) {
-      LogDebug("FDGuard") << "close fd = " << fd;
+      LogDebug("FDGuard") << "Close fd = " << fd;
       ::close(fd);
       fd = -1;
     }
@@ -49,7 +49,7 @@ struct FDGuard {
     close();
     fd = fd_;
     if (fd != -1)
-      LogDebug("FDGuard") << "guard fd = " << fd;
+      LogDebug("FDGuard") << "Guard fd = " << fd;
   }
 
   ~FDGuard() {

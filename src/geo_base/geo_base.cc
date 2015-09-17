@@ -33,8 +33,8 @@ class GeoBase::Impl {
       wrapper(path) {
   }
 
-  RegionID Lookup(const Location& location, GeoBase::Debug* debug) const {
-    return GeoDataLookup(*wrapper.geo_data(), location, debug);
+  RegionID Lookup(const Location& location, GeoBase::LookupInfo* info) const {
+    return GeoDataLookup(*wrapper.geo_data(), location, info);
   }
 
   const char* LookupValueByKey(RegionID region_id, const char* key) const {
@@ -94,15 +94,18 @@ GeoBase::~GeoBase() {
   delete impl;
 }
 
-RegionID GeoBase::Lookup(const Location& location, Debug* debug) const {
-  return impl->Lookup(location, debug);
+RegionID GeoBase::Lookup(const Location& location,
+    GeoBase::LookupInfo* info) const {
+  return impl->Lookup(location, info);
 }
 
-const char* GeoBase::LookupValueByKey(RegionID region_id, const char* key) const {
+const char* GeoBase::LookupValueByKey(RegionID region_id,
+    const char* key) const {
   return impl->LookupValueByKey(region_id, key);
 }
 
-void GeoBase::ForEachKeyValue(RegionID region_id, KeyValueVisitor visitor) const {
+void GeoBase::ForEachKeyValue(RegionID region_id,
+    KeyValueVisitor visitor) const {
   return impl->ForEachKeyValue(region_id, visitor);
 }
 

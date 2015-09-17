@@ -88,12 +88,12 @@ void GeoDataMap(void *dat, GeoData* geo_data);
 // Show GeoData sizes of arrays, values of variables and memory usage.
 void GeoDataShow(const GeoData& geo_data, OutputStream& out);
 
-typedef GeoBase::Debug LookupDebug;
+typedef GeoBase::LookupInfo LookupInfo;
 
 // Just fast search RegionID by locations. Stores debug data in
 // LookupDebug (if it's not NULL).
 RegionID GeoDataLookup(const GeoData& geo_data, const Location& location,
-    LookupDebug* debug = NULL);
+    LookupInfo* info = NULL);
 
 } // namespace geo_base
 

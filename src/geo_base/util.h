@@ -119,7 +119,8 @@ class PolygonProcessor {
         }
       }
 
-      if (locations.size() > 3 && locations.front() == locations.back()) {
+      if (locations.size() > 3 && 
+          Point(locations.front()) == Point(locations.back())) {
         locations.pop_back();
         callback(locations);
         locations.clear();

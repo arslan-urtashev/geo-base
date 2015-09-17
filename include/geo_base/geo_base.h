@@ -46,9 +46,9 @@ typedef std::function<void (const char*, const char*)> KeyValueVisitor;
 // destroy data file.
 class GeoBase {
  public:
-  // Debug is a struct that stores the polygon id that contains the point.
+  // LookupInfo is a struct that stores the polygon id that contains the point.
   // The structure stores a list of regions in nesting order.
-  struct Debug {
+  struct LookupInfo {
     PolygonID polygon_id;
     std::vector<RegionID> regions;
   };
@@ -62,7 +62,7 @@ class GeoBase {
   uint32_t TouchMemory() const;
 
   // Lookup RegionID by Location.
-  RegionID Lookup(const Location& location, Debug* debug = NULL) const;
+  RegionID Lookup(const Location& location, LookupInfo* info = NULL) const;
 
   // Lookup value by key (stored as key-value data in GeoData file) for
   // given region. Searching is done by binary search on strings.

@@ -48,7 +48,7 @@ struct MMapGuard {
 
   void Unmap() {
     if (addr) {
-      LogDebug("MMapGuard") << "UnMap (" << addr << ", " << length << ")";
+      LogDebug("MMapGuard") << "Unmap (" << addr << ", " << length << ")";
       munmap(addr, length);
       addr = NULL;
       length = 0;

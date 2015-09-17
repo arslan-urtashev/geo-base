@@ -84,14 +84,14 @@ int main(int argc, char *argv[]) {
     GeoBase geo_base(argv[1]);
 
     Location location;
-    GeoBase::Debug debug;
+    GeoBase::LookupInfo info;
 
     while (std::cin >> location) {
-      RegionID region_id = geo_base.Lookup(location, &debug);
+      RegionID region_id = geo_base.Lookup(location, &info);
 
       if (region_id != kUnknownRegionID) {
         std::cout << RegionOutput(region_id, geo_base) << '\n';
-        for (const RegionID& r : debug.regions)
+        for (const RegionID& r : info.regions)
           LogDebug("geo-base-run", region_id) << RegionOutput(r, geo_base);
       } else {
         std::cout << -1 << '\n';

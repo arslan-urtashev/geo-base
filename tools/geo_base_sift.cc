@@ -72,7 +72,7 @@ struct Worker {
   }
 
   void operator () () {
-    LookupDebug debug;
+    LookupInfo info;
     for (offset = points_offset; offset < points_offset + points_count; ++offset) {
       for (Count try_lookup = 0; try_lookup < kLookupCount; ++try_lookup) {
         const Point& p = wrapper->geo_data()->points[offset];
@@ -81,13 +81,13 @@ struct Worker {
         double lat = ConvertToDouble(p.y) + GetRand() * kLookupRadius;
 
         RegionID region_id = GeoDataLookup(*wrapper->geo_data(),
-            Location(lon, lat), &debug);
+            Location(lon, lat), &info);
 
         if (region_id != kUnknownRegionID)
-          polygons.insert(debug.polygon_id);
+          polygons.insert(info.polygon_id);
 
-        for (size_t i = 0; i + 1 < debug.regions.size(); ++i)
-          parents[debug.regions[i]] = debug.regions[i + 1];
+        for (size_t i = 0; i + 1 < info.regions.size(); ++i)
+          parents[info.regions[i]] = info.regions[i + 1];
       }
     }
   }

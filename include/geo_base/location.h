@@ -52,14 +52,6 @@ struct Location {
     return *this;
   }
 
-  bool operator == (const Location& l) const {
-    return lon == l.lon && lat == l.lat;
-  }
-  
-  bool operator != (const Location &l) const {
-    return !(*this == l);
-  }
-
   double DistTo(const Location& l) const {
     static const double kEarthRadius = 6371000.0;
 
