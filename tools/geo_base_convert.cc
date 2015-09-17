@@ -1,6 +1,6 @@
 // Copyright (c) 2015 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
-//   
+//
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-//           
+//
 //   The above copyright notice and this permission notice shall be included
 //   in all copies or substantial portions of the Software.
-//              
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -119,8 +119,8 @@ template<typename Callback>
 class ProtobufParser {
  public:
   ProtobufParser(const ProtobufReader& reader, Callback &callback) :
-      reader(reader),
-      callback(callback) {
+      reader(&reader),
+      callback(&callback) {
   }
 
   void operator () () {
@@ -129,7 +129,7 @@ class ProtobufParser {
     OSMPBF::PrimitiveBlock block;
     OSMPBF::PrimitiveGroup group;
 
-    while (reader.ReadNext(&header, &blob, buffer)) {
+    while (reader->ReadNext(&header, &blob, buffer)) {
       if (header.type() == "OSMHeader")
         continue;
 
@@ -192,7 +192,7 @@ class ProtobufParser {
         l.lon = 1e-9 * (block.lon_offset() + block.granularity() * node.lon());
         l.lat = 1e-9 * (block.lat_offset() + block.granularity() * node.lat());
 
-        callback.NodeCallback(node.id(), l, GetTags(node, block));
+        callback->NodeCallback(node.id(), l, GetTags(node, block));
       }
 
       if (group.has_dense()) {
@@ -223,13 +223,13 @@ class ProtobufParser {
           }
           ++cur_kv;
 
-          callback.NodeCallback(osm_id, location, kvs);
+          callback->NodeCallback(osm_id, location, kvs);
         }
       }
 
       for (int i = 0; i < group.ways_size(); ++i) {
         const OSMPBF::Way& w = group.ways(i);
-        
+
         way_refs.clear();
         OSMID ref = 0;
         for (int j = 0; j < w.refs_size(); ++j) {
@@ -237,7 +237,7 @@ class ProtobufParser {
           way_refs.push_back(ref);
         }
 
-        callback.WayCallback(w.id(), GetTags(w, block), way_refs);
+        callback->WayCallback(w.id(), GetTags(w, block), way_refs);
       }
 
       for (int i = 0; i < group.relations_size(); ++i) {
@@ -250,15 +250,15 @@ class ProtobufParser {
           refs.push_back(Reference(r.types(j), osm_id, block.stringtable().s(r.roles_sid(j))));
         }
 
-        callback.RelationCallback(r.id(), GetTags(r, block), refs);
+        callback->RelationCallback(r.id(), GetTags(r, block), refs);
       }
     }
 
     return true;
   }
 
-  const ProtobufReader& reader;
-  Callback &callback;
+  const ProtobufReader* reader;
+  Callback* callback;
   std::vector<char> buffer;
   std::vector<KeyValue> kvs;
   std::vector<OSMID> way_refs;
@@ -410,18 +410,18 @@ struct WaysCallback : public PBFCallback {
 };
 
 struct NodeIDsCallback : public PBFCallback {
-  std::unordered_set<OSMID> const &need_ways;
+  std::unordered_set<OSMID> const *need_ways;
 
   std::unordered_set<OSMID> nodes;
   std::unordered_map<OSMID, std::vector<OSMID>> ways;
 
   NodeIDsCallback(const std::unordered_set<OSMID>& w) :
-      need_ways(w) {
+      need_ways(&w) {
   }
 
   void WayCallback(OSMID osm_id, const std::vector<KeyValue>&,
       const std::vector<OSMID>& n) {
-    if (need_ways.find(osm_id) != need_ways.end()) {
+    if (need_ways->find(osm_id) != need_ways->end()) {
       for (OSMID node_id : n) {
         nodes.insert(node_id);
         ways[osm_id].push_back(node_id);
@@ -431,17 +431,17 @@ struct NodeIDsCallback : public PBFCallback {
 };
 
 struct NodesCallback : public PBFCallback {
-  const std::unordered_set<OSMID>& need_nodes;
+  const std::unordered_set<OSMID>* need_nodes;
 
   std::unordered_map<OSMID, Location> nodes;
 
   NodesCallback(const std::unordered_set<OSMID>& need_nodes) :
-      need_nodes(need_nodes) {
+      need_nodes(&need_nodes) {
   }
 
   void NodeCallback(OSMID osm_id, const Location& location,
       const std::vector<KeyValue>&) {
-    if (need_nodes.find(osm_id) != need_nodes.end())
+    if (need_nodes->find(osm_id) != need_nodes->end())
       nodes[osm_id] = location;
   }
 };
@@ -450,12 +450,12 @@ struct Parser : public PBFCallback {
   typedef std::unordered_map<OSMID, Location> Nodes;
   typedef std::unordered_map<OSMID, std::vector<OSMID>> Ways;
 
-  const Nodes& nodes;
-  const Ways& ways;
+  const Nodes* nodes;
+  const Ways* ways;
 
   proto::Region region;
   std::string buffer;
-  ProtoWriter &writer;
+  ProtoWriter* writer;
 
   std::unordered_map<OSMID, std::vector<OSMID>> graph;
   std::unordered_set<OSMID> used;
@@ -472,17 +472,17 @@ struct Parser : public PBFCallback {
 
   Parser(const Nodes& nodes, const Ways& ways, ProtoWriter& writer,
          PolygonID start, PolygonID step) :
-      nodes(nodes),
-      ways(ways),
-      writer(writer),
+      nodes(&nodes),
+      ways(&ways),
+      writer(&writer),
       polygon_id(start),
       polygon_id_step(step) {
   }
-  
+
   void AddLocation(proto::Polygon* p, OSMID osm_id) const {
     proto::Location* location = p->add_locations();
-    location->set_lon(nodes.at(osm_id).lon);
-    location->set_lat(nodes.at(osm_id).lat);
+    location->set_lon(nodes->at(osm_id).lon);
+    location->set_lat(nodes->at(osm_id).lat);
   }
 
   void WayCallback(OSMID osm_id, const std::vector<KeyValue>& kvs,
@@ -507,10 +507,10 @@ struct Parser : public PBFCallback {
       buffer.clear();
       region.SerializeToString(&buffer);
 
-      writer.Write(buffer);
+      writer->Write(buffer);
     }
   }
-  
+
   void SaveLocations(proto::Polygon* polygon, OSMID osm_id) {
     stack.push(osm_id);
     while (!stack.empty()) {
@@ -535,7 +535,7 @@ struct Parser : public PBFCallback {
 
       bool found = true;
       for (const Reference& r : refs)
-        if (IsWayReference(r) && ways.find(r.osm_id) == ways.end())
+        if (IsWayReference(r) && ways->find(r.osm_id) == ways->end())
           found = false;
 
       if (!found) {
@@ -551,7 +551,7 @@ struct Parser : public PBFCallback {
 
       for (const Reference& r : refs)
         if (IsWayReference(r)) {
-          const std::vector<OSMID>& w = ways.at(r.osm_id);
+          const std::vector<OSMID>& w = ways->at(r.osm_id);
           for (Count i = 0; i + 1 < w.size(); ++i) {
             if (graph[w[i]].size() < 2 && graph[w[i + 1]].size() < 2) {
               graph[w[i]].push_back(w[i + 1]);
@@ -563,10 +563,10 @@ struct Parser : public PBFCallback {
       region.Clear();
       region.set_region_id(osm_id);
       region.set_options(GetOptions(kvs));
-      
+
       for (const Reference& r : refs) {
         if (IsWayReference(r)) {
-          const std::vector<OSMID>& w = ways.at(r.osm_id);
+          const std::vector<OSMID>& w = ways->at(r.osm_id);
           for (Count i = 0; i < w.size(); ++i) {
             if (used.find(w[i]) == used.end()) {
               proto::Polygon* p = region.add_polygons();
@@ -590,8 +590,8 @@ struct Parser : public PBFCallback {
 
         buffer.clear();
         region.SerializeToString(&buffer);
-        
-        writer.Write(buffer);
+
+        writer->Write(buffer);
       }
     }
   }
@@ -609,7 +609,7 @@ int main(int argc, char *argv[]) {
   geo_base::Options opts = geo_base::GetOpts(argc, argv, &args);
 
   std::unordered_set<OSMID> ways;
-  
+
   {
     std::vector<WaysCallback> ways_callbacks(opts.jobs);
     MTProtobufParser<WaysCallback>(args[0], ways_callbacks)();
