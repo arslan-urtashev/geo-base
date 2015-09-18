@@ -25,7 +25,7 @@
 
 #include "exception.h"
 
-#include "zlib/zlib.h"
+#include "zlib.h"
 
 namespace geo_base {
 

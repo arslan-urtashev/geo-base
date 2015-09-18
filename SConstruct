@@ -1,3 +1,5 @@
+ZLIB_PATH = "contrib/zlib-1.2.8"
+
 env = Environment(
     toolpath = [
         "scons"
@@ -9,7 +11,7 @@ env = Environment(
 )
 
 zlib = env.SConscript(
-	"contrib/zlib/SConscript",
+	ZLIB_PATH + "/SConscript",
 	exports='env'
 )
 
@@ -48,7 +50,8 @@ env.Append(
         "include/geo_base",
         "src",
         "src/geo_base",
-		"contrib"
+		"contrib",
+		ZLIB_PATH
     ]
 )
 
