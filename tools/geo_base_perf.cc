@@ -21,6 +21,7 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "geo_base.h"
+#include "get_opt.h"
 #include "location.h"
 #include "log.h"
 #include "stop_watch.h"
@@ -40,14 +41,17 @@ int main(int argc, char *argv[]) {
 
   LogInit(std::cerr, Log::LEVEL_DEBUG, Log::COLOR_ENABLE);
 
-  if (argc != 2) {
+  geo_base::Options opts = GetOpts(argc, argv);
+
+  if (argc < 2) {
     LogError("geo-base-perf") << "geo-base-perf <geodata.dat>";
     return -1;
   }
 
   try {
-    GeoBase geo_base(argv[1]);
-    LogInfo("geo-base-perf") << "Simple checksum = " << geo_base.TouchMemory();
+    GeoBase geo_base(opts.args[0].c_str());
+    if (opts.touch_memory)
+      LogInfo("geo-base-perf") << "Simple checksum = " << geo_base.TouchMemory();
 
     Location location;
     std::vector<Count> checkpoints;

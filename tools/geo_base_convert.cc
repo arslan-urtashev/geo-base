@@ -605,14 +605,13 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  std::vector<std::string> args;
-  geo_base::Options opts = geo_base::GetOpts(argc, argv, &args);
+  geo_base::Options opts = geo_base::GetOpts(argc, argv);
 
   std::unordered_set<OSMID> ways;
 
   {
     std::vector<WaysCallback> ways_callbacks(opts.jobs);
-    MTProtobufParser<WaysCallback>(args[0], ways_callbacks)();
+    MTProtobufParser<WaysCallback>(opts.args[0], ways_callbacks)();
 
     for (WaysCallback& w : ways_callbacks) {
       ways.insert(w.ways.begin(), w.ways.end());
@@ -630,7 +629,7 @@ int main(int argc, char *argv[]) {
     for (size_t i = 0; i < opts.jobs; ++i)
       node_ids_callback.emplace_back(ways);
 
-    MTProtobufParser<NodeIDsCallback>(args[0], node_ids_callback)();
+    MTProtobufParser<NodeIDsCallback>(opts.args[0], node_ids_callback)();
 
     for (NodeIDsCallback& n : node_ids_callback) {
       node_ids.insert(n.nodes.begin(), n.nodes.end());
@@ -653,7 +652,7 @@ int main(int argc, char *argv[]) {
     for (size_t i = 0; i < opts.jobs; ++i)
       nodes_callback.emplace_back(node_ids);
 
-    MTProtobufParser<NodesCallback>(args[0], nodes_callback)();
+    MTProtobufParser<NodesCallback>(opts.args[0], nodes_callback)();
 
     for (NodesCallback& n : nodes_callback) {
       nodes.insert(n.nodes.begin(), n.nodes.end());
@@ -668,7 +667,7 @@ int main(int argc, char *argv[]) {
   for (size_t i = 0; i < opts.jobs; ++i)
     parsers.emplace_back(nodes, way_nodes, writer, i, opts.jobs);
 
-  MTProtobufParser<Parser>(args[0], parsers)();
+  MTProtobufParser<Parser>(opts.args[0], parsers)();
 
   return 0;
 }

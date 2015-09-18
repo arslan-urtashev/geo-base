@@ -41,16 +41,19 @@ static int ParseInt(const char* str) {
 
 typedef std::function<void (const char*)> GetOptCallback;
 
-void ParseOptions(int argc, char* argv[], Options* opts,
-    std::vector<std::string>* args) {
+void ParseOptions(int argc, char* argv[], Options* opts) {
   const struct option options[] = {
     { "jobs", required_argument, NULL, 0 },
+    { "touch-memory", no_argument, NULL, 0 },
     { NULL, 0, NULL, 0 }
   };
 
   const GetOptCallback callbacks[] = {
     [&] (const char* arg) {
       opts->jobs = ParseInt(arg);
+    },
+    [&] (const char*) {
+      opts->touch_memory = true;
     },
     [&] (const char*) {
       throw Exception("%s", "Unknown options!");
@@ -72,7 +75,7 @@ void ParseOptions(int argc, char* argv[], Options* opts,
   }
 
   while (optind < argc)
-    args->push_back(std::string(argv[optind++]));
+    opts->args.push_back(std::string(argv[optind++]));
 }
 
 } // namespace geo_base

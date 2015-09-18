@@ -119,11 +119,10 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  std::vector<std::string> args;
-  geo_base::Options opts = geo_base::GetOpts(argc, argv, &args);
+  geo_base::Options opts = geo_base::GetOpts(argc, argv);
 
   try {
-    GeoDataWrapper wrapper(args[0].c_str());
+    GeoDataWrapper wrapper(opts.args[0].c_str());
 
     Count points_count = wrapper.geo_data()->points_count;
     Count one_thread_count = points_count / opts.jobs + 1;

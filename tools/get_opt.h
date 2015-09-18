@@ -32,18 +32,21 @@ namespace geo_base {
 
 struct Options {
   Count jobs;
+  bool touch_memory;
 
   Options() :
-      jobs(2) {
+      jobs(2),
+      touch_memory(false) {
   }
+
+  std::vector<std::string> args;
 };
 
-void ParseOptions(int argc, char* argv[], Options* opts,
-    std::vector<std::string>* args);
+void ParseOptions(int argc, char* argv[], Options* opts);
 
-inline Options GetOpts(int argc, char* argv[], std::vector<std::string>* args) {
+inline Options GetOpts(int argc, char* argv[]) {
   Options opts;
-  ParseOptions(argc, argv, &opts, args);
+  ParseOptions(argc, argv, &opts);
   return opts;
 }
 
