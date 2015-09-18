@@ -46,11 +46,11 @@ class File {
   virtual ~File() { }
 
   int fd() const {
-    return fd_guard.fd;
+    return fd_guard_.fd;
   }
 
 private:
-  FDGuard fd_guard;
+  FDGuard fd_guard_;
 };
 
 } // namespace geo_base

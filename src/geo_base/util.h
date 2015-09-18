@@ -49,7 +49,7 @@ namespace geo_base {
 class ProtoParser {
  public:
   explicit ProtoParser(int fd) :
-      fd(fd) {
+      fd_(fd) {
   }
 
   template<typename Callback>
@@ -58,11 +58,11 @@ class ProtoParser {
     std::vector<char> buffer;
 
     uint32_t count = 0;
-    while (Read(fd, (char*) &count, sizeof(count))) {
+    while (Read(fd_, (char*) &count, sizeof(count))) {
       count = ntohl(count);
 
       buffer.resize(count);
-      if (!Read(fd, buffer.data(), buffer.size()))
+      if (!Read(fd_, buffer.data(), buffer.size()))
         throw Exception("%s", "Can't read data");
 
       if (!region.ParseFromArray(buffer.data(), buffer.size()))
@@ -73,7 +73,7 @@ class ProtoParser {
   }
 
  private:
-  int fd;
+  int fd_;
 };
 
 // Writes std::string buffer to fd output in right format. Thread safe.
@@ -82,21 +82,21 @@ class ProtoParser {
 class ProtoWriter {
  public:
   explicit ProtoWriter(int fd) :
-      fd(fd) {
+      fd_(fd) {
   }
 
   void Write(const std::string& buffer) {
     uint32_t count = htonl(static_cast<uint32_t>(buffer.size()));
 
-    std::lock_guard<std::mutex> lock(mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
 
-    geo_base::Write(fd, (const char*) &count, sizeof(count));
-    geo_base::Write(fd, buffer.data(), buffer.size());
+    geo_base::Write(fd_, (const char*) &count, sizeof(count));
+    geo_base::Write(fd_, buffer.data(), buffer.size());
   }
 
  private:
-  int fd;
-  std::mutex mutex;
+  int fd_;
+  std::mutex mutex_;
 };
 
 // Preprocess polygon locations. Try to detect multipolygons in input

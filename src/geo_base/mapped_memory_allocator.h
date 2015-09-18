@@ -38,18 +38,18 @@ class MappedMemoryAllocator : public MemoryMappedFile {
   static const uint64_t kAlignment = 32;
 
   explicit MappedMemoryAllocator(const char* path) :
-      offset(0) {
+      offset_(0) {
     ReadWriteOpen(path);
     if (((ptrdiff_t) addr()) % kAlignment != 0)
       LogWarning("MappedMemoryAllocator") << "Mapped memory is not aligned!";
   }
 
   void *Allocate(size_t count) {
-    size_t new_offset = Align(offset + count);
+    size_t new_offset = Align(offset_ + count);
     if (ftruncate(fd(), new_offset) < 0)
       throw Exception("%s", strerror(errno));
-    void *memory = ((char *) addr()) + offset;
-    offset = new_offset;
+    void *memory = ((char *) addr()) + offset_;
+    offset_ = new_offset;
     return memory;
   }
 
@@ -60,7 +60,7 @@ class MappedMemoryAllocator : public MemoryMappedFile {
     return x;
   }
 
-  size_t offset;
+  size_t offset_;
 };
 
 } // namespace geo_baes

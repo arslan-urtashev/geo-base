@@ -35,7 +35,7 @@ void File::ReadOnlyOpen(const char* path) {
   int fd = open(path, O_RDONLY | O_CLOEXEC); // | O_NOATIME);
   if (fd < 0)
     throw Exception("%s", strerror(errno));
-  fd_guard.Guard(fd);
+  fd_guard_.Guard(fd);
 }
 
 void File::ReadWriteOpen(const char* path) {
@@ -43,7 +43,7 @@ void File::ReadWriteOpen(const char* path) {
       S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
   if (fd < 0)
     throw Exception("%s", strerror(errno));
-  fd_guard.Guard(fd);
+  fd_guard_.Guard(fd);
 }
 
 size_t File::SizeOfOpenFile() const {

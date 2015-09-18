@@ -38,7 +38,7 @@ void MemoryMappedFile::ReadOnlyOpen(const char* path) {
   if (addr == MAP_FAILED)
     throw Exception("MemoryMappedFile.ReadOnlyOpen: %s", strerror(errno));
 
-  mmap_guard.Guard(addr, length);
+  mmap_guard_.Guard(addr, length);
 }
 
 void MemoryMappedFile::ReadWriteOpen(const char* path,
@@ -51,7 +51,7 @@ void MemoryMappedFile::ReadWriteOpen(const char* path,
   if (addr == MAP_FAILED)
     throw Exception("MemoryMappedFile.ReadWriteOpen: %s", strerror(errno));
 
-  mmap_guard.Guard(addr, memory_size);
+  mmap_guard_.Guard(addr, memory_size);
 }
 
 uint8_t MemoryMappedFile::GetSimpleChecksum() const {

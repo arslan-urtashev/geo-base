@@ -52,15 +52,15 @@ class MemoryMappedFile : public File {
   uint8_t GetSimpleChecksum() const;
 
   void *addr() const {
-    return mmap_guard.addr;
+    return mmap_guard_.addr;
   }
 
   size_t length() const {
-    return mmap_guard.length;
+    return mmap_guard_.length;
   }
 
  private:
-  MMapGuard mmap_guard;
+  MMapGuard mmap_guard_;
 };
 
 } // namespace geo_base
