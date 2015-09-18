@@ -1,0 +1,24 @@
+env = Environment()
+
+env.Append(
+	CFLAGS = [
+		"-DHAVE_HIDDEN",
+		"-O3",
+		"-flto",
+		"-funroll-loops",
+		"-g",
+		"-march=corei7"
+	],
+	LINKFLAGS = [
+		"-O3",
+		"-flto",
+		"-g"
+	]
+)
+
+zlib = env.Library(
+	"lib/z",
+	Glob("*.c")
+)
+
+Return("zlib")

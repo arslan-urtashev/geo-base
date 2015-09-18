@@ -8,6 +8,11 @@ env = Environment(
     ]
 )
 
+zlib = env.SConscript(
+	"contrib/zlib/SConscript",
+	exports='env'
+)
+
 if ARGUMENTS.get("log-boundary", "false") == "true":
     env.Append(CXXFLAGS = ["-DTROLL_LOG_BOUNDARY"])
 
@@ -16,8 +21,8 @@ if ARGUMENTS.get("log-generate", "false") == "true":
 
 opt = ARGUMENTS.get("opt", "3")
 
-env.Append(CXXFLAGS = 
-    [
+env.Append(
+	CXXFLAGS = [
         "-O" + opt,
         "-W",
         "-Wall",
@@ -42,7 +47,8 @@ env.Append(CXXFLAGS =
         "include",
         "include/geo_base",
         "src",
-        "src/geo_base"
+        "src/geo_base",
+		"contrib"
     ]
 )
 
@@ -115,9 +121,8 @@ if ARGUMENTS.get("geo-base-convert", "true") == "true":
         LIBS = [
             libgeo_base,
             libgeo_base_tool,
-            "protobuf",
-            "z"
-        ]
+            "protobuf"
+        ] + zlib
     )
 
 env.Program(
