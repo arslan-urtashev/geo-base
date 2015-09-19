@@ -37,16 +37,12 @@ class GeoBase::Impl {
     return GeoDataLookup(*wrapper.geo_data(), location, info);
   }
 
-  const char* LookupValueByKey(RegionID region_id, const char* key) const {
-    const GeoData* geo_data = wrapper.geo_data();
-
-    const Region* regions = geo_data->regions;
-    const Count regions_count = geo_data->regions_count;
-
-    const Region* region = Find(regions, regions_count, region_id);
+  const char* GetValue(RegionID region_id, const char* key) const {
+    const Region* region = FindRegion(region_id);
     if (!region)
       return NULL;
 
+    const GeoData* geo_data = wrapper.geo_data();
     const KeyValue* kvs = geo_data->kvs + region->kvs_offset;
     const Count kvs_count = region->kvs_count;
 
@@ -58,16 +54,12 @@ class GeoBase::Impl {
   }
 
   template<typename Callback>
-  void ForEachKeyValue(RegionID region_id, Callback callback) const {
-    const GeoData* geo_data = wrapper.geo_data();
-
-    const Region* regions = geo_data->regions;
-    const Count regions_count = geo_data->regions_count;
-
-    const Region* region = Find(regions, regions_count, region_id);
+  void ForEachKV(RegionID region_id, Callback callback) const {
+    const Region* region = FindRegion(region_id);
     if (!region)
       return;
 
+    const GeoData* geo_data = wrapper.geo_data();
     const KeyValue* kvs = geo_data->kvs + region->kvs_offset;
     const Count kvs_count = region->kvs_count;
 
@@ -78,11 +70,26 @@ class GeoBase::Impl {
     }
   }
 
+//  template<typename Callback>
+//  void ForEachParent(RegionID region_id, Callback callback) const {
+//    const Region* region = FindRegion(region_id);
+//    while (region) {
+//      callback(region->region_id);
+//      region = FindRegion->parent_id;
+//    }
+//  }
+
   uint32_t TouchMemory() const {
     return wrapper.GetSimpleChecksum();
   }
 
  private:
+  const Region* FindRegion(RegionID region_id) const {
+    const Region* regions = wrapper.geo_data()->regions;
+    const Count regions_count = wrapper.geo_data()->regions_count;
+    return Find(regions, regions_count, region_id);
+  }
+
   GeoDataWrapper wrapper;
 };
 
@@ -99,15 +106,17 @@ RegionID GeoBase::Lookup(const Location& location,
   return impl->Lookup(location, info);
 }
 
-const char* GeoBase::LookupValueByKey(RegionID region_id,
-    const char* key) const {
-  return impl->LookupValueByKey(region_id, key);
+const char* GeoBase::GetValue(RegionID region_id, const char* key) const {
+  return impl->GetValue(region_id, key);
 }
 
-void GeoBase::ForEachKeyValue(RegionID region_id,
-    KeyValueVisitor visitor) const {
-  return impl->ForEachKeyValue(region_id, visitor);
+void GeoBase::ForEachKV(RegionID region_id, KeyValueVisitor visitor) const {
+  return impl->ForEachKV(region_id, visitor);
 }
+
+//void GeoBase::ForEachParent(RegionID region_id, RegionVisitor visitor) const {
+//  return impl->ForEachParent(region_id, visitor);
+//}
 
 uint32_t GeoBase::TouchMemory() const {
   return impl->TouchMemory();

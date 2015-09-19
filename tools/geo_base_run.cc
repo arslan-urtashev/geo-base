@@ -41,23 +41,23 @@ struct RegionOutput {
 static OutputStream& operator << (OutputStream& out, const RegionOutput& r) {
   const GeoBase& geo_base = r.geo_base;
 
-  const char* name = geo_base.LookupValueByKey(r.region_id, "name:ru");
+  const char* name = geo_base.GetValue(r.region_id, "name:ru");
 
   if (!name)
-    name = geo_base.LookupValueByKey(r.region_id, "name");
+    name = geo_base.GetValue(r.region_id, "name");
   if (!name)
-    name = geo_base.LookupValueByKey(r.region_id, "name:en");
+    name = geo_base.GetValue(r.region_id, "name:en");
 
   out << r.region_id << ' ';
 
   if (name) {
     out << name << ' ';
-    const char* en = geo_base.LookupValueByKey(r.region_id, "name:en");
+    const char* en = geo_base.GetValue(r.region_id, "name:en");
     if (en)
       out << "(" << en << ")";
   } else {
     bool sep = false;
-    geo_base.ForEachKeyValue(r.region_id,
+    geo_base.ForEachKV(r.region_id,
       [&] (const char* key, const char* val) {
         // if (strstr(key, "name") == key) {
           if (sep)
