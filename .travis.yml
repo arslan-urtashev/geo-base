@@ -19,7 +19,9 @@ before_install:
       g++ --version;
     fi
 
-script: scons
+script: 
+  - scons
+  - test/run_ut
 
 branches:
   only:
