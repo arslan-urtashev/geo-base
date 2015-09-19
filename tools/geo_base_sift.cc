@@ -105,7 +105,7 @@ static OutputStream& operator << (OutputStream& out,
   for (Count i = 1; i <= 20; ++i)
     out << (i <= result ? "#" : " ");
   out << "] ";
-  out << count * 100.0 / total;
+  out << count * 100.0 / total << "%";
   return out;
 }
 
