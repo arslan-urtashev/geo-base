@@ -8,7 +8,8 @@ gmock_lib = env.StaticLibrary(
     ],
     CXXFLAGS = [
         env["CXXFLAGS"],
-        "-Wno-missing-field-initializers"
+        "-Wno-missing-field-initializers",
+        "-DGTEST_LANG_CXX11=0"
     ],
     CPPPATH = [
         "gtest",
