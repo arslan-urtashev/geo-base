@@ -20,55 +20,43 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef GEO_BASE_MEMORY_UNITS_H_
-#define GEO_BASE_MEMORY_UNITS_H_
+#ifndef GEO_BASE_MEMORY_UNIT_H_
+#define GEO_BASE_MEMORY_UNIT_H_
 
 #include "io.h"
 
+#include <iomanip>
+
 namespace geo_base {
 
-struct Bytes {
+// Structure for user friendly memory size output.
+struct MemoryUnit {
   size_t bytes_count;
 
-  explicit Bytes(size_t count) :
+  explicit MemoryUnit(size_t count) :
       bytes_count(count) {
   }
 };
 
-// Fake structure for convert bytes to megabytes in output.
-struct Megabytes : public Bytes {
-  explicit Megabytes(size_t count) :
-      Bytes(count) {
-  }
-};
+inline OutputStream& operator << (OutputStream& out, const MemoryUnit& b) {
+  static const size_t kOneKb = 1024;
+  static const size_t kOneMb = kOneKb * 1024;
+  static const size_t kOneGb = kOneMb * 1024;
 
-inline OutputStream& operator << (OutputStream& out, const Megabytes& m) {
-  out << m.bytes_count / (1024. * 1024.) << " Mb";
-  return out;
-}
+  out << std::fixed << std::setprecision(2);
 
-// Fake structure for convert bytes to gigabytes in output.
-struct Gigabytes : public Bytes {
-  explicit Gigabytes(size_t count) :
-      Bytes(count) {
-  }
-};
-
-inline OutputStream& operator << (OutputStream& out, const Gigabytes& g) {
-  static const size_t kOneGigabyte = 1024 * 1024 * 1024;
-
-  if (g.bytes_count >= kOneGigabyte)
-    out << g.bytes_count * 1.0 / kOneGigabyte  << " Gb";
+  if (b.bytes_count < kOneKb)
+    out << b.bytes_count << " B";
+  else if (b.bytes_count < kOneMb)
+    out << b.bytes_count / 1024. << " Kb";
+  else if (b.bytes_count < kOneGb)
+    out << b.bytes_count / (1024. * 1024.) << " Mb";
   else
-    out << Megabytes(g.bytes_count);
-  return out;
-}
+    out << b.bytes_count / (1024. * 1024. * 1024.) << " Gb";
 
-inline OutputStream& operator << (OutputStream& out, const Bytes& b) {
-  out << Megabytes(b.bytes_count);
   return out;
 }
 
 } // namespace geo_base
 
-#endif // GEO_BASE_MEMORY_UNITS_H_
+#endif // GEO_BASE_MEMORY_UNIT_H_

@@ -29,7 +29,7 @@
 #define GEO_BASE_LOG_H_
 
 #include "io.h"
-#include "memory_units.h"
+#include "memory_unit.h"
 #include "watch.h"
 
 #include <mutex>
@@ -100,7 +100,7 @@ class LogOutput {
   }
 
  protected:
-  LogOutput(char begin, char end, Log::Level level) :
+  LogOutput(const char *begin, const char* end, Log::Level level) :
       begin(begin),
       end(end),
       level(level) {
@@ -118,14 +118,14 @@ class LogOutput {
     }
   }
 
-  char begin;
-  char end;
+  const char* begin;
+  const char* end;
   Log::Level level;
 };
 
 class LogColor : public LogOutput {
  protected:
-  LogColor(int color1, char begin, char end, Log::Level level) :
+  LogColor(int color1, const char* begin, const char* end, Log::Level level) :
       LogOutput(begin, end, level),
       color(color1) {
     if (Log::GetInst().color() == Log::COLOR_ENABLE)
@@ -143,7 +143,7 @@ class LogColor : public LogOutput {
 
 class LogLevel : public LogColor {
  protected:
-  LogLevel(int color, char begin, char end, Log::Level level) :
+  LogLevel(int color, const char* begin, const char* end, Log::Level level) :
       LogColor(color, begin, end, level) {
     static const char *levels[] = {
       "[  error]",
@@ -162,7 +162,7 @@ class LogLevel : public LogColor {
 
 class LogTime : public LogLevel {
  protected:
-  LogTime(int color, char begin, char end, Log::Level level) :
+  LogTime(int color, const char* begin, const char* end, Log::Level level) :
       LogLevel(color, begin, end, level) {
     (*this) << Watch();
   }
@@ -171,7 +171,8 @@ class LogTime : public LogLevel {
 class LogContext : public LogTime {
  protected:
   template<typename... Args>
-  LogContext(int color, char begin, char end, Log::Level level, Args... args) :
+  LogContext(int color, const char* begin, const char* end, Log::Level level,
+             Args... args) :
       LogTime(color, begin, end, level) {
     WriteContext(std::forward<Args>(args)...);
   }
@@ -192,7 +193,7 @@ class LogContext : public LogTime {
    public: \
     template<typename... Args> \
     Log##Type(Args... args) : \
-        LogContext(color, '\r', '\n', level, args...) { \
+        LogContext(color, "", "\n", level, args...) { \
     } \
   };
 
@@ -205,13 +206,19 @@ LOG_DEF(Debug, 37, Log::LEVEL_DEBUG);
 
 class LogStatus : public LogContext {
  public:
+  // FIXME
+  #define CLEAR_STRING \
+      "\b\b\b\b\b\b\b\b\b\b" \
+      "                  \r" \
+  // CLEAR_STRING
+
   template<typename... Args>
   LogStatus(Args... args) :
-      LogContext(32, '\r', ' ', Log::LEVEL_INFO, args...) {
+      LogContext(32, CLEAR_STRING, "", Log::LEVEL_INFO, args...) {
   }
 
   static void Clear() {
-    Log::GetInst().out() << '\n';
+    Log::GetInst().out() << "\n";
     Log::GetInst().out().flush();
   }
 };

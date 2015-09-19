@@ -109,7 +109,8 @@ int main(int argc, char *argv[]) {
 
         double percent = r * 100.0 / part_refs.size();
         LogInfo("geo-base-show", "refs count stat") << percent << "% <= "
-            << part_refs[l] << " (" << Megabytes(part_refs_memory) << ")";
+            << part_refs[l] << " ("
+            << MemoryUnit(part_refs_memory) << ")";
       });
     }
 

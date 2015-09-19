@@ -83,7 +83,7 @@ Count GenerateContext::AddBlob(const std::string& b) {
   return saved.blobs[b];
 }
 
-Bytes GenerateContext::MemoryUsage() const {
+MemoryUnit GenerateContext::MemoryUsage() const {
   double total = 0;
 
 #define GEO_BASE_DEF_VAR(Var, var) \
@@ -102,7 +102,7 @@ Bytes GenerateContext::MemoryUsage() const {
 #undef GEO_BASE_DEF_PTR
 #undef GEO_BASE_DEF_ARR
 
-  return Bytes(total);
+  return MemoryUnit(total);
 }
 
 static bool IsBadEdge(const Edge& e, const Point* p) {
