@@ -185,6 +185,7 @@ env.Program(
         contrib["gmock"]["include"]
     ],
     LIBS = [
+        libgeo_base,
         contrib["gmock"]["lib"]
     ]
 )
