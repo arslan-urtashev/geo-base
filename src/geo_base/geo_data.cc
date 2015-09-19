@@ -25,6 +25,7 @@
 #include "exception.h"
 #include "hash.h"
 #include "io.h"
+#include "memory_units.h"
 
 namespace geo_base {
 
@@ -163,7 +164,7 @@ void GeoDataShow(const GeoData& geo_data, OutputStream& out) {
       << " = " \
     << geo_data.arr##_count * sizeof(Arr) \
       << " = " \
-    << geo_data.arr##_count * sizeof(Arr) / (1024. * 1024.) << " MB" << '\n' \
+    << Megabytes(geo_data.arr##_count * sizeof(Arr)) << '\n' \
   ; \
   total += sizeof(Arr) * geo_data.arr##_count;
 
@@ -173,7 +174,7 @@ void GeoDataShow(const GeoData& geo_data, OutputStream& out) {
 #undef GEO_BASE_DEF_PTR
 #undef GEO_BASE_DEF_ARR
 
-  out << "Total = " << total * 1.0 / (1024. * 1024. * 1024.) << " GB" << '\n';
+  out << "Total = " << Gigabytes(total) << '\n';
 }
 
 static void UpdateVersion(const char* str, const Count sof, const Count pos,

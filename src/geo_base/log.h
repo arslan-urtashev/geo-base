@@ -29,6 +29,7 @@
 #define GEO_BASE_LOG_H_
 
 #include "io.h"
+#include "memory_units.h"
 #include "watch.h"
 
 #include <mutex>
@@ -172,7 +173,7 @@ class LogContext : public LogTime {
   template<typename... Args>
   LogContext(int color, char begin, char end, Log::Level level, Args... args) :
       LogTime(color, begin, end, level) {
-    WriteContext(args...);
+    WriteContext(std::forward<Args>(args)...);
   }
 
  private:
@@ -182,7 +183,7 @@ class LogContext : public LogTime {
   template<typename T, typename... Args>
   void WriteContext(const T& x, Args... args) {
     (*this) << "[" << x << "] ";
-    WriteContext(args...);
+    WriteContext(std::forward<Args>(args)...);
   }
 };
 

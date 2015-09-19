@@ -26,6 +26,7 @@
 #include <sys/mman.h>
 
 #include "log.h"
+#include "memory_units.h"
 
 namespace geo_base {
 
@@ -34,12 +35,15 @@ class MappedMemoryGuard {
   explicit MappedMemoryGuard(void *addr = NULL, size_t length = 0) :
       addr_(addr),
       length_(length) {
+    if (addr_)
+      LogDebug("MappedMemoryGuard") << "Guard memory (" << addr_ << ", "
+          << Megabytes(length_) << ")";
   }
 
   void unmap() {
     if (addr_) {
-      LogDebug("MappedMemoryGuard") << "Guard memory (" << addr_ << ", "
-          << length_ << ")";
+      LogDebug("MappedMemoryGuard") << "Unmap memory (" << addr_ << ", "
+          << Megabytes(length_) << ")";
       munmap(addr_, length_);
       addr_ = NULL;
       length_ = 0;
@@ -68,6 +72,10 @@ class MappedMemoryGuard {
 
   size_t length() const {
     return length_;
+  }
+
+  ~MappedMemoryGuard() {
+    unmap();
   }
   
  private:

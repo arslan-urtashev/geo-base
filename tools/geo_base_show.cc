@@ -108,10 +108,8 @@ int main(int argc, char *argv[]) {
           part_refs_memory += part_refs[i] * sizeof(i);
 
         double percent = r * 100.0 / part_refs.size();
-        double memory = part_refs_memory / (1024. * 1024.0);
-
         LogInfo("geo-base-show", "refs count stat") << percent << "% <= "
-            << part_refs[l] << " (" << memory << " MB)";
+            << part_refs[l] << " (" << Megabytes(part_refs_memory) << ")";
       });
     }
 

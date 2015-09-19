@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     while (!reader.Readed()) {
       const GenerateContext& ctx = generate.Context();
       LogStatus("geo-base-generate", "status") << "Polygons = " <<
-          ctx.polygons.size() << ", " << ctx.MemoryUsage() << " MB";
+          ctx.polygons.size() << ", " << ctx.MemoryUsage();
       std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 

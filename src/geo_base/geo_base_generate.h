@@ -27,6 +27,7 @@
 #include "geo_base_allocator.h"
 #include "geo_data.h"
 #include "hash.h"
+#include "memory_units.h"
 
 #include <unordered_set>
 #include <unordered_map>
@@ -73,7 +74,7 @@ struct GenerateContext {
 
   void Fini(GeoBaseAllocator *base);
 
-  double MemoryUsage() const;
+  Bytes MemoryUsage() const;
 
   struct {
     std::vector<CheckPoint> checkpoints;
