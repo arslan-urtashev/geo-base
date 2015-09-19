@@ -26,6 +26,10 @@ gmock_main = env.Object(
     [
         "src/gmock_main.cc"
     ],
+    CXXFLAGS = [
+        env["CXXFLAGS"],
+        "-DGTEST_LANG_CXX11=0"
+    ],
     CPPPATH = [
         "gtest/include",
         "include"
