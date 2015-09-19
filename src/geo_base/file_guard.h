@@ -20,49 +20,56 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef GEO_BASE_MMAP_GUARD_H_
-#define GEO_BASE_MMAP_GUARD_H_
+#ifndef GEO_BASE_FILE_GUARD_H_
+#define GEO_BASE_FILE_GUARD_H_
 
-#include <sys/mman.h>
+#include <unistd.h>
 
 #include "log.h"
 
 namespace geo_base {
 
-struct MMapGuard {
-  void *addr;
-  size_t length;
-
-  MMapGuard() :
-      addr(NULL),
-      length(0) {
+class FileGuard {
+ public:
+  explicit FileGuard(int fd = -1) :
+      fd_(fd) {
+    if (fd_ != -1)
+      LogDebug("FileGuard") << "Guard file descriptor: " << fd_;
   }
 
-  void Guard(void *addr_, size_t length_) {
-    Unmap();
-    addr = addr_;
-    length = length_;
-    if (addr)
-      LogDebug("MMapGuard") << "Guard (" << addr << ", " << length << ")";
-  }
-
-  void Unmap() {
-    if (addr) {
-      LogDebug("MMapGuard") << "Unmap (" << addr << ", " << length << ")";
-      munmap(addr, length);
-      addr = NULL;
-      length = 0;
+  void close() {
+    if (fd_ != -1) {
+      LogDebug("FileGuard") << "Close file descriptor: " << fd_;
+      ::close(fd_);
+      fd_ = -1;
     }
   }
 
-  ~MMapGuard() {
-    Unmap();
+  FileGuard(FileGuard&& g) :
+      fd_(-1) {
+    std::swap(fd_, g.fd_);
   }
 
-  MMapGuard(const MMapGuard&) = delete;
-  MMapGuard &operator = (const MMapGuard&) = delete;
+  FileGuard& operator = (FileGuard&& g) {
+    std::swap(fd_, g.fd_);
+    return *this;
+  }
+
+  FileGuard& operator = (const FileGuard&) = delete;
+  FileGuard(const FileGuard&) = delete;
+
+  ~FileGuard() {
+    close();
+  }
+
+  int fd() const {
+    return fd_;
+  }
+
+ private:
+  int fd_;
 };
 
 } // namespace geo_base
 
-#endif // GEO_BASE_MMAP_GUARD_H_
+#endif // GEO_BASE_FILE_GUARD_H_

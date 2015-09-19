@@ -23,7 +23,7 @@
 #ifndef GEO_BASE_FILE_H_
 #define GEO_BASE_FILE_H_
 
-#include "fd_guard.h"
+#include "file_guard.h"
 
 namespace geo_base {
 
@@ -33,24 +33,24 @@ namespace geo_base {
 class File {
  public:
   // Open file for reading with O_RDONLY|O_CLOEXEC flags.
-  void ReadOnlyOpen(const char* path);
+  void OpenReadOnly(const char* path);
 
   // Open file for reading and writing with O_RFWR|O_CREAT|O_CLOEXEC|O_TRUNC
   // flags and S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH permissions.
-  void ReadWriteOpen(const char* path);
+  void OpenReadWrite(const char* path);
 
   // Return length of an open file in bytes. Throws exception if file is not
   // opened. Needed for right memory mapping in MemoryMappedFile
-  size_t SizeOfOpenFile() const;
+  size_t BytesCount() const;
 
   virtual ~File() { }
 
   int fd() const {
-    return fd_guard_.fd;
+    return file_guard_.fd();
   }
 
 private:
-  FDGuard fd_guard_;
+  FileGuard file_guard_;
 };
 
 } // namespace geo_base

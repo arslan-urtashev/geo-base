@@ -25,7 +25,7 @@
 
 #include "crc32.h"
 #include "file.h"
-#include "mmap_guard.h"
+#include "mapped_memory_guard.h"
 
 namespace geo_base {
 
@@ -38,29 +38,29 @@ class MemoryMappedFile : public File {
 
   // Open file for reading and map file data with PROT_READ and MAP_SHARED
   // options.
-  void ReadOnlyOpen(const char* path);
+  void OpenReadOnly(const char* path);
 
   // Open file for writing and map file data with PROTO_READ|PROT_WRITE and
   // MAP_SHARED options.
-  void ReadWriteOpen(const char* path, size_t memory_size = kDefaultMemorySize);
+  void OpenReadWrite(const char* path, size_t memory_size = kDefaultMemorySize);
 
  public:
   uint32_t GetCRC32() const {
-    return geo_base::GetCRC32(addr(), SizeOfOpenFile());
+    return geo_base::GetCRC32(addr(), BytesCount());
   }
 
   uint8_t GetSimpleChecksum() const;
 
   void *addr() const {
-    return mmap_guard_.addr;
+    return memory_guard_.addr();
   }
 
   size_t length() const {
-    return mmap_guard_.length;
+    return memory_guard_.length();
   }
 
  private:
-  MMapGuard mmap_guard_;
+  MappedMemoryGuard memory_guard_;
 };
 
 } // namespace geo_base

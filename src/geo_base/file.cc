@@ -31,22 +31,22 @@
 
 namespace geo_base {
 
-void File::ReadOnlyOpen(const char* path) {
+void File::OpenReadOnly(const char* path) {
   int fd = open(path, O_RDONLY | O_CLOEXEC); // | O_NOATIME);
   if (fd < 0)
     throw Exception("%s", strerror(errno));
-  fd_guard_.Guard(fd);
+  file_guard_ = FileGuard(fd);
 }
 
-void File::ReadWriteOpen(const char* path) {
+void File::OpenReadWrite(const char* path) {
   int fd = open(path, O_RDWR | O_CREAT | O_CLOEXEC | O_TRUNC,
       S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
   if (fd < 0)
     throw Exception("%s", strerror(errno));
-  fd_guard_.Guard(fd);
+  file_guard_ = FileGuard(fd);
 }
 
-size_t File::SizeOfOpenFile() const {
+size_t File::BytesCount() const {
   struct stat st;
   if (fstat(fd(), &st) < 0)
     throw Exception("%s", strerror(errno));

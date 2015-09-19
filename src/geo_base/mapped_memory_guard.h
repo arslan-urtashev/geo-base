@@ -20,46 +20,61 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef GEO_BASE_FDGUARD_H_
-#define GEO_BASE_FDGUARD_H_
+#ifndef GEO_BASE_MAPPED_MEMORY_GUARD_H_
+#define GEO_BASE_MAPPED_MEMORY_GUARD_H_
 
-#include <unistd.h>
+#include <sys/mman.h>
 
 #include "log.h"
 
 namespace geo_base {
 
-struct FDGuard {
-  int fd;
-
-  explicit FDGuard(int fd = -1) :
-      fd(fd) {
-    Guard(fd);
+class MappedMemoryGuard {
+ public:
+  explicit MappedMemoryGuard(void *addr = NULL, size_t length = 0) :
+      addr_(addr),
+      length_(length) {
   }
 
-  void close() {
-    if (fd != -1) {
-      LogDebug("FDGuard") << "Close fd = " << fd;
-      ::close(fd);
-      fd = -1;
+  void unmap() {
+    if (addr_) {
+      LogDebug("MappedMemoryGuard") << "Guard memory (" << addr_ << ", "
+          << length_ << ")";
+      munmap(addr_, length_);
+      addr_ = NULL;
+      length_ = 0;
     }
   }
 
-  void Guard(int fd_) {
-    close();
-    fd = fd_;
-    if (fd != -1)
-      LogDebug("FDGuard") << "Guard fd = " << fd;
+  MappedMemoryGuard(MappedMemoryGuard&& m) :
+      addr_(NULL),
+      length_(0) {
+    std::swap(addr_, m.addr_);
+    std::swap(length_, m.length_);
   }
 
-  ~FDGuard() {
-    close();
+  MappedMemoryGuard& operator = (MappedMemoryGuard&& m) {
+    std::swap(addr_, m.addr_);
+    std::swap(length_, m.length_);
+    return *this;
   }
 
-  FDGuard(FDGuard const &) = delete;
-  FDGuard& operator = (FDGuard const &) = delete;
+  MappedMemoryGuard(const MappedMemoryGuard&) = delete;
+  MappedMemoryGuard& operator = (const MappedMemoryGuard&) = delete;
+
+  void* addr() const {
+    return addr_;
+  }
+
+  size_t length() const {
+    return length_;
+  }
+  
+ private:
+  void *addr_;
+  size_t length_;
 };
 
 } // namespace geo_base
 
-#endif // GEO_BASE_FDGUARD_H_
+#endif // GEO_BASE_MAPPED_MEMORY_GUARD_H_

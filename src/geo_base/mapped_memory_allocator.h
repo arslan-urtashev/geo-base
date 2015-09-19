@@ -39,7 +39,7 @@ class MappedMemoryAllocator : public MemoryMappedFile {
 
   explicit MappedMemoryAllocator(const char* path) :
       offset_(0) {
-    ReadWriteOpen(path);
+    OpenReadWrite(path);
     if (((ptrdiff_t) addr()) % kAlignment != 0)
       LogWarning("MappedMemoryAllocator") << "Mapped memory is not aligned!";
   }

@@ -30,20 +30,20 @@
 
 namespace geo_base {
 
-void MemoryMappedFile::ReadOnlyOpen(const char* path) {
-  File::ReadOnlyOpen(path);
+void MemoryMappedFile::OpenReadOnly(const char* path) {
+  File::OpenReadOnly(path);
   
-  size_t length = SizeOfOpenFile();
+  size_t length = BytesCount();
   void *addr = mmap(NULL, length, PROT_READ, MAP_SHARED, fd(), 0);
   if (addr == MAP_FAILED)
     throw Exception("MemoryMappedFile.ReadOnlyOpen: %s", strerror(errno));
 
-  mmap_guard_.Guard(addr, length);
+  memory_guard_ = MappedMemoryGuard(addr, length);
 }
 
-void MemoryMappedFile::ReadWriteOpen(const char* path,
+void MemoryMappedFile::OpenReadWrite(const char* path,
     size_t memory_size /* = kDefaultMemorySize */) {
-  File::ReadWriteOpen(path);
+  File::OpenReadWrite(path);
 
   void *addr = mmap(NULL, memory_size, PROT_READ | PROT_WRITE,
       MAP_SHARED, fd(), 0);
@@ -51,14 +51,14 @@ void MemoryMappedFile::ReadWriteOpen(const char* path,
   if (addr == MAP_FAILED)
     throw Exception("MemoryMappedFile.ReadWriteOpen: %s", strerror(errno));
 
-  mmap_guard_.Guard(addr, memory_size);
+  memory_guard_ = MappedMemoryGuard(addr, memory_size);
 }
 
 uint8_t MemoryMappedFile::GetSimpleChecksum() const {
-  assert(SizeOfOpenFile() % (2 * sizeof(uint64_t)) == 0);
+  assert(BytesCount() % (2 * sizeof(uint64_t)) == 0);
 
   const uint64_t* ptr = static_cast<const uint64_t*>(addr());
-  const uint64_t length = SizeOfOpenFile() / sizeof(uint64_t);
+  const uint64_t length = BytesCount() / sizeof(uint64_t);
 
   uint8_t result = 0;
 

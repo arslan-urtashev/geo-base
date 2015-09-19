@@ -31,7 +31,7 @@ namespace geo_base {
 class GeoDataWrapper : public MemoryMappedFile {
  public:
   explicit GeoDataWrapper(const char* path) {
-    ReadOnlyOpen(path);
+    OpenReadOnly(path);
     geo_data_ = *((GeoData *) addr());
     GeoDataMap(addr(), &geo_data_);
   }

@@ -33,13 +33,13 @@
 #include <netinet/in.h>
 
 #include "file.h"
+#include "get_opt.h"
 #include "io.h"
 #include "location.h"
 #include "log.h"
 #include "stop_watch.h"
 #include "util.h"
 #include "zlib_wrapper.h"
-#include "get_opt.h"
 
 #include "proto/fileformat.pb.h"
 #include "proto/osmformat.pb.h"
@@ -70,7 +70,7 @@ struct Reference {
 class ProtobufReader {
  public:
   ProtobufReader(const char* path) {
-    file.ReadOnlyOpen(path);
+    file.OpenReadOnly(path);
   }
 
   bool ReadNext(OSMPBF::BlobHeader* header, OSMPBF::Blob* blob,
