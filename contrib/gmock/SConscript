@@ -1,0 +1,47 @@
+Import("env")
+
+gmock_lib = env.StaticLibrary(
+    "gmock",
+    [
+        "gtest/src/gtest-all.cc",
+        "src/gmock-all.cc"
+    ],
+    CXXFLAGS = [
+        env["CXXFLAGS"],
+        "-Wno-missing-field-initializers"
+    ],
+    CPPPATH = [
+        "gtest",
+        ".",
+        "gtest/include",
+        "include",
+        "gtest/src",
+        "src"
+    ]
+)
+
+gmock_main = env.Object(
+    "gmock_main",
+    [
+        "src/gmock_main.cc"
+    ],
+    CPPPATH = [
+        "gtest/include",
+        "include"
+    ]
+)
+
+path = Dir(".").srcnode().abspath
+
+gmock_include = [
+    path + "/include",
+    path + "/gtest/include"
+]
+
+gmock = {
+    "lib" : gmock_lib,
+    "include" : gmock_include,
+    "main" : gmock_main
+}
+
+Return("gmock")

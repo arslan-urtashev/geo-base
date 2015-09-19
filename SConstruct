@@ -8,43 +8,42 @@ env = Environment(
     ]
 )
 
-if ARGUMENTS.get("log-boundary", "false") == "true":
-    env.Append(CXXFLAGS = ["-DTROLL_LOG_BOUNDARY"])
-
-if ARGUMENTS.get("log-generate", "false") == "true":
-    env.Append(CXXFLAGS = ["-DTROLL_GENERATE_LOG_ENABLE"])
-
 opt = ARGUMENTS.get("opt", "3")
 
-env.Append(
-	CXXFLAGS = [
-        "-O" + opt,
-        "-W",
-        "-Wall",
-        "-Werror",
-        "-Wextra",
-        "-ffast-math",
-        "-flto",
-        "-fno-omit-frame-pointer",
-        "-funroll-loops",
-        "-g",
-        "-march=corei7", 
-        "-pthread",
-        "-std=c++0x"
-    ],
-    LINKFLAGS = [
-        "-O" + opt,
-        "-flto",
-        "-g"
-    ],
-    CPPPATH = [
-        ".",
-        "include",
-        "include/geo_base",
-        "src",
-        "src/geo_base"
-    ]
+env.Append(CXXFLAGS = [
+    "-O" + opt,
+    "-W",
+    "-Wall",
+    "-Werror",
+    "-Wextra",
+    "-ffast-math",
+    "-flto",
+    "-fno-omit-frame-pointer",
+    "-funroll-loops",
+    "-g",
+    "-march=corei7", 
+    "-pthread",
+    "-std=c++0x"
+])
+
+env.Append(LINKFLAGS = [
+    "-O" + opt,
+    "-flto",
+    "-g"
+])
+
+contrib = SConscript(
+    "contrib/SConscript",
+    exports="env"
 )
+
+env.Append(CPPPATH = [
+    ".",
+    "include",
+    "include/geo_base",
+    "src",
+    "src/geo_base"
+])
 
 proto = env.Protoc(
     Glob("proto/*.proto"),
@@ -54,7 +53,10 @@ proto = env.Protoc(
 
 libgeo_base = env.SharedLibrary(
     "lib/geo-base",
-    Glob("src/geo_base/*.cc") + Glob("proto/*.cc"),
+    [
+        Glob("src/geo_base/*.cc"),
+        Glob("proto/*.cc")
+    ],
     LIBS = [
         "protobuf"
     ]
@@ -165,5 +167,20 @@ env.Program(
         libgeo_base,
         libgeo_base_tool,
         "protobuf"
+    ]
+)
+
+env.Program(
+    "test/run_ut",
+    [
+        Glob("test/ut/*.cc"),
+        contrib["gmock"]["main"]
+    ],
+    CPPPATH = [
+        env["CPPPATH"],
+        contrib["gmock"]["include"]
+    ],
+    LIBS = [
+        contrib["gmock"]["lib"]
     ]
 )

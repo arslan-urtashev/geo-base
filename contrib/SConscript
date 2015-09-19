@@ -1,0 +1,12 @@
+Import("env")
+
+gmock = SConscript(
+    "gmock/SConscript",
+    exports="env"
+)
+
+contrib = {
+    "gmock" : gmock,
+}
+
+Return("contrib")
