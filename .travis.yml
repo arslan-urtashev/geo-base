@@ -28,3 +28,10 @@ branches:
 os:
   - linux
   - osx
+
+notifications:
+  email:
+    recipients:
+      - urtashev@gmail.com
+    on_success: change
+    on_failure: change
