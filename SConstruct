@@ -29,6 +29,7 @@ env.Append(CXXFLAGS = [
 env.Append(LINKFLAGS = [
     "-O" + opt,
     "-flto",
+    "-pthread",
     "-g"
 ])
 
