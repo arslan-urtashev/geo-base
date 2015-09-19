@@ -176,6 +176,10 @@ env.Program(
         Glob("test/ut/*.cc"),
         contrib["gmock"]["main"]
     ],
+    CXXFLAGS = [
+        env["CXXFLAGS"],
+        contrib["gmock"]["flags"]
+    ],
     CPPPATH = [
         env["CPPPATH"],
         contrib["gmock"]["include"]
