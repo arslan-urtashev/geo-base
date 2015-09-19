@@ -1,5 +1,3 @@
-ZLIB_PATH = "contrib/zlib-1.2.8"
-
 env = Environment(
     toolpath = [
         "scons"
@@ -8,11 +6,6 @@ env = Environment(
         "default",
         "protoc"
     ]
-)
-
-zlib = env.SConscript(
-	ZLIB_PATH + "/SConscript",
-	exports='env'
 )
 
 if ARGUMENTS.get("log-boundary", "false") == "true":
@@ -49,9 +42,7 @@ env.Append(
         "include",
         "include/geo_base",
         "src",
-        "src/geo_base",
-		"contrib",
-		ZLIB_PATH
+        "src/geo_base"
     ]
 )
 
@@ -124,8 +115,9 @@ if ARGUMENTS.get("geo-base-convert", "true") == "true":
         LIBS = [
             libgeo_base,
             libgeo_base_tool,
-            "protobuf"
-        ] + zlib
+            "protobuf",
+			"z"
+        ]
     )
 
 env.Program(
