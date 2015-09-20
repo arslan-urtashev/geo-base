@@ -47,29 +47,8 @@ bool Polygon::Contains(const Point& point, const Part* parts, const Ref* edge_re
   if (point.x < part->coordinate || point.x > (part + 1)->coordinate)
     return false;
 
-  edge_refs += part->edge_refs_offset;
   Count edge_refs_count = (part + 1)->edge_refs_offset - part->edge_refs_offset;
-
-  // Find lower bound edge, which lying below given point.
-  const Ref* edge_ref = LowerBound(edge_refs, edge_refs_count, point,
-    [&] (const Ref& e, const Point& p) {
-      if (edges[e].Contains(p, points))
-        return false;
-      const Point& a = points[edges[e].beg];
-      const Point& b = points[edges[e].end];
-      return (b - a).CrossProduct(p - a) > 0;
-    }
-  );
-
-  if (edge_ref == edge_refs + edge_refs_count)
-    return false;
-
-  if (edges[*edge_ref].Contains(point, points))
-    return true;
-
-  // If the point is on the inside of the polygon then it will intersect the
-  // edge an odd number of times.
-  return (edge_ref - edge_refs) % 2 == 1;
+  return part->Contains(point, edge_refs_count, edge_refs, edges, points);
 };
 
 bool Polygon::Better(const Polygon& p, const Region* regions, Count regions_count) const {

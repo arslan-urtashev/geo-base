@@ -20,33 +20,34 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef GEO_BASE_PART_H_
-#define GEO_BASE_PART_H_
-
-#include "algo.h"
-#include "common.h"
-#include "edge.h"
-#include "point.h"
+#include "part.h"
 
 namespace geo_base {
 
-// Part contains version of persistent scanline. Parts lying in GeoData.parts
-// array, ordered by coordinate for each polygon. Variable edge_refs_offset 
-// refers on edge_refs array for current part. For optimal usage of memory,
-// Part does not contain edge_refs_count variable, because it's can be computed
-// as parts[i + 1].edge_refs_offset - parts[i].edge_refs_offset for every part
-// in GeoData. Especially for this added fake part into GeoData with right
-// edge_refs_offset. Refs in edge_refs are in ascending order for each part.
-// It is necessary to quickly determine how many edges is under the point.
-// See GeoBaseGenerate for details.
-struct Part {
-  Coordinate coordinate;
-  Count edge_refs_offset;
+bool Part::Contains(const Point& point, const Count edge_refs_count,
+    const Ref* edge_refs, const Edge* edges, const Point* points) const {
+  edge_refs += edge_refs_offset;
 
-  bool Contains(const Point& point, const Count edge_refs_count,
-      const Ref* edge_refs, const Edge* edges, const Point* points) const;
-};
+  // Find lower bound edge, which lying below given point.
+  const Ref* edge_ref = LowerBound(edge_refs, edge_refs_count, point,
+    [&] (const Ref& e, const Point& p) {
+      if (edges[e].Contains(p, points))
+        return false;
+      const Point& a = points[edges[e].beg];
+      const Point& b = points[edges[e].end];
+      return (b - a).CrossProduct(p - a) > 0;
+    }
+  );
 
-} // namespace geo_base
+  if (edge_ref == edge_refs + edge_refs_count)
+    return false;
 
-#endif // GEO_BASE_PART_H_
+  if (edges[*edge_ref].Contains(point, points))
+    return true;
+
+  // If the point is on the inside of the polygon then it will intersect the
+  // edge an odd number of times.
+  return (edge_ref - edge_refs) % 2 == 1;
+}
+
+} // geo_base
