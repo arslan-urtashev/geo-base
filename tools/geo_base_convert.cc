@@ -30,8 +30,6 @@
 #include <unordered_set>
 #include <vector>
 
-#include <jemalloc/jemalloc.h>
-
 #include <netinet/in.h>
 
 #include "file.h"
@@ -670,8 +668,6 @@ int main(int argc, char *argv[]) {
     parsers.emplace_back(nodes, way_nodes, writer, i, opts.jobs);
 
   MTProtobufParser<Parser>(opts.args[0], parsers)();
-
-  je_malloc_stats_print(NULL, NULL, NULL);
 
   return 0;
 }
