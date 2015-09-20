@@ -29,12 +29,44 @@
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
+#include <mutex>
+#include <random>
+#include <thread>
 
 using namespace geo_base;
 
 static int ConvertToMicroseconds(double x) {
   return x * 1000000;
 }
+
+struct Worker {
+  std::mt19937 rnd;
+  std::vector<Count> checks;
+  const GeoBase* geo_base;
+  Count iters;
+  StopWatch stop_watch;
+
+  explicit Worker(Count init = 0, const GeoBase* geo_base = NULL,
+                  Count iters = 0) :
+      rnd(init),
+      geo_base(geo_base),
+      iters(iters) {
+  }
+
+  void operator () () {
+    for (Count i = 0; i < iters; ++i) {
+      Location location;
+      location.lon = -180.0 + rnd() * 360.0 / (rnd.max() - rnd.min());
+      location.lat = -90.0 + rnd() * 180.0 / (rnd.max() - rnd.min());
+
+      stop_watch.CheckPoint();
+      geo_base->Lookup(location);
+      double t = stop_watch.CheckPoint();
+
+      checks.push_back(ConvertToMicroseconds(t));
+    }
+  }
+};
 
 int main(int argc, char *argv[]) {
   std::cerr << std::fixed << std::setprecision(2);
@@ -53,17 +85,34 @@ int main(int argc, char *argv[]) {
     if (opts.touch_memory)
       LogInfo("geo-base-perf") << "Simple checksum = " << geo_base.TouchMemory();
 
-    Location location;
     std::vector<Count> checkpoints;
 
-    while (std::cin >> location) {
+    if (opts.random > 0) {
+      std::vector<Worker> workers(opts.jobs);
+      for (Count i = 0; i < workers.size(); ++i)
+        workers[i] = Worker(i, &geo_base, opts.random);
+
+      std::vector<std::thread> threads;
+      for (Count i = 0; i < workers.size(); ++i)
+        threads.emplace_back(std::ref(workers[i]));
+
+      for (Count i = 0; i < workers.size(); ++i)
+        threads[i].join();
+
+      for (const Worker& w : workers)
+        checkpoints.insert(checkpoints.end(), w.checks.begin(), w.checks.end());
+
+    } else {
       StopWatch sw;
+      Location location;
 
-      sw.CheckPoint();
-      geo_base.Lookup(location);
-      double t = sw.CheckPoint();
+      while (std::cin >> location) {
+        sw.CheckPoint();
+        geo_base.Lookup(location);
+        double t = sw.CheckPoint();
 
-      checkpoints.push_back(ConvertToMicroseconds(t));
+        checkpoints.push_back(ConvertToMicroseconds(t));
+      }
     }
 
     std::sort(checkpoints.begin(), checkpoints.end());

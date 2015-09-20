@@ -192,19 +192,19 @@ env.Program(
     "test/run_ut",
     [
         Glob("test/ut/*.cc"),
-        contrib["gmock"]["main"]
+        contrib["gmock"]["MAIN"]
     ],
     CXXFLAGS = [
         env["CXXFLAGS"],
-        contrib["gmock"]["flags"]
+        contrib["gmock"]["CXXFLAGS"]
     ],
     CPPPATH = [
         env["CPPPATH"],
-        contrib["gmock"]["include"]
+        contrib["gmock"]["INCLUDE"]
     ],
     LIBS = [
         libgeo_base,
         "protobuf",
-        contrib["gmock"]["lib"]
+        contrib["gmock"]["LIBS"]
     ]
 )

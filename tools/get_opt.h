@@ -33,10 +33,12 @@ namespace geo_base {
 struct Options {
   Count jobs;
   bool touch_memory;
+  Count random;
 
   Options() :
       jobs(2),
-      touch_memory(false) {
+      touch_memory(false),
+      random(0) {
   }
 
   std::vector<std::string> args;

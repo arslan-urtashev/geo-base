@@ -44,10 +44,10 @@ gmock_include = [
 ]
 
 gmock = {
-    "lib" : gmock_lib,
-    "include" : gmock_include,
-    "main" : gmock_main,
-    "flags" : ["-DGTEST_LANG_CXX11=0"]
+    "LIBS" : gmock_lib,
+    "INCLUDE" : gmock_include,
+    "MAIN" : gmock_main,
+    "CXXFLAGS" : ["-DGTEST_LANG_CXX11=0"]
 }
 
 Return("gmock")

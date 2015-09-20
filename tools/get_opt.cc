@@ -45,6 +45,7 @@ void ParseOptions(int argc, char* argv[], Options* opts) {
   const struct option options[] = {
     { "jobs", required_argument, NULL, 0 },
     { "touch-memory", no_argument, NULL, 0 },
+    { "random", required_argument, NULL, 0 },
     { NULL, 0, NULL, 0 }
   };
 
@@ -54,6 +55,9 @@ void ParseOptions(int argc, char* argv[], Options* opts) {
     },
     [&] (const char*) {
       opts->touch_memory = true;
+    },
+    [&] (const char* arg) {
+      opts->random = ParseInt(arg);
     },
     [&] (const char*) {
       throw Exception("%s", "Unknown options!");
