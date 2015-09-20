@@ -76,9 +76,6 @@ struct GenerateContext {
 
   MemoryUnit MemoryUsage() const;
 
-  // Get GeoData view with valid pointers.
-  const GeoData* GeoData() const;
-
   struct {
     std::vector<CheckPoint> checkpoints;
     std::vector<Edge> edges;
