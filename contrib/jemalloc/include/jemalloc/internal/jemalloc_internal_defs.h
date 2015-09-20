@@ -62,12 +62,6 @@
 #define JEMALLOC_HAVE_MADVISE 
 
 /*
- * Defined if OSSpin*() functions are available, as provided by Darwin, and
- * documented in the spinlock(3) manual page.
- */
-#define JEMALLOC_OSSPIN 
-
-/*
  * Defined if secure_getenv(3) is available.
  */
 /* #undef JEMALLOC_HAVE_SECURE_GETENV */
