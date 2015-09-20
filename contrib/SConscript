@@ -5,14 +5,8 @@ gmock = SConscript(
     exports="env"
 )
 
-jemalloc = SConscript(
-    "jemalloc/SConscript",
-    exports="env"
-)
-
 contrib = {
-    "gmock" : gmock,
-    "jemalloc" : jemalloc
+    "gmock" : gmock
 }
 
 Return("contrib")

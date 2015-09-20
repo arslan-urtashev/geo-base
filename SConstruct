@@ -61,7 +61,6 @@ env.Append(CPPPATH = [
     "include/geo_base",
     "src",
     "src/geo_base",
-    contrib["jemalloc"]["INCLUDE"],
     contrib["gmock"]["INCLUDE"]
 ])
 
@@ -112,8 +111,7 @@ env.Program(
     LIBS = [
         libgeo_base,
         libgeo_base_tool,
-        "protobuf",
-        contrib["jemalloc"]["LIBS"]
+        "protobuf"
     ]
 )
 
@@ -139,8 +137,7 @@ if ARGUMENTS.get("geo-base-convert", "true") == "true":
             libgeo_base,
             libgeo_base_tool,
             "protobuf",
-            "z",
-            contrib["jemalloc"]["LIBS"]
+            "z"
         ]
     )
 
