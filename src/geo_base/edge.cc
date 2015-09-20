@@ -35,6 +35,8 @@ bool Edge::Lower(const Edge& e, const Point* points) const {
 
   if (a1 == b1) {
     return (a2 - a1).CrossProduct(b2 - a1) > 0;
+  } else if (a2 == b2) {
+    return (a1 - b1).CrossProduct(b2 - b1) > 0;
   } else if (b1.x >= a1.x && b1.x <= a2.x) {
     return (a2 - a1).CrossProduct(b1 - a1) > 0;
   } else if (b2.x >= a1.x && b2.x <= a2.x) {
