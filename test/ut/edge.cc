@@ -1,7 +1,6 @@
 #include <gmock/gmock.h>
 
-#include "test.h"
-#include "edge.h"
+#include "geo_base_test.h"
 
 using namespace geo_base;
 
