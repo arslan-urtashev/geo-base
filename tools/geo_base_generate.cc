@@ -26,6 +26,8 @@
 #include <sstream>
 #include <thread>
 
+#include <jemalloc/jemalloc.h>
+
 #include "geo_base_generate.h"
 #include "io.h"
 #include "log.h"
@@ -99,6 +101,8 @@ int main(int argc, char *argv[]) {
   } catch (const std::exception& e) {
     LogError("geo-base-generate", "EXCEPTION") << e.what();
   }
+
+  je_malloc_stats_print(NULL, NULL, NULL);
 
   return 0;
 }
