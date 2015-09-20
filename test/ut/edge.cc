@@ -1,30 +1,11 @@
 #include <gmock/gmock.h>
 
+#include "test.h"
 #include "edge.h"
 
 using namespace geo_base;
 
-class EdgeTest : public ::testing::Test {
- public:
-  virtual void SetUp() {
-  }
-
-  virtual void TearDown() {
-    points_.clear();
-  }
-
-  const Point* points() const {
-    return points_.data();
-  }
-
-  const Edge MakeEdge(const Point& a, const Point& b) {
-    points_.push_back(a);
-    points_.push_back(b);
-    return Edge(points_.size() - 2, points_.size() - 1);
-  }
-
- private:
-  std::vector<Point> points_;
+class EdgeTest : public Test {
 };
 
 TEST_F(EdgeTest, ContainsPoint) {
