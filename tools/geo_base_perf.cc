@@ -54,6 +54,7 @@ struct Worker {
   }
 
   void operator () () {
+    checks.reserve(iters);
     for (Count i = 0; i < iters; ++i) {
       Location location;
       location.lon = -180.0 + rnd() * 360.0 / (rnd.max() - rnd.min());
