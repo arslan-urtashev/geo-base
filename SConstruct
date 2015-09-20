@@ -10,16 +10,34 @@ env = Environment(
 
 opt = ARGUMENTS.get("opt", "3")
 
-env.Append(CXXFLAGS = [
+FLAGS = [
     "-O" + opt,
+    "-ffast-math",
+    "-flto",
+    "-funroll-loops",
+]
+
+LINKFLAGS = [
+    "-O" + opt,
+    "-flto"
+]
+
+if ARGUMENTS.get("debug", "false") == "true":
+    FLAGS = [
+        "-O0"
+    ]
+
+    LINKFLAGS = [
+        "-O0"
+    ]
+
+env.Append(CXXFLAGS = [
+    FLAGS,
     "-W",
     "-Wall",
     "-Werror",
     "-Wextra",
-    "-ffast-math",
-    "-flto",
     "-fno-omit-frame-pointer",
-    "-funroll-loops",
     "-g",
     "-march=corei7", 
     "-pthread",
@@ -27,8 +45,7 @@ env.Append(CXXFLAGS = [
 ])
 
 env.Append(LINKFLAGS = [
-    "-O" + opt,
-    "-flto",
+    LINKFLAGS,
     "-pthread",
     "-g"
 ])
@@ -187,6 +204,7 @@ env.Program(
     ],
     LIBS = [
         libgeo_base,
+        "protobuf",
         contrib["gmock"]["lib"]
     ]
 )

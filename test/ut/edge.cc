@@ -1,10 +1,8 @@
-#include <gmock/gmock.h>
-
 #include "geo_base_test.h"
 
 using namespace geo_base;
 
-class EdgeTest : public Test {
+class EdgeTest : public GeoBaseTest {
 };
 
 TEST_F(EdgeTest, ContainsPoint) {

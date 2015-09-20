@@ -6,10 +6,6 @@
 
 namespace geo_base {
 
-struct PartHelper : public Part {
-  Count edge_refs_count;
-};
-
 class GeoDataTest {
 #define GEO_BASE_DEF_VAR(Var, var) \
  protected: \
@@ -33,7 +29,16 @@ class GeoDataTest {
 #undef GEO_BASE_DEF_ARR
 };
 
-class Test : public GeoDataTest, public ::testing::Test {
+struct PartHelper : public Part {
+  Count edge_refs_count;
+
+  bool Contains(const Point& p, const GeoDataTest& g) const {
+    return Part::Contains(p, edge_refs_count, g.edge_refs(),
+        g.edges(), g.points());
+  }
+};
+
+class GeoBaseTest : public GeoDataTest, public ::testing::Test {
  public:
   Edge MakeEdge(const Point& a, const Point& b) {
     points_.push_back(a);
@@ -47,8 +52,8 @@ class Test : public GeoDataTest, public ::testing::Test {
     helper.edge_refs_offset = edge_refs_.size();
 
     for (const Edge& e : edges) {
-      edges_.push_back(e);
       edge_refs_.push_back(edges_.size());
+      edges_.push_back(e);
     }
 
     helper.edge_refs_count = edge_refs_.size();
@@ -62,6 +67,12 @@ class Test : public GeoDataTest, public ::testing::Test {
     );
 
     return helper;
+  }
+
+  const GeoDataTest& geo_data() const {
+    const GeoDataTest* data = dynamic_cast<const GeoDataTest*>(this);
+    assert(data != nullptr);
+    return *data;
   }
 };
 
