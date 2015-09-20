@@ -43,6 +43,7 @@ struct Part {
   Coordinate coordinate;
   Count edge_refs_offset;
 
+  // Checks point lying under odd numbers of edges or on edge.
   bool Contains(const Point& point, const Count edge_refs_count,
       const Ref* edge_refs, const Edge* edges, const Point* points) const;
 };

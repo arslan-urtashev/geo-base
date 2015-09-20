@@ -76,6 +76,9 @@ struct GenerateContext {
 
   MemoryUnit MemoryUsage() const;
 
+  // Get GeoData view with valid pointers.
+  const GeoData* GeoData() const;
+
   struct {
     std::vector<CheckPoint> checkpoints;
     std::vector<Edge> edges;
@@ -118,10 +121,10 @@ class GeoBaseGenerate {
     return ctx;
   }
 
- private:
   void Update(RegionID region_id, const proto::Polygon& polygon);
   void Update(RegionID region_id, PolygonID polygon_id, const std::vector<Point>& points, bool is_inner);
 
+ private:
   void GenerateBoxes();
 
   GeoBaseAllocator base;
