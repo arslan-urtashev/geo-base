@@ -55,8 +55,8 @@ class GeoBase {
     std::vector<RegionID> regions;
   };
 
-   // Call open and mmap on file, stored on disk by path.
-   // Throws exception with strerror(errno) if open or mmap returns error.
+  // Call open and mmap on file, stored on disk by path.
+  // Throws exception with strerror(errno) if open or mmap returns error.
   explicit GeoBase(const char* path);
     
   // All memory will be touched, so no lookups will be slow. Be careful, all
