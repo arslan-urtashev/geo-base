@@ -22,6 +22,7 @@
 
 #include "geo_base.h"
 #include "log.h"
+#include "get_opt.h"
 
 #include <iomanip>
 #include <iostream>
@@ -75,13 +76,20 @@ static OutputStream& operator << (OutputStream& out, const RegionOutput& r) {
 int main(int argc, char *argv[]) {
   LogInit(std::cerr, Log::LEVEL_DEBUG, Log::COLOR_ENABLE);
 
-  if (argc != 2) {
+  Options opts = GetOpts(argc, argv);
+
+  if (opts.args.size() != 1) {
     LogError("geo-base-run")  << "geo-base-run <geodata.dat>";
     return -1;
   }
 
   try {
-    GeoBase geo_base(argv[1]);
+    GeoBase geo_base(opts.args[0].c_str());
+
+    if (opts.touch_memory) {
+      uint64_t h = geo_base.TouchMemory();
+      LogInfo("geo-base-run") << "TouchMemory = " << h;
+    }
 
     Location location;
     GeoBase::LookupInfo info;
