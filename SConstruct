@@ -121,7 +121,7 @@ proto = env.Protoc(
     PROTOCPROTOPATH = ["."],
 )
 
-libgeo_base = env.SharedLibrary(
+libgeo_base = env.Library(
     "lib/geo-base",
     [
         Glob("src/geo_base/*.cc"),
