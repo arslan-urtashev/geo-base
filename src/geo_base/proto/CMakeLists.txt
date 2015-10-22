@@ -1,3 +1,4 @@
+INCLUDE(findprotobuf)
 FIND_PACKAGE(protobuf REQUIRED)
 
 INCLUDE_DIRECTORIES(
