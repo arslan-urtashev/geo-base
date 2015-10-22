@@ -75,7 +75,7 @@ static char const *t(char *buffer)
 	localtime_r(&time_val.tv_sec, &time_info);
 
 	snprintf(buffer, TIMESTAMP_LIMIT, "%02d:%02d:%02d.%06d",
-		time_info.tm_hour, time_info.tm_min, time_info.tm_sec, time_val.tv_usec);
+		time_info.tm_hour, time_info.tm_min, time_info.tm_sec, (int) time_val.tv_usec);
 
 	return buffer;
 }
