@@ -1,6 +1,7 @@
 ADD_EXECUTABLE(run_ut
 	edge.cc
 	hello.cc
+	log.cc
 	osm_parser.cc
 	part.cc
 	pool_allocator.cc

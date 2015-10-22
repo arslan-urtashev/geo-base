@@ -92,9 +92,9 @@ void log_write(log_level_t level, char const *message)
 
 	static char const *B[LOG_LEVEL_COUNT] = {
 		"", // LOG_LEVEL_DISABLE
-		"\033[91mError\033[0m", // LOG_LEVEL_ERROR
-		"\033[93mWarning\033[0m", // LOG_LEVEL_WARNING
-		"\033[92mInfo\033[0m", // LOG_LEVEL_INFO
+		"\033[31;1mError\033[0m", // LOG_LEVEL_ERROR
+		"\033[33;1mWarn\033[0m", // LOG_LEVEL_WARNING
+		"\033[32;1mInfo\033[0m", // LOG_LEVEL_INFO
 		"Debug", // LOG_LEVEL_DEBUG
 	};
 
