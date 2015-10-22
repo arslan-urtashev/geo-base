@@ -21,6 +21,8 @@
 #include <geo_base/util/allocator.h>
 #include <geo_base/util/system.h>
 
+#include <algorithm>
+
 namespace geo_base {
 
 template<typename data_t>
