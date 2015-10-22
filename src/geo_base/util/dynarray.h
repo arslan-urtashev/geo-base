@@ -19,12 +19,13 @@
 #pragma once
 
 #include <geo_base/util/allocator.h>
+#include <geo_base/util/system.h>
 
 namespace geo_base {
 
 template<typename data_t>
 class dynarray_t {
-	static_assert(std::is_trivially_copyable<data_t>::value, "Data must be trivially copyable");
+	static_assert(IS_TRIVIALLY_COPYABLE(data_t), "Data must be trivially copyable");
 
 public:
 	dynarray_t()

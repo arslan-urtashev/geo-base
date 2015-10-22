@@ -26,8 +26,7 @@
 #include <geo_base/polygon.h>
 #include <geo_base/region.h>
 #include <geo_base/typedef.h>
-
-#include <type_traits>
+#include <geo_base/util/system.h>
 
 namespace geo_base {
 
@@ -55,17 +54,5 @@ namespace geo_base {
 	GEO_BASE_DEF_ARR(kv_t, kvs); \
 	/* Geographical regions. */ \
 	GEO_BASE_DEF_ARR(region_t, regions);
-
-// Check that all geo_data types is tribially copyable. Need for correct placement in geo_data
-// file.
-#define GEO_BASE_DEF_VAR(var_t, var) \
-	static_assert(std::is_trivially_copyable<var_t>::value, #var " must be trivially copyable!");
-#define GEO_BASE_DEF_ARR(arr_t, arr) \
-	static_assert(std::is_trivially_copyable<arr_t>::value, #arr " must be trivially copyable!");
-
-GEO_BASE_DEF_GEO_DATA
-
-#undef GEO_BASE_DEF_VAR
-#undef GEO_BASE_DEF_ARR
 
 } // namespace geo_base
