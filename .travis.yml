@@ -10,17 +10,16 @@ before_install:
       sudo apt-get install -y zlib1g-dev;
       sudo apt-get install -y libprotobuf-dev;
       sudo apt-get install -y protobuf-compiler;
-      sudo apt-get install -y scons;
+      sudo apt-get install -y cmake;
     fi
   - if [ $TRAVIS_OS_NAME == osx ]; then
       brew update;
       brew install protobuf;
-      brew install scons;
-      g++ --version;
+      brew install cmake;
     fi
 
 script: 
-  - scons
+  - cmake && make
   - test/run_ut
 
 branches:

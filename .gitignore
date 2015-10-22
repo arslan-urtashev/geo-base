@@ -1,7 +1,2 @@
-*.o
-*.so
-*.a
-*.os
-*.pyc
-/.sconsign.dblite
-/bin/*
+/target
+/data

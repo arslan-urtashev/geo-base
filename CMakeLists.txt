@@ -1,0 +1,35 @@
+PROJECT(geo_base CXX C)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+
+ADD_DEFINITIONS(
+	-flto
+)
+
+ADD_SUBDIRECTORY(contrib)
+
+INCLUDE_DIRECTORIES(
+	${gmock_SOURCE_DIR}/include
+	${gtest_SOURCE_DIR}/include
+	${osmpbf_SOURCE_DIR}/include
+)
+
+ADD_DEFINITIONS(
+	-W
+	-Wall
+	-Werror
+	-std=c++0x
+)
+
+INCLUDE_DIRECTORIES(
+	${geo_base_SOURCE_DIR}/include
+	${geo_base_SOURCE_DIR}/src
+)
+
+ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(tool)
+
+INCLUDE_DIRECTORIES(
+	.
+)
+
+ADD_SUBDIRECTORY(test)
