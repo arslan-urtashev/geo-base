@@ -16,10 +16,11 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "osm_reader.h"
-
 #include <geo_base/util/dynarray.h>
 #include <geo_base/util/log.h>
+#include <tool/osm/osm_reader.h>
+
+#include <arpa/inet.h>
 
 namespace geo_base {
 namespace tool {
