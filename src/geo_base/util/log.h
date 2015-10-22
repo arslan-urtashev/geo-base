@@ -31,7 +31,6 @@ enum log_level_t {
 	LOG_LEVEL_ERROR,
 	LOG_LEVEL_WARNING,
 	LOG_LEVEL_INFO,
-	LOG_LEVEL_STATUS,
 	LOG_LEVEL_DEBUG,
 	LOG_LEVEL_COUNT
 };
@@ -41,8 +40,8 @@ void log_setup(int fd, log_level_t level);
 
 // Write log message with colors, level and current time.
 // Example:
-//   [   info] [13:24:10] Good job!
-//   [warning] [13:24:11] Hello, world!
+//   Info (13:24:11): Good job!
+//   Error (13:24:22): Hello, world!
 void log_write(log_level_t level, char const *message);
 
 template<typename... args_t>
@@ -76,12 +75,6 @@ template<typename... args_t>
 void log_debug(args_t... args)
 {
 	log_write(LOG_LEVEL_DEBUG, std::forward<args_t>(args)...);
-}
-
-template<typename... args_t>
-void log_status(args_t... args)
-{
-	log_write(LOG_LEVEL_STATUS, std::forward<args_t>(args)...);
 }
 
 }

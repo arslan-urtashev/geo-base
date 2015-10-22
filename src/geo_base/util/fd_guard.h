@@ -36,7 +36,7 @@ public:
 		: fd_(fd)
 	{
 		if (fd_ != -1)
-			log_debug("Guard fd: %d", fd_);
+			log_debug("Guard fd %d", fd_);
 	}
 
 	fd_guard_t(fd_guard_t&& g)
@@ -59,7 +59,7 @@ public:
 	~fd_guard_t()
 	{
 		if (fd_ != -1) {
-			log_debug("Close fd: %d", fd_);
+			log_debug("Close fd %d", fd_);
 			close(fd_);
 		}
 	}

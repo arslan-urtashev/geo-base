@@ -27,7 +27,7 @@ namespace tool {
 void osm_command_t::run(int argc, char *argv[])
 {
 	if (argc < 4)
-		throw exception_t("usage: geo-base osm <from.osm.pbf> <to.geo-base.pbf>");
+		throw exception_t("geo-base osm <from.osm.pbf> <to.geo-base.pbf>");
 
 	file_t osmpbf_file(argv[2], file_t::READ_ONLY);
 	file_t geo_base_pbf_file(argv[3], file_t::READ_WRITE);

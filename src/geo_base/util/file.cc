@@ -19,6 +19,7 @@
 #include "file.h"
 
 #include "exception.h"
+#include "log.h"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -35,7 +36,7 @@ static int open(char const *path, file_t::mode_t mode)
 	case file_t::READ_WRITE:
 		return ::open(path, O_RDWR | O_CREAT | O_TRUNC, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
 	default:
-		throw exception_t("Can't open file in mode: %d", (int) mode);
+		throw exception_t("Unable open file in mode: %d", (int) mode);
 	}
 }
 

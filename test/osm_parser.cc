@@ -31,8 +31,8 @@
 using namespace geo_base;
 using namespace geo_base::tool;
 
-struct osm_amount_t : public osm_parser_t {
-	osm_amount_t(allocator_t *allocator)
+struct osm_counter_t : public osm_parser_t {
+	osm_counter_t(allocator_t *allocator)
 		: osm_parser_t(allocator)
 		, nodes_amount(0)
 		, ways_amount(0)
@@ -61,7 +61,7 @@ struct osm_amount_t : public osm_parser_t {
 	size_t relations_amount;
 };
 
-TEST(osm_amount, osm_amount)
+TEST(osm_parser, osm_parser)
 {
 	pool_allocator_t allocator(1LLU << 20);
 	
@@ -69,16 +69,14 @@ TEST(osm_amount, osm_amount)
 	file_input_stream_t input_stream(file.fd());
 
 	osm_reader_t reader(&input_stream);
-	osm_amount_t amount(&allocator);
+	osm_counter_t amount(&allocator);
 
 	amount.parse(&reader);
 
-	log_debug("%lu nodes amount", amount.nodes_amount);
 	EXPECT_EQ(123736ULL, amount.nodes_amount);
-
-	log_debug("%lu ways amount", amount.ways_amount);
 	EXPECT_EQ(5750ULL, amount.ways_amount);
-
-	log_debug("%lu relations amount", amount.relations_amount);
 	EXPECT_EQ(142ULL, amount.relations_amount);
+
+	log_info("Parsed %lu relations, %lu ways and %lu nodes",
+		amount.relations_amount, amount.ways_amount, amount.nodes_amount);
 }

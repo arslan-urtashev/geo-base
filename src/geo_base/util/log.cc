@@ -19,6 +19,7 @@
 #include "log.h"
 
 #include <mutex>
+#include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -67,43 +68,48 @@ void log_setup(int fd, log_level_t level)
 
 static char const *t(char *buffer)
 {
+	struct timeval time_val;
+	gettimeofday(&time_val, nullptr);
+
 	struct tm time_info;
-	time_t timestamp = time(&timestamp);
-	localtime_r(&timestamp, &time_info);
-#ifndef GEO_BASE_LOG_DATE_FORMAT
-	snprintf(buffer, TIMESTAMP_LIMIT, "[%02d:%02d:%02d]",
-		time_info.tm_hour, time_info.tm_min, time_info.tm_sec);
-#else
-	snprintf(buffer, TIMESTAMP_LIMIT, "[%02d-%02d-%04d %02d:%02d:%02d]",
-		time_info.tm_mday, time_info.tm_mon + 1, time_info.tm_year + 1900,
-		time_info.tm_hour, time_info.tm_min, time_info.tm_sec);
-#endif
+	localtime_r(&time_val.tv_sec, &time_info);
+
+	snprintf(buffer, TIMESTAMP_LIMIT, "%02d:%02d:%02d.%06d",
+		time_info.tm_hour, time_info.tm_min, time_info.tm_sec, time_val.tv_usec);
+
 	return buffer;
 }
 
 void log_write(log_level_t level, char const *message)
 {
-	static char const *P[LOG_LEVEL_COUNT] = {
-		"",                    // LOG_LEVEL_DISABLE
-		"\r\033[31m[  error]", // LOG_LEVEL_ERROR
-		"\r\033[33m[warning]", // LOG_LEVEL_WARNING
-		"\r\033[32m[   info]", // LOG_LEVEL_INFO
-		"\r\033[34m[ status]", // LOG_LEVEL_STATUS
-		"\r\033[90m[  debug]", // LOG_LEVEL_DEBUG
+	static char const *A[LOG_LEVEL_COUNT] = {
+		"", // LOG_LEVEL_DISABLE
+		"\033[90m", // LOG_LEVEL_ERROR
+		"\033[90m", // LOG_LEVEL_WARNING
+		"\033[90m", // LOG_LEVEL_INFO
+		"\033[90m", // LOG_LEVEL_DEBUG
 	};
 
-	static char const *S[LOG_LEVEL_COUNT] = {
-		"",                    // LOG_LEVEL_DISABLE
-		"\033[0m\n", // LOG_LEVEL_ERROR
-		"\033[0m\n", // LOG_LEVEL_WARNING
-		"\033[0m\n", // LOG_LEVEL_INFO
-		"\033[0m",   // LOG_LEVEL_STATUS
+	static char const *B[LOG_LEVEL_COUNT] = {
+		"", // LOG_LEVEL_DISABLE
+		"\033[91mError\033[0m", // LOG_LEVEL_ERROR
+		"\033[93mWarning\033[0m", // LOG_LEVEL_WARNING
+		"\033[92mInfo\033[0m", // LOG_LEVEL_INFO
+		"Debug", // LOG_LEVEL_DEBUG
+	};
+
+	static char const *C[LOG_LEVEL_COUNT] = {
+		"", // LOG_LEVEL_DISABLE
+		"\n", // LOG_LEVEL_ERROR
+		"\n", // LOG_LEVEL_WARNING
+		"\n", // LOG_LEVEL_INFO
 		"\033[0m\n", // LOG_LEVEL_DEBUG
 	};
 
 	char buffer[LOG_MESSAGE_LIMIT], tbuffer[TIMESTAMP_LIMIT];
 	// Ignore logger snprintf errors.
-	snprintf(buffer, LOG_MESSAGE_LIMIT, "%s %s %s %s", P[level], t(tbuffer), message, S[level]);
+	snprintf(buffer, LOG_MESSAGE_LIMIT, "%s(%s) %s: %s%s",
+		A[level], t(tbuffer), B[level], message, C[level]);
 
 	logger_t::inst().write(level, buffer);
 }

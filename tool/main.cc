@@ -26,7 +26,7 @@
 using namespace geo_base;
 using namespace geo_base::tool;
 
-static char const SHORT_USAGE[] = "usage: geo-base osm|run|make|sift";
+static char const SHORT_USAGE[] = "geo-base osm|run|make|sift";
 
 typedef std::unique_ptr<command_t> command_ptr_t;
 

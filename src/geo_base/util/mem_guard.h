@@ -38,7 +38,7 @@ public:
 		, length_(length)
 	{
 		if (addr_)
-			log_debug("Guard memory: %p, %lu", addr_, length_);
+			log_debug("Guard memory %p, %lu", addr_, length_);
 	}
 
 	mem_guard_t &operator = (mem_guard_t&& g)
@@ -61,7 +61,7 @@ public:
 	~mem_guard_t()
 	{
 		if (addr_) {
-			log_debug("Unmap memory: %p, %lu", addr_, length_);
+			log_debug("Unmap memory %p, %lu", addr_, length_);
 			munmap(addr_, length_);
 		}
 	}
