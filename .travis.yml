@@ -11,10 +11,12 @@ before_install:
       sudo apt-get install -y libprotobuf-dev;
       sudo apt-get install -y protobuf-compiler;
       sudo apt-get install -y cmake;
+      cmake --version;
     fi
   - if [ $TRAVIS_OS_NAME == osx ]; then
       brew update;
       brew install protobuf;
+      cmake --version;
     fi
 
 script: 
