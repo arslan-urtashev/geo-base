@@ -15,7 +15,6 @@ before_install:
   - if [ $TRAVIS_OS_NAME == osx ]; then
       brew update;
       brew install protobuf;
-      brew install cmake;
     fi
 
 script: 
