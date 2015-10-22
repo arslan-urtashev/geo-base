@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "edge.h"
-#include "point.h"
-#include "typedef.h"
+#include <geo_base/edge.h>
+#include <geo_base/point.h>
+#include <geo_base/typedef.h>
 
 namespace geo_base {
 

@@ -16,9 +16,8 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "pool_allocator.h"
-
-#include "exception.h"
+#include <geo_base/util/exception.h>
+#include <geo_base/util/pool_allocator.h>
 
 #include <errno.h>
 #include <string.h>

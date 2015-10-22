@@ -18,14 +18,16 @@
 
 #pragma once
 
-#include "area_box.h"
-#include "edge.h"
-#include "kv.h"
-#include "part.h"
-#include "point.h"
-#include "polygon.h"
-#include "region.h"
-#include "typedef.h"
+#include <geo_base/area_box.h>
+#include <geo_base/edge.h>
+#include <geo_base/kv.h>
+#include <geo_base/part.h>
+#include <geo_base/point.h>
+#include <geo_base/polygon.h>
+#include <geo_base/region.h>
+#include <geo_base/typedef.h>
+
+#include <type_traits>
 
 namespace geo_base {
 

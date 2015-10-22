@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include "edge.h"
-#include "part.h"
-#include "point.h"
-#include "rectangle.h"
-#include "region.h"
-#include "typedef.h"
+#include <geo_base/edge.h>
+#include <geo_base/part.h>
+#include <geo_base/point.h>
+#include <geo_base/rectangle.h>
+#include <geo_base/region.h>
+#include <geo_base/typedef.h>
 
 namespace geo_base {
 

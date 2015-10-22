@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "allocator.h"
-#include "mem_guard.h"
+#include <geo_base/util/allocator.h>
+#include <geo_base/util/mem_guard.h>
 
 namespace geo_base {
 

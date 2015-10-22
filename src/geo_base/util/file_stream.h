@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "io_stream.h"
+#include <geo_base/util/io_stream.h>
 
 namespace geo_base {
 

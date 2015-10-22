@@ -18,10 +18,9 @@
 
 #pragma once
 
+#include <geo_base/point.h>
+#include <geo_base/typedef.h>
 #include <geo_base/util/algo.h>
-
-#include "point.h"
-#include "typedef.h"
 
 namespace geo_base {
 

@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "point.h"
-#include "typedef.h"
+#include <geo_base/point.h>
+#include <geo_base/typedef.h>
 
 namespace geo_base {
 

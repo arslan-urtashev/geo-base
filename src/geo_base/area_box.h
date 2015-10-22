@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "typedef.h"
+#include <geo_base/typedef.h>
 
 namespace geo_base {
 

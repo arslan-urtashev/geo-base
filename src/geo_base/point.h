@@ -19,8 +19,7 @@
 #pragma once
 
 #include <geo_base/location.h>
-
-#include "typedef.h"
+#include <geo_base/typedef.h>
 
 namespace geo_base {
 

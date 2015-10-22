@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "allocator.h"
+#include <geo_base/util/allocator.h>
 
 namespace geo_base {
 

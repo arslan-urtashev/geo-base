@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "geo_data_def.h"
-#include "util/io_stream.h"
+#include <geo_base/geo_data_def.h>
+#include <geo_base/util/io_stream.h>
 
 namespace geo_base {
 
