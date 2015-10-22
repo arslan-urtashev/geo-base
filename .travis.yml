@@ -19,8 +19,7 @@ before_install:
     fi
 
 script: 
-  - cmake . && make
-  - test/run_ut
+  - cmake . && make && test/run_ut
 
 branches:
   only:
