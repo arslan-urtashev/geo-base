@@ -1,22 +1,13 @@
 PROJECT(geo_base CXX C)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.7)
 
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
 ADD_DEFINITIONS(
 	-flto
 )
 
-INCLUDE_DIRECTORIES(
-	.
-	cmake
-)
-
 ADD_SUBDIRECTORY(contrib)
-
-INCLUDE_DIRECTORIES(
-	${gmock_SOURCE_DIR}/include
-	${gtest_SOURCE_DIR}/include
-	${osmpbf_SOURCE_DIR}/include
-)
 
 ADD_DEFINITIONS(
 	-W
@@ -28,6 +19,10 @@ ADD_DEFINITIONS(
 INCLUDE_DIRECTORIES(
 	${geo_base_SOURCE_DIR}/include
 	${geo_base_SOURCE_DIR}/src
+	${gmock_SOURCE_DIR}/include
+	${gtest_SOURCE_DIR}/include
+	${osmpbf_SOURCE_DIR}/include
+	.
 )
 
 ADD_SUBDIRECTORY(src)
