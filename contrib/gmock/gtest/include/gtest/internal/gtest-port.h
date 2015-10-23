@@ -274,7 +274,7 @@
 // -std={c,gnu}++{0x,11} is passed.  The C++11 standard specifies a
 // value for __cplusplus, and recent versions of clang, gcc, and
 // probably other compilers set that too in C++11 mode.
-# if __GXX_EXPERIMENTAL_CXX0X__ || __cplusplus >= 201103L
+# if 0 && (__GXX_EXPERIMENTAL_CXX0X__ || __cplusplus >= 201103L)
 // Compiling in at least C++11 mode.
 #  define GTEST_LANG_CXX11 1
 # else
