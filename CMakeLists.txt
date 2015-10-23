@@ -3,6 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.7)
 
 ADD_DEFINITIONS(
 	-flto
+	-std=c++0x
 )
 
 ADD_SUBDIRECTORY(contrib)
@@ -11,7 +12,6 @@ ADD_DEFINITIONS(
 	-W
 	-Wall
 	-Werror
-	-std=c++0x
 )
 
 INCLUDE_DIRECTORIES(
