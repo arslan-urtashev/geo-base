@@ -31,6 +31,9 @@ void osm_command_t::run(int argc, char *argv[])
 
 	file_t osmpbf_file(argv[2], file_t::READ_ONLY);
 	file_t geo_base_pbf_file(argv[3], file_t::READ_WRITE);
+
+	log_info("Reading osmpbf from %s", argv[2]);
+	log_info("Writing geopbf into %s", argv[3]);
 }
 
 } // namespace tool

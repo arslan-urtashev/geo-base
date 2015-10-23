@@ -40,8 +40,8 @@ void log_setup(int fd, log_level_t level);
 
 // Write log message with colors, level and current time.
 // Example:
-//   Info (13:24:11): Good job!
-//   Error (13:24:22): Hello, world!
+//   (13:24:11.123456) Info: Good job!
+//   (13:24:22.456789) Error: Hello, world!
 void log_write(log_level_t level, char const *message);
 
 template<typename... args_t>
