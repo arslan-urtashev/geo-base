@@ -16,36 +16,73 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
-
-#include <geo_base/generator/storage.h>
-#include <geo_base/geo_data.h>
-#include <geo_base/proto/region.pb.h>
+#include <geo_base/location.h>
 #include <geo_base/util/allocator.h>
 #include <geo_base/util/dynarray.h>
+#include <geo_base/proto/region.pb.h>
 
 namespace geo_base {
 namespace generator {
 
-class generator_t {
+namespace {
+
+inline double lon(location_t const &l)
+{
+	return l.lon;
+}
+
+inline double lat(location_t const &l)
+{
+	return l.lat;
+}
+
+inline double lon(proto::location_t const &l)
+{
+	return l.lon();
+}
+
+inline double lat(proto::location_t const &l)
+{
+	return l.lat();
+}
+
+} // namespace
+
+template<typename a_t, typename b_t>
+bool is_equal_locations(a_t const &a, b_t const &b)
+{
+	location_t a1(lon(a), lat(a));
+	location_t b1(lon(b), lat(b));
+	return point_t(a1) == point_t(b1);
+}
+
+class locations_converter_t {
 public:
-	generator_t(mut_geo_data_t *geo_data, storage_t *storage, allocator_t *allocator)
-		: geo_data_(geo_data)
-		, storage_(storage)
-		, allocator_(allocator)
+	locations_converter_t(allocator_t *allocator)
+		: allocator_(allocator)
 	{
 	}
 
-	void update(proto::region_t const &region);
+	template<typename locations_t, typename callback_t>
+	void each(locations_t const &raw_locations, callback_t callback)
+	{
+		dynarray_t<location_t> locations(raw_locations.size(), allocator_);
+		for (auto const &l : raw_locations) {
+			if (locations.empty() || !is_equal_locations(locations.back(), l))
+				locations.push_back(location_t(lon(l), lat(l)));
 
-	void update(geo_id_t region_id, proto::polygon_t const &polygon);
+			if (locations.size() > 3 && is_equal_locations(locations.front(), locations.back())) {
+				locations.pop_back();
+				callback(locations);
+				locations.clear();
+			}
+		}
 
-	void update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<point_t> const &points,
-		bool is_inner);
+		if (locations.size() > 2)
+			callback(locations);
+	}
 
 private:
-	mut_geo_data_t *geo_data_ __unused;
-	storage_t *storage_ __unused;
 	allocator_t *allocator_;
 };
 

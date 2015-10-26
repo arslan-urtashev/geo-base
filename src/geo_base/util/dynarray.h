@@ -28,6 +28,7 @@ namespace geo_base {
 template<typename data_t>
 class dynarray_t {
 	static_assert(IS_TRIVIALLY_COPYABLE(data_t), "Data must be trivially copyable");
+	static_assert(IS_TRIVIALLY_DESTRUCTIBLE(data_t), "Data must be trivially destructible");
 
 public:
 	dynarray_t()
@@ -61,6 +62,16 @@ public:
 		return data_[index];
 	}
 
+	data_t const &back() const
+	{
+		return data_[size_ - 1];
+	}
+
+	data_t const &front() const
+	{
+		return data_[0];
+	}
+
 	data_t &operator [] (size_t index)
 	{
 		return data_[index];
@@ -71,7 +82,17 @@ public:
 		return data_;
 	}
 
+	data_t const *begin() const
+	{
+		return data_;
+	}
+
 	data_t *end()
+	{
+		return data_ + size_;
+	}
+
+	data_t const *end() const
 	{
 		return data_ + size_;
 	}
@@ -96,9 +117,19 @@ public:
 		size_ = 0;
 	}
 
+	bool empty() const
+	{
+		return size_ == 0;
+	}
+
 	void push_back(data_t const &data)
 	{
 		data_[size_++] = data;
+	}
+
+	void pop_back()
+	{
+		size_--;
 	}
 
 	~dynarray_t()

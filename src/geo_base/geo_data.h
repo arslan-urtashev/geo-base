@@ -44,4 +44,18 @@ public:
 	}
 };
 
+class mut_geo_data_t {
+#define GEO_BASE_DEF_VAR(var_t, var) \
+	virtual void set_##var(var_t const &) = 0;
+
+#define GEO_BASE_DEF_ARR(arr_t, arr) \
+	virtual void arr##_push_back(arr_t const &) = 0;
+
+public:
+	GEO_BASE_DEF_GEO_DATA
+
+#undef GEO_BASE_DEF_VAR
+#undef GEO_BASE_DEF_ARR
+};
+
 } // namespace geo_base

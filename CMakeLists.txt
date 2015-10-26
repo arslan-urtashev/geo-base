@@ -21,12 +21,13 @@ ADD_DEFINITIONS(
 )
 
 INCLUDE_DIRECTORIES(
+	${geo_base_BINARY_DIR}/src
 	${geo_base_SOURCE_DIR}/include
 	${geo_base_SOURCE_DIR}/src
 	${gmock_SOURCE_DIR}/include
 	${gtest_SOURCE_DIR}/include
-	${osmpbf_SOURCE_DIR}
 	${osmpbf_BINARY_DIR}
+	${osmpbf_SOURCE_DIR}
 	.
 )
 

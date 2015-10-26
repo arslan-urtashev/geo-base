@@ -16,38 +16,58 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/generator/generator.h>
+#include "geo_base_test.h"
+
 #include <geo_base/generator/locations_converter.h>
+#include <geo_base/util/pool_allocator.h>
 
-namespace geo_base {
-namespace generator {
+using namespace geo_base;
+using namespace geo_base::generator;
 
-void generator_t::update(geo_id_t, geo_id_t,
-	dynarray_t<point_t> const &, bool)
+struct location_converter_t : public geo_base_test_t {
+};
+
+TEST_F(location_converter_t, location_converter)
 {
-}
+	std::vector<location_t> raw_locations = {
+		{ 0, 0 },
+		{ 1, 1 },
+		{ 2, 2 },
+		{ 3, 3 },
+		{ 0, 0 },
+		{ 5, 5 },
+		{ 6, 6 },
+		{ 7, 7 },
+		{ 5, 5 },
+		{ 10, 10 },
+		{ 11, 11 },
+		{ 12, 12 }
+	};
 
-static bool is_inner(proto::polygon_t const &p)
-{
-	return p.type() == proto::polygon_t::TYPE_INNER;
-}
+	std::vector<size_t> offsets = {
+		0, 5, 9
+	};
 
-void generator_t::update(geo_id_t region_id, proto::polygon_t const &polygon)
-{
-	locations_converter_t converter(allocator_);
-	converter.each(polygon.locations(), [&] (dynarray_t<location_t> const &locations) {
-		dynarray_t<point_t> points(locations.size(), allocator_);
-		for (location_t const &l : locations)
-			points.push_back(point_t(l));
-		update(region_id, polygon.polygon_id(), points, is_inner(polygon));
+	std::vector<size_t> sizes = {
+		4, 3, 3
+	};
+
+	pool_allocator_t allocator(1024);
+	locations_converter_t converter(&allocator);
+
+	size_t callbacks_count = 0;
+
+	converter.each(raw_locations, [&] (dynarray_t<location_t> const &locations) {
+		ASSERT_EQ(sizes[callbacks_count], locations.size());
+
+		size_t offset = offsets[callbacks_count];
+		size_t size = sizes[callbacks_count];
+
+		for (size_t i = offset; i < offset + size; ++i)
+			ASSERT_TRUE(is_equal_locations(raw_locations[i], locations[i - offset]));
+
+		++callbacks_count;
 	});
-}
 
-void generator_t::update(proto::region_t const &region)
-{
-	for (proto::polygon_t const &polygon : region.polygons())
-		update(region.region_id(), polygon);
+	ASSERT_EQ(3ULL, callbacks_count);
 }
-
-} // namespace generator
-} // namespace geo_base
