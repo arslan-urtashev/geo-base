@@ -28,5 +28,3 @@
 #	define IS_TRIVIALLY_COPYABLE(T) std::is_trivially_copyable<T>::value
 #	define IS_TRIVIALLY_DESTRUCTIBLE(T) std::is_trivially_destructible<T>::value
 #endif
-
-#define __unused __attribute__((unused))

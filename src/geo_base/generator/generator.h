@@ -29,10 +29,8 @@ namespace generator {
 
 class generator_t {
 public:
-	generator_t(mut_geo_data_t *geo_data, storage_t *storage, allocator_t *allocator)
-		: geo_data_(geo_data)
-		, storage_(storage)
-		, allocator_(allocator)
+	generator_t(mut_geo_data_t *, storage_t *, allocator_t *allocator)
+		: allocator_(allocator)
 	{
 	}
 
@@ -44,8 +42,6 @@ public:
 		bool is_inner);
 
 private:
-	mut_geo_data_t *geo_data_ __unused;
-	storage_t *storage_ __unused;
 	allocator_t *allocator_;
 };
 
