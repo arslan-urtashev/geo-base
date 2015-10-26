@@ -19,5 +19,4 @@ ADD_DEPENDENCIES(geo-base
 TARGET_LINK_LIBRARIES(geo-base
 	geo-base-proto
 	geo-base-util
-	geo-base-generator
 )
