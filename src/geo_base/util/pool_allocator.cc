@@ -24,7 +24,7 @@
 
 namespace geo_base {
 
-static size_t const USED_MEMORY = ~0ULL;
+static size_t const USED_MEMORY = ~0ull;
 
 pool_allocator_t::pool_allocator_t(size_t pool_size)
 	: bytes_allocated_(0)

@@ -3,4 +3,5 @@ ADD_LIBRARY(geo-base-util
 	file.cc
 	log.cc
 	pool_allocator.cc
+	base_allocator.cc
 )
