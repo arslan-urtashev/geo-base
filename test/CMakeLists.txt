@@ -1,5 +1,6 @@
 ADD_EXECUTABLE(run_ut
 	edge.cc
+	generator.cc
 	hello.cc
 	location_converter.cc
 	log.cc

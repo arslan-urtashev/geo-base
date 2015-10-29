@@ -102,6 +102,11 @@ public:
 		return data_;
 	}
 
+	data_t const *data() const
+	{
+		return data_;
+	}
+
 	size_t size() const
 	{
 		return size_;

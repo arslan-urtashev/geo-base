@@ -18,27 +18,31 @@
 
 #pragma once
 
-#include <geo_base/util/allocator.h>
-#include <geo_base/util/io_stream.h>
+#include <geo_base/geo_data.h>
 
 namespace geo_base {
+namespace generator {
 
-class mem_output_stream_t : public output_stream_t {
+class geo_data_t : public geo_base::geo_data_t {
+#define GEO_BASE_DEF_VAR(var_t, var) \
+	virtual void set_##var(var_t const &var) = 0;
+
+#define GEO_BASE_DEF_ARR(arr_t, arr) \
+	virtual arr_t *mut_##arr() = 0; \
+	virtual void arr##_append(arr_t const &arr) = 0;
+
 public:
-	mem_output_stream_t(allocator_t *allocator)
-		: allocator_(allocator)
-	{
-	}
+	GEO_BASE_DEF_GEO_DATA
 
-	virtual bool write(char const *ptr, size_t count)
-	{
-		char *dst = (char *) allocator_->allocate(count);
-		memcpy(dst, ptr, count);
-		return true;
-	}
+#undef GEO_BASE_DEF_VAR
+#undef GEO_BASE_DEF_ARR
 
-private:
-	allocator_t *allocator_;
+	// Insert unique point into points array.
+	virtual ref_t insert(point_t const &p) = 0;
+
+	// Insert unique edge into edges array.
+	virtual ref_t insert(edge_t const &e) = 0;
 };
 
+} // namespace generator
 } // namespace geo_base

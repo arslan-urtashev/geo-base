@@ -16,32 +16,81 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
+#include "geo_base_test.h"
 
-#include <geo_base/geo_data_def.h>
-#include <geo_base/util/io_stream.h>
+#include <geo_base/generator/generator.h>
+#include <geo_base/generator/geo_data.h>
+#include <geo_base/util/pool_allocator.h>
+
 
 namespace geo_base {
+namespace generator {
 
-class geo_data_t {
+class geo_data_test_t : public geo_data_t {
 #define GEO_BASE_DEF_VAR(var_t, var) \
-	virtual var_t const &var() const = 0;
+public: \
+	virtual var_t const &var() const \
+	{ \
+		return var##_; \
+	} \
+	virtual void set_##var(var_t const &v) \
+	{ \
+		var##_ = v; \
+	} \
+private: \
+	var_t var##_;
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
-	virtual arr_t const *arr() const = 0; \
-	virtual count_t arr##_count() const = 0;
+public: \
+	virtual arr_t const *arr() const \
+	{ \
+		return arr##_.data(); \
+	} \
+	virtual arr_t *mut_##arr() \
+	{ \
+		return arr##_.data(); \
+	} \
+	virtual count_t arr##_count() const \
+	{ \
+		return arr##_.size(); \
+	} \
+	virtual void arr##_append(arr_t const &a) \
+	{ \
+		arr##_.push_back(a); \
+	} \
+private: \
+	std::vector<arr_t> arr##_;
 
-public:
 	GEO_BASE_DEF_GEO_DATA
 
 #undef GEO_BASE_DEF_VAR
 #undef GEO_BASE_DEF_ARR
 
-	void save(output_stream_t *out);
-
-	virtual ~geo_data_t()
+	virtual ref_t insert(point_t const &p)
 	{
+		points_.push_back(p);
+		return points_.size() - 1;
+	}
+
+	virtual ref_t insert(edge_t const &e)
+	{
+		edges_.push_back(e);
+		return edges_.size() - 1;
 	}
 };
 
+} // namespace generator
 } // namespace geo_base
+
+using namespace geo_base;
+
+class generator_test_t : public test_t {
+};
+
+TEST_F(generator_test_t, generator_test)
+{
+	pool_allocator_t allocator(1024 * 1024 * 1024);
+
+	generator::geo_data_test_t geo_data;
+	generator::generator_t generator(&geo_data, &allocator);
+}

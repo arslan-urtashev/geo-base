@@ -24,6 +24,14 @@
 
 namespace geo_base {
 
+class test_t : public ::testing::Test {
+public:
+	test_t()
+	{
+		log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
+	}
+};
+
 class geo_data_test_t : public geo_data_t {
 #define GEO_BASE_DEF_VAR(var_t, var) \
 public: \
@@ -61,13 +69,8 @@ struct part_helper_t : public part_t {
 	}
 };
 
-class geo_base_test_t : public geo_data_test_t, public ::testing::Test {
+class geo_base_test_t : public geo_data_test_t, public test_t {
 public:
-	geo_base_test_t()
-	{
-		log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
-	}
-
 	edge_t make_edge(point_t const &a, point_t const &b)
 	{
 		points_.push_back(a);

@@ -32,27 +32,16 @@ namespace geo_base {
 
 // Geographical data definition. This define need for reflection in map/unmap, show, etc.
 #define GEO_BASE_DEF_GEO_DATA \
-	/* Version of geographical data. Need for check that library can parse this geo-data. */ \
 	GEO_BASE_DEF_VAR(version_t, version); \
-	/* Array of points. Other structures contains only references on elements in this array. */ \
 	GEO_BASE_DEF_ARR(point_t, points); \
-	/* Array of edges. Other structures contains only references on elements in this array. */ \
 	GEO_BASE_DEF_ARR(edge_t, edges); \
-	/* Array with persistence scanline versions data. */ \
 	GEO_BASE_DEF_ARR(ref_t, edge_refs); \
-	/* Array with persistence scanline version definitions. */ \
 	GEO_BASE_DEF_ARR(part_t, parts); \
-	/* Geographical polygons. */ \
 	GEO_BASE_DEF_ARR(polygon_t, polygons); \
-	/* References on polygons. See area_box.h for details. */ \
 	GEO_BASE_DEF_ARR(ref_t, polygon_refs); \
-	/* Area boxes. See area_box.h for details. */ \
 	GEO_BASE_DEF_ARR(area_box_t, boxes); \
-	/* All blobs lie in here. */ \
 	GEO_BASE_DEF_ARR(byte_t, blobs); \
-	/* References on blobs. Stored in sorted order by key for every region. */ \
 	GEO_BASE_DEF_ARR(kv_t, kvs); \
-	/* Geographical regions. */ \
 	GEO_BASE_DEF_ARR(region_t, regions);
 
 } // namespace geo_base

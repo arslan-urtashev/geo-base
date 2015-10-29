@@ -19,18 +19,19 @@
 #pragma once
 
 #include <geo_base/generator/storage.h>
-#include <geo_base/geo_data.h>
-#include <geo_base/proto/region.pb.h>
+#include <geo_base/generator/geo_data.h>
 #include <geo_base/util/allocator.h>
 #include <geo_base/util/dynarray.h>
+#include <geo_base/proto/region.pb.h>
 
 namespace geo_base {
 namespace generator {
 
 class generator_t {
 public:
-	generator_t(mut_geo_data_t *, storage_t *, allocator_t *allocator)
-		: allocator_(allocator)
+	generator_t(geo_data_t *geo_data, allocator_t *allocator)
+		: geo_data_(geo_data)
+		, allocator_(allocator)
 	{
 	}
 
@@ -42,6 +43,7 @@ public:
 		bool is_inner);
 
 private:
+	geo_data_t *geo_data_;
 	allocator_t *allocator_;
 };
 
