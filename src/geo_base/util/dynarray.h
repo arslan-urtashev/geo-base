@@ -117,7 +117,6 @@ public:
 			pop_back();
 		while (size_ < size)
 			push_back(data_t());
-		size_ = size;
 	}
 
 	void clear()
@@ -139,8 +138,10 @@ public:
 
 	void pop_back()
 	{
-		data_[size_].~data_t();
+		if (size_ == 0)
+			throw exception_t("Out of bounds pop_back");
 		size_--;
+		data_[size_].~data_t();
 	}
 
 	~dynarray_t()

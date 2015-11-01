@@ -7,6 +7,7 @@ ADD_EXECUTABLE(run_ut
 	osm_parser.cc
 	part.cc
 	pool_allocator.cc
+	dynarray.cc
 )
 
 ADD_DEPENDENCIES(run_ut
