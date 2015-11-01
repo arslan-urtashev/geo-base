@@ -19,6 +19,7 @@
 #pragma once
 
 #include <geo_base/util/allocator.h>
+#include <geo_base/util/exception.h>
 #include <geo_base/util/system.h>
 
 #include <algorithm>
@@ -129,6 +130,8 @@ public:
 
 	void push_back(data_t const &data)
 	{
+		if (size_ == capacity_)
+			throw exception_t("Out of bounds push_back");
 		data_[size_++] = data;
 	}
 
