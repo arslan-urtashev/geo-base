@@ -50,12 +50,13 @@ public:
 	}
 
 	dynarray_t(size_t size, size_t capacity, allocator_t *allocator)
-		: size_(size)
+		: size_(0)
 		, capacity_(capacity)
 		, data_(nullptr)
 		, allocator_(allocator)
 	{
 		data_ = (data_t *) allocator_->allocate(capacity * sizeof(data_t));
+		resize(size);
 	}
 
 	data_t const &operator [] (size_t index) const
@@ -115,12 +116,16 @@ public:
 
 	void resize(size_t size)
 	{
+		while (size_ > size)
+			pop_back();
+		while (size_ < size)
+			push_back(data_t());
 		size_ = size;
 	}
 
 	void clear()
 	{
-		size_ = 0;
+		resize(0);
 	}
 
 	bool empty() const
@@ -137,13 +142,16 @@ public:
 
 	void pop_back()
 	{
+		data_[size_].~data_t();
 		size_--;
 	}
 
 	~dynarray_t()
 	{
-		if (data_)
+		if (data_) {
+			clear();
 			allocator_->deallocate(data_, capacity_ * sizeof(data_t));
+		}
 	}
 
 	dynarray_t(dynarray_t &&a)
