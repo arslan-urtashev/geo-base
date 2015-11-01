@@ -24,4 +24,6 @@ namespace geo_base {
 
 typedef uint64_t geo_id_t;
 
+geo_id_t const UNKNOWN_GEO_ID = -1;
+
 }

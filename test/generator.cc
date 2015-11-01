@@ -93,4 +93,19 @@ TEST_F(generator_test_t, generator_test)
 
 	generator::geo_data_test_t geo_data;
 	generator::generator_t generator(&geo_data, &allocator);
+
+	dynarray_t<point_t> points(3, &allocator);
+	points.push_back(point_t(to_coordinate(0), to_coordinate(0)));
+	points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
+	points.push_back(point_t(to_coordinate(10), to_coordinate(10)));
+
+	generator.update(123, 123, points, false);
+
+	generator.fini();
+
+	EXPECT_EQ(123ull, geo_data.lookup(location_t(5, 5)));
+	EXPECT_EQ(UNKNOWN_GEO_ID, geo_data.lookup(location_t(-1, -1)));
+	EXPECT_EQ(UNKNOWN_GEO_ID, geo_data.lookup(location_t(0, 3)));
+	EXPECT_EQ(123ull, geo_data.lookup(location_t(4, 0)));
+	EXPECT_EQ(123ull, geo_data.lookup(location_t(5, 5)));
 }

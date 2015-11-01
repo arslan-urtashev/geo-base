@@ -161,6 +161,40 @@ void generator_t::update(geo_id_t region_id, geo_id_t polygon_id,
 	geo_data_->polygons_append(polygon);
 }
 
+void generator_t::fini()
+{
+	log_info("Generate area boxes...");
+
+	for (coordinate_t x0 = area_box::lower_x; x0 < area_box::upper_x; x0 += area_box::delta_x) {
+		for (coordinate_t y0 = area_box::lower_y; y0 < area_box::upper_y; y0 += area_box::delta_y) {
+			rectangle_t rect(x0, y0, x0 + area_box::delta_x, y0 + area_box::delta_y);
+
+			area_box_t box;
+			box.polygon_refs_offset = geo_data_->polygon_refs_count();
+
+			for (count_t i = 0; i < geo_data_->polygons_count(); ++i)
+				if (geo_data_->polygons()[i].rectangle.has_intersection(rect))
+					geo_data_->polygon_refs_append(i);
+
+			box.polygon_refs_count = geo_data_->polygon_refs_count() - box.polygon_refs_offset;
+
+			std::sort(
+				geo_data_->mut_polygon_refs() + box.polygon_refs_offset,
+				geo_data_->mut_polygon_refs() + geo_data_->polygon_refs_count(),
+				[&] (ref_t const &a, ref_t const &b) {
+					polygon_t const *p = geo_data_->polygons();
+					return p[a].region_id < p[b].region_id ||
+						(p[a].region_id == p[b].region_id && p[a].is_inner && !p[b].is_inner);
+				}
+			);
+
+			geo_data_->boxes_append(box);
+		}
+	}
+
+	log_info("Area boxes generated");
+}
+
 static bool is_inner(proto::polygon_t const &p)
 {
 	return p.type() == proto::polygon_t::TYPE_INNER;

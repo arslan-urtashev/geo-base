@@ -54,4 +54,44 @@ void geo_data_t::save(output_stream_t *out)
 #undef GEO_BASE_DEF_ARR
 }
 
+geo_id_t geo_data_t::lookup(location_t const &location)
+{
+	point_t point(location);
+
+	// Determin in wich area box is point.
+	ref_t box_x = (point.x - area_box::lower_x) / area_box::delta_x;
+	ref_t box_y = (point.y - area_box::lower_y) / area_box::delta_y;
+	ref_t box_ref = box_x * area_box::count_y + box_y;
+
+	if (box_ref >= boxes_count())
+		return UNKNOWN_GEO_ID;
+
+	count_t refs_offset = boxes()[box_ref].polygon_refs_offset;
+	count_t refs_count = boxes()[box_ref].polygon_refs_count;
+
+	polygon_t const *answer = nullptr;
+
+	for (ref_t l = refs_offset, r = 0; l < refs_offset + refs_count; l = r) {
+		ref_t const *refs = polygon_refs();
+		polygon_t const *p = polygons();
+
+		r = l + 1;
+
+		if (p[refs[l]].contains(point, parts(), edge_refs(), edges(), points())) {
+			if (p[refs[l]].is_inner) {
+				// All polygons with same region_id must be skipped if polygon is inner.
+				// In geo_data inner polygons stored before outer polygons.
+				while (r < refs_offset + refs_count && p[refs[l]].region_id == p[refs[r]].region_id)
+					++r;
+
+			} else {
+				if (!answer || !answer->better(p[refs[l]], regions(), regions_count()))
+					answer = &(p[refs[l]]);
+			}
+		}
+	}
+
+	return answer ? answer->region_id : UNKNOWN_GEO_ID;
+}
+
 } // namespace geo_base

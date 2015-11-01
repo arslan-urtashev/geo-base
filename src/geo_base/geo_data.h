@@ -39,6 +39,8 @@ public:
 
 	void save(output_stream_t *out);
 
+	geo_id_t lookup(location_t const &l);
+
 	virtual ~geo_data_t()
 	{
 	}

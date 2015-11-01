@@ -69,7 +69,7 @@ struct rectangle_t {
 		y2 = std::max(y2, p.y);
 	}
 
-	bool has_intersections(rectangle_t const &r) const
+	bool has_intersection(rectangle_t const &r) const
 	{
 		if (x1 > r.x2 || x2 < r.x1 || y1 > r.y2 || y2 < r.y1)
 			return false;
