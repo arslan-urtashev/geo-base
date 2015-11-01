@@ -28,9 +28,6 @@ namespace geo_base {
 
 template<typename data_t>
 class dynarray_t {
-	static_assert(IS_TRIVIALLY_COPYABLE(data_t), "Data must be trivially copyable");
-	static_assert(IS_TRIVIALLY_DESTRUCTIBLE(data_t), "Data must be trivially destructible");
-
 public:
 	dynarray_t()
 		: size_(0)
