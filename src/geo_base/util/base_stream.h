@@ -22,11 +22,11 @@
 
 namespace geo_base {
 
-// base_stream_t is a wrapper on base_allocator_t for geo_data serialize. In unit tests allocator
-// can be switch to other.
-class base_stream_t : public output_stream_t {
+// base_output_stream_t is a wrapper on base_allocator_t for geo_data serialize. In unit tests
+// allocator can be switch to other.
+class base_output_stream_t : public output_stream_t {
 public:
-	base_strem_t(allocator_t *allocator)
+	base_output_stream_t(allocator_t *allocator)
 		: allocator_(allocator)
 	{
 	}
