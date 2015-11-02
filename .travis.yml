@@ -9,12 +9,12 @@ compiler:
 
 before_install:
   - if [ $TRAVIS_OS_NAME == linux ]; then
+      sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
       sudo apt-get update;
       sudo apt-get install -y zlib1g-dev;
       sudo apt-get install -y libprotobuf-dev;
       sudo apt-get install -y protobuf-compiler;
       sudo apt-get install -y cmake;
-      sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
       sudo apt-get install -y g++-4.9
       cmake --version;
     fi
