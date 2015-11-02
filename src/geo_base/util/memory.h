@@ -16,57 +16,25 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "geo_base_test.h"
+#pragma once
 
-#include <geo_base/util/dynarray.h>
-#include <geo_base/util/pool_allocator.h>
-#include <geo_base/util/memory.h>
+#include <stdint.h>
 
-using namespace geo_base;
+namespace geo_base {
 
-struct pool_allocator_test_t : public geo_base_test_t {
-};
-
-TEST_F(pool_allocator_test_t, pool_allocator)
+inline uint64_t operator "" _gb (uint64_t x)
 {
-	pool_allocator_t pool_allocator(8_kb);
-
-	{
-		dynarray_t<int> a;
-
-		{
-			dynarray_t<long long> array(100, &pool_allocator);
-			for (int i = 0; i < 100; ++i)
-				array.push_back(100 - i);
-
-			a = dynarray_t<int>(10, &pool_allocator);
-
-			ASSERT_EQ(sizeof(int) * 10 + sizeof(long long) * 100 + 2 * sizeof(size_t),
-				pool_allocator.size());
-
-			for (int i = 0; i < 100; ++i)
-				ASSERT_EQ(100 - i, array[i]);
-
-			std::sort(array.begin(), array.end());
-			for (int i = 0; i < 100; ++i)
-				ASSERT_EQ(i + 1, array[i]);
-		}
-
-		for (int i = 0; i < 10; ++i)
-			a.push_back(i);
-
-		for (int i = 0; i < 10; ++i) {
-			dynarray_t<int> b(10, &pool_allocator);
-			for (int j = 0; j < 10; ++j)
-				b.push_back(i + j);
-
-			for (int j = 0; j < 10; ++j)
-				ASSERT_EQ(b[j], i + j);
-		}
-
-		for (int i = 0; i < 10; ++i)
-			ASSERT_EQ(i, a[i]);
-	}
-
-	ASSERT_EQ(0ULL, pool_allocator.size());
+	return x * (1ull << 30);
 }
+
+inline uint64_t operator "" _mb (uint64_t x)
+{
+	return x * (1ull << 20);
+}
+
+inline uint64_t operator "" _kb (uint64_t x)
+{
+	return x * (1ull << 10);
+}
+
+} // namespace geo_base

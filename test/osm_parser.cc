@@ -24,6 +24,7 @@
 #include <geo_base/util/file_stream.h>
 #include <geo_base/util/io_stream.h>
 #include <geo_base/util/pool_allocator.h>
+#include <geo_base/util/memory.h>
 #include <tool/osm/osm.h>
 #include <tool/osm/osm_parser.h>
 #include <tool/osm/osm_reader.h>
@@ -63,7 +64,7 @@ struct osm_counter_t : public osm_parser_t {
 
 TEST(osm_parser, osm_parser)
 {
-	pool_allocator_t allocator(1LLU << 20);
+	pool_allocator_t allocator(1_mb);
 	
 	file_t file("test/osm/andorra-latest.osm.pbf", file_t::READ_ONLY);
 	file_input_stream_t input_stream(file.fd());

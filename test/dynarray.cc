@@ -20,6 +20,7 @@
 
 #include <geo_base/util/dynarray.h>
 #include <geo_base/util/pool_allocator.h>
+#include <geo_base/util/memory.h>
 
 #include <cassert>
 
@@ -60,7 +61,7 @@ struct data_t {
 
 TEST_F(dynarray_test_t, destructor)
 {
-	pool_allocator_t allocator(1024);
+	pool_allocator_t allocator(1_kb);
 
 	size_t counter = 13ull;
 

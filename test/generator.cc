@@ -21,7 +21,7 @@
 #include <geo_base/generator/generator.h>
 #include <geo_base/generator/geo_data.h>
 #include <geo_base/util/pool_allocator.h>
-
+#include <geo_base/util/memory.h>
 
 namespace geo_base {
 namespace generator {
@@ -89,7 +89,7 @@ class generator_test_t : public test_t {
 
 TEST_F(generator_test_t, generator_test)
 {
-	pool_allocator_t allocator(1024 * 1024 * 1024);
+	pool_allocator_t allocator(1_mb);
 
 	generator::geo_data_test_t geo_data;
 	generator::generator_t generator(&geo_data, &allocator);
@@ -109,4 +109,8 @@ TEST_F(generator_test_t, generator_test)
 	EXPECT_EQ(UNKNOWN_GEO_ID, geo_data.lookup(location_t(0, 3)));
 	EXPECT_EQ(123ull, geo_data.lookup(location_t(4, 0)));
 	EXPECT_EQ(123ull, geo_data.lookup(location_t(5, 5)));
+}
+
+TEST_F(generator_test_t, polygon)
+{
 }
