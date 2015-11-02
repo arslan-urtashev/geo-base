@@ -5,6 +5,10 @@ dist: trusty
 
 compiler:
   - gcc
+  - clang
+
+env:
+  - GCC_VERSION=4.9
 
 before_install:
   - if [ $TRAVIS_OS_NAME == linux ]; then
@@ -31,6 +35,11 @@ branches:
 os:
   - linux
   - osx
+
+matrix:
+  exclude:
+    - compiler: clang
+    - os: linux
 
 notifications:
   email:
