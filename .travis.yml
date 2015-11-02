@@ -4,11 +4,8 @@ sudo: required
 dist: trusty
 
 compiler:
-  - gcc
+  - g++-4.9
   - clang
-
-env:
-  - GCC_VERSION=4.9
 
 before_install:
   - if [ $TRAVIS_OS_NAME == linux ]; then
@@ -17,6 +14,8 @@ before_install:
       sudo apt-get install -y libprotobuf-dev;
       sudo apt-get install -y protobuf-compiler;
       sudo apt-get install -y cmake;
+      sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+      sudo apt-get install -y g++-4.9
       cmake --version;
     fi
   - if [ $TRAVIS_OS_NAME == osx ]; then
