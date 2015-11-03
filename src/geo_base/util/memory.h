@@ -22,17 +22,17 @@
 
 namespace geo_base {
 
-inline uint64_t operator "" _gb (uint64_t x)
+inline unsigned long long operator "" _gb (unsigned long long x)
 {
 	return x * (1ull << 30);
 }
 
-inline uint64_t operator "" _mb (uint64_t x)
+inline unsigned long long operator "" _mb (unsigned long long x)
 {
 	return x * (1ull << 20);
 }
 
-inline uint64_t operator "" _kb (uint64_t x)
+inline unsigned long long operator "" _kb (unsigned long long x)
 {
 	return x * (1ull << 10);
 }
