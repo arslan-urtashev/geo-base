@@ -17,6 +17,7 @@ before_install:
       sudo apt-get install -y protobuf-compiler;
       sudo apt-get install -y cmake;
       cmake --version;
+      g++ --version;
     fi
   - if [ $TRAVIS_OS_NAME == osx ]; then
       brew update;
