@@ -23,7 +23,7 @@ before_install:
     fi
 
 script: 
-  - cmake . && make && test/run_ut
+  - cmake . && make VERBOSE=1 && test/run_ut
 
 branches:
   only:
