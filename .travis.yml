@@ -5,7 +5,7 @@ dist: trusty
 
 compiler:
   - g++
-  - clang
+#  - clang
 
 before_install:
   - if [ $TRAVIS_OS_NAME == linux ]; then
