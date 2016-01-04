@@ -27,9 +27,9 @@ class pool_allocator_t : public allocator_t {
 public:
 	pool_allocator_t(size_t pool_size);
 
-	virtual void *allocate(size_t count);
+	void *allocate(size_t count) override;
 
-	virtual void deallocate(void *ptr, size_t count);
+	void deallocate(void *ptr, size_t count) override;
 
 	size_t size() const
 	{

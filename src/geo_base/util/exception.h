@@ -40,7 +40,7 @@ public:
 		strncpy(buffer_, message, MESSAGE_LIMIT);
 	}
 
-	virtual char const *what() const noexcept
+	char const *what() const noexcept override
 	{
 		return buffer_;
 	}

@@ -29,9 +29,9 @@ class base_allocator_t : public file_t, public allocator_t {
 public:
 	base_allocator_t(char const *path);
 
-	virtual void *allocate(size_t count);
+	void *allocate(size_t count) override;
 
-	virtual void deallocate(void *, size_t)
+	void deallocate(void *, size_t) override
 	{
 		throw exception_t("Unable to deallocate in base_allocator_t");
 	}

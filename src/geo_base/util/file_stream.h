@@ -29,7 +29,7 @@ public:
 	{
 	}
 
-	virtual bool write(char const *ptr, size_t count);
+	bool write(char const *ptr, size_t count) override;
 
 private:
 	int fd_;
@@ -42,7 +42,7 @@ public:
 	{
 	}
 
-	virtual bool read(char *ptr, size_t count);
+	bool read(char *ptr, size_t count) override;
 
 private:
 	int fd_;

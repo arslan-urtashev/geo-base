@@ -31,7 +31,7 @@ public:
 	{
 	}
 
-	virtual bool write(char const *ptr, size_t count)
+	bool write(char const *ptr, size_t count) override
 	{
 		char *dst = (char *) allocator_->allocate(count);
 		memcpy(dst, ptr, count);
