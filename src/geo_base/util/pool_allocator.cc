@@ -24,7 +24,7 @@
 
 namespace geo_base {
 
-static size_t const USED_MEMORY = ~0ull;
+static size_t const MEMORY_IS_USED_FLAG = ~0ull;
 
 pool_allocator_t::pool_allocator_t(size_t pool_size)
 	: bytes_allocated_(0)
@@ -42,7 +42,7 @@ void *pool_allocator_t::allocate(size_t count)
 		throw std::bad_alloc();
 	char *begin = ((char *) mem_guard_.data()) + bytes_allocated_;
 	char *end = begin + count;
-	*((size_t *) end) = USED_MEMORY;
+	*((size_t *) end) = MEMORY_IS_USED_FLAG;
 	bytes_allocated_ += count + sizeof(size_t);
 	return begin;
 }
@@ -51,7 +51,7 @@ static void relax_pool(char *begin, size_t *count)
 {
 	while (*count > 0) {
 		char *ptr = begin + *count - sizeof(size_t);
-		if (*((size_t *) ptr) == USED_MEMORY)
+		if (*((size_t *) ptr) == MEMORY_IS_USED_FLAG)
 			return;
 		*count -= *((size_t *) ptr) + sizeof(size_t);
 	}
@@ -61,7 +61,7 @@ void pool_allocator_t::deallocate(void *ptr, size_t count)
 {
 	char *begin = (char *) ptr;
 	char *end = begin + count;
-	if (*((size_t *) end) != USED_MEMORY)
+	if (*((size_t *) end) != MEMORY_IS_USED_FLAG)
 		throw exception_t("Trying to deallocate not allocated pointer %p", ptr);
 	*((size_t *) end) = count;
 	relax_pool((char *) mem_guard_.data(), &bytes_allocated_);
