@@ -1,4 +1,5 @@
-ADD_LIBRARY(geo-base-util
+ADD_LIBRARY(
+	geo-base-util
 	file_stream.cc
 	file.cc
 	log.cc

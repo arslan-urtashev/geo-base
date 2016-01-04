@@ -1,4 +1,5 @@
-ADD_EXECUTABLE(run_ut
+ADD_EXECUTABLE(
+	run_ut
 	edge.cc
 	generator.cc
 	hello.cc
@@ -10,11 +11,13 @@ ADD_EXECUTABLE(run_ut
 	dynarray.cc
 )
 
-ADD_DEPENDENCIES(run_ut
+ADD_DEPENDENCIES(
+	run_ut
 	geo-base-proto
 )
 
-TARGET_LINK_LIBRARIES(run_ut
+TARGET_LINK_LIBRARIES(
+	run_ut
 	geo-base
 	geo-base-tool-osm
 	geo-base-generator

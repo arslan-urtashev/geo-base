@@ -1,10 +1,12 @@
 ADD_SUBDIRECTORY(osm)
 
-ADD_EXECUTABLE(geo-base-tool
+ADD_EXECUTABLE(
+	geo-base-tool
 	main.cc
 )
 
-TARGET_LINK_LIBRARIES(geo-base-tool
+TARGET_LINK_LIBRARIES(
+	geo-base-tool
 	geo-base
 	geo-base-tool-osm
 )

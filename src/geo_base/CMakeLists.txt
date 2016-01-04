@@ -6,17 +6,20 @@ INCLUDE_DIRECTORIES(
 	${CMAKE_CURRENT_BINARY_DIR}
 )
 
-ADD_LIBRARY(geo-base
+ADD_LIBRARY(
+	geo-base
 	geo_data.cc
 	part.cc
 	polygon.cc
 )
 
-ADD_DEPENDENCIES(geo-base
+ADD_DEPENDENCIES(
+	geo-base
 	geo-base-proto
 )
 
-TARGET_LINK_LIBRARIES(geo-base
+TARGET_LINK_LIBRARIES(
+	geo-base
 	geo-base-proto
 	geo-base-util
 )

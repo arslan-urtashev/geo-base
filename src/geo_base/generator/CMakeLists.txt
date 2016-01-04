@@ -1,11 +1,14 @@
-ADD_LIBRARY(geo-base-generator
+ADD_LIBRARY(
+	geo-base-generator
 	generator.cc
 )
 
-ADD_DEPENDENCIES(geo-base-generator
+ADD_DEPENDENCIES(
+	geo-base-generator
 	geo-base-proto
 )
 
-TARGET_LINK_LIBRARIES(geo-base-generator
+TARGET_LINK_LIBRARIES(
+	geo-base-generator
 	geo-base
 )
