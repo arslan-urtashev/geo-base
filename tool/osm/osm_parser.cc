@@ -19,6 +19,7 @@
 #include "osm_parser.h"
 
 #include <geo_base/util/exception.h>
+#include <geo_base/util/log.h>
 #include <zlib.h>
 
 namespace geo_base {
@@ -26,24 +27,9 @@ namespace tool {
 
 static void unpack(char const *ptr, size_t count, dynarray_t<char> *buffer)
 {
-	z_stream stream;
-	memset(&stream, 0, sizeof(stream));
-
-	stream.next_in = (unsigned char *) ptr;
-	stream.avail_in = count;
-	stream.next_out = (unsigned char *) buffer->data();
-	stream.avail_out = buffer->size();
-
-	if (inflateInit(&stream) != Z_OK)
-		throw exception_t("Can't inflateInit!");
-
-	if (inflate(&stream, Z_FINISH) != Z_STREAM_END)
-		throw exception_t("Can't inflate!");
-
-	if (inflateEnd(&stream) != Z_OK)
-		throw exception_t("Can't inflateEnd!");
-
-	buffer->resize(stream.total_out);
+    unsigned long reply_count = buffer->size();
+    if (uncompress((unsigned char*) buffer->data(), &reply_count, (unsigned char *) ptr, count) != Z_OK)
+        throw exception_t("Unable uncompress zlib data");
 }
 
 static bool parse_primitive_block(osmpbf::blob_t const &blob, osmpbf::primitive_block_t *block,

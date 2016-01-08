@@ -1,12 +1,12 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
-//   
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 // and associated documentation files (the "Software"), to deal in the Software without
 // restriction, including without limitation the rights to use, copy, modify, merge, publish,
 // distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
 // Software is furnished to do so, subject to the following conditions:
-// 
+//
 //   The above copyright notice and this permission notice shall be included in all copies or
 //   substantial portions of the Software.
 //
@@ -16,51 +16,51 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/polygon.h>
+#include <geo_base/open_street_map/reader.h>
+#include <geo_base/util/log.h>
+#include <geo_base/util/dynarray.h>
+
+#include <arpa/inet.h>
 
 namespace geo_base {
+namespace open_street_map {
 
-bool polygon_t::contains(point_t const &point, part_t const *parts, ref_t const *edge_refs,
-	edge_t const *edges, point_t const *points) const
+bool reader_t::read(proto::blob_header_t *header, proto::blob_t *blob, allocator_t *allocator)
 {
-	if (!rectangle.contains(point))
+	std::lock_guard<std::mutex> lock(mutex_);
+
+	int32_t header_size = 0;
+	if (!input_stream_->read((char *) &header_size, sizeof(header_size)))
 		return false;
 
-	// Find lower bound part, which can contains given point.
-	parts += parts_offset;
-	part_t const *part = lower_bound(parts, parts_count, point,
-		[&] (part_t const &a, point_t const &b)
-		{
-			return a.coordinate < b.x;
-		}
-	);
+	header_size = ntohl(header_size);
 
-	if (part == parts)
+	dynarray_t<char> raw_header(header_size, header_size, allocator);
+	if (!input_stream_->read(raw_header.data(), raw_header.size())) {
+		log_error("Can't read header!");
 		return false;
-
-	--part;
-	if (part + 1 == parts + parts_count)
-		return false;
-
-	if (point.x < part->coordinate || point.x > (part + 1)->coordinate)
-		return false;
-
-	count_t edge_refs_count = (part + 1)->edge_refs_offset - part->edge_refs_offset;
-	return part->contains(point, edge_refs_count, edge_refs, edges, points);
-};
-
-bool polygon_t::better(polygon_t const &p, region_t const *regions, count_t regions_count) const
-{
-	if (square < p.square)
-		return true;
-
-	if (square == p.square) {
-		region_t const *r1 = find(regions, regions_count, region_id);
-		region_t const *r2 = find(regions, regions_count, p.region_id);
-		return r1->better(*r2);
 	}
 
-	return false;
+	if (!header->ParseFromArray(raw_header.data(), raw_header.size())) {
+		log_error("Can't parse header!");
+		return false;
+	}
+
+	int32_t blob_size = header->data_size();
+	
+	dynarray_t<char> raw_blob(blob_size, blob_size, allocator);
+	if (!input_stream_->read(raw_blob.data(), raw_blob.size())) {
+		log_error("Can't read blob!");
+		return false;
+	}
+
+	if (!blob->ParseFromArray(raw_blob.data(), raw_blob.size())) {
+		log_error("Can't parse blob!");
+		return false;
+	}
+
+	return true;
 }
 
+} // namespace open_street_map
 } // namespace geo_base

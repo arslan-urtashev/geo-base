@@ -1,6 +1,6 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
-//   
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 // and associated documentation files (the "Software"), to deal in the Software without
 // restriction, including without limitation the rights to use, copy, modify, merge, publish,
@@ -9,7 +9,7 @@
 //
 //   The above copyright notice and this permission notice shall be included in all copies or
 //   substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
 // BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -19,51 +19,44 @@
 #pragma once
 
 #include <geo_base/location.h>
-#include <geo_base/typedef.h>
+#include <geo_base/open_street_map/open_street_map.h>
+#include <geo_base/open_street_map/proto/open_street_map.pb.h>
+#include <geo_base/open_street_map/reader.h>
+#include <geo_base/util/allocator.h>
+#include <geo_base/util/dynarray.h>
 
 namespace geo_base {
+namespace open_street_map {
 
-struct point_t {
-	coordinate_t x;
-	coordinate_t y;
-
-	point_t()
-		: x(0)
-		, y(0)
+class parser_t {
+public:
+	parser_t(allocator_t *allocator)
+		: allocator_(allocator)
 	{
 	}
 
-	point_t(coordinate_t const &x1, coordinate_t const &y1)
-		: x(x1)
-		, y(y1)
-	{
-	}
+	void parse(reader_t *reader);
 
-	explicit point_t(location_t const &l)
-		: x(to_coordinate(l.lon))
-		, y(to_coordinate(l.lat))
-	{
-	}
+protected:
+	virtual void process_node(geo_id_t geo_id, location_t const &location,
+		dynarray_t<kv_t> const &kvs) = 0;
 
-	point_t operator - (point_t const &p) const
-	{
-		return point_t(x - p.x, y - p.y);
-	}
+	virtual void process_way(geo_id_t geo_id, dynarray_t<kv_t> const &kvs,
+		dynarray_t<geo_id_t> const &references) = 0;
 
-	bool operator == (point_t const &b) const
-	{
-		return x == b.x && y == b.y;
-	}
+	virtual void process_relation(geo_id_t geo_id, dynarray_t<kv_t> const &kvs,
+		dynarray_t<reference_t> const &references) = 0;
 
-	bool operator < (point_t const &b)
-	{
-		return x < b.x || (x == b.x && y < b.y);
-	}
+	allocator_t *allocator_;
 
-	square_t cross(point_t const &p) const
-	{
-		return 1LL * x * p.y - 1LL * y * p.x;
-	}
+private:
+	void process_basic_groups(proto::basic_block_t const &block);
+
+	void process_dense_nodes(proto::dense_nodes_t const &nodes, proto::basic_block_t const &block);
 };
 
+// Run parser_t::parse in different threads.
+void run_pool_parse(char const *path, parser_t *parsers, size_t parsers_count);
+
+} // namespace open_street_map
 } // namespace geo_base

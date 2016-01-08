@@ -19,7 +19,7 @@ ADD_DEPENDENCIES(
 TARGET_LINK_LIBRARIES(
 	run_ut
 	geo-base
-	geo-base-tool-osm
+	geo-base-open-street-map
 	geo-base-generator
 	gmock_main
 )

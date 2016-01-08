@@ -1,0 +1,88 @@
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
+// Contacts: <urtashev@gmail.com>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+// and associated documentation files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+//   The above copyright notice and this permission notice shall be included in all copies or
+//   substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+// BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+package geo_base.open_street_map.proto;
+
+message blob_t {
+	optional bytes raw = 1;
+	optional int32 raw_size = 2;
+	optional bytes zlib_data = 3;
+	optional bytes lzma_data = 4;
+}
+
+message blob_header_t {
+	required string type = 1;
+	optional bytes index_data = 2;
+	required int32 data_size = 3;
+}
+
+message string_table_t {
+	repeated bytes s = 1;
+}
+
+message basic_group_t {
+	repeated node_t nodes = 1;
+	optional dense_nodes_t dense_nodes = 2;
+	repeated way_t ways = 3;
+	repeated relation_t relations = 4;
+}
+
+message basic_block_t {
+	required string_table_t string_table = 1;
+	repeated basic_group_t basic_groups = 2;
+	optional int32 granularity = 17 [default = 100];
+	optional int64 lat_off = 19 [default = 0];
+	optional int64 lon_off = 20 [default = 0];
+}
+
+message node_t {
+	required sint64 id = 1;
+	repeated uint32 keys = 2 [packed = true];
+	repeated uint32 vals = 3 [packed = true];
+	required sint64 lat = 8;
+	required sint64 lon = 9;
+}
+
+message dense_nodes_t {
+	repeated sint64 id = 1 [packed = true];
+	repeated sint64 lat = 8 [packed = true];
+	repeated sint64 lon = 9 [packed = true];
+	repeated int32 kvs = 10 [packed = true];
+}
+
+message way_t {
+	required int64 id = 1;
+	repeated uint32 keys = 2 [packed = true];
+	repeated uint32 vals = 3 [packed = true];
+	repeated sint64 refs = 8 [packed = true];
+}
+
+message relation_t {
+	enum member_type_t {
+		NODE = 0;
+		RAOD = 1;
+		RELATION = 2;
+	}
+
+	required int64 id = 1;
+	repeated uint32 keys = 2 [packed = true];
+	repeated uint32 vals = 3 [packed = true];
+	repeated int32 roles_sid = 8 [packed = true];
+	repeated sint64 member_ids = 9 [packed = true];
+	repeated member_type_t member_types = 10 [packed = true];
+}
