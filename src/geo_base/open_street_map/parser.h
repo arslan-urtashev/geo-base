@@ -59,7 +59,6 @@ public:
 	}
 
 	void parse(reader_t *reader);
-	allocator_t *allocator_;
 
 protected:
 	virtual void process_node(geo_id_t geo_id, location_t const &location,
@@ -71,6 +70,7 @@ protected:
 	virtual void process_relation(geo_id_t geo_id, dynarray_t<kv_t> const &kvs,
 		dynarray_t<reference_t> const &references) = 0;
 
+	allocator_t *allocator_;
 
 private:
 	void process_basic_groups(proto::basic_block_t const &block);
