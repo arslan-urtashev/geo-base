@@ -109,8 +109,6 @@ TEST(osm_parser, run_pool_parse)
 	counters.emplace_back(&allocators[0]);
 	counters.emplace_back(&allocators[1]);
 
-	log_error("%p, %p", counters[0].allocator_, counters[1].allocator_);
-
 	run_pool_parse("test/osm/andorra-latest.osm.pbf", counters);
 
 	EXPECT_EQ(123736ULL, counters[0].nodes_amount + counters[1].nodes_amount);

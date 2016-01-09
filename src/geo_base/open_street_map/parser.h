@@ -85,7 +85,6 @@ private:
 template<typename parser_t>
 void run_pool_parse(reader_t *reader, std::vector<parser_t> &parsers)
 {
-	log_error("%p, %p", parsers[0].allocator_, parsers[1].allocator_);
 	std::vector<std::thread> threads(parsers.size());
 	for (size_t i = 0; i < threads.size(); ++i)
 		threads[i] = std::thread([&] () {
@@ -102,7 +101,6 @@ void run_pool_parse(char const *path, std::vector<parser_t> &parsers)
 	file_t file(path, file_t::READ_ONLY);
 	file_input_stream_t input_stream(file.fd());
 	reader_t reader(&input_stream);
-	log_error("%p, %p", parsers[0].allocator_, parsers[1].allocator_);
 	run_pool_parse(&reader, parsers);
 }
 
