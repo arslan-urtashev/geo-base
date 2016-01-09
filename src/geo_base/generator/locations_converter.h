@@ -58,7 +58,7 @@ bool is_equal_locations(a_t const &a, b_t const &b)
 
 class locations_converter_t {
 public:
-	locations_converter_t(allocator_t *allocator)
+	explicit locations_converter_t(allocator_t *allocator)
 		: allocator_(allocator)
 	{
 	}

@@ -25,7 +25,27 @@ namespace geo_base {
 
 class pool_allocator_t : public allocator_t {
 public:
-	pool_allocator_t(size_t pool_size);
+	pool_allocator_t()
+		: bytes_allocated_(0)
+		, mem_guard_()
+	{
+	}
+
+	pool_allocator_t(pool_allocator_t &&a)
+		: pool_allocator_t()
+	{
+		std::swap(bytes_allocated_, a.bytes_allocated_);
+		std::swap(mem_guard_, a.mem_guard_);
+	}
+
+	pool_allocator_t &operator = (pool_allocator_t &&a)
+	{
+		std::swap(bytes_allocated_, a.bytes_allocated_);
+		std::swap(mem_guard_, a.mem_guard_);
+		return *this;
+	}
+
+	explicit pool_allocator_t(size_t pool_size);
 
 	void *allocate(size_t count) override;
 
@@ -39,6 +59,9 @@ public:
 private:
 	size_t bytes_allocated_;
 	mem_guard_t mem_guard_;
+
+	pool_allocator_t(pool_allocator_t const &) = delete;
+	pool_allocator_t &operator = (pool_allocator_t const &) = delete;
 };
 
 } // namespace geo_base

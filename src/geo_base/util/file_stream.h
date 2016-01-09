@@ -24,7 +24,7 @@ namespace geo_base {
 
 class file_output_stream_t : public output_stream_t {
 public:
-	file_output_stream_t(int fd)
+	explicit file_output_stream_t(int fd)
 		: fd_(fd)
 	{
 	}
@@ -37,7 +37,7 @@ private:
 
 class file_input_stream_t : public input_stream_t {
 public:
-	file_input_stream_t(int fd)
+	explicit file_input_stream_t(int fd)
 		: fd_(fd)
 	{
 	}

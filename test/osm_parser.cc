@@ -33,7 +33,7 @@ using namespace geo_base;
 using namespace open_street_map;
 
 struct counter_t : public parser_t {
-	counter_t(allocator_t *allocator)
+	explicit counter_t(allocator_t *allocator)
 		: parser_t(allocator)
 		, nodes_amount(0)
 		, ways_amount(0)
@@ -41,20 +41,31 @@ struct counter_t : public parser_t {
 	{
 	}
 
-	virtual void process_node(geo_id_t, location_t const &,
-		dynarray_t<kv_t> const &)
+	counter_t(counter_t &&c)
+		: parser_t(std::forward<parser_t>(c))
+		, nodes_amount(0)
+		, ways_amount(0)
+		, relations_amount(0)
+	{
+		std::swap(nodes_amount, c.nodes_amount);
+		std::swap(ways_amount, c.ways_amount);
+		std::swap(relations_amount, c.relations_amount);
+	}
+
+	void process_node(geo_id_t, location_t const &,
+		dynarray_t<kv_t> const &) override
 	{
 		++nodes_amount;
 	}
 
-	virtual void process_way(geo_id_t, dynarray_t<kv_t> const &,
-		dynarray_t<geo_id_t> const &)
+	void process_way(geo_id_t, dynarray_t<kv_t> const &,
+		dynarray_t<geo_id_t> const &) override
 	{
 		++ways_amount;
 	}
 
-	virtual void process_relation(geo_id_t, dynarray_t<kv_t> const &,
-		dynarray_t<reference_t> const &)
+	void process_relation(geo_id_t, dynarray_t<kv_t> const &,
+		dynarray_t<reference_t> const &) override
 	{
 		++relations_amount;
 	}
@@ -62,6 +73,9 @@ struct counter_t : public parser_t {
 	size_t nodes_amount;
 	size_t ways_amount;
 	size_t relations_amount;
+
+	counter_t(counter_t const &) = delete;
+	counter_t &operator = (counter_t const) = delete;
 };
 
 TEST(osm_parser, osm_parser)
@@ -86,11 +100,18 @@ TEST(osm_parser, osm_parser)
 
 TEST(osm_parser, run_pool_parse)
 {
-	pool_allocator_t allocator1(1_mb);
-	pool_allocator_t allocator2(1_mb);
-	std::vector<counter_t> counters{ &allocator1, &allocator2 };
+	std::vector<pool_allocator_t> allocators;
+	std::vector<counter_t> counters;
 
-	run_pool_parse("test/osm/andorra-latest.osm.pbf", counters.data(), counters.size());
+	allocators.emplace_back(1_mb);
+	allocators.emplace_back(1_mb);
+
+	counters.emplace_back(&allocators[0]);
+	counters.emplace_back(&allocators[1]);
+
+	log_error("%p, %p", counters[0].allocator_, counters[1].allocator_);
+
+	run_pool_parse("test/osm/andorra-latest.osm.pbf", counters);
 
 	EXPECT_EQ(123736ULL, counters[0].nodes_amount + counters[1].nodes_amount);
 	EXPECT_EQ(5750ULL, counters[0].ways_amount + counters[1].ways_amount);

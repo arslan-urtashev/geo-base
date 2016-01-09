@@ -27,7 +27,7 @@ namespace geo_base {
 
 class base_allocator_t : public file_t, public allocator_t {
 public:
-	base_allocator_t(char const *path);
+	explicit base_allocator_t(char const *path);
 
 	void *allocate(size_t count) override;
 

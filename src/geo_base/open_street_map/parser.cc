@@ -16,14 +16,12 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include <zlib.h>
+
 #include <geo_base/open_street_map/parser.h>
 #include <geo_base/util/dynarray.h>
 #include <geo_base/util/file.h>
 #include <geo_base/util/file_stream.h>
-
-#include <zlib.h>
-#include <thread>
-#include <future>
 
 namespace geo_base {
 namespace open_street_map {
@@ -163,6 +161,9 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 
 void parser_t::parse(reader_t *reader)
 {
+	if (allocator_ == nullptr)
+		log_error("allocator_ is nullptr");
+
 	proto::blob_header_t header;
 	proto::blob_t blob;
 	proto::basic_block_t block;
@@ -185,23 +186,6 @@ void parser_t::parse(reader_t *reader)
 
 		process_basic_groups(block);
 	}
-}
-
-static void run_pool_parse(reader_t *reader, parser_t *parsers, size_t parsers_count)
-{
-	std::vector<std::future<void>> futures(parsers_count);
-	for (size_t i = 0; i < futures.size(); ++i)
-		futures[i] = std::async(&parser_t::parse, &parsers[i], reader);
-	for (size_t i = 0; i < futures.size(); ++i)
-		futures[i].get();
-}
-
-void run_pool_parse(char const *path, parser_t *parsers, size_t parsers_count)
-{
-	file_t file(path, file_t::READ_ONLY);
-	file_input_stream_t input_stream(file.fd());
-	reader_t reader(&input_stream);
-	run_pool_parse(&reader, parsers, parsers_count);
 }
 
 } // namespace open_street_map

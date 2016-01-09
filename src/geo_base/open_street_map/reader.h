@@ -29,7 +29,7 @@ namespace open_street_map {
 
 class reader_t {
 public:
-    reader_t(input_stream_t *input_stream)
+    explicit reader_t(input_stream_t *input_stream)
         : input_stream_(input_stream)
     {
     }

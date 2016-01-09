@@ -41,6 +41,13 @@ public:
 			log_debug("Guard memory %p, %lu", addr_, length_);
 	}
 
+	mem_guard_t(mem_guard_t &&g)
+		: mem_guard_t()
+	{
+		std::swap(addr_, g.addr_);
+		std::swap(length_, g.length_);
+	}
+
 	mem_guard_t &operator = (mem_guard_t&& g)
 	{
 		std::swap(addr_, g.addr_);

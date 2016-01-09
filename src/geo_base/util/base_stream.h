@@ -27,7 +27,7 @@ namespace geo_base {
 // allocator can be switch to other.
 class base_output_stream_t : public output_stream_t {
 public:
-	base_output_stream_t(allocator_t *allocator)
+	explicit base_output_stream_t(allocator_t *allocator)
 		: allocator_(allocator)
 	{
 	}
