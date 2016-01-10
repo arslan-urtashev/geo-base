@@ -38,11 +38,13 @@ class parser_t {
 public:
 	parser_t()
 		: allocator_(nullptr)
+		, blocks_processed_(0)
 	{
 	}
 	
 	explicit parser_t(allocator_t *allocator)
 		: allocator_(allocator)
+		, blocks_processed_(0)
 	{
 	}
 
@@ -50,9 +52,15 @@ public:
 		: parser_t()
 	{
 		std::swap(allocator_, p.allocator_);
+		std::swap(blocks_processed_, p.blocks_processed_);
 	}
 
 	void parse(reader_t *reader);
+
+	size_t blocks_processed() const
+	{
+		return blocks_processed_;
+	}
 
 protected:
 	virtual void process_node(geo_id_t geo_id, location_t const &location,
@@ -70,6 +78,8 @@ private:
 	void process_basic_groups(proto::basic_block_t const &block);
 
 	void process_dense_nodes(proto::dense_nodes_t const &nodes, proto::basic_block_t const &block);
+
+	size_t blocks_processed_;
 
 	parser_t(parser_t const &) = delete;
 	parser_t &operator = (parser_t const &) = delete;

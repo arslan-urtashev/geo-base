@@ -185,6 +185,8 @@ void parser_t::parse(reader_t *reader)
 			throw exception_t("Unable parse block");
 
 		process_basic_groups(block);
+
+		++blocks_processed_;
 	}
 }
 
