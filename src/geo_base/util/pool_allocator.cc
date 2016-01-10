@@ -17,6 +17,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/util/exception.h>
+#include <geo_base/util/memory.h>
 #include <geo_base/util/pool_allocator.h>
 
 #include <errno.h>
@@ -38,6 +39,7 @@ pool_allocator_t::pool_allocator_t(size_t pool_size)
 
 void *pool_allocator_t::allocate(size_t count)
 {
+	count = align_memory(count);
 	if (bytes_allocated_ + count + sizeof(size_t) > mem_guard_.size())
 		throw std::bad_alloc();
 	char *begin = ((char *) mem_guard_.data()) + bytes_allocated_;
@@ -59,6 +61,7 @@ static void relax_pool(char *begin, size_t *count)
 
 void pool_allocator_t::deallocate(void *ptr, size_t count)
 {
+	count = align_memory(count);
 	char *begin = (char *) ptr;
 	char *end = begin + count;
 	if (*((size_t *) end) != MEMORY_IS_USED_FLAG)

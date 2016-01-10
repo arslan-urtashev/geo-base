@@ -52,12 +52,6 @@ public:
 		std::swap(allocator_, p.allocator_);
 	}
 
-	parser_t &operator = (parser_t &&p)
-	{
-		std::swap(allocator_, p.allocator_);
-		return *this;
-	}
-
 	void parse(reader_t *reader);
 
 protected:

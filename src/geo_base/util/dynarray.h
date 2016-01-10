@@ -58,6 +58,8 @@ public:
 
 	data_t const &operator [] (size_t index) const
 	{
+		if (index >= size_)
+			throw exception_t("Index %lu out of bounds %lu", index, size_);
 		return data_[index];
 	}
 
@@ -73,6 +75,8 @@ public:
 
 	data_t &operator [] (size_t index)
 	{
+		if (index >= size_)
+			throw exception_t("Index %lu out of bounds %lu", index, size_);
 		return data_[index];
 	}
 

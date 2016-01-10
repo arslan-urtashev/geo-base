@@ -37,4 +37,12 @@ inline unsigned long long operator "" _kb (unsigned long long x)
 	return x * (1ull << 10);
 }
 
+inline unsigned long long align_memory(unsigned long long x)
+{
+	static size_t constexpr MEMORY_ALIGNMENT = 16ull;
+	while (x % MEMORY_ALIGNMENT != 0)
+		++x;
+	return x;
+}
+
 } // namespace geo_base

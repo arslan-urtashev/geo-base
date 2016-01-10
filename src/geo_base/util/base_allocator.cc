@@ -17,13 +17,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/util/base_allocator.h>
+#include <geo_base/util/memory.h>
 
 #include <errno.h>
 
 namespace geo_base {
 
 static size_t const BASE_MAX_SIZE = 8ull * (1ull << 30);
-static size_t const BASE_ALIGNMENT = 16ull;
 
 base_allocator_t::base_allocator_t(char const *path)
 	: file_t(path, file_t::READ_WRITE)
@@ -38,8 +38,7 @@ base_allocator_t::base_allocator_t(char const *path)
 
 void *base_allocator_t::allocate(size_t count)
 {
-	while (count % BASE_ALIGNMENT != 0)
-		++count;
+	count = align_memory(count);
 	
 	if (ftruncate(fd(), off_ + count) < 0)
 		throw exception_t("Unable ftrancate: %s", strerror(errno));
