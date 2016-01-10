@@ -91,7 +91,7 @@ void run_pool_parse(reader_t *reader, std::vector<parser_t> &parsers)
 {
 	std::vector<std::thread> threads(parsers.size());
 	for (size_t i = 0; i < threads.size(); ++i)
-		threads[i] = std::thread([&] () {
+		threads[i] = std::thread([&parsers, &reader, i] () {
 			parsers[i].parse(reader);
 		});
 	for (size_t i = 0; i < threads.size(); ++i)

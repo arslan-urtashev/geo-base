@@ -41,8 +41,10 @@ TEST_F(pool_allocator_test_t, pool_allocator)
 
 			a = dynarray_t<int>(10, &pool_allocator);
 
-			ASSERT_EQ(sizeof(int) * 10 + sizeof(long long) * 100 + 2 * sizeof(size_t),
-				pool_allocator.size());
+			ASSERT_EQ(
+				align_memory(sizeof(int) * 10) + align_memory(sizeof(long long) * 100) + 2 * sizeof(size_t),
+				pool_allocator.size()
+			);
 
 			for (int i = 0; i < 100; ++i)
 				ASSERT_EQ(100 - i, array[i]);

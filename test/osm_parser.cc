@@ -114,4 +114,7 @@ TEST(osm_parser, run_pool_parse)
 	EXPECT_EQ(123736ULL, counters[0].nodes_amount + counters[1].nodes_amount);
 	EXPECT_EQ(5750ULL, counters[0].ways_amount + counters[1].ways_amount);
 	EXPECT_EQ(142ULL, counters[0].relations_amount + counters[1].relations_amount);
+
+	log_info("Blocks processed 1 = %lu", counters[0].blocks_processed());
+	log_info("Blobks processed 2 = %lu", counters[1].blocks_processed());
 }
