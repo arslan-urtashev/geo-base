@@ -17,9 +17,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/location.h>
+#include <geo_base/point.h>
+#include <geo_base/proto/region.pb.h>
 #include <geo_base/util/allocator.h>
 #include <geo_base/util/dynarray.h>
-#include <geo_base/proto/region.pb.h>
 
 namespace geo_base {
 namespace generator {

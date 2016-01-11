@@ -33,11 +33,13 @@
 using namespace geo_base;
 using namespace open_street_map;
 
+static char const *OSM_PBF_TEST_FILE = "test/geo_base/open_street_map/andorra-latest.osm.pbf";
+
 TEST(osm_parser, osm_parser)
 {
 	pool_allocator_t allocator(1_mb);
 	
-	file_t file("test/osm/andorra-latest.osm.pbf", file_t::READ_ONLY);
+	file_t file(OSM_PBF_TEST_FILE, file_t::READ_ONLY);
 	file_input_stream_t input_stream(file.fd());
 
 	reader_t reader(&input_stream);
@@ -64,7 +66,7 @@ TEST(osm_parser, run_pool_parse)
 	simple_counters.emplace_back(&allocators[0]);
 	simple_counters.emplace_back(&allocators[1]);
 
-	run_pool_parse("test/osm/andorra-latest.osm.pbf", simple_counters);
+	run_pool_parse(OSM_PBF_TEST_FILE, simple_counters);
 
 	EXPECT_EQ(123736ULL, simple_counters[0].nodes_count() + simple_counters[1].nodes_count());
 	EXPECT_EQ(5750ULL, simple_counters[0].ways_count() + simple_counters[1].ways_count());

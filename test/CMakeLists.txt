@@ -1,27 +1,20 @@
 ADD_EXECUTABLE(
 	run_ut
+	dynarray.cc
 	edge.cc
 	generator.cc
-	hello.cc
-	location_converter.cc
+	locations_converter.cc
 	log.cc
-	osm_parser.cc
+	parser.cc
 	part.cc
 	pool_allocator.cc
-	dynarray.cc
-)
-
-ADD_DEPENDENCIES(
-	run_ut
-	geo-base-proto
+	run_ut.cc
 )
 
 TARGET_LINK_LIBRARIES(
 	run_ut
 	geo-base
-	geo-base-open-street-map
-	geo-base-generator
 	gmock_main
 )
 
-FILE(COPY osm DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+FILE(COPY andorra-latest.osm.pbf DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
