@@ -70,7 +70,7 @@ TEST_F(dynarray_test_t, destructor)
 		for (size_t i = 0; i < 20; ++i)
 			arr.push_back(data_t(&counter, i + 1));
 
-		log_info("counter = %llu", counter);
+		ASSERT_EQ(223ull, counter);
 	}
 
 	ASSERT_EQ(13ull, counter);

@@ -1,7 +1,9 @@
 ADD_EXECUTABLE(
 	run_ut
+	algo.cc
 	dynarray.cc
 	edge.cc
+	exception.cc
 	generator.cc
 	locations_converter.cc
 	log.cc

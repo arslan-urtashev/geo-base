@@ -33,9 +33,9 @@
 using namespace geo_base;
 using namespace open_street_map;
 
-static char const *OSM_PBF_TEST_FILE = "test/geo_base/open_street_map/andorra-latest.osm.pbf";
+static char const *OSM_PBF_TEST_FILE = "test/andorra-latest.osm.pbf";
 
-TEST(osm_parser, osm_parser)
+TEST(open_street_map_parser, parse)
 {
 	pool_allocator_t allocator(1_mb);
 	
@@ -55,7 +55,7 @@ TEST(osm_parser, osm_parser)
 		count.relations_count(), count.ways_count(), count.nodes_count());
 }
 
-TEST(osm_parser, run_pool_parse)
+TEST(open_street_map_parser, run_pool_parse)
 {
 	std::vector<pool_allocator_t> allocators;
 	std::vector<simple_counter_t> simple_counters;
