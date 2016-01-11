@@ -33,19 +33,19 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	size_t threads_count = std::thread::hardware_concurrency();
+	if (threads_count == 0)
+		++threads_count;
+
+	log_info("Threads count: %lu", threads_count);
+
 	std::vector<pool_allocator_t> allocators;
-	
-	allocators.emplace_back(128_mb);
-	allocators.emplace_back(128_mb);
-	allocators.emplace_back(128_mb);
-	allocators.emplace_back(128_mb);
+	for (size_t i = 0; i < threads_count; ++i)
+		allocators.emplace_back(128_mb);
 
 	std::vector<simple_counter_t> counters;
-
-	counters.emplace_back(&allocators[0]);
-	counters.emplace_back(&allocators[1]);
-	counters.emplace_back(&allocators[2]);
-	counters.emplace_back(&allocators[3]);
+	for (size_t i = 0; i < threads_count; ++i)
+		counters.emplace_back(&allocators[i]);
 
 	run_pool_parse(argv[1], counters);
 
