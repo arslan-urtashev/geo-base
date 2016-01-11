@@ -1,3 +1,0 @@
-PROJECT(osmpbf)
-
-ADD_SUBDIRECTORY(osmpbf)
