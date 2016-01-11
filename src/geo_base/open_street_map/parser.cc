@@ -161,9 +161,6 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 
 void parser_t::parse(reader_t *reader)
 {
-	if (allocator_ == nullptr)
-		log_error("allocator_ is nullptr");
-
 	proto::blob_header_t header;
 	proto::blob_t blob;
 	proto::basic_block_t block;
