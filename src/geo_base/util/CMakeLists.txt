@@ -4,5 +4,6 @@ ADD_LIBRARY(
 	file.cc
 	file_stream.cc
 	log.cc
+	mem_file.cc
 	pool_allocator.cc
 )

@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,33 +16,51 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
+#include <geo_base/util/mem_file.h>
 
-#include <stdint.h>
+#include <errno.h>
+#include <sys/stat.h>
 
 namespace geo_base {
 
-inline unsigned long long constexpr operator "" _gb (unsigned long long x)
+void mem_file_t::read_open(char const *path)
 {
-	return x * (1ull << 30);
+	file_t::read_open(path);
+
+	struct stat buf;
+	if (!fstat(fd(), &buf))
+		throw exception_t("Unable fstat %s: %s", path, strerror(errno));
+
+	void *memory = mmap(nullptr, buf.st_size, PROT_READ, MAP_SHARED, fd(), 0);
+	if (memory == MAP_FAILED)
+		throw exception_t("Unable mmap file %s: %s", path, strerror(errno));
+
+	mem_guard_ = mem_guard_t(memory, buf.st_size);
 }
 
-inline unsigned long long constexpr operator "" _mb (unsigned long long x)
+void mem_file_t::read_write_open(char const *path, size_t mmap_size)
 {
-	return x * (1ull << 20);
+	file_t::read_write_open(path);
+
+	void *memory = mmap(nullptr, mmap_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd(), 0);
+	if (memory == MAP_FAILED)
+		throw exception_t("Unable mmap file %s: %s", path, strerror(errno));
+
+	mem_guard_ = mem_guard_t(memory, mmap_size);
 }
 
-inline unsigned long long constexpr operator "" _kb (unsigned long long x)
+mem_file_t make_read_mem_file(char const *path)
 {
-	return x * (1ull << 10);
+	mem_file_t file;
+	file.read_open(path);
+	return file;
 }
 
-inline unsigned long long align_memory(unsigned long long x)
+mem_file_t make_read_write_mem_file(char const *path, size_t mmap_size)
 {
-	static size_t constexpr MEMORY_ALIGNMENT = 16ull;
-	while (x % MEMORY_ALIGNMENT != 0)
-		++x;
-	return x;
+	mem_file_t file;
+	file.read_write_open(path, mmap_size);
+	return file;
 }
 
 } // namespace geo_base

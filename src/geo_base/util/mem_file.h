@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,31 +18,57 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <geo_base/util/file.h>
+#include <geo_base/util/mem_guard.h>
+#include <geo_base/util/memory.h>
 
 namespace geo_base {
 
-inline unsigned long long constexpr operator "" _gb (unsigned long long x)
-{
-	return x * (1ull << 30);
-}
+class mem_file_t : public file_t {
+public:
+	static size_t const DEFAULT_MMAP_SIZE = 16_gb;
 
-inline unsigned long long constexpr operator "" _mb (unsigned long long x)
-{
-	return x * (1ull << 20);
-}
+	mem_file_t()
+		: mem_guard_()
+	{
+	}
 
-inline unsigned long long constexpr operator "" _kb (unsigned long long x)
-{
-	return x * (1ull << 10);
-}
+	mem_file_t(mem_file_t &&f)
+		: file_t(std::forward<file_t>(f))
+	{
+		std::swap(mem_guard_, f.mem_guard_);
+	}
 
-inline unsigned long long align_memory(unsigned long long x)
-{
-	static size_t constexpr MEMORY_ALIGNMENT = 16ull;
-	while (x % MEMORY_ALIGNMENT != 0)
-		++x;
-	return x;
-}
+	mem_file_t &operator = (mem_file_t &&f)
+	{
+		file_t::operator = (std::forward<file_t>(f));
+		std::swap(mem_guard_, f.mem_guard_);
+		return *this;
+	}
+
+	void read_open(char const *path);
+
+	void read_write_open(char const *path, size_t mmap_size = DEFAULT_MMAP_SIZE);
+
+	void *data() const
+	{
+		return mem_guard_.data();
+	}
+
+	size_t size() const
+	{
+		return mem_guard_.size();
+	}
+
+private:
+	mem_guard_t mem_guard_;
+
+	mem_file_t(mem_file_t const &) = delete;
+	mem_file_t &operator = (mem_file_t const &) = delete;
+};
+
+mem_file_t make_read_mem_file(char const *path);
+
+mem_file_t make_read_write_mem_file(char const *path, size_t mmap_size = mem_file_t::DEFAULT_MMAP_SIZE);
 
 } // namespace geo_base
