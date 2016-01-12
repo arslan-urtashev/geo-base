@@ -27,9 +27,10 @@
 #include <geo_base/open_street_map/reader.h>
 #include <geo_base/util/allocator.h>
 #include <geo_base/util/dynarray.h>
-#include <geo_base/util/log.h>
 #include <geo_base/util/file.h>
 #include <geo_base/util/file_stream.h>
+#include <geo_base/util/log.h>
+#include <geo_base/util/stop_watch.h>
 
 namespace geo_base {
 namespace open_street_map {
@@ -102,10 +103,19 @@ void run_pool_parse(reader_t *reader, std::vector<parser_t> &parsers)
 template<typename parser_t>
 void run_pool_parse(char const *path, std::vector<parser_t> &parsers)
 {
-	file_t file(path, file_t::READ_ONLY);
-	file_input_stream_t input_stream(file.fd());
-	reader_t reader(&input_stream);
-	run_pool_parse(&reader, parsers);
+	log_info("Parse %s", path);
+
+	stop_watch_t stop_watch;
+	stop_watch.run();
+
+	{
+		file_t file(path, file_t::READ_ONLY);
+		file_input_stream_t input_stream(file.fd());
+		reader_t reader(&input_stream);
+		run_pool_parse(&reader, parsers);
+	}
+
+	log_info("Parsed %s in %.3f seconds", path, stop_watch.get());
 }
 
 } // namespace open_street_map
