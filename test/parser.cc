@@ -39,7 +39,7 @@ TEST(open_street_map_parser, parse)
 {
 	pool_allocator_t allocator(1_mb);
 	
-	file_t file(OSM_PBF_TEST_FILE, file_t::READ_ONLY);
+	file_t file = make_read_file(OSM_PBF_TEST_FILE);
 	file_input_stream_t input_stream(file.fd());
 
 	reader_t reader(&input_stream);

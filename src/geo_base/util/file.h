@@ -24,12 +24,26 @@ namespace geo_base {
 
 class file_t {
 public:
-	enum mode_t {
-		READ_ONLY,
-		READ_WRITE
-	};
+	file_t()
+		: fd_guard_()
+	{
+	}
 
-	file_t(char const *path, mode_t mode);
+	file_t(file_t &&f)
+		: fd_guard_()
+	{
+		std::swap(fd_guard_, f.fd_guard_);
+	}
+
+	file_t &operator = (file_t &&f)
+	{
+		std::swap(fd_guard_, f.fd_guard_);
+		return *this;
+	}
+
+	void read_open(char const *path);
+
+	void read_write_open(char const *path);
 
 	int fd() const
 	{
@@ -38,6 +52,13 @@ public:
 
 private:
 	fd_guard_t fd_guard_;
+
+	file_t(file_t const &) = delete;
+	file_t &operator = (file_t const &) = delete;
 };
+
+file_t make_read_write_file(char const *path);
+
+file_t make_read_file(char const *path);
 
 } // namespace geo_base

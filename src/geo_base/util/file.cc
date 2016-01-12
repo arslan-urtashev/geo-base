@@ -27,24 +27,34 @@
 
 namespace geo_base {
 
-static int open(char const *path, file_t::mode_t mode)
+void file_t::read_open(char const *path)
 {
-	switch (mode) {
-	case file_t::READ_ONLY:
-		return ::open(path, O_RDONLY);
-	case file_t::READ_WRITE:
-		return ::open(path, O_RDWR | O_CREAT | O_TRUNC, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
-	default:
-		throw exception_t("Unable open file in mode: %d", (int) mode);
-	}
-}
-
-file_t::file_t(char const *path, mode_t mode)
-{
-	int fd = open(path, mode);
+	int fd = open(path, O_RDONLY);
 	if (fd < 0)
 		throw exception_t("Unable open %s: %s", path, strerror(errno));
 	fd_guard_ = fd_guard_t(fd);
+}
+
+void file_t::read_write_open(char const *path)
+{
+	int fd = open(path, O_RDWR | O_CREAT | O_TRUNC, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+	if (fd < 0)
+		throw exception_t("Unable open %s: %s", path, strerror(errno));
+	fd_guard_ = fd_guard_t(fd);
+}
+
+file_t make_read_write_file(char const *path)
+{
+	file_t file;
+	file.read_write_open(path);
+	return file;
+}
+
+file_t make_read_file(char const *path)
+{
+	file_t file;
+	file.read_open(path);
+	return file;
 }
 
 } // namespace geo_base

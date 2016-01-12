@@ -26,7 +26,7 @@ namespace geo_base {
 static size_t const BASE_MAX_SIZE = 8ull * (1ull << 30);
 
 base_allocator_t::base_allocator_t(char const *path)
-	: file_t(path, file_t::READ_WRITE)
+	: file_t(make_read_write_file(path))
 	, off_(0)
 	, mem_guard_()
 {
