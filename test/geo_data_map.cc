@@ -16,6 +16,7 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include <geo_base/generator/generator.h>
 #include <geo_base/geo_data_map.h>
 #include <geo_base/util/pool_allocator.h>
 #include <test/geo_base_test.h>
@@ -69,4 +70,34 @@ TEST_F(geo_data_map_test_t, simple_serialize)
 	geo_data_map_t geo_data_map2(geo_data_map1.data(), geo_data_map1.size());
 
 	EXPECT_TRUE(geo_data_map1 == geo_data_map2);
+}
+
+TEST_F(geo_data_map_test_t, fake_data_serialize)
+{
+	pool_allocator_t allocator(1_mb);
+	pool_allocator_t serialize_allocator(1_mb);
+
+	generator::geo_data_test_t geo_data;
+	generator::generator_t generator(&geo_data, &allocator);
+
+	dynarray_t<point_t> points(4, &allocator);
+	points.push_back(point_t(to_coordinate(0), to_coordinate(0)));
+	points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
+	points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
+	points.push_back(point_t(to_coordinate(10), to_coordinate(10)));
+
+	generator.update(123, 123, points, false);
+
+	generator.fini();
+
+	geo_data_map_t geo_data_map1(geo_data, &serialize_allocator);
+	geo_data_map_t geo_data_map2(geo_data_map1.data(), geo_data_map1.size());
+
+	EXPECT_TRUE(geo_data_map1 == geo_data_map2);
+
+	EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(5, 5)));
+	EXPECT_EQ(UNKNOWN_GEO_ID, geo_data_map2.lookup(location_t(-1, -1)));
+	EXPECT_EQ(UNKNOWN_GEO_ID, geo_data_map2.lookup(location_t(0, 3)));
+	EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(4, 0)));
+	EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(5, 5)));
 }
