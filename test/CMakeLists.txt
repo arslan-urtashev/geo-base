@@ -8,6 +8,7 @@ ADD_EXECUTABLE(
 	generator.cc
 	locations_converter.cc
 	log.cc
+	mem_file.cc
 	parser.cc
 	part.cc
 	pool_allocator.cc

@@ -28,7 +28,7 @@ void mem_file_t::read_open(char const *path)
 	file_t::read_open(path);
 
 	struct stat buf;
-	if (!fstat(fd(), &buf))
+	if (fstat(fd(), &buf) < 0)
 		throw exception_t("Unable fstat %s: %s", path, strerror(errno));
 
 	void *memory = mmap(nullptr, buf.st_size, PROT_READ, MAP_SHARED, fd(), 0);

@@ -17,48 +17,57 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <gmock/gmock.h>
-#include <geo_base/util/file.h>
+#include <geo_base/util/mem_file.h>
 
 using namespace geo_base;
 
-TEST(file_t, read_open)
+#define ASSERT_MEM_EQ(file) \
+	ASSERT_EQ(-1, file.fd()); \
+	ASSERT_EQ(nullptr, file.data()); \
+	ASSERT_EQ(0ull, file.size());
+
+#define ASSERT_MEM_NE(file) \
+	ASSERT_NE(-1, file.fd()); \
+	ASSERT_NE(nullptr, file.data()); \
+	ASSERT_NE(0ull, file.size());
+
+TEST(mem_file_t, read_open)
 {
-	file_t file;
-	ASSERT_EQ(-1, file.fd());
+	mem_file_t file;
+	ASSERT_MEM_EQ(file);
 
 	file.read_open("test/andorra-latest.osm.pbf");
-	ASSERT_NE(-1, file.fd());
+	ASSERT_MEM_NE(file);
 }
 
-TEST(file_t, read_open_wrong_file)
+TEST(mem_file_t, read_open_wrong_file)
 {
-	file_t file;
-	ASSERT_EQ(-1, file.fd());
+	mem_file_t file;
+	ASSERT_MEM_EQ(file);
 	EXPECT_THROW(file.read_open("wrong_file"), exception_t);
 }
 
-TEST(file_t, move)
+TEST(mem_file_t, move)
 {
-	file_t file;
-	ASSERT_EQ(-1, file.fd());
+	mem_file_t file;
+	ASSERT_MEM_EQ(file);
 
 	{
-		file_t file1;
+		mem_file_t file1;
 		file1.read_open("test/andorra-latest.osm.pbf");
-
-		ASSERT_NE(-1, file1.fd());
+		ASSERT_MEM_NE(file1);
 
 		file = std::move(file1);
 
-		ASSERT_NE(-1, file.fd());
-		ASSERT_EQ(-1, file1.fd());
+		ASSERT_MEM_EQ(file1);
+		ASSERT_MEM_NE(file);
 	}
 }
 
-TEST(file_t, read_write)
+TEST(mem_file_t, read_mmap)
 {
-	static std::string const FILENAME = "file_test.txt";
-	static std::string const TEXT = "Hello, world!";
+	static std::string const FILENAME = "mem_file_test.txt";
+	static std::string const TEXT = "Hello, world!\0";
 
 	{
 		file_t file;
@@ -67,14 +76,9 @@ TEST(file_t, read_write)
 	}
 
 	{
-		file_t file;
-		file.read_open(FILENAME.data());
-
-		char buffer[TEXT.size() + 1];
-		buffer[TEXT.size()] = '\0';
-		ASSERT_EQ((int) TEXT.size(), read(file.fd(), buffer, TEXT.size()));
-
-		ASSERT_STREQ(TEXT.data(), buffer);
+		mem_file_t mem_file;
+		mem_file.read_open(FILENAME.data());
+		ASSERT_STREQ(TEXT.data(), (char const *) mem_file.data());
 	}
 
 	ASSERT_EQ(0, remove(FILENAME.data()));
