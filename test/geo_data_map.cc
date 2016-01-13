@@ -19,6 +19,7 @@
 #include <geo_base/generator/generator.h>
 #include <geo_base/geo_data_map.h>
 #include <geo_base/util/pool_allocator.h>
+#include <geo_base/util/stop_watch.h>
 #include <test/geo_base_test.h>
 
 using namespace geo_base;
@@ -87,9 +88,13 @@ TEST_F(geo_data_map_test_t, fake_data_serialize)
 	points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
 	points.push_back(point_t(to_coordinate(10), to_coordinate(10)));
 
-	generator.update(123, 123, points, false);
+	stop_watch_t stop_watch;
+	stop_watch.run();
 
+	generator.update(123, 123, points, false);
 	generator.fini();
+
+	log_info("geo_data generated in %.3f seconds", stop_watch.get());
 
 	geo_data_map_t geo_data_map1(geo_data, &serialize_allocator);
 	geo_data_map_t geo_data_map2(geo_data_map1.data(), geo_data_map1.size());
