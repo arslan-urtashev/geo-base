@@ -54,3 +54,28 @@ TEST(file_t, move)
 		ASSERT_EQ(-1, file1.fd());
 	}
 }
+
+TEST(file_t, read_write)
+{
+	static std::string const FILENAME = "hello_world.txt";
+	static std::string const TEXT = "Hello, world!";
+
+	{
+		file_t file;
+		file.read_write_open(FILENAME.data());
+		ASSERT_EQ((int) TEXT.size(), write(file.fd(), TEXT.data(), TEXT.size()));
+	}
+
+	{
+		file_t file;
+		file.read_open(FILENAME.data());
+
+		char buffer[TEXT.size() + 1];
+		buffer[TEXT.size()] = '\0';
+		ASSERT_EQ((int) TEXT.size(), read(file.fd(), buffer, TEXT.size()));
+
+		ASSERT_STREQ(TEXT.data(), buffer);
+	}
+
+	ASSERT_EQ(0, remove(FILENAME.data()));
+}
