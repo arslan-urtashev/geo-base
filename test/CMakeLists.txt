@@ -7,7 +7,6 @@ ADD_EXECUTABLE(
 	exception.cc
 	file.cc
 	generator.cc
-	geo_data_serialize.cc
 	locations_converter.cc
 	log.cc
 	mem_file.cc
