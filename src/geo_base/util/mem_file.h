@@ -67,8 +67,4 @@ private:
 	mem_file_t &operator = (mem_file_t const &) = delete;
 };
 
-mem_file_t make_read_mem_file(char const *path);
-
-mem_file_t make_read_write_mem_file(char const *path, size_t mmap_size = mem_file_t::DEFAULT_MMAP_SIZE);
-
 } // namespace geo_base

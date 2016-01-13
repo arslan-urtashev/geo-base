@@ -109,7 +109,8 @@ void run_pool_parse(char const *path, std::vector<parser_t> &parsers)
 	stop_watch.run();
 
 	{
-		file_t file = make_read_file(path);
+		file_t file;
+		file.read_open(path);
 		file_input_stream_t input_stream(file.fd());
 		reader_t reader(&input_stream);
 		run_pool_parse(&reader, parsers);

@@ -49,18 +49,4 @@ void mem_file_t::read_write_open(char const *path, size_t mmap_size)
 	mem_guard_ = mem_guard_t(memory, mmap_size);
 }
 
-mem_file_t make_read_mem_file(char const *path)
-{
-	mem_file_t file;
-	file.read_open(path);
-	return file;
-}
-
-mem_file_t make_read_write_mem_file(char const *path, size_t mmap_size)
-{
-	mem_file_t file;
-	file.read_write_open(path, mmap_size);
-	return file;
-}
-
 } // namespace geo_base

@@ -57,8 +57,4 @@ private:
 	file_t &operator = (file_t const &) = delete;
 };
 
-file_t make_read_write_file(char const *path);
-
-file_t make_read_file(char const *path);
-
 } // namespace geo_base

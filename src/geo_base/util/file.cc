@@ -43,18 +43,4 @@ void file_t::read_write_open(char const *path)
 	fd_guard_ = fd_guard_t(fd);
 }
 
-file_t make_read_write_file(char const *path)
-{
-	file_t file;
-	file.read_write_open(path);
-	return file;
-}
-
-file_t make_read_file(char const *path)
-{
-	file_t file;
-	file.read_open(path);
-	return file;
-}
-
 } // namespace geo_base
