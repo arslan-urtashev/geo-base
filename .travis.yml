@@ -38,8 +38,8 @@ before_install:
 
 script: 
   - if [ $TRAVIS_OS_NAME == linux ]; then
-      cmake . && make VERBOSE=1 && valgrind --error-exitcode=1 ./test/run_ut
+      cmake . && make VERBOSE=1 && valgrind --error-exitcode=1 ./test/run_ut;
     fi
   - if [ $TRAVIS_OS_NAME == osx ]; then
-      cmake . && make VERBOSE=1 && ./test/run_ut
+      cmake . && make VERBOSE=1 && ./test/run_ut;
     fi
