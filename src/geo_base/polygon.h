@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2015,2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //   
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -46,6 +46,16 @@ struct polygon_t {
 
 	// Square of polygon. Need for determine which polygon is better. See better member function.
 	square_t square;
+
+	polygon_t()
+		: is_inner(false)
+		, region_id(UNKNOWN_GEO_ID)
+		, polygon_id(UNKNOWN_GEO_ID)
+		, parts_offset(0)
+		, parts_count(0)
+		, rectangle()
+	{
+	}
 
 	// Fast point in polygon test using persistent scanline. You can see how this data structure
 	// generated in geo_base/generator/.
