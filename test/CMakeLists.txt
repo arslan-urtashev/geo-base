@@ -4,6 +4,7 @@ ADD_EXECUTABLE(
 	dynarray.cc
 	edge.cc
 	exception.cc
+	file.cc
 	generator.cc
 	locations_converter.cc
 	log.cc
