@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,28 +16,32 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
+#include <gmock/gmock.h>
+#include <geo_base/util/base_allocator.h>
 
-#include <geo_base/util/allocator.h>
-#include <geo_base/util/exception.h>
-#include <geo_base/util/file.h>
-#include <geo_base/util/mem_file.h>
+using namespace geo_base;
 
-namespace geo_base {
+TEST(base_allocator, base_allocator)
+{
+	static std::string const FILENAME = "base_allocator_test.txt";
+	static std::string const TEXT = "Hello, base_allocator_t world!\0";
 
-class base_allocator_t : public mem_file_t, public allocator_t {
-public:
-	explicit base_allocator_t(char const *path);
-
-	void *allocate(size_t count) override;
-
-	void deallocate(void *, size_t) override
 	{
-		throw exception_t("Unable to deallocate in base_allocator_t");
+		base_allocator_t allocator(FILENAME.data());
+
+		char *ptr = (char *) allocator.allocate(TEXT.size());
+		ASSERT_NE(nullptr, ptr);
+
+		std::copy(TEXT.begin(), TEXT.end(), ptr);
 	}
 
-private:
-	off_t off_;
-};
+	{
+		mem_file_t mem_file;
+		mem_file.read_open(FILENAME.data());
 
-} // namespace geo_base
+		ASSERT_EQ(align_memory(TEXT.size()), mem_file.size());
+		ASSERT_STREQ(TEXT.data(), (char const *) mem_file.data());
+	}
+
+	ASSERT_EQ(0, remove(FILENAME.data()));
+}

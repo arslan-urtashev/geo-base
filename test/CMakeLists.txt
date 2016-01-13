@@ -1,6 +1,7 @@
 ADD_EXECUTABLE(
 	run_ut
 	algo.cc
+	base_allocator.cc
 	dynarray.cc
 	edge.cc
 	exception.cc

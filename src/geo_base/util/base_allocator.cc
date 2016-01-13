@@ -23,17 +23,10 @@
 
 namespace geo_base {
 
-static size_t const BASE_MAX_SIZE = 8ull * (1ull << 30);
-
 base_allocator_t::base_allocator_t(char const *path)
-	: file_t(make_read_write_file(path))
+	: mem_file_t(make_read_write_mem_file(path))
 	, off_(0)
-	, mem_guard_()
 {
-	void *memory = mmap(nullptr, BASE_MAX_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd(), 0);
-	if (memory == MAP_FAILED)
-		throw exception_t("Unable init binary base allocator: %s", strerror(errno));
-	mem_guard_ = mem_guard_t(memory, BASE_MAX_SIZE);
 }
 
 void *base_allocator_t::allocate(size_t count)
@@ -45,7 +38,7 @@ void *base_allocator_t::allocate(size_t count)
 
 	off_ += count;
 	
-	return ((char *) mem_guard_.data()) + off_ - count;
+	return ((char *) data()) + off_ - count;
 }
 
 } // namespace geo_base
