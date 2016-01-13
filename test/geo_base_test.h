@@ -19,6 +19,7 @@
 #include <gmock/gmock.h>
 
 #include <geo_base/edge.h>
+#include <geo_base/generator/geo_data.h>
 #include <geo_base/geo_data.h>
 #include <geo_base/util/log.h>
 
@@ -133,11 +134,11 @@ namespace generator {
 class geo_data_test_t : public geo_data_t {
 #define GEO_BASE_DEF_VAR(var_t, var) \
 public: \
-	virtual var_t const &var() const \
+	var_t const &var() const override \
 	{ \
 		return var##_; \
 	} \
-	virtual void set_##var(var_t const &v) \
+	void set_##var(var_t const &v) override \
 	{ \
 		var##_ = v; \
 	} \
@@ -146,19 +147,19 @@ private: \
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
 public: \
-	virtual arr_t const *arr() const \
+	arr_t const *arr() const override \
 	{ \
 		return arr##_.data(); \
 	} \
-	virtual arr_t *mut_##arr() \
+	arr_t *mut_##arr() override \
 	{ \
 		return arr##_.data(); \
 	} \
-	virtual count_t arr##_count() const \
+	count_t arr##_count() const override \
 	{ \
 		return arr##_.size(); \
 	} \
-	virtual void arr##_append(arr_t const &a) \
+	void arr##_append(arr_t const &a) override \
 	{ \
 		arr##_.push_back(a); \
 	} \
@@ -170,13 +171,28 @@ private: \
 #undef GEO_BASE_DEF_VAR
 #undef GEO_BASE_DEF_ARR
 
-	virtual ref_t insert(point_t const &p)
+public:
+	geo_data_test_t()
+	{
+#define GEO_BASE_DEF_VAR(var_t, var) \
+		var##_ = var_t();
+
+#define GEO_BASE_DEF_ARR(arr_t, arr) \
+		// undef
+
+		GEO_BASE_DEF_GEO_DATA
+
+#undef GEO_BASE_DEF_VAR
+#undef GEO_BASE_DEF_ARR
+	}
+
+	ref_t insert(point_t const &p) override
 	{
 		points_.push_back(p);
 		return points_.size() - 1;
 	}
 
-	virtual ref_t insert(edge_t const &e)
+	ref_t insert(edge_t const &e) override
 	{
 		edges_.push_back(e);
 		return edges_.size() - 1;
