@@ -18,26 +18,24 @@
 
 #pragma once
 
-#include <geo_base/util/allocator.h>
+#include <geo_base/util/block_allocator.h>
 #include <geo_base/util/exception.h>
 #include <geo_base/util/file.h>
 #include <geo_base/util/mem_file.h>
 
 namespace geo_base {
 
-class base_allocator_t : public mem_file_t, public allocator_t {
+class base_allocator_t : public mem_file_t, public block_allocator_t {
 public:
 	explicit base_allocator_t(char const *path);
 
 	void *allocate(size_t count) override;
 
-	void deallocate(void *, size_t) override
-	{
-		throw exception_t("Unable to deallocate in base_allocator_t");
-	}
+	void deallocate(void *, size_t) override;
 
 private:
-	off_t off_;
+	base_allocator_t(base_allocator_t const &) = delete;
+	base_allocator_t &operator = (base_allocator_t const &) = delete;
 };
 
 } // namespace geo_base

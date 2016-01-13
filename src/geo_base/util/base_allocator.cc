@@ -24,21 +24,23 @@
 namespace geo_base {
 
 base_allocator_t::base_allocator_t(char const *path)
-	: mem_file_t(make_read_write_mem_file(path))
-	, off_(0)
 {
+	read_write_open(path);
+	setup(data(), size());
 }
 
 void *base_allocator_t::allocate(size_t count)
 {
-	count = align_memory(count);
-	
-	if (ftruncate(fd(), off_ + count) < 0)
+	if (ftruncate(fd(), total_allocated_size() + allocate_size(count)) < 0)
 		throw exception_t("Unable ftrancate: %s", strerror(errno));
+	return block_allocator_t::allocate(count);
+}
 
-	off_ += count;
-	
-	return ((char *) data()) + off_ - count;
+void base_allocator_t::deallocate(void *ptr, size_t count)
+{
+	block_allocator_t::deallocate(ptr, count);
+	if (ftruncate(fd(), total_allocated_size()) < 0)
+		throw exception_t("Unable ftrancate: %s", strerror(errno));
 }
 
 } // namespace geo_base

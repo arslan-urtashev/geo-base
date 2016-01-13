@@ -45,7 +45,7 @@ TEST_F(pool_allocator_test_t, pool_allocator)
 			expected_memory_size += align_memory(sizeof(long long) * 100);
 			expected_memory_size += 2 * align_memory(sizeof(size_t));
 
-			ASSERT_EQ(expected_memory_size, pool_allocator.size());
+			ASSERT_EQ(expected_memory_size, pool_allocator.total_allocated_size());
 
 			for (int i = 0; i < 100; ++i)
 				ASSERT_EQ(100 - i, array[i]);
@@ -71,7 +71,7 @@ TEST_F(pool_allocator_test_t, pool_allocator)
 			ASSERT_EQ(i, a[i]);
 	}
 
-	ASSERT_EQ(0ULL, pool_allocator.size());
+	ASSERT_EQ(0ULL, pool_allocator.total_allocated_size());
 }
 
 TEST_F(pool_allocator_test_t, alignment)

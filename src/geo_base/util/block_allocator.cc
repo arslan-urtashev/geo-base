@@ -37,6 +37,11 @@ void *block_allocator_t::allocate(size_t count)
 	return begin;
 }
 
+size_t block_allocator_t::allocate_size(size_t count) const
+{
+	return align_memory(count) + SIZEOF_SIZE;
+}
+
 static void relax_block(char *begin, size_t *count)
 {
 	while (*count > 0) {

@@ -39,7 +39,7 @@ TEST(base_allocator, base_allocator)
 		mem_file_t mem_file;
 		mem_file.read_open(FILENAME.data());
 
-		ASSERT_EQ(align_memory(TEXT.size()), mem_file.size());
+		ASSERT_EQ(align_memory(TEXT.size()) + align_memory(sizeof(size_t)), mem_file.size());
 		ASSERT_STREQ(TEXT.data(), (char const *) mem_file.data());
 	}
 

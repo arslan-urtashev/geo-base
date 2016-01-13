@@ -26,7 +26,7 @@ namespace geo_base {
 
 class mem_file_t : public file_t {
 public:
-	static size_t const DEFAULT_MMAP_SIZE = 16_gb;
+	static size_t const DEFAULT_MMAP_SIZE = 8_gb;
 
 	mem_file_t()
 		: mem_guard_()

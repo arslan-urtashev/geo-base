@@ -58,9 +58,11 @@ public:
 
 	void *allocate(size_t count) override;
 
+	size_t allocate_size(size_t count) const;
+
 	void deallocate(void *ptr, size_t count) override;
 
-	size_t size() const
+	size_t total_allocated_size() const
 	{
 		return bytes_allocated_;
 	}
