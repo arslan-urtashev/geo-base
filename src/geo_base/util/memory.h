@@ -41,9 +41,9 @@ inline unsigned long long constexpr operator "" _kb (unsigned long long x)
 
 inline unsigned long long align_memory(unsigned long long x)
 {
-	while (x % MEMORY_ALIGNMENT != 0)
-		++x;
-	return x;
+	if (x % MEMORY_ALIGNMENT == 0)
+		return x;
+	return x + MEMORY_ALIGNMENT - x % MEMORY_ALIGNMENT;
 }
 
 inline bool is_aligned_memory(void *ptr)
