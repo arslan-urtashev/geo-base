@@ -69,6 +69,7 @@ TEST_F(geo_data_map_test_t, simple_serialize)
 	geo_data_map_t geo_data_map1(geo_data, &allocator);
 	geo_data_map_t geo_data_map2(geo_data_map1.data(), geo_data_map1.size());
 
+	EXPECT_TRUE(geo_data_map1 == geo_data);
 	EXPECT_TRUE(geo_data_map1 == geo_data_map2);
 }
 
@@ -93,6 +94,7 @@ TEST_F(geo_data_map_test_t, fake_data_serialize)
 	geo_data_map_t geo_data_map1(geo_data, &serialize_allocator);
 	geo_data_map_t geo_data_map2(geo_data_map1.data(), geo_data_map1.size());
 
+	EXPECT_TRUE(geo_data_map1 == geo_data);
 	EXPECT_TRUE(geo_data_map1 == geo_data_map2);
 
 	EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(5, 5)));
