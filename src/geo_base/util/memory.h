@@ -22,6 +22,8 @@
 
 namespace geo_base {
 
+size_t constexpr MEMORY_ALIGNMENT = 16ull;
+
 inline unsigned long long constexpr operator "" _gb (unsigned long long x)
 {
 	return x * (1ull << 30);
@@ -39,10 +41,14 @@ inline unsigned long long constexpr operator "" _kb (unsigned long long x)
 
 inline unsigned long long align_memory(unsigned long long x)
 {
-	static size_t constexpr MEMORY_ALIGNMENT = 16ull;
 	while (x % MEMORY_ALIGNMENT != 0)
 		++x;
 	return x;
+}
+
+inline bool is_aligned_memory(void *ptr)
+{
+	return ((uintptr_t) ptr) % MEMORY_ALIGNMENT == 0;
 }
 
 } // namespace geo_base

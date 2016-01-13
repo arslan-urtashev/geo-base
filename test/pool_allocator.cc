@@ -40,10 +40,12 @@ TEST_F(pool_allocator_test_t, pool_allocator)
 
 			a = dynarray_t<int>(10, &pool_allocator);
 
-			ASSERT_EQ(
-				align_memory(sizeof(int) * 10) + align_memory(sizeof(long long) * 100) + 2 * sizeof(size_t),
-				pool_allocator.size()
-			);
+			size_t expected_memory_size = 0;
+			expected_memory_size += align_memory(sizeof(int) * 10);
+			expected_memory_size += align_memory(sizeof(long long) * 100);
+			expected_memory_size += 2 * align_memory(sizeof(size_t));
+
+			ASSERT_EQ(expected_memory_size, pool_allocator.size());
 
 			for (int i = 0; i < 100; ++i)
 				ASSERT_EQ(100 - i, array[i]);
@@ -70,4 +72,21 @@ TEST_F(pool_allocator_test_t, pool_allocator)
 	}
 
 	ASSERT_EQ(0ULL, pool_allocator.size());
+}
+
+TEST_F(pool_allocator_test_t, alignment)
+{
+	pool_allocator_t pool_allocator(8_kb);
+
+	dynarray_t<long long> a(100, &pool_allocator);
+	ASSERT_TRUE(is_aligned_memory(a.data()));
+
+	dynarray_t<int> b(100, &pool_allocator);
+	ASSERT_TRUE(is_aligned_memory(b.data()));
+
+	dynarray_t<short> c(23, &pool_allocator);
+	ASSERT_TRUE(is_aligned_memory(c.data()));
+
+	dynarray_t<double> d(77, &pool_allocator);
+	ASSERT_TRUE(is_aligned_memory(d.data()));
 }
