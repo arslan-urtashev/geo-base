@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,41 +16,46 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
-
 #include <geo_base/util/block_allocator.h>
-#include <geo_base/util/mem_guard.h>
+
+#include <new>
 
 namespace geo_base {
 
-class pool_allocator_t : public block_allocator_t {
-public:
-	pool_allocator_t()
-		: mem_guard_()
-	{
+static size_t const MEMORY_IS_USED_FLAG = ~0ull;
+static size_t const SIZEOF_SIZE = align_memory(sizeof(size_t));
+
+void *block_allocator_t::allocate(size_t count)
+{
+	count = align_memory(count);
+	if (bytes_allocated_ + count + SIZEOF_SIZE > bytes_limit_)
+		throw std::bad_alloc();
+	char *begin = ((char *) data_) + bytes_allocated_;
+	char *end = begin + count;
+	*((size_t *) end) = MEMORY_IS_USED_FLAG;
+	bytes_allocated_ += count + SIZEOF_SIZE;
+	return begin;
+}
+
+static void relax_block(char *begin, size_t *count)
+{
+	while (*count > 0) {
+		char *ptr = begin + *count - SIZEOF_SIZE;
+		if (*((size_t *) ptr) == MEMORY_IS_USED_FLAG)
+			return;
+		*count -= *((size_t *) ptr) + SIZEOF_SIZE;
 	}
+}
 
-	pool_allocator_t(pool_allocator_t &&a)
-		: block_allocator_t(std::forward<block_allocator_t>(a))
-		, mem_guard_()
-	{
-		std::swap(mem_guard_, a.mem_guard_);
-	}
-
-	pool_allocator_t &operator = (pool_allocator_t &&a)
-	{
-		block_allocator_t::operator = (std::forward<block_allocator_t>(a));
-		std::swap(mem_guard_, a.mem_guard_);
-		return *this;
-	}
-
-	explicit pool_allocator_t(size_t pool_size);
-
-private:
-	mem_guard_t mem_guard_;
-
-	pool_allocator_t(pool_allocator_t const &) = delete;
-	pool_allocator_t &operator = (pool_allocator_t const &) = delete;
-};
+void block_allocator_t::deallocate(void *ptr, size_t count)
+{
+	count = align_memory(count);
+	char *begin = (char *) ptr;
+	char *end = begin + count;
+	if (*((size_t *) end) != MEMORY_IS_USED_FLAG)
+		throw exception_t("Trying to deallocate not allocated pointer %p", ptr);
+	*((size_t *) end) = count;
+	relax_block((char *) data_, &bytes_allocated_);
+}
 
 } // namespace geo_base

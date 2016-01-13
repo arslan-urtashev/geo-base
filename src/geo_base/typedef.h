@@ -28,6 +28,7 @@ typedef int64_t square_t;
 typedef uint32_t count_t;
 typedef uint32_t ref_t;
 typedef uint64_t version_t;
+typedef uintptr_t ptr_offset_t;
 
 inline coordinate_t to_coordinate(double x)
 {

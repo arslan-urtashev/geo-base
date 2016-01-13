@@ -35,7 +35,7 @@ public:
 class geo_data_test_t : public geo_data_t {
 #define GEO_BASE_DEF_VAR(var_t, var) \
 public: \
-	virtual var_t const &var() const \
+	var_t const &var() const override \
 	{ \
 		return var##_; \
 	} \
@@ -44,10 +44,12 @@ protected: \
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
 public: \
-	virtual arr_t const *arr() const { \
+	arr_t const *arr() const override \
+	{ \
 		return arr##_.data(); \
 	} \
-	virtual count_t arr##_count() const { \
+	count_t arr##_count() const override \
+	{ \
 		return arr##_.size(); \
 	} \
 protected: \

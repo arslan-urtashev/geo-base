@@ -25,50 +25,14 @@
 
 namespace geo_base {
 
-static size_t const MEMORY_IS_USED_FLAG = ~0ull;
-static size_t const SIZEOF_SIZE = align_memory(sizeof(size_t));
-
 pool_allocator_t::pool_allocator_t(size_t pool_size)
-	: bytes_allocated_(0)
-	, mem_guard_()
+	: mem_guard_()
 {
 	void *memory = mmap(nullptr, pool_size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_SHARED, -1, 0);
 	if (memory == MAP_FAILED)
 		throw exception_t("Can't init pool allocator: %s", strerror(errno));
 	mem_guard_ = mem_guard_t(memory, pool_size);
-}
-
-void *pool_allocator_t::allocate(size_t count)
-{
-	count = align_memory(count);
-	if (bytes_allocated_ + count + SIZEOF_SIZE > mem_guard_.size())
-		throw std::bad_alloc();
-	char *begin = ((char *) mem_guard_.data()) + bytes_allocated_;
-	char *end = begin + count;
-	*((size_t *) end) = MEMORY_IS_USED_FLAG;
-	bytes_allocated_ += count + SIZEOF_SIZE;
-	return begin;
-}
-
-static void relax_pool(char *begin, size_t *count)
-{
-	while (*count > 0) {
-		char *ptr = begin + *count - SIZEOF_SIZE;
-		if (*((size_t *) ptr) == MEMORY_IS_USED_FLAG)
-			return;
-		*count -= *((size_t *) ptr) + SIZEOF_SIZE;
-	}
-}
-
-void pool_allocator_t::deallocate(void *ptr, size_t count)
-{
-	count = align_memory(count);
-	char *begin = (char *) ptr;
-	char *end = begin + count;
-	if (*((size_t *) end) != MEMORY_IS_USED_FLAG)
-		throw exception_t("Trying to deallocate not allocated pointer %p", ptr);
-	*((size_t *) end) = count;
-	relax_pool((char *) mem_guard_.data(), &bytes_allocated_);
+	setup(mem_guard_.data(), mem_guard_.size());
 }
 
 } // namespace geo_base
