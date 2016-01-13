@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,41 +16,57 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/generator/generator.h>
-#include <geo_base/generator/geo_data.h>
-#include <geo_base/util/memory.h>
+#include <geo_base/geo_data_map.h>
 #include <geo_base/util/pool_allocator.h>
 #include <test/geo_base_test.h>
 
 using namespace geo_base;
 
-class generator_test_t : public test_t {
+class geo_data_map_test_t : public test_t {
 };
 
-TEST_F(generator_test_t, generator_test)
+template<typename val_t>
+static bool is_equal(val_t const &a, val_t const &b)
 {
-	pool_allocator_t allocator(1_mb);
-
-	generator::geo_data_test_t geo_data;
-	generator::generator_t generator(&geo_data, &allocator);
-
-	dynarray_t<point_t> points(4, &allocator);
-	points.push_back(point_t(to_coordinate(0), to_coordinate(0)));
-	points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
-	points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
-	points.push_back(point_t(to_coordinate(10), to_coordinate(10)));
-
-	generator.update(123, 123, points, false);
-
-	generator.fini();
-
-	EXPECT_EQ(123ull, geo_data.lookup(location_t(5, 5)));
-	EXPECT_EQ(UNKNOWN_GEO_ID, geo_data.lookup(location_t(-1, -1)));
-	EXPECT_EQ(UNKNOWN_GEO_ID, geo_data.lookup(location_t(0, 3)));
-	EXPECT_EQ(123ull, geo_data.lookup(location_t(4, 0)));
-	EXPECT_EQ(123ull, geo_data.lookup(location_t(5, 5)));
+	return !memcmp(&a, &b, sizeof(val_t));
 }
 
-TEST_F(generator_test_t, polygon)
+template<typename arr_t>
+static bool is_equal(arr_t const *a, arr_t const *b, count_t count)
 {
+	for (count_t i = 0; i < count; ++i)
+		if (!is_equal(a[i], b[i]))
+			return false;
+	return true;
+}
+
+static bool operator == (geo_data_t const &a, geo_data_t const &b)
+{
+#define GEO_BASE_DEF_VAR(var_t, var) \
+	if (a.var() != b.var()) \
+		return false;
+
+#define GEO_BASE_DEF_ARR(arr_t, arr) \
+	if (a.arr##_count() != b.arr##_count()) \
+		return false; \
+	if (!is_equal(a.arr(), b.arr(), a.arr##_count())) \
+		return false;
+
+	GEO_BASE_DEF_GEO_DATA
+
+#undef GEO_BASE_DEF_VAR
+#undef GEO_BASE_DEF_ARR
+
+	return true;
+}
+
+TEST_F(geo_data_map_test_t, simple_serialize)
+{
+	pool_allocator_t allocator(1_mb);
+	generator::geo_data_test_t geo_data;
+
+	geo_data_map_t geo_data_map1(geo_data, &allocator);
+	geo_data_map_t geo_data_map2(geo_data_map1.data(), geo_data_map1.size());
+
+	EXPECT_TRUE(geo_data_map1 == geo_data_map2);
 }

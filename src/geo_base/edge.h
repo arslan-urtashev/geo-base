@@ -46,6 +46,11 @@ struct edge_t {
 		return beg == e.beg && end == e.end;
 	}
 
+	bool operator != (edge_t const &e) const
+	{
+		return beg != e.beg || end != e.end;
+	}
+
 	bool operator < (edge_t const &e) const
 	{
 		return beg < e.beg || (beg == e.beg && end < e.end);
