@@ -19,29 +19,25 @@
 #pragma once
 
 #include <geo_base/geo_data_def.h>
-#include <geo_base/util/io_stream.h>
 
 namespace geo_base {
 
-class geo_data_t {
+inline size_t geo_data_fields_count()
+{
+	size_t counter = 0;
+
 #define GEO_BASE_DEF_VAR(var_t, var) \
-	virtual var_t const &var() const = 0;
+	++counter;
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
-	virtual arr_t const *arr() const = 0; \
-	virtual count_t arr##_count() const = 0;
+	++counter;
 
-public:
-	GEO_BASE_DEF_GEO_DATA
+	GEO_BASE_DEF_GEO_DATA;
 
 #undef GEO_BASE_DEF_VAR
 #undef GEO_BASE_DEF_ARR
 
-	geo_id_t lookup(location_t const &l);
-
-	virtual ~geo_data_t()
-	{
-	}
-};
+	return counter;
+}
 
 } // namespace geo_base

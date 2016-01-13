@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2015,2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -17,48 +17,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/geo_data.h>
-#include <geo_base/proto/geo_data.pb.h>
 #include <geo_base/util/exception.h>
 
 namespace geo_base {
-
-void geo_data_t::save(output_stream_t *out)
-{
-	proto::geo_data_t message;
-
-#define GEO_BASE_DEF_VAR(var_t, var) \
-	message.set_##var(var());
-
-#define GEO_BASE_DEF_ARR(arr_t, arr) \
-	message.mutable_##arr()->set_count(arr##_count()); \
-
-	GEO_BASE_DEF_GEO_DATA
-
-#undef GEO_BASE_DEF_VAR
-#undef GEO_BASE_DEF_ARR
-
-	std::string const &data = message.SerializeAsString();
-	if (!out->write(data.data(), data.size()))
-		throw exception_t("Can't write serialized data!");
-
-#define GEO_BASE_DEF_VAR(var_t, var) \
-	// undef
-
-#define GEO_BASE_DEF_ARR(arr_t, arr) \
-	if (!out->write((char const *) arr(), sizeof(arr_t) * arr##_count())) \
-		throw exception_t("Can't write " #arr "!");
-
-	GEO_BASE_DEF_GEO_DATA
-
-#undef GEO_BASE_DEF_VAR
-#undef GEO_BASE_DEF_ARR
-}
 
 geo_id_t geo_data_t::lookup(location_t const &location)
 {
 	point_t point(location);
 
-	// Determin in wich area box is point.
+	// Determine in wich area box is point.
 	ref_t box_x = (point.x - area_box::lower_x) / area_box::delta_x;
 	ref_t box_y = (point.y - area_box::lower_y) / area_box::delta_y;
 	ref_t box_ref = box_x * area_box::count_y + box_y;

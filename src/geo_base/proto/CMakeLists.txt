@@ -8,7 +8,6 @@ INCLUDE_DIRECTORIES(
 PROTOBUF_GENERATE_CPP(
 	PROTO_SRCS
 	PROTO_HDRS
-	geo_data.proto
 	region.proto
 )
 

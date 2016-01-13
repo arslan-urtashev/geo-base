@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,22 +16,15 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package geo_base.proto;
+#include <geo_base/geo_data_serialize.h>
+#include <test/geo_base_test.h>
 
-message memory_block_t {
-	required uint64 count = 1;
-}
+using namespace geo_base;
 
-message geo_data_t {
-	required uint64 version = 1;
-	required memory_block_t points = 2;
-	required memory_block_t edges = 3;
-	required memory_block_t edge_refs = 4;
-	required memory_block_t parts = 5;
-	required memory_block_t polygons = 6;
-	required memory_block_t polygon_refs = 7;
-	required memory_block_t boxes = 8;
-	required memory_block_t blobs = 9;
-	required memory_block_t kvs = 10;
-	required memory_block_t regions = 11;
+class geo_data_serialize_t : public geo_base_test_t {
+};
+
+TEST_F(geo_data_serialize_t, fields_count)
+{
+	ASSERT_EQ(11u, geo_data_fields_count());
 }
