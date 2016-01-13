@@ -103,6 +103,8 @@ void generator_t::update(geo_id_t region_id, geo_id_t polygon_id,
 	}
 
 	polygon_t polygon;
+	memset(&polygon, 0, sizeof(polygon));
+
 	polygon.region_id = region_id;
 	polygon.polygon_id = polygon_id;
 	polygon.square = get_square(points);
@@ -144,15 +146,14 @@ void generator_t::update(geo_id_t region_id, geo_id_t polygon_id,
 				if (!std::binary_search(erase.begin(), erase.end(), edges[check_points[i].idx]))
 					geo_data_->edge_refs_append(geo_data_->insert(edges[check_points[i].idx]));
 
-		std::sort(
-			geo_data_->mut_edge_refs() + part.edge_refs_offset,
-			geo_data_->mut_edge_refs() + geo_data_->edge_refs_count(),
-			[&] (ref_t const &a, ref_t const &b) {
-				edge_t const &e1 = geo_data_->edges()[a];
-				edge_t const &e2 = geo_data_->edges()[b];
-				return e1.lower(e2, geo_data_->points());
-			}
-		);
+		edge_ref_t *mut_edge_refs = geo_data_->mut_edge_refs() + part.edge_refs_offset;
+		edge_ref_t *mut_edge_refs_end = geo_data_->mut_edge_refs() + geo_data_->mut_edge_refs_count();
+
+		std::sort(mut_edge_refs, mut_edge_refs_end, [&] (ref_t const &a, ref_t const &b) {
+			edge_t const &e1 = geo_data_->edges()[a];
+			edge_t const &e2 = geo_data_->edges()[b];
+			return e1.lower(e2, geo_data_->points());
+		});
 
 		geo_data_->parts_append(part);
 	}
@@ -178,15 +179,14 @@ void generator_t::fini()
 
 			box.polygon_refs_count = geo_data_->polygon_refs_count() - box.polygon_refs_offset;
 
-			std::sort(
-				geo_data_->mut_polygon_refs() + box.polygon_refs_offset,
-				geo_data_->mut_polygon_refs() + geo_data_->polygon_refs_count(),
-				[&] (ref_t const &a, ref_t const &b) {
-					polygon_t const *p = geo_data_->polygons();
-					return p[a].region_id < p[b].region_id ||
-						(p[a].region_id == p[b].region_id && p[a].is_inner && !p[b].is_inner);
-				}
-			);
+			polygon_t *mut_polygon_refs = geo_data_->mut_polygon_refs() + box.polygon_refs_offset;
+			polygon_t *mut_polygon_refs_end = geo_data_->mut_polygon_refs() + geo_data_->polygon_refs_count();
+
+			std::sort(mut_polygon_refs, mut_polygon_refs_end, [&] (ref_t const &a, ref_t const &b) {
+				polygon_t const *p = geo_data_->polygons();
+				return p[a].region_id < p[b].region_id ||
+					(p[a].region_id == p[b].region_id && p[a].is_inner && !p[b].is_inner);
+			});
 
 			geo_data_->boxes_append(box);
 		}

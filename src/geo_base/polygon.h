@@ -47,17 +47,6 @@ struct polygon_t {
 	// Square of polygon. Need for determine which polygon is better. See better member function.
 	square_t square;
 
-	polygon_t()
-		: is_inner(false)
-		, region_id(UNKNOWN_GEO_ID)
-		, polygon_id(UNKNOWN_GEO_ID)
-		, parts_offset(0)
-		, parts_count(0)
-		, rectangle()
-		, square(0)
-	{
-	}
-
 	// Fast point in polygon test using persistent scanline. You can see how this data structure
 	// generated in geo_base/generator/.
 	bool contains(point_t const &point, part_t const *parts, ref_t const *edge_refs,
