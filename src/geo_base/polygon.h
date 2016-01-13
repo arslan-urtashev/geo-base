@@ -54,6 +54,7 @@ struct polygon_t {
 		, parts_offset(0)
 		, parts_count(0)
 		, rectangle()
+		, square(0)
 	{
 	}
 
