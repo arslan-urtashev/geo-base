@@ -59,6 +59,21 @@ protected: \
 
 #undef GEO_BASE_DEF_VAR
 #undef GEO_BASE_DEF_ARR
+
+public:
+	geo_data_test_t()
+	{
+#define GEO_BASE_DEF_VAR(var_t, var) \
+		var##_ = var_t();
+
+#define GEO_BASE_DEF_ARR(arr_t, arr) \
+		// undef
+
+		GEO_BASE_DEF_GEO_DATA
+
+#undef GEO_BASE_DEF_VAR
+#undef GEO_BASE_DEF_ARR
+	}
 };
 
 struct part_helper_t : public part_t {
