@@ -65,13 +65,25 @@ static bool operator == (geo_data_t const &a, geo_data_t const &b)
 TEST_F(geo_data_map_test_t, simple_serialize)
 {
 	pool_allocator_t allocator(1_mb);
+
 	generator::geo_data_test_t geo_data;
+	geo_data.set_version(GEO_DATA_CURRENT_VERSION);
 
 	geo_data_map_t geo_data_map1(geo_data, &allocator);
 	geo_data_map_t geo_data_map2(geo_data_map1.data(), geo_data_map1.size());
 
 	EXPECT_TRUE(geo_data_map1 == geo_data);
 	EXPECT_TRUE(geo_data_map1 == geo_data_map2);
+}
+
+TEST_F(geo_data_map_test_t, check_version)
+{
+	pool_allocator_t allocator(1_mb);
+
+	generator::geo_data_test_t geo_data;
+	geo_data.set_version(GEO_DATA_VERSION_0);
+
+	EXPECT_THROW(geo_data_map_t(geo_data, &allocator), exception_t);
 }
 
 TEST_F(geo_data_map_test_t, fake_data_serialize)

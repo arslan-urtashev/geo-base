@@ -192,6 +192,8 @@ void generator_t::fini()
 		}
 	}
 
+	geo_data_->set_version(GEO_DATA_CURRENT_VERSION);
+
 	log_info("Area boxes generated");
 }
 

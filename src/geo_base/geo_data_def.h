@@ -30,6 +30,11 @@
 
 namespace geo_base {
 
+version_t const GEO_DATA_VERSION_0 = 0;
+version_t const GEO_DATA_VERSION_1 = 1;
+
+version_t const GEO_DATA_CURRENT_VERSION = GEO_DATA_VERSION_1;
+
 // Geographical data definition. This define need for reflection in map/unmap, show, etc.
 #define GEO_BASE_DEF_GEO_DATA \
 	GEO_BASE_DEF_VAR(version_t, version); \

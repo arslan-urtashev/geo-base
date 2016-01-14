@@ -101,7 +101,7 @@ static char const *serialize(geo_data_t const &geo_data,
 template<typename value_t>
 static bool deserialize_value(char const *end, char const **ptr, value_t *value)
 {
-	if (!end || *ptr + sizeof(value_t) < end) {
+	if (*ptr + sizeof(value_t) < end) {
 		*value = *((value_t const *) *ptr);
 		*ptr += sizeof(value_t);
 		return true;
@@ -130,7 +130,7 @@ void geo_data_map_t::remap()
 	char const *ptr = data_;
 
 	size_t header_space = 0;
-	deserialize_value(nullptr, &ptr, &header_space);
+	deserialize_value(data_ + size_, &ptr, &header_space);
 
 	char const *end = data_ + header_space;
 
@@ -146,6 +146,10 @@ void geo_data_map_t::remap()
 
 #undef GEO_BASE_DEF_VAR
 #undef GEO_BASE_DEF_ARR
+
+	if (version() != GEO_DATA_CURRENT_VERSION)
+		throw exception_t("Unable use version %llu (current version is %llu)",
+			version(), GEO_DATA_CURRENT_VERSION);
 }
 
 geo_data_map_t::geo_data_map_t(geo_data_t const &geo_data, block_allocator_t *allocator)
