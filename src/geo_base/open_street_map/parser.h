@@ -122,7 +122,8 @@ void run_pool_parse(char const *path, std::vector<parser_t> &parsers)
 		run_pool_parse(&reader, parsers);
 	}
 
-	log_info("Parsed %s in %.3f seconds", path, stop_watch.get());
+	float const seconds = stop_watch.get();
+	log_info("Parsed %s in %.3f seconds (%.3f minutes)", path, seconds, seconds / 60.0);
 }
 
 } // namespace open_street_map
