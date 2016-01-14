@@ -18,6 +18,7 @@
 
 #include <geo_base/generator/generator.h>
 #include <geo_base/geo_data_map.h>
+#include <geo_base/geo_data_debug.h>
 #include <geo_base/util/pool_allocator.h>
 #include <geo_base/util/stop_watch.h>
 #include <test/geo_base_test.h>
@@ -119,4 +120,6 @@ TEST_F(geo_data_map_test_t, fake_data_serialize)
 	EXPECT_EQ(UNKNOWN_GEO_ID, geo_data_map2.lookup(location_t(0, 3)));
 	EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(4, 0)));
 	EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(5, 5)));
+
+	geo_data_show(log_fd(), geo_data_map2);
 }

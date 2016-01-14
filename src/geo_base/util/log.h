@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2015,2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -44,6 +44,9 @@ void log_setup(int fd, log_level_t level);
 //   (13:24:11.323456) Warn: Ooops :(
 //   (13:24:22.456789) Error: Hello, world!
 void log_write(log_level_t level, char const *message);
+
+// Log output file descriptor.
+int log_fd();
 
 template<typename... args_t>
 void log_write(log_level_t level, char const *fmt, args_t... args)

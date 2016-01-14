@@ -1,4 +1,4 @@
-// Copyright (c) 2015,2016 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,31 +16,49 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
-
-#include <geo_base/geo_data_def.h>
+#include <geo_base/geo_data_debug.h>
 
 namespace geo_base {
 
-class geo_data_t {
+size_t geo_data_space(geo_data_t const &g)
+{
+	size_t space = 0;
+
 #define GEO_BASE_DEF_VAR(var_t, var) \
-	virtual var_t const &var() const = 0;
+	space += sizeof(var_t);
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
-	virtual arr_t const *arr() const = 0; \
-	virtual count_t arr##_count() const = 0;
+	space += sizeof(count_t) + sizeof(arr_t) * g.arr##_count();
 
-public:
 	GEO_BASE_DEF_GEO_DATA
 
 #undef GEO_BASE_DEF_VAR
 #undef GEO_BASE_DEF_ARR
+	
+	return space;
+}
 
-	geo_id_t lookup(location_t const &l);
+template<typename arr_t>
+static float array_space(count_t count)
+{
+	return count * sizeof(arr_t) / (1024.0 * 1024.0);
+}
 
-	virtual ~geo_data_t()
-	{
-	}
-};
+void geo_data_show(int fd, geo_data_t const &g)
+{
+	dprintf(fd, "geo_data = %.3f Gb\n", geo_data_space(g) / (1024.0 * 1024.0 * 1024.0));
+
+#define GEO_BASE_DEF_VAR(var_t, var) \
+	dprintf(fd, "  geo_data.%s = %llu\n", #var, (unsigned long long) g.var());
+
+#define GEO_BASE_DEF_ARR(arr_t, arr) \
+	dprintf(fd, "  geo_data.%s = %u x %lu = %.3f Mb\n", \
+		#arr, g.arr##_count(), sizeof(arr_t), array_space<arr_t>(g.arr##_count()));
+
+	GEO_BASE_DEF_GEO_DATA
+
+#undef GEO_BASE_DEF_VAR
+#undef GEO_BASE_DEF_ARR
+}
 
 } // namespace geo_base
