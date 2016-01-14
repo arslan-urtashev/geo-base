@@ -19,7 +19,6 @@
 #pragma once
 
 #include <geo_base/open_street_map/parser.h>
-#include <geo_base/proto/region.pb.h>
 
 #include <unordered_set>
 
