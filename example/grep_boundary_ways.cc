@@ -53,9 +53,9 @@ int main(int argc, char *argv[])
 		log_info("Parsed by %lu grep: %lu ways", i + 1, greps[i].ways().size());
 
 	std::unordered_set<geo_id_t> all_ways;
-	while (!greps.empty()) {
-		all_ways.insert(greps.back().ways().begin(), greps.back().ways().end());
-		greps.pop_back();
+	for (size_t i = 0; i < greps.size(); ++i) {
+		all_ways.insert(greps[i].ways().begin(), greps[i].ways().end());
+		greps[i].clear();
 	}
 
 	log_info("Total grep %lu different ways", all_ways.size());

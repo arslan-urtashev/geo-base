@@ -101,6 +101,16 @@ void grep_boundary_ways_t::process_relation(geo_id_t, kvs_t const &kvs, referenc
 				ways_.insert(ref.geo_id);
 }
 
+void grep_boundary_node_ids_t::process_way(geo_id_t geo_id, kvs_t const &,
+	geo_ids_t const &node_ids)
+{
+	if (need_ways_->find(geo_id) != need_ways_->end()) {
+		for (geo_id_t const &node_id : node_ids) {
+			nodes_.insert(node_id);
+			ways_[geo_id].push_back(node_id);
+		}
+	}
+}
 
 } // namespace open_street_map
 } // namespace geo_base

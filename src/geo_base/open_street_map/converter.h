@@ -21,9 +21,14 @@
 #include <geo_base/open_street_map/parser.h>
 
 #include <unordered_set>
+#include <unordered_map>
 
 namespace geo_base {
 namespace open_street_map {
+
+typedef std::unordered_set<geo_id_t> geo_ids_set_t;
+typedef std::unordered_map<geo_id_t, std::vector<geo_id_t>> ways_map_t;
+typedef std::unordered_map<geo_id_t, location_t> nodes_map_t;
 
 class grep_boundary_ways_t : public parser_t {
 public:
@@ -36,13 +41,79 @@ public:
 
 	void process_relation(geo_id_t, kvs_t const &, references_t const &) override;
 
-	std::unordered_set<geo_id_t> const &ways() const
+	geo_ids_set_t const &ways() const
+	{
+		return ways_;
+	}
+
+	void clear()
+	{
+		ways_.clear();
+	}
+
+private:
+	geo_ids_set_t ways_;
+};
+
+class grep_boundary_node_ids_t : public parser_t {
+public:
+	grep_boundary_node_ids_t(geo_ids_set_t const &ways, allocator_t *allocator)
+		: parser_t(allocator)
+		, need_ways_(&ways)
+	{
+	}
+
+	void process_way(geo_id_t geo_id, kvs_t const &, geo_ids_t const &node_ids) override;
+
+	void clear()
+	{
+		ways_.clear();
+		nodes_.clear();
+	}
+
+	geo_ids_set_t const &nodes() const
+	{
+		return nodes_;
+	}
+	
+	ways_map_t const &ways() const
 	{
 		return ways_;
 	}
 
 private:
-	std::unordered_set<geo_id_t> ways_;
+	ways_map_t ways_;
+	geo_ids_set_t const *need_ways_;
+	geo_ids_set_t nodes_;
+};
+
+class grep_boundary_nodes_t : public parser_t {
+public:
+	grep_boundary_nodes_t(geo_ids_set_t const &nodes, allocator_t *allocator)
+		: parser_t(allocator)
+		, need_nodes_(&nodes)
+	{
+	}
+
+	void process_node(geo_id_t geo_id, location_t const &location, kvs_t const &) override
+	{
+		if (need_nodes_->find(geo_id) != need_nodes_->end())
+			nodes_[geo_id] = location;
+	}
+
+	void clear()
+	{
+		nodes_.clear();
+	}
+
+	nodes_map_t const &nodes() const
+	{
+		return nodes_;
+	}
+
+private:
+	geo_ids_set_t const *need_nodes_;
+	nodes_map_t nodes_;
 };
 
 class converter_t {
