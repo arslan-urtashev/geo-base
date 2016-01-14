@@ -65,7 +65,7 @@ static void serialize_value(char **ptr, value_t const &v)
 
 template<typename array_t>
 static void serialize_array(char const *begin, char **ptr, array_t const *arr,
-	count_t count, allocator_t *allocator)
+	count_t count, block_allocator_t *allocator)
 {
 	serialize_value(ptr, count);
 	array_t *buf = (array_t *) allocator->allocate(sizeof(array_t) * count);
