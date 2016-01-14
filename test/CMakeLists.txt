@@ -9,6 +9,7 @@ ADD_EXECUTABLE(
 	file.cc
 	generator.cc
 	geo_data_map.cc
+	grep_boundary_ways.cc
 	locations_converter.cc
 	log.cc
 	mem_file.cc
