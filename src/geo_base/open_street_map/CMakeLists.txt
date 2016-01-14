@@ -12,6 +12,7 @@ ADD_LIBRARY(
 ADD_DEPENDENCIES(
 	geo-base-open-street-map
 	geo-base-open-street-map-proto
+	geo-base-proto
 )
 
 TARGET_LINK_LIBRARIES(
