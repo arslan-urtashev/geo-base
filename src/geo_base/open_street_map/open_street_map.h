@@ -19,7 +19,6 @@
 #pragma once
 
 #include <geo_base/open_street_map/proto/open_street_map.pb.h>
-#include <geo_base/proto/region.pb.h>
 #include <geo_base/typedef.h>
 #include <geo_base/util/dynarray.h>
 
