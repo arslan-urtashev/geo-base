@@ -5,6 +5,7 @@ ADD_EXECUTABLE(
 	dynarray.cc
 	edge.cc
 	exception.cc
+	fd_guard.cc
 	file.cc
 	generator.cc
 	geo_data_map.cc
