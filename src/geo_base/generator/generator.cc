@@ -169,12 +169,12 @@ void generator_t::init()
 	stop_watch_.run();
 }
 
-void generator_t::fini()
+void generator_t::generate_area_boxes()
 {
-	log_info("Polygons generated in %.3f seconds", stop_watch_.get());
 	log_info("Generate area boxes...");
 
-	stop_watch_.run();
+	stop_watch_t stop_watch;
+	stop_watch.run();
 
 	for (coordinate_t x0 = area_box::lower_x; x0 < area_box::upper_x; x0 += area_box::delta_x) {
 		for (coordinate_t y0 = area_box::lower_y; y0 < area_box::upper_y; y0 += area_box::delta_y) {
@@ -206,9 +206,26 @@ void generator_t::fini()
 		}
 	}
 
-	geo_data_->set_version(GEO_DATA_CURRENT_VERSION);
+	log_info("Area boxes generated in %.3f seconds", stop_watch.get());
+}
 
-	log_info("Area boxes generated in %.3f seconds", stop_watch_.get());
+// Create fake part for right edge_refs_count calculation.
+static void create_fake_part(geo_data_t *geo_data)
+{
+	part_t fake_part;
+	fake_part.coordinate = 0;
+	fake_part.edge_refs_offset = geo_data->edge_refs_count();
+	geo_data->parts_append(fake_part);
+}
+
+void generator_t::fini()
+{
+	log_info("Polygons generated in %.3f seconds", stop_watch_.get());
+
+	generate_area_boxes();
+	create_fake_part(geo_data_);
+
+	geo_data_->set_version(GEO_DATA_CURRENT_VERSION);
 }
 
 void generator_t::update(geo_id_t region_id, proto::polygon_t const &polygon)
