@@ -117,8 +117,10 @@ static bool deserialize_array(char const *begin, char const *end, char const **p
 		return false;
 	
 	uintptr_t offset = 0;
-	if (!deserialize_value(end, ptr, &offset))
+	if (!deserialize_value(end, ptr, &offset)) {
+		*count = 0;
 		return false;
+	}
 
 	*arr = (array_t const *) (begin + offset);
 
