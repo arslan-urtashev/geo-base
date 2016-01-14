@@ -18,11 +18,12 @@
 
 #pragma once
 
-#include <geo_base/generator/storage.h>
 #include <geo_base/generator/geo_data.h>
+#include <geo_base/generator/storage.h>
+#include <geo_base/proto/region.pb.h>
 #include <geo_base/util/allocator.h>
 #include <geo_base/util/dynarray.h>
-#include <geo_base/proto/region.pb.h>
+#include <geo_base/util/stop_watch.h>
 
 namespace geo_base {
 namespace generator {
@@ -30,10 +31,13 @@ namespace generator {
 class generator_t {
 public:
 	generator_t(geo_data_t *geo_data, allocator_t *allocator)
-		: geo_data_(geo_data)
+		: stop_watch_()
+		, geo_data_(geo_data)
 		, allocator_(allocator)
 	{
 	}
+
+	void init();
 
 	void update(proto::region_t const &region);
 
@@ -45,6 +49,7 @@ public:
 	void fini();
 
 private:
+	stop_watch_t stop_watch_;
 	geo_data_t *geo_data_;
 	allocator_t *allocator_;
 };

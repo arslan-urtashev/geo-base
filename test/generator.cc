@@ -40,8 +40,8 @@ TEST_F(generator_test_t, generator_test)
 	points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
 	points.push_back(point_t(to_coordinate(10), to_coordinate(10)));
 
+	generator.init();
 	generator.update(123, 123, points, false);
-
 	generator.fini();
 
 	EXPECT_EQ(123ull, geo_data.lookup(location_t(5, 5)));

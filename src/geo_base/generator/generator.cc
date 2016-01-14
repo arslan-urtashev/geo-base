@@ -162,9 +162,19 @@ void generator_t::update(geo_id_t region_id, geo_id_t polygon_id,
 	geo_data_->polygons_append(polygon);
 }
 
+void generator_t::init()
+{
+	log_info("Generate polygons...");
+
+	stop_watch_.run();
+}
+
 void generator_t::fini()
 {
+	log_info("Polygons generated in %.3f seconds", stop_watch_.get());
 	log_info("Generate area boxes...");
+
+	stop_watch_.run();
 
 	for (coordinate_t x0 = area_box::lower_x; x0 < area_box::upper_x; x0 += area_box::delta_x) {
 		for (coordinate_t y0 = area_box::lower_y; y0 < area_box::upper_y; y0 += area_box::delta_y) {
@@ -194,7 +204,7 @@ void generator_t::fini()
 
 	geo_data_->set_version(GEO_DATA_CURRENT_VERSION);
 
-	log_info("Area boxes generated");
+	log_info("Area boxes generated in %.3f seconds", stop_watch_.get());
 }
 
 static bool is_inner(proto::polygon_t const &p)
