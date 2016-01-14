@@ -1,4 +1,5 @@
 sudo: required
+dist: trusty
 
 language: cpp
 os:
@@ -8,7 +9,10 @@ compiler:
   - g++
   - clang
 
-dist: trusty
+matrix:
+  exclude:
+    - os: linux
+      compiler: clang
 
 branches:
   only:
