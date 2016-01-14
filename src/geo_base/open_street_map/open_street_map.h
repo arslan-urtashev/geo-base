@@ -18,8 +18,10 @@
 
 #pragma once
 
-#include <geo_base/typedef.h>
 #include <geo_base/open_street_map/proto/open_street_map.pb.h>
+#include <geo_base/proto/region.pb.h>
+#include <geo_base/typedef.h>
+#include <geo_base/util/dynarray.h>
 
 namespace geo_base {
 namespace open_street_map {
@@ -30,12 +32,20 @@ struct kv_t {
 };
 
 struct reference_t {
-	typedef proto::relation_t::member_type_t type_t;
+	enum type_t {
+		TYPE_NODE     = proto::relation_t::NODE,
+		TYPE_WAY      = proto::relation_t::WAY,
+		TYPE_RELATION = proto::relation_t::RELATION,
+	};
 	
 	geo_id_t geo_id;
 	type_t type;
 	char const *role;
 };
+
+typedef dynarray_t<kv_t> kvs_t;
+typedef dynarray_t<reference_t> references_t;
+typedef dynarray_t<geo_id_t> geo_ids_t;
 
 } // namespace open_street_map
 } // namespace geo_base

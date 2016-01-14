@@ -28,8 +28,9 @@ message polygon_t {
 	repeated location_t locations = 2;
 
 	enum type_t {
-		TYPE_INNER = 0;
-		TYPE_OUTER = 1;
+		TYPE_UNKNOWN = 0;
+		TYPE_INNER = 1;
+		TYPE_OUTER = 2;
 	}
 
 	required type_t type = 3;
@@ -46,4 +47,16 @@ message region_t {
 	repeated polygon_t polygons = 3;
 	repeated kv_t kvs = 4;
 	repeated string blobs = 5;
+
+	enum option_t {
+		BOUNDARY_ADMINISTRATIVE = 0;
+		PLACE_ISLAND = 1;
+		PLACE_TOWN = 2;
+		PLACE_CITY = 3;
+		PLACE_VILLAGE = 4;
+		PLACE_BOROUGH = 5;
+		PLACE_SUBURB = 6;
+	}
+
+	required uint64 options = 6;
 }

@@ -44,7 +44,7 @@ public:
 	void update(geo_id_t region_id, proto::polygon_t const &polygon);
 
 	void update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<point_t> const &points,
-		bool is_inner);
+		polygon_t::type_t type);
 
 	void fini();
 

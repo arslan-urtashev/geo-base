@@ -64,14 +64,20 @@ public:
 	}
 
 protected:
-	virtual void process_node(geo_id_t geo_id, location_t const &location,
-		dynarray_t<kv_t> const &kvs) = 0;
+	virtual void process_node(geo_id_t, location_t const &, kvs_t const &)
+	{
+		// Do nothing.
+	}
 
-	virtual void process_way(geo_id_t geo_id, dynarray_t<kv_t> const &kvs,
-		dynarray_t<geo_id_t> const &references) = 0;
+	virtual void process_way(geo_id_t, kvs_t const &, geo_ids_t const &)
+	{
+		// Do nothing.
+	}
 
-	virtual void process_relation(geo_id_t geo_id, dynarray_t<kv_t> const &kvs,
-		dynarray_t<reference_t> const &references) = 0;
+	virtual void process_relation(geo_id_t, kvs_t const &, references_t const &)
+	{
+		// Do nothing.
+	}
 
 	allocator_t *allocator_;
 

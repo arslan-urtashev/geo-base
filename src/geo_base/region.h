@@ -19,14 +19,29 @@
 #pragma once
 
 #include <geo_base/geo_base.h>
+#include <geo_base/proto/region.pb.h>
 
 namespace geo_base {
 
 struct region_t {
+	enum option_t {
+		OPTION_ZERO                    = 0,
+		OPTION_BOUNDARY_ADMINISTRATIVE = 1 << proto::region_t::BOUNDARY_ADMINISTRATIVE,
+		OPTION_PLACE_ISLAND            = 1 << proto::region_t::PLACE_ISLAND,
+		OPTION_PLACE_TOWN              = 1 << proto::region_t::PLACE_TOWN,
+		OPTION_PLACE_CITY              = 1 << proto::region_t::PLACE_CITY,
+		OPTION_PLACE_VILLAGE           = 1 << proto::region_t::PLACE_VILLAGE,
+		OPTION_PLACE_BOROUGH           = 1 << proto::region_t::PLACE_BOROUGH,
+		OPTION_PLACE_SUBURB            = 1 << proto::region_t::PLACE_SUBURB,
+	};
+
+	typedef uint64_t options_t;
+
 	geo_id_t region_id;
 	count_t kvs_offset;
 	count_t kvs_count;
 	square_t square;
+	options_t options;
 
 	bool operator == (region_t const &r) const
 	{

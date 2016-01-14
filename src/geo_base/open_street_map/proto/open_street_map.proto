@@ -75,7 +75,7 @@ message way_t {
 message relation_t {
 	enum member_type_t {
 		NODE = 0;
-		RAOD = 1;
+		WAY = 1;
 		RELATION = 2;
 	}
 

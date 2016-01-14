@@ -102,7 +102,7 @@ TEST_F(geo_data_map_test_t, fake_data_serialize)
 	points.push_back(point_t(to_coordinate(10), to_coordinate(10)));
 
 	generator.init();
-	generator.update(123, 123, points, false);
+	generator.update(123, 123, points, polygon_t::TYPE_OUTER);
 	generator.fini();
 
 	geo_data_map_t geo_data_map1(geo_data, &serialize_allocator);

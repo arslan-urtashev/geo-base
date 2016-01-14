@@ -44,17 +44,17 @@ public:
 		std::swap(relations_count_, c.relations_count_);
 	}
 
-	void process_node(geo_id_t, location_t const &, dynarray_t<kv_t> const &) override
+	void process_node(geo_id_t, location_t const &, kvs_t const &) override
 	{
 		++nodes_count_;
 	}
 
-	void process_way(geo_id_t, dynarray_t<kv_t> const &, dynarray_t<geo_id_t> const &) override
+	void process_way(geo_id_t, kvs_t const &, geo_ids_t const &) override
 	{
 		++ways_count_;
 	}
 
-	void process_relation(geo_id_t, dynarray_t<kv_t> const &, dynarray_t<reference_t> const &) override
+	void process_relation(geo_id_t, kvs_t const &, references_t const &) override
 	{
 		++relations_count_;
 	}

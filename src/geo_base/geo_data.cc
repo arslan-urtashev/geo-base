@@ -47,7 +47,7 @@ geo_id_t geo_data_t::lookup(location_t const &location)
 		r = l + 1;
 
 		if (p[refs[l]].contains(point, parts(), edge_refs(), edges(), points())) {
-			if (p[refs[l]].is_inner) {
+			if (p[refs[l]].type == polygon_t::TYPE_INNER) {
 				// All polygons with same region_id must be skipped if polygon is inner.
 				// In geo_data inner polygons stored before outer polygons.
 				while (r < refs_offset + refs_count && p[refs[l]].region_id == p[refs[r]].region_id)

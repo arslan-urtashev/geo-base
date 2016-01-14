@@ -65,24 +65,23 @@ static location_t make_location(proto::basic_block_t const &block, double lat, d
 }
 
 template<typename type_t>
-static dynarray_t<kv_t> make_tags(type_t const &obj, proto::basic_block_t const &block,
-	allocator_t *allocator)
+static kvs_t make_kvs(type_t const &obj, proto::basic_block_t const &block, allocator_t *allocator)
 {
-	dynarray_t<kv_t> tags(obj.keys_size(), allocator);
+	kvs_t kvs(obj.keys_size(), allocator);
 	
 	for (int i = 0; i < obj.keys_size(); ++i) {
 		size_t const k = obj.keys(i);
 		size_t const v = obj.vals(i);
-		tags.push_back(kv_t{block.string_table().s(k).c_str(), block.string_table().s(v).c_str()});
+		kvs.push_back(kv_t{block.string_table().s(k).c_str(), block.string_table().s(v).c_str()});
 	}
 
-	return tags;
+	return kvs;
 }
 
-static dynarray_t<kv_t> make_tags(int *offset, proto::dense_nodes_t const &nodes,
+static kvs_t make_kvs(int *offset, proto::dense_nodes_t const &nodes,
 	proto::basic_block_t const &block, allocator_t *allocator)
 {
-	dynarray_t<kv_t> tags(nodes.kvs_size(), allocator);
+	kvs_t tags(nodes.kvs_size(), allocator);
 
 	while (*offset < nodes.kvs_size() && nodes.kvs(*offset) != 0) {
 		size_t const k = nodes.kvs(*offset);
@@ -110,7 +109,7 @@ void parser_t::process_dense_nodes(proto::dense_nodes_t const &nodes,
 	for (int i = 0; i < nodes.id_size(); ++i) {
 		geo_id += nodes.id(i);
 		location += make_location(block, nodes.lat(i), nodes.lon(i));
-		process_node(geo_id, location, make_tags(&tags_offset, nodes, block, allocator_));
+		process_node(geo_id, location, make_kvs(&tags_offset, nodes, block, allocator_));
 		++tags_offset;
 	}
 }
@@ -123,7 +122,7 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 		for (int i = 0; i < group.nodes_size(); ++i) {
 			proto::node_t const &node = group.nodes(i);
 			location_t const location = make_location(block, node.lat(), node.lon());
-			process_node(node.id(), location, make_tags(node, block, allocator_));
+			process_node(node.id(), location, make_kvs(node, block, allocator_));
 		}
 
 		if (group.has_dense_nodes()) {
@@ -134,27 +133,31 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 		for (int i = 0; i < group.ways_size(); ++i) {
 			proto::way_t const &w = group.ways(i);
 
-			dynarray_t<geo_id_t> references(w.refs_size(), allocator_);
+			geo_ids_t references(w.refs_size(), allocator_);
 			for (int j = 0, reference_id = 0; j < w.refs_size(); ++j) {
 				reference_id += w.refs(j);
 				references.push_back(reference_id);
 			}
 
-			process_way(w.id(), make_tags(w, block, allocator_), references);
+			process_way(w.id(), make_kvs(w, block, allocator_), references);
 		}
 
 		for (int i = 0; i < group.relations_size(); ++i) {
 			proto::relation_t const &r = group.relations(i);
 
-			dynarray_t<reference_t> references(r.member_ids_size(), allocator_);
+			references_t references(r.member_ids_size(), allocator_);
 			for (int j = 0, reference_id = 0; j < r.member_ids_size(); ++j) {
 				reference_id += r.member_ids(j);
-				reference_t reference{(geo_id_t) reference_id, r.member_types(j),
-					block.string_table().s(r.roles_sid(j)).c_str()};
+
+				reference_t reference;
+				reference.geo_id = reference_id;
+				reference.type = (reference_t::type_t) r.member_types(j);
+				reference.role = block.string_table().s(r.roles_sid(j)).c_str();
+
 				references.push_back(reference);
 			}
 
-			process_relation(r.id(), make_tags(r, block, allocator_), references);
+			process_relation(r.id(), make_kvs(r, block, allocator_), references);
 		}
 	}
 }

@@ -18,10 +18,33 @@
 
 #pragma once
 
+#include <geo_base/open_street_map/parser.h>
 #include <geo_base/proto/region.pb.h>
+
+#include <unordered_set>
 
 namespace geo_base {
 namespace open_street_map {
+
+class grep_boundary_ways_t : public parser_t {
+public:
+	grep_boundary_ways_t(allocator_t *allocator)
+		: parser_t(allocator)
+	{
+	}
+
+	void process_way(geo_id_t, kvs_t const &, geo_ids_t const &) override;
+
+	void process_relation(geo_id_t, kvs_t const &, references_t const &) override;
+
+	std::unordered_set<geo_id_t> const &ways() const
+	{
+		return ways_;
+	}
+
+private:
+	std::unordered_set<geo_id_t> ways_;
+};
 
 class converter_t {
 };

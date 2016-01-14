@@ -4,8 +4,9 @@ ADD_SUBDIRECTORY(proto)
 
 ADD_LIBRARY(
 	geo-base-open-street-map
-	reader.cc
+	converter.cc
 	parser.cc
+	reader.cc
 )
 
 ADD_DEPENDENCIES(
