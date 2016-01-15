@@ -349,13 +349,11 @@ void run_pool_convert(char const *input_path, char const *output_path, size_t th
 		file.read_write_open(output_path);
 		file_output_stream_t output_stream(file.fd());
 
-		std::vector<safe_output_stream_t> safe_output_streams;
-		for (size_t i = 0; i < threads_count; ++i)
-			safe_output_streams.emplace_back(&output_stream);
+		safe_output_stream_t safe_output_stream(&output_stream);
 
 		std::vector<converter_t> converters;
 		for (size_t i = 0; i < threads_count; ++i)
-			converters.emplace_back(nodes, ways, &safe_output_streams[i], &allocators[i]);
+			converters.emplace_back(nodes, ways, &safe_output_stream, &allocators[i]);
 
 		run_pool_parse(input_path, converters);
 
