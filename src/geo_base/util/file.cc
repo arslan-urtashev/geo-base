@@ -29,6 +29,7 @@ namespace geo_base {
 
 void file_t::read_open(char const *path)
 {
+	log_debug("Read open %s", path);
 	int fd = open(path, O_RDONLY);
 	if (fd < 0)
 		throw exception_t("Unable open %s: %s", path, strerror(errno));
@@ -37,6 +38,7 @@ void file_t::read_open(char const *path)
 
 void file_t::read_write_open(char const *path)
 {
+	log_debug("Write/read open %s", path);
 	int fd = open(path, O_RDWR | O_CREAT | O_TRUNC, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
 	if (fd < 0)
 		throw exception_t("Unable open %s: %s", path, strerror(errno));
