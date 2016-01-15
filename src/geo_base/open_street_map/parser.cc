@@ -54,10 +54,10 @@ static bool parse_basic_block(proto::blob_t const &blob, proto::basic_block_t *b
 	allocator_t *allocator)
 {
 	dynarray_t<char> buffer(blob.raw_size(), blob.raw_size(), allocator);
-	
+
 	auto const &z = blob.zlib_data();
 	unpack(z.data(), z.size(), &buffer);
-	
+
 	if (!block->ParseFromArray(buffer.data(), buffer.size()))
 		return false;
 
@@ -81,7 +81,7 @@ template<typename type_t>
 static kvs_t make_kvs(type_t const &obj, proto::basic_block_t const &block, allocator_t *allocator)
 {
 	kvs_t kvs(obj.keys_size(), allocator);
-	
+
 	for (int i = 0; i < obj.keys_size(); ++i) {
 		size_t const k = obj.keys(i);
 		size_t const v = obj.vals(i);
@@ -125,7 +125,8 @@ void parser_t::process_dense_nodes(proto::dense_nodes_t const &nodes,
 		geo_id += nodes.id(i);
 		location += make_location(block, nodes.lat(i), nodes.lon(i));
 		kvs_t const kvs = make_kvs(&tags_offset, nodes, block, allocator_);
-		CATCH_RUN("nodes", process_node(geo_id, location, make_kvs(&tags_offset, nodes, block, allocator_)));
+		CATCH_RUN("nodes", process_node(geo_id, location, kvs));
+		++dense_nodes_processed_;
 	}
 }
 
@@ -137,7 +138,9 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 		for (int i = 0; i < group.nodes_size(); ++i) {
 			proto::node_t const &node = group.nodes(i);
 			location_t const location = make_location(block, node.lat(), node.lon());
-			process_node(node.id(), location, make_kvs(node, block, allocator_));
+			kvs_t const kvs = make_kvs(node, block, allocator_);
+			CATCH_RUN("nodes", process_node(node.id(), location, kvs));
+			++nodes_processed_;
 		}
 
 		if (group.has_dense_nodes()) {
@@ -148,14 +151,18 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 		for (int i = 0; i < group.ways_size(); ++i) {
 			proto::way_t const &w = group.ways(i);
 
+			geo_id_t reference_id = 0;
 			geo_ids_t references(w.refs_size(), allocator_);
-			for (int j = 0, reference_id = 0; j < w.refs_size(); ++j) {
+
+			for (int j = 0; j < w.refs_size(); ++j) {
 				reference_id += w.refs(j);
 				references.push_back(reference_id);
 			}
 
 			kvs_t const kvs = make_kvs(w, block, allocator_);
-			CATCH_RUN("ways", process_way(w.id(), make_kvs(w, block, allocator_), references));
+			CATCH_RUN("ways", process_way(w.id(), kvs, references));
+
+			++ways_processed_;
 		}
 
 		for (int i = 0; i < group.relations_size(); ++i) {
@@ -175,6 +182,8 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 
 			kvs_t const kvs = make_kvs(r, block, allocator_);
 			CATCH_RUN("relations", process_relation(r.id(), kvs, references));
+
+			++relations_processed_;
 		}
 	}
 }

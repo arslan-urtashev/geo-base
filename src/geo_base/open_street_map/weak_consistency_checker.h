@@ -20,6 +20,7 @@
 
 #include <geo_base/open_street_map/parser.h>
 #include <unordered_set>
+#include <geo_base/util/log.h>
 
 namespace geo_base {
 namespace open_street_map {
@@ -42,12 +43,16 @@ public:
 			expect_nodes_.insert(id);
 	}
 
-	bool check() const
+	count_t check() const
 	{
-		for (geo_id_t const &id : expect_nodes_)
-			if (nodes_.find(id) == nodes_.end())
-				return false;
-		return true;
+		count_t not_found = 0;
+		for (geo_id_t const &id : expect_nodes_) {
+			if (nodes_.find(id) == nodes_.end()) {
+				// log_error("%llu not found!", id);
+				++not_found;
+			}
+		}
+		return not_found;
 	}
 
 private:

@@ -40,12 +40,20 @@ public:
 	parser_t()
 		: allocator_(nullptr)
 		, blocks_processed_(0)
+		, nodes_processed_(0)
+		, dense_nodes_processed_(0)
+		, relations_processed_(0)
+		, ways_processed_(0)
 	{
 	}
 	
 	explicit parser_t(allocator_t *allocator)
 		: allocator_(allocator)
 		, blocks_processed_(0)
+		, nodes_processed_(0)
+		, dense_nodes_processed_(0)
+		, relations_processed_(0)
+		, ways_processed_(0)
 	{
 	}
 
@@ -54,6 +62,10 @@ public:
 	{
 		std::swap(allocator_, p.allocator_);
 		std::swap(blocks_processed_, p.blocks_processed_);
+		std::swap(nodes_processed_, p.nodes_processed_);
+		std::swap(dense_nodes_processed_, p.dense_nodes_processed_);
+		std::swap(relations_processed_, p.relations_processed_);
+		std::swap(ways_processed_, ways_processed_);
 	}
 
 	void parse(reader_t *reader);
@@ -61,6 +73,26 @@ public:
 	size_t blocks_processed() const
 	{
 		return blocks_processed_;
+	}
+
+	size_t nodes_processed() const
+	{
+		return nodes_processed_;
+	}
+
+	size_t dense_nodes_processed() const
+	{
+		return dense_nodes_processed_;
+	}
+
+	size_t relations_processed() const
+	{
+		return relations_processed_;
+	}
+
+	size_t ways_processed() const
+	{
+		return ways_processed_;
 	}
 
 protected:
@@ -87,6 +119,10 @@ private:
 	void process_dense_nodes(proto::dense_nodes_t const &nodes, proto::basic_block_t const &block);
 
 	size_t blocks_processed_;
+	size_t nodes_processed_;
+	size_t dense_nodes_processed_;
+	size_t relations_processed_;
+	size_t ways_processed_;
 
 	parser_t(parser_t const &) = delete;
 	parser_t &operator = (parser_t const &) = delete;

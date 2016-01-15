@@ -52,6 +52,10 @@ TEST(open_street_map_parser, parse)
 	EXPECT_EQ(5750ULL, count.ways_count());
 	EXPECT_EQ(142ULL, count.relations_count());
 
+	EXPECT_EQ(count.nodes_processed() + count.dense_nodes_processed(), count.nodes_count());
+	EXPECT_EQ(count.ways_processed(), count.ways_count());
+	EXPECT_EQ(count.relations_processed(), count.relations_count());
+
 	log_info("Parsed %lu relations, %lu ways and %lu nodes",
 		count.relations_count(), count.ways_count(), count.nodes_count());
 }
