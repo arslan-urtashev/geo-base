@@ -1,4 +1,5 @@
 ADD_SUBDIRECTORY(proto)
+ADD_SUBDIRECTORY(proto_util)
 ADD_SUBDIRECTORY(generator)
 ADD_SUBDIRECTORY(util)
 ADD_SUBDIRECTORY(open_street_map)
@@ -21,6 +22,7 @@ TARGET_LINK_LIBRARIES(
 	geo-base
 	geo-base-proto
 	geo-base-util
+	geo-base-proto-util
 	geo-base-open-street-map
 	geo-base-generator
 )
