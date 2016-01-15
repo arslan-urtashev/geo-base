@@ -23,7 +23,7 @@ notifications:
     recipients:
       - urtashev@gmail.com
     on_success: change
-    on_failure: always
+    on_failure: change
 
 addons:
   apt:
