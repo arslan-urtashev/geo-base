@@ -25,7 +25,7 @@
 using namespace geo_base;
 using namespace open_street_map;
 
-size_t get_threads_count()
+static size_t get_threads_count()
 {
 	size_t threads_count = std::thread::hardware_concurrency();
 	if (threads_count == 0)
@@ -38,12 +38,11 @@ int main(int argc, char *argv[])
 	log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
 
 	if (argc != 3) {
-		log_error("USAGE: grep-boundary-ways <planet-latest.osm.pbf> <geo-base.pbf>");
+		log_error("USAGE: convert <planet-latest.osm.pbf> <geo-base.pbf>");
 		return -1;
 	}
 
-	size_t const threads_count = get_threads_count();
-	run_pool_convert(argv[1], argv[2], threads_count);
+	run_pool_convert(argv[1], argv[2], get_threads_count());
 
 	return 0;
 }
