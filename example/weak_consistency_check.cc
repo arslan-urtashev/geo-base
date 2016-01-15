@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 	pool_allocator_t allocator(128_mb);
 
 	file_t file;
-	file.read_open(argv[0]);
+	file.read_open(argv[1]);
 	file_input_stream_t stream(file.fd());
 
 	reader_t reader(&stream);
