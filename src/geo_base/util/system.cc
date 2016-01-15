@@ -23,7 +23,8 @@ namespace geo_base {
 
 endian_flag_t system_endian_flag()
 {
-	return htonl(47);
+	static endian_flag_t const ENDIAN_FLAG = ntohl(47);
+	return ENDIAN_FLAG;
 }
 
 } // namespace geo_base
