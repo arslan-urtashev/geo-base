@@ -50,9 +50,9 @@ int main(int argc, char *argv[])
 	run_pool_parse(argv[1], counters);
 
 	for (size_t i = 0; i < counters.size(); ++i)
-		log_info("Parsed by %lu counter: %lu nodes, %lu ways, %lu relations (%lu blocks)",
-			i + 1, counters[i].nodes_count(), counters[i].ways_count(),
-			counters[i].relations_count(), counters[i].blocks_processed());
+		log_info("Parsed by %lu counter: %lu nodes, %lu ways, %lu relations (%lu blocks)", i + 1,
+			counters[i].nodes_number(), counters[i].ways_number(),
+			counters[i].relations_number(), counters[i].blocks_processed());
 
 	return 0;
 }

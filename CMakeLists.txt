@@ -1,24 +1,21 @@
 PROJECT(geo_base CXX C)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.7)
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto -std=c++0x -g")
-SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -flto -g")
-
-ADD_SUBDIRECTORY(contrib)
-
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Werror")
-
-INCLUDE_DIRECTORIES(
-	${geo_base_BINARY_DIR}/src
-	${geo_base_SOURCE_DIR}/include
-	${geo_base_SOURCE_DIR}/src
-	${gmock_SOURCE_DIR}/include
-	${gtest_SOURCE_DIR}/include
-	${osmpbf_BINARY_DIR}
-	${osmpbf_SOURCE_DIR}
-	.
+ADD_DEFINITIONS(
+	-W
+	-Wall
+	-Werror
+	-g
+	-std=c++0x
 )
 
-ADD_SUBDIRECTORY(src)
+INCLUDE_DIRECTORIES(
+	gmock
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_BINARY_DIR}
+)
+
+ADD_SUBDIRECTORY(gmock)
+ADD_SUBDIRECTORY(geo_base)
 ADD_SUBDIRECTORY(test)
 ADD_SUBDIRECTORY(example)
