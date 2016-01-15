@@ -20,5 +20,6 @@ TARGET_LINK_LIBRARIES(
 	geo-base-open-street-map
 	geo-base-open-street-map-proto
 	geo-base-util
+	geo-base-proto
 	z
 )
