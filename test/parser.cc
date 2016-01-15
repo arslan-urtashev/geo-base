@@ -190,6 +190,11 @@ TEST(open_street_map_parser, double_parse)
 		power = counter.power();
 	}
 
+	ASSERT_NE(0ull, hash);
+	ASSERT_NE(0ull, power);
+
+	log_info("hash = %llu, power = %llu", hash, power);
+
 	{
 		file_t file;
 		file.read_open(OSM_PBF_TEST_FILE);
