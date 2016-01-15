@@ -167,9 +167,11 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 
 		for (int i = 0; i < group.relations_size(); ++i) {
 			proto::relation_t const &r = group.relations(i);
-
+			
+			geo_id_t reference_id = 0;
 			references_t references(r.member_ids_size(), allocator_);
-			for (int j = 0, reference_id = 0; j < r.member_ids_size(); ++j) {
+
+			for (int j = 0; j < r.member_ids_size(); ++j) {
 				reference_id += r.member_ids(j);
 
 				reference_t reference;
