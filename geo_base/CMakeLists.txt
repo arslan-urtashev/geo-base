@@ -3,10 +3,6 @@ ADD_SUBDIRECTORY(generator)
 ADD_SUBDIRECTORY(util)
 ADD_SUBDIRECTORY(open_street_map)
 
-INCLUDE_DIRECTORIES(
-	${CMAKE_CURRENT_BINARY_DIR}
-)
-
 ADD_LIBRARY(
 	geo-base
 	geo_data.cc
