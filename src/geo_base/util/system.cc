@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,24 +16,14 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
-
-#include <type_traits>
-#include <stdint.h>
-
-// Workaround missing builtin functions in g++ < 5.0
-#if __GNUG__ && __GNUC__ < 5
-#	define IS_TRIVIALLY_COPYABLE(T) __has_trivial_copy(T)
-#	define IS_TRIVIALLY_DESTRUCTIBLE(T) __has_trivial_destructor(T)
-#else
-#	define IS_TRIVIALLY_COPYABLE(T) std::is_trivially_copyable<T>::value
-#	define IS_TRIVIALLY_DESTRUCTIBLE(T) std::is_trivially_destructible<T>::value
-#endif
+#include <geo_base/util/system.h>
+#include <arpa/inet.h>
 
 namespace geo_base {
 
-typedef uint32_t endian_flag_t;
-
-endian_flag_t system_endian_flag();
+endian_flag_t system_endian_flag()
+{
+	return htonl(0x01020304) == 0x01020304;
+}
 
 } // namespace geo_base

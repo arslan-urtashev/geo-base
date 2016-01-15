@@ -7,4 +7,5 @@ ADD_LIBRARY(
 	log.cc
 	mem_file.cc
 	pool_allocator.cc
+	system.cc
 )
