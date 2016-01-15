@@ -1,3 +1,9 @@
+ADD_SUBDIRECTORY(gmock)
+
+INCLUDE_DIRECTORIES(
+	gmock
+)
+
 ADD_EXECUTABLE(
 	run_ut
 	algo.cc
