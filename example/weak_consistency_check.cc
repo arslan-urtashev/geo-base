@@ -43,17 +43,22 @@ int main(int argc, char *argv[])
 	weak_consistency_checker_t checker(&allocator);
 
 	checker.parse(&reader);
-	count_t const not_found = checker.check();
 
 	log_info("Processed %llu nodes", checker.nodes_processed());
 	log_info("Processed %llu dense nodes", checker.dense_nodes_processed());
 	log_info("Processed %llu ways", checker.ways_processed());
 	log_info("Processed %llu relations", checker.relations_processed());
 
-	if (not_found > 0) {
-		log_error("%llu nodes not found!", not_found);
+	size_t const nodes_not_found = checker.check_nodes();
+	size_t const ways_not_found = checker.check_ways();
+
+	if (nodes_not_found == 0 && ways_not_found == 0) {
+		log_info("Ok");
 	} else {
-		log_info("Data is consistent");
+		if (nodes_not_found > 0)
+			log_error("%llu nodes not found!", nodes_not_found);
+		if (ways_not_found > 0)
+			log_error("%llu ways not found!", ways_not_found);
 	}
 
 	return 0;

@@ -37,27 +37,43 @@ public:
 		nodes_.insert(geo_id);
 	}
 
-	void process_way(geo_id_t, kvs_t const &, geo_ids_t const &nodes) override
+	void process_way(geo_id_t geo_id, kvs_t const &, geo_ids_t const &nodes) override
 	{
 		for (geo_id_t const &id : nodes)
 			expect_nodes_.insert(id);
+		ways_.insert(geo_id);
 	}
 
-	count_t check() const
+	void process_relation(geo_id_t, kvs_t const &, references_t const &refs) override
 	{
-		count_t not_found = 0;
-		for (geo_id_t const &id : expect_nodes_) {
-			if (nodes_.find(id) == nodes_.end()) {
-				// log_error("%llu not found!", id);
+		for (reference_t const &r: refs)
+			if (r.type == reference_t::TYPE_WAY)
+				expect_ways_.insert(r.geo_id);
+	}
+
+	size_t check_nodes() const
+	{
+		size_t not_found = 0;
+		for (geo_id_t const &id : expect_nodes_)
+			if (nodes_.find(id) == nodes_.end())
 				++not_found;
-			}
-		}
+		return not_found;
+	}
+
+	size_t check_ways() const
+	{
+		size_t not_found = 0;
+		for (geo_id_t const &id : expect_ways_)
+			if (ways_.find(id) == ways_.end())
+				++not_found;
 		return not_found;
 	}
 
 private:
 	std::unordered_set<geo_id_t> nodes_;
 	std::unordered_set<geo_id_t> expect_nodes_;
+	std::unordered_set<geo_id_t> ways_;
+	std::unordered_set<geo_id_t> expect_ways_;
 };
 
 } // namespace open_street_map
