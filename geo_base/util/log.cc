@@ -17,6 +17,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/util/log.h>
+#include <geo_base/util/exception.h>
 
 #include <mutex>
 #include <sys/time.h>
@@ -45,7 +46,8 @@ public:
 	{
 		if (level <= level_) {
 			std::lock_guard<std::mutex> lock(lock_);
-			::write(fd_, message, strlen(message)); // Ignore logger write errors.
+			if (::write(fd_, message, strlen(message)) < 0)
+				throw exception_t("Unable write log message: %s", strerror(errno));
 		}
 	}
 
