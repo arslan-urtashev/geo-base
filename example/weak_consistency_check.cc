@@ -16,30 +16,39 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <gmock/gmock.h>
-#include <geo_base/open_street_map/converter.h>
-#include <geo_base/util/file.h>
-#include <geo_base/util/file_stream.h>
+#include <geo_base/open_street_map/weak_consistency_checker.h>
+#include <geo_base/util/log.h>
+#include <geo_base/util/memory.h>
 #include <geo_base/util/pool_allocator.h>
 
 using namespace geo_base;
 using namespace open_street_map;
 
-TEST(grep_boundary_ways_t, check_boundary_ways)
+int main(int argc, char *argv[])
 {
-	pool_allocator_t allocator(1_mb);
+	log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
+
+	if (argc != 2) {
+		log_error("USAGE: weak-consistency-check <planet-latest.osm.pbf>");
+		return -1;
+	}
+
+	pool_allocator_t allocator(128_mb);
 
 	file_t file;
-	file.read_open("test/andorra-latest.osm.pbf");
+	file.read_open(argv[0]);
 	file_input_stream_t stream(file.fd());
 
 	reader_t reader(&stream);
-	grep_boundary_ways_t grep(&allocator);
+	weak_consistency_checker_t checker(&allocator);
 
-	grep.parse(&reader);
+	checker.parse(&reader);
 
-	log_info("Found %lu boundary ways", grep.ways().size());
+	if (!checker.check()) {
+		log_error("The data is not consistent!");
+	} else {
+		log_info("Data is consistent");
+	}
 
-	ASSERT_NE(0u, grep.ways().size());
-	ASSERT_EQ(3411u, grep.ways().size());
+	return 0;
 }

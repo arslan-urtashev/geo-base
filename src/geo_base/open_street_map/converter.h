@@ -19,6 +19,7 @@
 #pragma once
 
 #include <geo_base/open_street_map/parser.h>
+#include <geo_base/proto/region.pb.h>
 
 #include <unordered_set>
 #include <unordered_map>
@@ -116,8 +117,37 @@ private:
 	nodes_map_t nodes_;
 };
 
-class converter_t {
+class converter_t : public parser_t {
+public:
+	converter_t(nodes_map_t const &nodes, ways_map_t const &ways, output_stream_t *output_stream,
+	            allocator_t *allocator)
+		: parser_t(allocator)
+		, output_stream_(output_stream)
+		, ways_(&ways)
+		, nodes_(&nodes)
+		, regions_number_(0)
+	{
+	}
+
+	void process_way(geo_id_t geo_id, kvs_t const &kvs, geo_ids_t const &nodes) override;
+
+	void process_relation(geo_id_t geo_id, kvs_t const &kvs, references_t const &refs) override;
+
+	size_t regions_number() const
+	{
+		return regions_number_;
+	}
+
+private:
+	output_stream_t *output_stream_;
+	ways_map_t const *ways_;
+	nodes_map_t const *nodes_;
+	size_t regions_number_;
 };
+
+// Run all convertion in different threads. Read open_street_map data from input_path file
+// and write geo_base protobuf into output_path.
+void run_pool_convert(char const *input_path, char const *output_path, size_t threads_count);
 
 } // namespace open_street_map
 } // namespace geo_base

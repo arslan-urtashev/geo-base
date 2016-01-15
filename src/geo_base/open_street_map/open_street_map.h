@@ -46,5 +46,7 @@ typedef dynarray_t<kv_t> kvs_t;
 typedef dynarray_t<reference_t> references_t;
 typedef dynarray_t<geo_id_t> geo_ids_t;
 
+char const *find_name(kvs_t const &kvs);
+
 } // namespace open_street_map
 } // namespace geo_base

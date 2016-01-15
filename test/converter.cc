@@ -18,28 +18,13 @@
 
 #include <gmock/gmock.h>
 #include <geo_base/open_street_map/converter.h>
-#include <geo_base/util/file.h>
-#include <geo_base/util/file_stream.h>
 #include <geo_base/util/pool_allocator.h>
 
 using namespace geo_base;
 using namespace open_street_map;
 
-TEST(grep_boundary_ways_t, check_boundary_ways)
+TEST(open_street_map_convert, simple_convert)
 {
-	pool_allocator_t allocator(1_mb);
-
-	file_t file;
-	file.read_open("test/andorra-latest.osm.pbf");
-	file_input_stream_t stream(file.fd());
-
-	reader_t reader(&stream);
-	grep_boundary_ways_t grep(&allocator);
-
-	grep.parse(&reader);
-
-	log_info("Found %lu boundary ways", grep.ways().size());
-
-	ASSERT_NE(0u, grep.ways().size());
-	ASSERT_EQ(3411u, grep.ways().size());
+	ASSERT_NO_THROW(run_pool_convert("test/andorra-latest.osm.pbf", "andorra-latest.pbf", 1));
+	remove("andorra-latest.pbf");
 }

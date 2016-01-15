@@ -1,7 +1,14 @@
 ADD_EXECUTABLE(simple-counter simple_counter.cc)
-ADD_DEPENDENCIES(simple-counter geo-base)
-TARGET_LINK_LIBRARIES(simple-counter geo-base)
-
 ADD_EXECUTABLE(grep-boundary-ways grep_boundary_ways.cc)
+ADD_EXECUTABLE(convert convert.cc)
+ADD_EXECUTABLE(weak-consistency-check weak_consistency_check.cc)
+
+ADD_DEPENDENCIES(simple-counter geo-base)
 ADD_DEPENDENCIES(grep-boundary-ways geo-base)
+ADD_DEPENDENCIES(convert geo-base)
+ADD_DEPENDENCIES(weak-consistency-check geo-base)
+
+TARGET_LINK_LIBRARIES(simple-counter geo-base)
 TARGET_LINK_LIBRARIES(grep-boundary-ways geo-base)
+TARGET_LINK_LIBRARIES(convert geo-base)
+TARGET_LINK_LIBRARIES(weak-consistency-check geo-base)

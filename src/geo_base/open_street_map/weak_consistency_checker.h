@@ -16,30 +16,44 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <gmock/gmock.h>
-#include <geo_base/open_street_map/converter.h>
-#include <geo_base/util/file.h>
-#include <geo_base/util/file_stream.h>
-#include <geo_base/util/pool_allocator.h>
+#pragma once
 
-using namespace geo_base;
-using namespace open_street_map;
+#include <geo_base/open_street_map/parser.h>
+#include <unordered_set>
 
-TEST(grep_boundary_ways_t, check_boundary_ways)
-{
-	pool_allocator_t allocator(1_mb);
+namespace geo_base {
+namespace open_street_map {
 
-	file_t file;
-	file.read_open("test/andorra-latest.osm.pbf");
-	file_input_stream_t stream(file.fd());
+class weak_consistency_checker_t : public parser_t {
+public:
+	weak_consistency_checker_t(allocator_t *allocator)
+		: parser_t(allocator)
+	{
+	}
 
-	reader_t reader(&stream);
-	grep_boundary_ways_t grep(&allocator);
+	void process_node(geo_id_t geo_id, location_t const &, kvs_t const &) override
+	{
+		nodes_.insert(geo_id);
+	}
 
-	grep.parse(&reader);
+	void process_way(geo_id_t, kvs_t const &, geo_ids_t const &nodes) override
+	{
+		for (geo_id_t const &id : nodes)
+			expect_nodes_.insert(id);
+	}
 
-	log_info("Found %lu boundary ways", grep.ways().size());
+	bool check() const
+	{
+		for (geo_id_t const &id : expect_nodes_)
+			if (nodes_.find(id) == nodes_.end())
+				return false;
+		return true;
+	}
 
-	ASSERT_NE(0u, grep.ways().size());
-	ASSERT_EQ(3411u, grep.ways().size());
-}
+private:
+	std::unordered_set<geo_id_t> nodes_;
+	std::unordered_set<geo_id_t> expect_nodes_;
+};
+
+} // namespace open_street_map
+} // namespace geo_base

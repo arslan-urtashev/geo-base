@@ -16,30 +16,43 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <gmock/gmock.h>
-#include <geo_base/open_street_map/converter.h>
-#include <geo_base/util/file.h>
-#include <geo_base/util/file_stream.h>
-#include <geo_base/util/pool_allocator.h>
+#pragma once
 
-using namespace geo_base;
-using namespace open_street_map;
+#include <geo_base/util/io_stream.h>
+#include <mutex>
+#include <algorithm>
 
-TEST(grep_boundary_ways_t, check_boundary_ways)
-{
-	pool_allocator_t allocator(1_mb);
+namespace geo_base {
 
-	file_t file;
-	file.read_open("test/andorra-latest.osm.pbf");
-	file_input_stream_t stream(file.fd());
+class safe_output_stream_t : public output_stream_t {
+public:
+	explicit safe_output_stream_t(output_stream_t *output_stream)
+		: mutex_()
+		, output_stream_(output_stream)
+	{
+	}
 
-	reader_t reader(&stream);
-	grep_boundary_ways_t grep(&allocator);
+	safe_output_stream_t(safe_output_stream_t &&s)
+		: mutex_()
+		, output_stream_(nullptr)
+	{
+		std::lock_guard<std::mutex> lock1(mutex_);
+		std::lock_guard<std::mutex> lock2(s.mutex_);
+		std::swap(output_stream_, s.output_stream_);
+	}
 
-	grep.parse(&reader);
+	bool write(char const *ptr, size_t count) override
+	{
+		std::lock_guard<std::mutex> lock(mutex_);
+		return output_stream_->write(ptr, count);
+	}
 
-	log_info("Found %lu boundary ways", grep.ways().size());
+private:
+	std::mutex mutex_;
+	output_stream_t *output_stream_;
 
-	ASSERT_NE(0u, grep.ways().size());
-	ASSERT_EQ(3411u, grep.ways().size());
-}
+	safe_output_stream_t(safe_output_stream_t const &) = delete;
+	safe_output_stream_t &operator = (safe_output_stream_t const &) = delete;
+};
+
+} // namespace geo_base

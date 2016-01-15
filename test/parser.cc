@@ -209,5 +209,3 @@ TEST(open_street_map_parser, double_parse)
 		ASSERT_EQ(power, counter.power());
 	}
 }
-
-

@@ -49,4 +49,17 @@ private:
 	char buffer_[MESSAGE_LIMIT];
 };
 
+#define THROW_CHECK(function) \
+	do { \
+		try { \
+			function; \
+		} catch (std::exception const &e) { \
+			log_error("Thrown exception: %s", e.what()); \
+			throw; \
+		} catch (...) { \
+			log_error("Thrown unknown exception"); \
+			throw; \
+		} \
+	} while (false);
+
 }

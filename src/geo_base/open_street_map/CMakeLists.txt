@@ -7,6 +7,7 @@ ADD_LIBRARY(
 	converter.cc
 	parser.cc
 	reader.cc
+	open_street_map.cc
 )
 
 ADD_DEPENDENCIES(

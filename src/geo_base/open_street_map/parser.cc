@@ -26,6 +26,19 @@
 namespace geo_base {
 namespace open_street_map {
 
+#define CATCH_RUN(type, function) \
+	try { \
+		function; \
+	} catch (std::exception const &e) { \
+		log_error("Exception thrown while processing %s of %s: %s", \
+			type, find_name(kvs), e.what()); \
+		throw; \
+	} catch (...) { \
+		log_error("Unknown exception thrown while processing %s of %s", \
+			type, find_name(kvs)); \
+		throw; \
+	}
+
 static void unpack(char const *ptr, size_t count, dynarray_t<char> *buffer)
 {
 	unsigned long size = buffer->size();
@@ -90,6 +103,8 @@ static kvs_t make_kvs(int *offset, proto::dense_nodes_t const &nodes,
 		*offset += 2;
 	}
 
+	*offset += 1;
+
 	return tags;
 }
 
@@ -109,8 +124,8 @@ void parser_t::process_dense_nodes(proto::dense_nodes_t const &nodes,
 	for (int i = 0; i < nodes.id_size(); ++i) {
 		geo_id += nodes.id(i);
 		location += make_location(block, nodes.lat(i), nodes.lon(i));
-		process_node(geo_id, location, make_kvs(&tags_offset, nodes, block, allocator_));
-		++tags_offset;
+		kvs_t const kvs = make_kvs(&tags_offset, nodes, block, allocator_);
+		CATCH_RUN("nodes", process_node(geo_id, location, make_kvs(&tags_offset, nodes, block, allocator_)));
 	}
 }
 
@@ -139,7 +154,8 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 				references.push_back(reference_id);
 			}
 
-			process_way(w.id(), make_kvs(w, block, allocator_), references);
+			kvs_t const kvs = make_kvs(w, block, allocator_);
+			CATCH_RUN("ways", process_way(w.id(), make_kvs(w, block, allocator_), references));
 		}
 
 		for (int i = 0; i < group.relations_size(); ++i) {
@@ -157,7 +173,8 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 				references.push_back(reference);
 			}
 
-			process_relation(r.id(), make_kvs(r, block, allocator_), references);
+			kvs_t const kvs = make_kvs(r, block, allocator_);
+			CATCH_RUN("relations", process_relation(r.id(), kvs, references));
 		}
 	}
 }

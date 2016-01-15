@@ -16,30 +16,34 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <gmock/gmock.h>
+#include <algorithm>
 #include <geo_base/open_street_map/converter.h>
-#include <geo_base/util/file.h>
-#include <geo_base/util/file_stream.h>
+#include <geo_base/util/log.h>
+#include <geo_base/util/memory.h>
 #include <geo_base/util/pool_allocator.h>
 
 using namespace geo_base;
 using namespace open_street_map;
 
-TEST(grep_boundary_ways_t, check_boundary_ways)
+size_t get_threads_count()
 {
-	pool_allocator_t allocator(1_mb);
+	size_t threads_count = std::thread::hardware_concurrency();
+	if (threads_count == 0)
+		++threads_count;
+	return std::min(threads_count, 12ul);
+}
 
-	file_t file;
-	file.read_open("test/andorra-latest.osm.pbf");
-	file_input_stream_t stream(file.fd());
+int main(int argc, char *argv[])
+{
+	log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
 
-	reader_t reader(&stream);
-	grep_boundary_ways_t grep(&allocator);
+	if (argc != 3) {
+		log_error("USAGE: grep-boundary-ways <planet-latest.osm.pbf> <geo-base.pbf>");
+		return -1;
+	}
 
-	grep.parse(&reader);
+	size_t const threads_count = get_threads_count();
+	run_pool_convert(argv[1], argv[2], threads_count);
 
-	log_info("Found %lu boundary ways", grep.ways().size());
-
-	ASSERT_NE(0u, grep.ways().size());
-	ASSERT_EQ(3411u, grep.ways().size());
+	return 0;
 }
