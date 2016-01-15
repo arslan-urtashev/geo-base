@@ -23,7 +23,7 @@ namespace geo_base {
 
 endian_flag_t system_endian_flag()
 {
-	return htonl(0x01020304) == 0x01020304;
+	return htonl(47);
 }
 
 } // namespace geo_base
