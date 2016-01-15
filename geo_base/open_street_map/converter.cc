@@ -232,9 +232,9 @@ void converter_t::process_relation(geo_id_t geo_id, kvs_t const &kvs, references
 
 		way_list_t const &w = ways_->at(r.geo_id);
 		for (count_t i = 0; i + 1 < w.size(); ++i) {
-			if (graph[w[i]].size() < 2 && graph[w[i] + 1].size() < 2) {
+			if (graph[w[i]].size() < 2 && graph[w[i + 1]].size() < 2) {
 				graph[w[i]].push_back(w[i + 1]);
-				graph[w[i] + 1].push_back(w[i]);
+				graph[w[i + 1]].push_back(w[i]);
 			}
 		}
 	}

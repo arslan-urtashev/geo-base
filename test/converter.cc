@@ -19,12 +19,16 @@
 #include <gmock/gmock.h>
 #include <geo_base/open_street_map/converter.h>
 #include <geo_base/util/pool_allocator.h>
+#include <test/geo_base_test.h>
 
 using namespace geo_base;
 using namespace open_street_map;
 
-TEST(open_street_map_convert, simple_convert)
+class open_street_map_convert_t : public test_t {
+};
+
+TEST_F(open_street_map_convert_t, simple_convert)
 {
-	// ASSERT_NO_THROW(run_pool_convert("test/andorra-latest.osm.pbf", "andorra-latest.pbf", 1));
-	// remove("andorra-latest.pbf");
+	ASSERT_NO_THROW(run_pool_convert("test/andorra-latest.osm.pbf", "andorra-latest.pbf", 2));
+	remove("andorra-latest.pbf");
 }
