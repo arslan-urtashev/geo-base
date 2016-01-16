@@ -36,7 +36,6 @@ static bool eq(char const *a, char const *b)
 	return !strcmp(a, b);
 }
 
-
 #define op(ev, opt) \
 	if (eq(ev, kv.v)) \
 		return opt;

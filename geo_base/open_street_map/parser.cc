@@ -167,20 +167,17 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 
 		for (int i = 0; i < group.relations_size(); ++i) {
 			proto::relation_t const &r = group.relations(i);
-			
-			geo_id_t reference_id = 0;
-			references_t references(r.member_ids_size(), allocator_);
 
-			for (int j = 0; j < r.member_ids_size(); ++j) {
-				reference_id += r.member_ids(j);
+			references_t references(r.member_ids_size(), r.member_ids_size(), allocator_);
 
-				reference_t reference;
-				reference.geo_id = reference_id;
-				reference.type = (reference_t::type_t) r.member_types(j);
-				reference.role = block.string_table().s(r.roles_sid(j)).c_str();
-
-				references.push_back(reference);
-			}
+			for (int j = 0; j < r.member_ids_size(); ++j)
+				references[j].geo_id = r.member_ids(j);
+			for (int j = 0; j < r.member_ids_size(); ++j)
+				references[j].type = (reference_t::type_t) r.member_types(j);
+			for (int j = 0; j < r.member_ids_size(); ++j)
+				references[j].role = block.string_table().s(r.roles_sid(j)).c_str();
+			for (int j = 0; j < r.member_ids_size() - 1; ++j)
+				references[j + 1].geo_id += references[j].geo_id;
 
 			kvs_t const kvs = make_kvs(r, block, allocator_);
 			CATCH_RUN("relations", process_relation(r.id(), kvs, references));
