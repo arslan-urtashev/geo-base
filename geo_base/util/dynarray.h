@@ -135,15 +135,19 @@ public:
 
 	void push_back(data_t const &data)
 	{
+#ifndef NDEBUG
 		if (size_ == capacity_)
 			throw exception_t("Out of bounds push_back");
+#endif
 		data_[size_++] = data;
 	}
 
 	void pop_back()
 	{
+#ifndef NDEBUG
 		if (size_ == 0)
 			throw exception_t("Out of bounds pop_back");
+#endif
 		size_--;
 		data_[size_].~data_t();
 	}

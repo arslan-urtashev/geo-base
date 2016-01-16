@@ -5,7 +5,6 @@ ADD_DEFINITIONS(
 	-W
 	-Wall
 	-Werror
-	-g
 	-std=c++0x
 )
 
