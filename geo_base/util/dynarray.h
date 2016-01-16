@@ -117,10 +117,8 @@ public:
 
 	void resize(size_t size)
 	{
-		while (size_ > size)
-			pop_back();
-		while (size_ < size)
-			push_back(data_t());
+		resize_down(size);
+		resize_up(size);
 	}
 
 	void clear()
@@ -182,6 +180,28 @@ public:
 	}
 
 private:
+	void resize_down(size_t size)
+	{
+		if (std::is_trivially_destructible<data_t>::value) {
+			if (size_ > size)
+				size_ = size;
+		} else {
+			while (size_ > size)
+				pop_back();
+		}
+	}
+
+	void resize_up(size_t size)
+	{
+		if (std::is_trivially_constructible<data_t>::value) {
+			if (size_ < size)
+				size_ = size;
+		} else {
+			while (size_ < size)
+				push_back(data_t());
+		}
+	}
+
 	size_t size_;
 	size_t capacity_;
 	data_t *data_;
