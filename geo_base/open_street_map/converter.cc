@@ -16,9 +16,9 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <arpa/inet.h>
 #include <geo_base/open_street_map/converter.h>
 #include <geo_base/polygon.h>
+#include <geo_base/proto_util/proto_writer.h>
 #include <geo_base/region.h>
 #include <geo_base/util/pool_allocator.h>
 #include <geo_base/util/safe_stream.h>
@@ -152,24 +152,6 @@ static void kvs_append(kv_t const &kv, ::geo_base::proto::region_t *region)
 	x->set_v(kv.v);
 }
 
-template<typename message_t>
-static void serialize_protobuf(message_t const &message, output_stream_t *stream,
-	allocator_t *allocator)
-{
-	uint32_t const byte_size = message.ByteSize();
-	uint32_t const total_size = byte_size + sizeof(byte_size);
-
-	dynarray_t<char> buffer(total_size, total_size, allocator);
-
-	*((uint32_t *) buffer.data()) = htonl(byte_size);
-
-	if (!message.SerializeToArray(buffer.data() + sizeof(byte_size), byte_size))
-		throw exception_t("Unable to serialize message to array");
-
-	if (!stream->write(buffer.data(), buffer.size()))
-		throw exception_t("Unable write serialized message");
-}
-
 static geo_id_t generate_polygon_id()
 {
 	// TODO: Make good polygon_id generation.
@@ -195,7 +177,7 @@ void converter_t::process_way(geo_id_t geo_id, kvs_t const &kvs, geo_ids_t const
 	for (kv_t const &kv : kvs)
 		kvs_append(kv, &region);
 
-	serialize_protobuf(region, output_stream_, allocator_);
+	writer_->write(region, allocator_);
 	++regions_number_;
 }
 
@@ -275,7 +257,7 @@ void converter_t::process_relation(geo_id_t geo_id, kvs_t const &kvs, references
 		for (kv_t const &kv : kvs)
 			kvs_append(kv, &region);
 
-		serialize_protobuf(region, output_stream_, allocator_);
+		writer_->write(region, allocator_);
 		++regions_number_;
 	}
 }
@@ -354,15 +336,11 @@ void run_pool_convert(char const *input_path, char const *output_path, size_t th
 	{
 		log_info("Convert...");
 
-		file_t file;
-		file.read_write_open(output_path);
-		file_output_stream_t output_stream(file.fd());
-
-		safe_output_stream_t safe_output_stream(&output_stream);
+		proto_writer_t proto_writer(output_path);
 
 		std::vector<converter_t> converters;
 		for (size_t i = 0; i < threads_count; ++i)
-			converters.emplace_back(nodes, ways, &safe_output_stream, &allocators[i]);
+			converters.emplace_back(nodes, ways, &proto_writer, &allocators[i]);
 
 		run_pool_parse(input_path, converters);
 

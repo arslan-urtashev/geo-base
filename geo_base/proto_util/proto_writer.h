@@ -18,55 +18,48 @@
 
 #pragma once
 
-#include <geo_base/util/io_stream.h>
-#include <mutex>
-#include <algorithm>
+#include <arpa/inet.h>
+#include <geo_base/proto/region.pb.h>
+#include <geo_base/util/dynarray.h>
+#include <geo_base/util/file.h>
+#include <geo_base/util/file_stream.h>
+#include <geo_base/util/safe_stream.h>
 
 namespace geo_base {
 
-class safe_output_stream_t : public output_stream_t {
+class proto_writer_t {
 public:
-	safe_output_stream_t()
-		: mutex_()
-		, output_stream_(nullptr)
+	proto_writer_t(char const *path)
+		: file_()
+		, output_stream_()
+		, safe_output_stream_()
 	{
+		file_.read_write_open(path);
+		output_stream_ = file_output_stream_t(file_.fd());
+		safe_output_stream_ = safe_output_stream_t(&output_stream_);
 	}
 
-	explicit safe_output_stream_t(output_stream_t *output_stream)
-		: mutex_()
-		, output_stream_(output_stream)
+	template<typename message_t>
+	void write(message_t const &message, allocator_t *allocator)
 	{
-	}
+		uint32_t const byte_size = message.ByteSize();
+		uint32_t const total_size = byte_size + sizeof(byte_size);
 
-	safe_output_stream_t(safe_output_stream_t &&s)
-		: mutex_()
-		, output_stream_(nullptr)
-	{
-		std::lock_guard<std::mutex> lock1(mutex_);
-		std::lock_guard<std::mutex> lock2(s.mutex_);
-		std::swap(output_stream_, s.output_stream_);
-	}
-	
-	safe_output_stream_t &operator = (safe_output_stream_t &&s)
-	{
-		std::lock_guard<std::mutex> lock1(mutex_);
-		std::lock_guard<std::mutex> lock2(s.mutex_);
-		std::swap(output_stream_, s.output_stream_);
-		return *this;
-	}
+		dynarray_t<char> buffer(total_size, total_size, allocator);
 
-	bool write(char const *ptr, size_t count) override
-	{
-		std::lock_guard<std::mutex> lock(mutex_);
-		return output_stream_->write(ptr, count);
+		*((uint32_t *) buffer.data()) = htonl(byte_size);
+
+		if (!message.SerializeToArray(buffer.data() + sizeof(byte_size), byte_size))
+			throw exception_t("Unable to serialize message to array");
+
+		if (!safe_output_stream_.write(buffer.data(), buffer.size()))
+			throw exception_t("Unable writer serialized message");
 	}
 
 private:
-	std::mutex mutex_;
-	output_stream_t *output_stream_;
-
-	safe_output_stream_t(safe_output_stream_t const &) = delete;
-	safe_output_stream_t &operator = (safe_output_stream_t const &) = delete;
+	file_t file_;
+	file_output_stream_t output_stream_;
+	safe_output_stream_t safe_output_stream_;
 };
 
 } // namespace geo_base

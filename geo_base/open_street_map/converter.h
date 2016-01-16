@@ -20,6 +20,7 @@
 
 #include <geo_base/open_street_map/parser.h>
 #include <geo_base/proto/region.pb.h>
+#include <geo_base/proto_util/proto_writer.h>
 
 #include <unordered_set>
 #include <unordered_map>
@@ -119,10 +120,10 @@ private:
 
 class converter_t : public parser_t {
 public:
-	converter_t(nodes_map_t const &nodes, ways_map_t const &ways, output_stream_t *output_stream,
+	converter_t(nodes_map_t const &nodes, ways_map_t const &ways, proto_writer_t *writer,
 	            allocator_t *allocator)
 		: parser_t(allocator)
-		, output_stream_(output_stream)
+		, writer_(writer)
 		, ways_(&ways)
 		, nodes_(&nodes)
 		, regions_number_(0)
@@ -139,7 +140,7 @@ public:
 	}
 
 private:
-	output_stream_t *output_stream_;
+	proto_writer_t *writer_;
 	ways_map_t const *ways_;
 	nodes_map_t const *nodes_;
 	size_t regions_number_;
