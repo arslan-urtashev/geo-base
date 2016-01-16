@@ -16,6 +16,8 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#pragma once
+
 #include <arpa/inet.h>
 #include <geo_base/proto/region.pb.h>
 #include <geo_base/typedef.h>
@@ -46,7 +48,7 @@ public:
 	bool region(geo_id_t geo_id, callback_t callback)
 	{
 		if (index_.empty()) {
-			each_region([&] (proto::region_t const &region) {
+			each([&] (proto::region_t const &region) {
 				if (region.region_id() == geo_id)
 					callback(region);
 			});
@@ -64,6 +66,8 @@ public:
 
 			callback(region);
 		}
+
+		return true;
 	}
 
 	void generate_index();
