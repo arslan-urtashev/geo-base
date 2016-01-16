@@ -45,10 +45,8 @@ static region_t::options_t get_region_options(kvs_t const &kvs)
 		char const *v = kv.v;
 
 #define op(ek, ev, opt) \
-	do { \
-		if (eq(ek, k) && eq(ev, v)) \
-			options |= opt; \
-	} while (false);
+	if (eq(ek, k) && eq(ev, v)) \
+		options |= opt;
 
 		op("boundary", "administrative", region_t::OPTION_BOUNDARY_ADMINISTRATIVE);
 		op("place", "island", region_t::OPTION_PLACE_ISLAND);
