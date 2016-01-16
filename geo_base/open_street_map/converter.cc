@@ -36,31 +36,43 @@ static bool eq(char const *a, char const *b)
 	return !strcmp(a, b);
 }
 
-static region_t::options_t get_region_options(kvs_t const &kvs)
+
+#define op(ev, opt) \
+	if (eq(ev, kv.v)) \
+		return opt;
+
+static region_t::options_t get_region_boundary_options(kvs_t const &kvs)
 {
-	region_t::options_t options = 0;
-
 	for (kv_t const &kv : kvs) {
-		char const *k = kv.k;
-		char const *v = kv.v;
+		if (eq(kv.k, "boundary")) {
+			op("administrative", region_t::OPTION_BOUNDARY_ADMINISTRATIVE);
+			return 0;
+		}
+	}
+	return 0;
+}
 
-#define op(ek, ev, opt) \
-	if (eq(ev, v) && eq(ek, k)) \
-		options |= opt;
-
-		op("boundary", "administrative", region_t::OPTION_BOUNDARY_ADMINISTRATIVE);
-		op("place", "island", region_t::OPTION_PLACE_ISLAND);
-		op("place", "town", region_t::OPTION_PLACE_TOWN);
-		op("place", "city", region_t::OPTION_PLACE_CITY);
-		op("place", "village", region_t::OPTION_PLACE_VILLAGE);
-		op("place", "borough", region_t::OPTION_PLACE_BOROUGH);
-		op("place", "suburb", region_t::OPTION_PLACE_SUBURB);
+static region_t::options_t get_region_place_options(kvs_t const &kvs)
+{
+	for (kv_t const &kv : kvs) {
+		if (eq(kv.k, "place")) {
+			op("island", region_t::OPTION_PLACE_ISLAND);
+			op("town", region_t::OPTION_PLACE_TOWN);
+			op("city", region_t::OPTION_PLACE_CITY);
+			op("village", region_t::OPTION_PLACE_VILLAGE);
+			op("borough", region_t::OPTION_PLACE_BOROUGH);
+			op("suburb", region_t::OPTION_PLACE_SUBURB);
+			return 0;
+		}
+	}
+	return 0;
+}
 
 #undef op
 
-	}
-
-	return options;
+static region_t::options_t get_region_options(kvs_t const &kvs)
+{
+	return get_region_boundary_options(kvs) | get_region_place_options(kvs);
 }
 
 static polygon_t::type_t get_polygon_type(char const *role)
