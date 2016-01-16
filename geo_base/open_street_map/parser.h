@@ -172,5 +172,7 @@ void run_pool_parse(char const *path, std::vector<parser_t> &parsers)
 	log_info("Parsed %s in %.3f seconds (%.3f minutes)", path, seconds, seconds / 60.0);
 }
 
+size_t optimal_threads_number();
+
 } // namespace open_street_map
 } // namespace geo_base

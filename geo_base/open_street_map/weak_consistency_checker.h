@@ -69,6 +69,14 @@ public:
 		return not_found;
 	}
 
+	void merge(weak_consistency_checker_t const &c)
+	{
+		nodes_.insert(c.nodes_.begin(), c.nodes_.end());
+		expect_nodes_.insert(c.expect_nodes_.begin(), c.expect_nodes_.end());
+		ways_.insert(c.ways_.begin(), c.ways_.end());
+		expect_ways_.insert(c.expect_ways_.begin(), c.expect_ways_.end());
+	}
+
 private:
 	std::unordered_set<geo_id_t> nodes_;
 	std::unordered_set<geo_id_t> expect_nodes_;

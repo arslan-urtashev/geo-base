@@ -24,14 +24,6 @@
 using namespace geo_base;
 using namespace open_street_map;
 
-static size_t get_threads_count()
-{
-	size_t threads_count = std::thread::hardware_concurrency();
-	if (threads_count == 0)
-		++threads_count;
-	return std::min(threads_count, 12ul);
-}
-
 int main(int argc, char *argv[])
 {
 	log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
@@ -41,7 +33,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	size_t const threads_count = get_threads_count();
+	size_t const threads_count = optimal_threads_number();
 	log_info("Threads count: %lu", threads_count);
 
 	std::vector<pool_allocator_t> allocators;

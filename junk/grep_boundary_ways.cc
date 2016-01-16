@@ -33,10 +33,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	size_t threads_count = std::thread::hardware_concurrency();
-	if (threads_count == 0)
-		++threads_count;
-
+	size_t const threads_count = optimal_threads_number();
 	log_info("Threads count: %lu", threads_count);
 
 	std::vector<pool_allocator_t> allocators;
