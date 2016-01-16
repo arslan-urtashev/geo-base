@@ -135,53 +135,59 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 	for (int k = 0; k < block.basic_groups_size(); ++k) {
 		proto::basic_group_t const &group = block.basic_groups(k);
 
-		for (int i = 0; i < group.nodes_size(); ++i) {
-			proto::node_t const &node = group.nodes(i);
-			location_t const location = make_location(block, node.lat(), node.lon());
-			kvs_t const kvs = make_kvs(node, block, allocator_);
-			CATCH_RUN("nodes", process_node(node.id(), location, kvs));
-			++nodes_processed_;
+		if (!(processing_disabled_mask_ & PROCESSING_DISABLED_NODE)) {
+			for (int i = 0; i < group.nodes_size(); ++i) {
+				proto::node_t const &node = group.nodes(i);
+				location_t const location = make_location(block, node.lat(), node.lon());
+				kvs_t const kvs = make_kvs(node, block, allocator_);
+				CATCH_RUN("nodes", process_node(node.id(), location, kvs));
+				++nodes_processed_;
+			}
+
+			if (group.has_dense_nodes()) {
+				proto::dense_nodes_t const &nodes = group.dense_nodes();
+				process_dense_nodes(nodes, block);
+			}
 		}
 
-		if (group.has_dense_nodes()) {
-			proto::dense_nodes_t const &nodes = group.dense_nodes();
-			process_dense_nodes(nodes, block);
+		if (!(processing_disabled_mask_ & PROCESSING_DISABLED_WAY)) {
+			for (int i = 0; i < group.ways_size(); ++i) {
+				proto::way_t const &w = group.ways(i);
+
+				geo_ids_t references(w.refs_size(), w.refs_size(), allocator_);
+
+				for (int j = 0; j < w.refs_size(); ++j)
+					references[j] = w.refs(j);
+				for (int j = 0; j < w.refs_size() - 1; ++j)
+					references[j + 1] += references[j];
+
+				kvs_t const kvs = make_kvs(w, block, allocator_);
+				CATCH_RUN("ways", process_way(w.id(), kvs, references));
+
+				++ways_processed_;
+			}
 		}
 
-		for (int i = 0; i < group.ways_size(); ++i) {
-			proto::way_t const &w = group.ways(i);
+		if (!(processing_disabled_mask_ & PROCESSING_DISABLED_RELATION)) {
+			for (int i = 0; i < group.relations_size(); ++i) {
+				proto::relation_t const &r = group.relations(i);
 
-			geo_ids_t references(w.refs_size(), w.refs_size(), allocator_);
+				references_t references(r.member_ids_size(), r.member_ids_size(), allocator_);
 
-			for (int j = 0; j < w.refs_size(); ++j)
-				references[j] = w.refs(j);
-			for (int j = 0; j < w.refs_size() - 1; ++j)
-				references[j + 1] += references[j];
+				for (int j = 0; j < r.member_ids_size(); ++j)
+					references[j].geo_id = r.member_ids(j);
+				for (int j = 0; j < r.member_ids_size(); ++j)
+					references[j].type = (reference_t::type_t) r.member_types(j);
+				for (int j = 0; j < r.member_ids_size(); ++j)
+					references[j].role = block.string_table().s(r.roles_sid(j)).c_str();
+				for (int j = 0; j < r.member_ids_size() - 1; ++j)
+					references[j + 1].geo_id += references[j].geo_id;
 
-			kvs_t const kvs = make_kvs(w, block, allocator_);
-			CATCH_RUN("ways", process_way(w.id(), kvs, references));
+				kvs_t const kvs = make_kvs(r, block, allocator_);
+				CATCH_RUN("relations", process_relation(r.id(), kvs, references));
 
-			++ways_processed_;
-		}
-
-		for (int i = 0; i < group.relations_size(); ++i) {
-			proto::relation_t const &r = group.relations(i);
-
-			references_t references(r.member_ids_size(), r.member_ids_size(), allocator_);
-
-			for (int j = 0; j < r.member_ids_size(); ++j)
-				references[j].geo_id = r.member_ids(j);
-			for (int j = 0; j < r.member_ids_size(); ++j)
-				references[j].type = (reference_t::type_t) r.member_types(j);
-			for (int j = 0; j < r.member_ids_size(); ++j)
-				references[j].role = block.string_table().s(r.roles_sid(j)).c_str();
-			for (int j = 0; j < r.member_ids_size() - 1; ++j)
-				references[j + 1].geo_id += references[j].geo_id;
-
-			kvs_t const kvs = make_kvs(r, block, allocator_);
-			CATCH_RUN("relations", process_relation(r.id(), kvs, references));
-
-			++relations_processed_;
+				++relations_processed_;
+			}
 		}
 	}
 }

@@ -44,6 +44,7 @@ public:
 		, dense_nodes_processed_(0)
 		, relations_processed_(0)
 		, ways_processed_(0)
+		, processing_disabled_mask_(0)
 	{
 	}
 	
@@ -54,6 +55,7 @@ public:
 		, dense_nodes_processed_(0)
 		, relations_processed_(0)
 		, ways_processed_(0)
+		, processing_disabled_mask_(0)
 	{
 	}
 
@@ -66,6 +68,7 @@ public:
 		std::swap(dense_nodes_processed_, p.dense_nodes_processed_);
 		std::swap(relations_processed_, p.relations_processed_);
 		std::swap(ways_processed_, ways_processed_);
+		std::swap(processing_disabled_mask_, processing_disabled_mask_);
 	}
 
 	void parse(reader_t *reader);
@@ -98,22 +101,28 @@ public:
 protected:
 	virtual void process_node(geo_id_t, location_t const &, kvs_t const &)
 	{
-		// Do nothing.
+		processing_disabled_mask_ |= PROCESSING_DISABLED_NODE;
 	}
 
 	virtual void process_way(geo_id_t, kvs_t const &, geo_ids_t const &)
 	{
-		// Do nothing.
+		processing_disabled_mask_ |= PROCESSING_DISABLED_WAY;
 	}
 
 	virtual void process_relation(geo_id_t, kvs_t const &, references_t const &)
 	{
-		// Do nothing.
+		processing_disabled_mask_ |= PROCESSING_DISABLED_RELATION;
 	}
 
 	allocator_t *allocator_;
 
 private:
+	enum processing_disable_t {
+		PROCESSING_DISABLED_NODE     = (1ull << 0),
+		PROCESSING_DISABLED_WAY      = (1ull << 1),
+		PROCESSING_DISABLED_RELATION = (1ull << 2),
+	};
+
 	void process_basic_groups(proto::basic_block_t const &block);
 
 	void process_dense_nodes(proto::dense_nodes_t const &nodes, proto::basic_block_t const &block);
@@ -123,6 +132,7 @@ private:
 	size_t dense_nodes_processed_;
 	size_t relations_processed_;
 	size_t ways_processed_;
+	uint64_t processing_disabled_mask_;
 
 	parser_t(parser_t const &) = delete;
 	parser_t &operator = (parser_t const &) = delete;
