@@ -153,7 +153,8 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 
 			geo_ids_t references(w.refs_size(), w.refs_size(), allocator_);
 
-			std::copy(w.refs().begin(), w.refs().end(), references.begin());
+			for (int j = 0; j < w.refs_size(); ++j)
+				references[j] = w.refs(j);
 			for (int j = 0; j < w.refs_size() - 1; ++j)
 				references[j + 1] += references[j];
 
