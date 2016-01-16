@@ -44,6 +44,9 @@ public:
 	template<typename callback_t>
 	bool call(geo_id_t geo_id, callback_t callback)
 	{
+		if (index_.empty())
+			generate_index();
+
 		if (index_.find(geo_id)	== index_.end())
 			return false;
 
@@ -51,20 +54,15 @@ public:
 		size_t const byte_size = ntohl(*((uint32_t *) ptr));
 
 		proto::region_t region;
-		if (!region.ParseFromArray(ptr + byte_size, byte_size))
+		if (!region.ParseFromArray(ptr + sizeof(byte_size), byte_size))
 			throw exception_t("Unable parse region from array");
 
 		callback(region);
 	}
 
-	void generate_index()
-	{
-		each_with_ptr([&] (char const *ptr, proto::region_t const &region) {
-			index_[region.region_id()] = ptr;
-		});
-	}
-
 private:
+	void generate_index();
+
 	template<typename callback_t>
 	void each_with_ptr(callback_t callback)
 	{
@@ -76,7 +74,7 @@ private:
 
 		while (ptr < end) {
 			uint32_t const byte_size = ntohl(*((uint32_t *) ptr));
-			if (!region.ParseFromArray(ptr + byte_size, byte_size))
+			if (!region.ParseFromArray(ptr + sizeof(byte_size), byte_size))
 				throw exception_t("Unable parse region from array");
 			callback(ptr, (proto::region_t const &) region);
 			ptr += byte_size + sizeof(byte_size);

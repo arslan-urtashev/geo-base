@@ -17,3 +17,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/proto_util/proto_reader.h>
+
+namespace geo_base {
+
+void proto_reader_t::generate_index()
+{
+	each_with_ptr([&] (char const *ptr, proto::region_t const &region) {
+		index_[region.region_id()] = ptr;
+	});
+}
+
+} // namespace geo_base

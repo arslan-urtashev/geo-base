@@ -18,6 +18,7 @@
 
 #include <gmock/gmock.h>
 #include <geo_base/open_street_map/converter.h>
+#include <geo_base/proto_util/proto_reader.h>
 #include <geo_base/util/pool_allocator.h>
 #include <test/geo_base_test.h>
 
@@ -27,8 +28,18 @@ using namespace open_street_map;
 class open_street_map_convert_t : public test_t {
 };
 
-TEST_F(open_street_map_convert_t, simple_convert)
+TEST_F(open_street_map_convert_t, convert)
 {
 	ASSERT_NO_THROW(run_pool_convert("test/andorra-latest.osm.pbf", "andorra-latest.pbf", 2));
+
+	proto_reader_t reader("andorra-latest.pbf");
+	size_t regions_number = 0;
+
+	reader.each([&] (::geo_base::proto::region_t const &) {
+		++regions_number;
+	});
+
+	EXPECT_EQ(11ul, regions_number);
+
 	remove("andorra-latest.pbf");
 }
