@@ -194,9 +194,10 @@ static void save_locations(graph_t const &graph, nodes_map_t const &nodes, geo_i
 		used->insert(geo_id);
 		location_append(nodes, polygon, geo_id);
 
-		for (geo_id_t const &node_id : graph.at(geo_id))
-			if (used->find(node_id) == used->end())
-				stack.push_back(node_id);
+		if (graph.find(geo_id) != graph.end())
+			for (geo_id_t const &node_id : graph.at(geo_id))
+				if (used->find(node_id) == used->end())
+					stack.push_back(node_id);
 	}
 }
 
