@@ -101,26 +101,26 @@ public:
 protected:
 	virtual void process_node(geo_id_t, location_t const &, kvs_t const &)
 	{
-		processing_disabled_mask_ |= PROCESSING_DISABLED_NODE;
+		processing_disabled_mask_ |= NODE_PROC_DISABLED;
 	}
 
 	virtual void process_way(geo_id_t, kvs_t const &, geo_ids_t const &)
 	{
-		processing_disabled_mask_ |= PROCESSING_DISABLED_WAY;
+		processing_disabled_mask_ |= WAY_PROC_DISABLED;
 	}
 
 	virtual void process_relation(geo_id_t, kvs_t const &, references_t const &)
 	{
-		processing_disabled_mask_ |= PROCESSING_DISABLED_RELATION;
+		processing_disabled_mask_ |= RELATION_PROC_DISABLED;
 	}
 
 	allocator_t *allocator_;
 
 private:
-	enum processing_disable_t {
-		PROCESSING_DISABLED_NODE     = (1ull << 0),
-		PROCESSING_DISABLED_WAY      = (1ull << 1),
-		PROCESSING_DISABLED_RELATION = (1ull << 2),
+	enum processing_disabled_t {
+		NODE_PROC_DISABLED     = (1u << 0),
+		WAY_PROC_DISABLED      = (1u << 1),
+		RELATION_PROC_DISABLED = (1u << 2),
 	};
 
 	void process_basic_groups(proto::basic_block_t const &block);

@@ -135,7 +135,7 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 	for (int k = 0; k < block.basic_groups_size(); ++k) {
 		proto::basic_group_t const &group = block.basic_groups(k);
 
-		if (!(processing_disabled_mask_ & PROCESSING_DISABLED_NODE)) {
+		if (!(processing_disabled_mask_ & NODE_PROC_DISABLED)) {
 			for (int i = 0; i < group.nodes_size(); ++i) {
 				proto::node_t const &node = group.nodes(i);
 				location_t const location = make_location(block, node.lat(), node.lon());
@@ -150,7 +150,7 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 			}
 		}
 
-		if (!(processing_disabled_mask_ & PROCESSING_DISABLED_WAY)) {
+		if (!(processing_disabled_mask_ & WAY_PROC_DISABLED)) {
 			for (int i = 0; i < group.ways_size(); ++i) {
 				proto::way_t const &w = group.ways(i);
 
@@ -168,7 +168,7 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 			}
 		}
 
-		if (!(processing_disabled_mask_ & PROCESSING_DISABLED_RELATION)) {
+		if (!(processing_disabled_mask_ & RELATION_PROC_DISABLED)) {
 			for (int i = 0; i < group.relations_size(); ++i) {
 				proto::relation_t const &r = group.relations(i);
 
