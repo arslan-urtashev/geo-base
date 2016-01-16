@@ -182,7 +182,7 @@ public:
 private:
 	void resize_down(size_t size)
 	{
-		if (std::is_trivially_destructible<data_t>::value) {
+		if (IS_TRIVIALLY_DESTRUCTIBLE(data_t)) {
 			if (size_ > size)
 				size_ = size;
 		} else {
@@ -193,7 +193,7 @@ private:
 
 	void resize_up(size_t size)
 	{
-		if (std::is_trivially_constructible<data_t>::value) {
+		if (IS_TRIVIALLY_CONSTRUCTIBLE(data_t)) {
 			if (size_ < size)
 				size_ = size;
 		} else {
