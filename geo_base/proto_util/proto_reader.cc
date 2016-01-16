@@ -22,7 +22,14 @@ namespace geo_base {
 
 void proto_reader_t::generate_index()
 {
+	if (!index_.empty()) {
+		log_warning("Index already generated!");
+		return;
+	}
+
 	each_with_ptr([&] (char const *ptr, proto::region_t const &region) {
+		if (index_.find(region.region_id()) != index_.end())
+			log_warning("Region %lu already exists in index", region.region_id());
 		index_[region.region_id()] = ptr;
 	});
 }

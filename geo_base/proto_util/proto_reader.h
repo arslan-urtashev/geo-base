@@ -35,54 +35,40 @@ public:
 	}
 
 	template<typename callback_t>
-	void each_region(callback_t callback)
+	void each(callback_t callback)
 	{
 		each_with_ptr([&] (char const *, proto::region_t const &region) {
 			callback(region);
 		});
 	}
-
+	
 	template<typename callback_t>
-	void each_polygon(callback_t callback)
+	bool region(geo_id_t geo_id, callback_t callback)
 	{
-		each_region([&] (proto::region_t const &region) {
-			for (proto::polygon_t const &polygon : region.polygons())
-				callback(polygon);
-		});
+		if (index_.empty()) {
+			each_region([&] (proto::region_t const &region) {
+				if (region.region_id() == geo_id)
+					callback(region);
+			});
+
+		} else {
+			if (index_.find(geo_id)	== index_.end())
+				return false;
+
+			char const *ptr = index_[geo_id];
+			size_t const byte_size = ntohl(*((uint32_t *) ptr));
+
+			proto::region_t region;
+			if (!region.ParseFromArray(ptr + sizeof(byte_size), byte_size))
+				throw exception_t("Unable parse region from array");
+
+			callback(region);
+		}
 	}
 
-	template<typename callback_t>
-	bool each_polygon(geo_id_t geo_id, callback_t callback)
-	{
-		bool const ret = call(geo_id, [&] (proto::region_t const &region) {
-			for (proto::polygon_t const &polygon : region.polygons())
-				callback(polygon);
-		});
-		return ret;
-	}
-
-	template<typename callback_t>
-	bool call(geo_id_t geo_id, callback_t callback)
-	{
-		if (index_.empty())
-			generate_index();
-
-		if (index_.find(geo_id)	== index_.end())
-			return false;
-
-		char const *ptr = index_[geo_id];
-		size_t const byte_size = ntohl(*((uint32_t *) ptr));
-
-		proto::region_t region;
-		if (!region.ParseFromArray(ptr + sizeof(byte_size), byte_size))
-			throw exception_t("Unable parse region from array");
-
-		callback(region);
-	}
-
-private:
 	void generate_index();
 
+private:
 	template<typename callback_t>
 	void each_with_ptr(callback_t callback)
 	{

@@ -16,35 +16,26 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <gmock/gmock.h>
-#include <geo_base/open_street_map/converter.h>
+#include <iostream>
 #include <geo_base/proto_util/proto_reader.h>
-#include <geo_base/util/pool_allocator.h>
-#include <test/geo_base_test.h>
 
 using namespace geo_base;
-using namespace open_street_map;
 
-class open_street_map_convert_t : public test_t {
-};
-
-TEST_F(open_street_map_convert_t, convert)
+int main(int argc, char *argv[])
 {
-	ASSERT_NO_THROW(run_pool_convert("test/andorra-latest.osm.pbf", "andorra-latest.pbf", 2));
+	log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
 
-	proto_reader_t reader("andorra-latest.pbf");
+	if (argc != 2) {
+		log_error("USAGE: write-proto <geo-base.pbf>");
+		return -1;
+	}
 
+	proto_reader_t reader(argv[1]);
 
-	size_t regions_number = 0;
-	size_t polygons_number = 0;
-
-	reader.each([&] (::geo_base::proto::region_t const &r) {
-		++regions_number;
-		polygons_number += r.polygons_size();
+	reader.each([&] (proto::region_t const &region) {
+		std::string const debug_string = region.Utf8DebugString();
+		std::cout << debug_string << std::endl;
 	});
 
-	EXPECT_EQ(11ul, regions_number);
-	EXPECT_EQ(11ul, polygons_number);
-
-	remove("andorra-latest.pbf");
+	return 0;
 }
