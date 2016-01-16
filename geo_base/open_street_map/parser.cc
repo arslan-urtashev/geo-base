@@ -151,13 +151,11 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 		for (int i = 0; i < group.ways_size(); ++i) {
 			proto::way_t const &w = group.ways(i);
 
-			geo_id_t reference_id = 0;
-			geo_ids_t references(w.refs_size(), allocator_);
+			geo_ids_t references(w.refs_size(), w.refs_size(), allocator_);
 
-			for (int j = 0; j < w.refs_size(); ++j) {
-				reference_id += w.refs(j);
-				references.push_back(reference_id);
-			}
+			std::copy(w.refs().begin(), w.refs().end(), references.begin());
+			for (int j = 0; j < w.refs_size() - 1; ++j)
+				references[j + 1] += references[j];
 
 			kvs_t const kvs = make_kvs(w, block, allocator_);
 			CATCH_RUN("ways", process_way(w.id(), kvs, references));
