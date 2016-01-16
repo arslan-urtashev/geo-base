@@ -52,12 +52,13 @@ public:
 	}
 
 	template<typename callback_t>
-	void each_polygon(geo_id_t geo_id, callback_t callback)
+	bool each_polygon(geo_id_t geo_id, callback_t callback)
 	{
-		call(geo_id, [&] (proto::region_t const &region) {
+		bool const ret = call(geo_id, [&] (proto::region_t const &region) {
 			for (proto::polygon_t const &polygon : region.polygons())
 				callback(polygon);
 		});
+		return ret;
 	}
 
 	template<typename callback_t>
