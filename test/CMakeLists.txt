@@ -5,7 +5,7 @@ INCLUDE_DIRECTORIES(
 )
 
 ADD_EXECUTABLE(
-	run_ut
+	run_test
 	algo.cc
 	base_allocator.cc
 	converter.cc
@@ -27,7 +27,7 @@ ADD_EXECUTABLE(
 )
 
 TARGET_LINK_LIBRARIES(
-	run_ut
+	run_test
 	geo-base
 	gmock
 )
