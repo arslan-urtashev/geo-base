@@ -1,9 +1,3 @@
-ADD_SUBDIRECTORY(gmock)
-
-INCLUDE_DIRECTORIES(
-	gmock
-)
-
 ADD_EXECUTABLE(
 	run_test
 	algo.cc
@@ -23,7 +17,7 @@ ADD_EXECUTABLE(
 	parser.cc
 	part.cc
 	pool_allocator.cc
-	run_ut.cc
+	run_test.cc
 )
 
 TARGET_LINK_LIBRARIES(
