@@ -1,0 +1,10 @@
+ADD_LIBRARY(
+	gtest
+	gtest-death-test.cc
+	gtest-filepath.cc
+	gtest-port.cc
+	gtest-printers.cc
+	gtest-test-part.cc
+	gtest-typed-test.cc
+	gtest.cc
+)

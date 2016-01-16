@@ -13,11 +13,6 @@ ADD_LIBRARY(
 	polygon.cc
 )
 
-ADD_DEPENDENCIES(
-	geo-base
-	geo-base-proto
-)
-
 TARGET_LINK_LIBRARIES(
 	geo-base
 	geo-base-proto

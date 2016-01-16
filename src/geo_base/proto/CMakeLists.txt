@@ -1,23 +1,13 @@
-FIND_PACKAGE(Protobuf REQUIRED)
-
-INCLUDE_DIRECTORIES(
-	${PROTOBUF_INCLUDE_DIRS}
-	${CMAKE_CURRENT_BINARY_DIR}
-)
-
-PROTOBUF_GENERATE_CPP(
-	PROTO_SRCS
-	PROTO_HDRS
-	region.proto
+ADD_DEFINITIONS(
+	-Wno-unused-parameter
 )
 
 ADD_LIBRARY(
 	geo-base-proto
-	${PROTO_SRCS}
-	${PROTO_HDRS}
+	region.pb.cc
 )
 
 TARGET_LINK_LIBRARIES(
 	geo-base-proto
-	${PROTOBUF_LIBRARIES}
+	protobuf
 )

@@ -20,7 +20,8 @@
 #include <geo_base/open_street_map/converter.h>
 #include <geo_base/proto_util/proto_reader.h>
 #include <geo_base/util/pool_allocator.h>
-#include <test/geo_base_test.h>
+
+#include "geo_base_test.h"
 
 using namespace geo_base;
 using namespace open_street_map;

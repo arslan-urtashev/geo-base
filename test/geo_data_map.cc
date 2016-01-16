@@ -21,7 +21,8 @@
 #include <geo_base/geo_data_debug.h>
 #include <geo_base/util/pool_allocator.h>
 #include <geo_base/util/stop_watch.h>
-#include <test/geo_base_test.h>
+
+#include "geo_base_test.h"
 
 using namespace geo_base;
 

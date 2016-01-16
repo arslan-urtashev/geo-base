@@ -1,23 +1,13 @@
-FIND_PACKAGE(Protobuf REQUIRED)
-
-INCLUDE_DIRECTORIES(
-	${PROTOBUF_INCLUDE_DIRS}
-	${CMAKE_CURRENT_BINARY_DIR}
-)
-
-PROTOBUF_GENERATE_CPP(
-	PROTO_SRCS
-	PROTO_HDRS
-	open_street_map.proto
+ADD_DEFINITIONS(
+	-Wno-unused-parameter
 )
 
 ADD_LIBRARY(
 	geo-base-open-street-map-proto
-	${PROTO_SRCS}
-	${PROTO_HDRS}
+	open_street_map.pb.cc
 )
 
 TARGET_LINK_LIBRARIES(
 	geo-base-open-street-map-proto
-	${PROTOBUF_LIBRARIES}
+	protobuf
 )
