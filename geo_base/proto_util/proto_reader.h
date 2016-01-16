@@ -58,7 +58,7 @@ public:
 				return false;
 
 			char const *ptr = index_[geo_id];
-			size_t const byte_size = ntohl(*((uint32_t *) ptr));
+			uint32_t const byte_size = ntohl(*((uint32_t *) ptr));
 
 			proto::region_t region;
 			if (!region.ParseFromArray(ptr + sizeof(byte_size), byte_size))

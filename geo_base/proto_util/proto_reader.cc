@@ -17,6 +17,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/proto_util/proto_reader.h>
+#include <geo_base/util/log.h>
+#include <geo_base/util/stop_watch.h>
 
 namespace geo_base {
 
@@ -27,11 +29,20 @@ void proto_reader_t::generate_index()
 		return;
 	}
 
+	log_debug("Generating proto reader index...");
+
+	stop_watch_t stop_watch;
+	stop_watch.run();
+
 	each_with_ptr([&] (char const *ptr, proto::region_t const &region) {
 		if (index_.find(region.region_id()) != index_.end())
 			log_warning("Region %lu already exists in index", region.region_id());
 		index_[region.region_id()] = ptr;
 	});
+
+	float const seconds = stop_watch.get();
+	log_debug("Proto reader index generated in %.3f seconds (%.3f minutes)",
+		seconds, seconds / 60.0);
 }
 
 } // namespace geo_base
