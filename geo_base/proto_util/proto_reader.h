@@ -34,10 +34,28 @@ public:
 	}
 
 	template<typename callback_t>
-	void each(callback_t callback)
+	void each_region(callback_t callback)
 	{
 		each_with_ptr([&] (char const *, proto::region_t const &region) {
 			callback(region);
+		});
+	}
+
+	template<typename callback_t>
+	void each_polygon(callback_t callback)
+	{
+		each_region([&] (proto::region_t const &region) {
+			for (proto::polygon_t const &polygon : region.polygons())
+				callback(polygon);
+		});
+	}
+
+	template<typename callback_t>
+	void each_polygon(geo_id_t geo_id, callback_t callback)
+	{
+		call(geo_id, [&] (proto::region_t const &region) {
+			for (proto::polygon_t const &polygon : region.polygons())
+				callback(polygon);
 		});
 	}
 

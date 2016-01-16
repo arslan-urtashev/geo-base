@@ -33,13 +33,20 @@ TEST_F(open_street_map_convert_t, convert)
 	ASSERT_NO_THROW(run_pool_convert("test/andorra-latest.osm.pbf", "andorra-latest.pbf", 2));
 
 	proto_reader_t reader("andorra-latest.pbf");
-	size_t regions_number = 0;
 
-	reader.each([&] (::geo_base::proto::region_t const &) {
+
+	size_t regions_number = 0;
+	reader.each_region([&] (::geo_base::proto::region_t const &) {
 		++regions_number;
 	});
 
+	size_t polygons_number = 0;
+	reader.each_polygon([&] (::geo_base::proto::polygon_t const &) {
+		++polygons_number;
+	});
+
 	EXPECT_EQ(11ul, regions_number);
+	EXPECT_EQ(11ul, polygons_number);
 
 	remove("andorra-latest.pbf");
 }
