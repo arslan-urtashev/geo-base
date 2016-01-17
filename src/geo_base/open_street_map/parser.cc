@@ -249,7 +249,7 @@ size_t optimal_threads_number()
 	size_t threads_count = std::thread::hardware_concurrency();
 	if (threads_count == 0)
 		++threads_count;
-	return std::min(threads_count, 12ul);
+	return std::min(threads_count, 16ul);
 }
 
 } // namespace open_street_map
