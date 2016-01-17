@@ -11,6 +11,8 @@ ADD_DEFINITIONS(
 	-Wno-unused-function
 	-Wno-unused-parameter
 	-Wno-unused-const-variable
+	-Wno-ignored-qualifiers
+	-Wno-maybe-uninitialized
 )
 
 INCLUDE_DIRECTORIES(
