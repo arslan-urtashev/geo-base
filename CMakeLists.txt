@@ -14,6 +14,7 @@ INCLUDE_DIRECTORIES(
 	deps/gtest
 	deps/protobuf
 	deps/zlib
+	deps/jemalloc
 	src
 )
 

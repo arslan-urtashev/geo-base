@@ -19,8 +19,8 @@
 #pragma once
 
 #include <geo_base/open_street_map/parser.h>
-#include <unordered_set>
 #include <geo_base/util/log.h>
+#include <geo_base/util/std.h>
 
 namespace geo_base {
 namespace open_street_map {
@@ -78,10 +78,10 @@ public:
 	}
 
 private:
-	std::unordered_set<geo_id_t> nodes_;
-	std::unordered_set<geo_id_t> expect_nodes_;
-	std::unordered_set<geo_id_t> ways_;
-	std::unordered_set<geo_id_t> expect_ways_;
+	set_t<geo_id_t> nodes_;
+	set_t<geo_id_t> expect_nodes_;
+	set_t<geo_id_t> ways_;
+	set_t<geo_id_t> expect_ways_;
 };
 
 } // namespace open_street_map

@@ -21,16 +21,14 @@
 #include <geo_base/open_street_map/parser.h>
 #include <geo_base/proto/region.pb.h>
 #include <geo_base/proto_util/proto_writer.h>
-
-#include <unordered_set>
-#include <unordered_map>
+#include <geo_base/util/std.h>
 
 namespace geo_base {
 namespace open_street_map {
 
-typedef std::unordered_set<geo_id_t> geo_ids_set_t;
-typedef std::unordered_map<geo_id_t, std::vector<geo_id_t>> ways_map_t;
-typedef std::unordered_map<geo_id_t, location_t> nodes_map_t;
+typedef set_t<geo_id_t> geo_ids_set_t;
+typedef map_t<geo_id_t, vector_t<geo_id_t>> ways_map_t;
+typedef map_t<geo_id_t, location_t> nodes_map_t;
 
 class grep_boundary_ways_t : public parser_t {
 public:

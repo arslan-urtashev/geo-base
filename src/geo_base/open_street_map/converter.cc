@@ -26,10 +26,9 @@
 namespace geo_base {
 namespace open_street_map {
 
-typedef std::vector<geo_id_t> way_list_t;
-typedef std::unordered_map<geo_id_t, std::vector<geo_id_t>> graph_t;
-typedef std::unordered_set<geo_id_t> used_t;
-typedef std::vector<geo_id_t> way_list_t;
+typedef vector_t<geo_id_t> way_list_t;
+typedef map_t<geo_id_t, vector_t<geo_id_t>> graph_t;
+typedef set_t<geo_id_t> used_t;
 
 static bool eq(char const *a, char const *b)
 {

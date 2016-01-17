@@ -22,8 +22,8 @@
 #include <geo_base/proto/region.pb.h>
 #include <geo_base/typedef.h>
 #include <geo_base/util/allocator.h>
+#include <geo_base/util/std.h>
 #include <geo_base/util/mem_file.h>
-#include <unordered_map>
 
 namespace geo_base {
 
@@ -92,7 +92,7 @@ private:
 	}
 
 	mem_file_t mem_file_;
-	std::unordered_map<geo_id_t, char const *> index_;
+	map_t<geo_id_t, char const *> index_;
 };
 
 } // namespace geo_base
