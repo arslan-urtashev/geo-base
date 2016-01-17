@@ -16,6 +16,7 @@ INCLUDE_DIRECTORIES(
 	deps/protobuf
 	deps/zlib
 	deps/jemalloc
+	deps/fcgi
 	src
 )
 
