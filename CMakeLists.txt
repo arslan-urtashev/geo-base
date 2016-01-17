@@ -6,6 +6,7 @@ ADD_SUBDIRECTORY(deps)
 ADD_DEFINITIONS(
 	-Wall
 	-Werror
+	-funroll-loops
 	-std=c++0x
 )
 
