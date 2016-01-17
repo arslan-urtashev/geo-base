@@ -14,10 +14,10 @@ This license applies to all parts of geo-base except the following:
   - Google Mocking Framework, located in deps/gmock.
     Files in this folder copyrighted by Google Inc.
 
-  - jemalloc - general purpose memory allocation functions, located in deps/jemalloc.
+  - Jemalloc - general purpose memory allocation functions, located in deps/jemalloc.
     Files in this folder copyrighted by Jason Evans, Mozilla Foundation and Facebook Inc.
 
-  - zlib - general purpose compression library, located in deps/zlib.
+  - Zlib - general purpose compression library, located in deps/zlib.
     Files in this folder copyrighted by Jean-loup Gailly and Mark Adler.
 
 Copyright (c) 2015, 2016 Urtashev Arslan. All rights reserved.
