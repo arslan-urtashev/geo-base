@@ -20,4 +20,5 @@ TARGET_LINK_LIBRARIES(
 	geo-base-proto-util
 	geo-base-open-street-map
 	geo-base-generator
+	pthread
 )
