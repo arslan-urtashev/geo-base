@@ -37,7 +37,7 @@ static char const *OSM_PBF_TEST_FILE = "test/andorra-latest.osm.pbf";
 
 TEST(open_street_map_parser, parse)
 {
-	pool_allocator_t allocator(1_mb);
+	pool_allocator_t allocator(16_mb);
 	
 	file_t file;
 	file.read_open(OSM_PBF_TEST_FILE);
@@ -65,8 +65,8 @@ TEST(open_street_map_parser, run_pool_parse)
 	std::vector<pool_allocator_t> allocators;
 	std::vector<simple_counter_t> simple_counters;
 
-	allocators.emplace_back(1_mb);
-	allocators.emplace_back(1_mb);
+	allocators.emplace_back(16_mb);
+	allocators.emplace_back(16_mb);
 
 	simple_counters.emplace_back(&allocators[0]);
 	simple_counters.emplace_back(&allocators[1]);

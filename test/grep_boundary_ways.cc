@@ -27,7 +27,7 @@ using namespace open_street_map;
 
 TEST(grep_boundary_ways_t, check_boundary_ways)
 {
-	pool_allocator_t allocator(1_mb);
+	pool_allocator_t allocator(16_mb);
 
 	file_t file;
 	file.read_open("test/andorra-latest.osm.pbf");

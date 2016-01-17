@@ -13,6 +13,7 @@ ADD_DEFINITIONS(
 	-Wno-unused-const-variable
 	-Wno-ignored-qualifiers
 	-Wno-uninitialized
+	-std=c++0x
 )
 
 INCLUDE_DIRECTORIES(
