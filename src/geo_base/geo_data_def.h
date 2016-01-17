@@ -26,7 +26,6 @@
 #include <geo_base/polygon.h>
 #include <geo_base/region.h>
 #include <geo_base/typedef.h>
-#include <geo_base/util/system.h>
 
 namespace geo_base {
 

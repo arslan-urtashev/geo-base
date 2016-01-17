@@ -17,6 +17,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/geo_data_map.h>
+#include <geo_base/util/system.h>
 
 namespace geo_base {
 
