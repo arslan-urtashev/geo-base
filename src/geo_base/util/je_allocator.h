@@ -62,6 +62,28 @@ public:
 		allocator_.deallocate(p, n);
 	}
 
+	template<typename p_t, typename... args_t>
+	void construct (p_t* p, args_t&&... args)
+	{
+		::new ((void *) p) p_t (std::forward<args_t>(args)...);
+	}
+
+	template<typename p_t>
+	void destroy(p_t *p)
+	{
+		p->~p_t();
+	}
+
+	pointer address(reference x) const noexcept
+	{
+		return &x;
+	}
+
+	const_pointer address(const_reference x) const noexcept
+	{
+		return &x;
+	}
+
 private:
 	je_allocator_t allocator_;
 };
