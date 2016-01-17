@@ -47,6 +47,18 @@ public:
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
 
+	je_temp_alloc_t()
+	{
+	}
+
+	je_temp_alloc_t(je_temp_alloc_t const &)
+	{
+	}
+
+	je_temp_alloc_t &operator = (je_temp_alloc_t const &)
+	{
+	}
+
 	template<typename other_t>
 	struct rebind {
 		typedef je_temp_alloc_t<other_t> other;
