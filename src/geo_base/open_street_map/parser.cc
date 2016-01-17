@@ -18,6 +18,8 @@
 
 #include <zlib.h>
 
+#include <google/protobuf/arena.h>
+
 #include <geo_base/open_street_map/parser.h>
 #include <geo_base/util/dynarray.h>
 #include <geo_base/util/file.h>
@@ -192,31 +194,56 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
 	}
 }
 
+template<typename message_t>
+message_t *create_message(google::protobuf::Arena *arena)
+{
+	return google::protobuf::Arena::CreateMessage<message_t>(arena);
+}
+
 void parser_t::parse(reader_t *reader)
 {
-	proto::blob_header_t header;
-	proto::blob_t blob;
-	proto::basic_block_t block;
+	google::protobuf::ArenaOptions options;
+	
+	std::function<void *(size_t)> block_alloc = [&] (size_t n) {
+		return allocator_->allocate(n);
+	};
+	std::function<void (void *, size_t)> block_dealloc = [&] (void *ptr, size_t n) {
+		allocator_->deallocate(ptr, n);
+	};
 
-	while (reader->read(&header, &blob, allocator_)) {
-		if (header.type() == "OSMHeader")
+	options.block_alloc = block_alloc.target<void *(size_t)>();
+	options.block_dealloc = block_dealloc.target<void (void *, size_t)>();
+
+	google::protobuf::Arena arena(options);
+
+	while (true) {
+		proto::blob_header_t *header = create_message<proto::blob_header_t>(&arena);
+		proto::blob_t *blob = create_message<proto::blob_t>(&arena);
+		proto::basic_block_t *block = create_message<proto::basic_block_t>(&arena);
+
+		if (!reader->read(header, blob, allocator_))
+			break;
+
+		if (header->type() == "OSMHeader")
 			continue;
 
-		if (header.type() != "OSMData")
+		if (header->type() != "OSMData")
 			continue;
 
-		if (blob.has_raw())
+		if (blob->has_raw())
 			throw exception_t("Unable parse raw data");
 
-		if (blob.has_lzma_data())
+		if (blob->has_lzma_data())
 			throw exception_t("Unable parse lzma data");
 
-		if (!parse_basic_block(blob, &block, allocator_))
+		if (!parse_basic_block(*blob, block, allocator_))
 			throw exception_t("Unable parse block");
 
-		process_basic_groups(block);
+		process_basic_groups(*block);
 
 		++blocks_processed_;
+
+		arena.Reset();
 	}
 }
 
