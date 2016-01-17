@@ -51,11 +51,8 @@ public:
 	{
 	}
 
-	je_temp_alloc_t(je_temp_alloc_t const &)
-	{
-	}
-
-	je_temp_alloc_t &operator = (je_temp_alloc_t const &)
+	template<typename other_t>
+	je_temp_alloc_t(je_temp_alloc_t<other_t> const &)
 	{
 	}
 
