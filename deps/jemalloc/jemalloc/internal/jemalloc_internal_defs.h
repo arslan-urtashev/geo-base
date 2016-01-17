@@ -24,7 +24,7 @@
 #define CPU_SPINWAIT __asm__ volatile("pause")
 
 /* Defined if C11 atomics are available. */
-/* #undef JEMALLOC_C11ATOMICS */
+#undef JEMALLOC_C11ATOMICS
 
 /* Defined if the equivalent of FreeBSD's atomic(9) functions are available. */
 /* #undef JEMALLOC_ATOMIC9 */
@@ -33,7 +33,7 @@
  * Defined if OSAtomic*() functions are available, as provided by Darwin, and
  * documented in the atomic(3) manual page.
  */
-#define JEMALLOC_OSATOMIC 
+/* #define JEMALLOC_OSATOMIC */
 
 /*
  * Defined if __sync_add_and_fetch(uint32_t *, uint32_t) and
@@ -59,13 +59,13 @@
 /*
  * Defined if madvise(2) is available.
  */
-#define JEMALLOC_HAVE_MADVISE 
+/* #define JEMALLOC_HAVE_MADVISE */
 
 /*
  * Defined if OSSpin*() functions are available, as provided by Darwin, and
  * documented in the spinlock(3) manual page.
  */
-#define JEMALLOC_OSSPIN 
+/* #define JEMALLOC_OSSPIN  */
 
 /*
  * Defined if secure_getenv(3) is available.
@@ -75,7 +75,7 @@
 /*
  * Defined if issetugid(2) is available.
  */
-#define JEMALLOC_HAVE_ISSETUGID 
+/* #define JEMALLOC_HAVE_ISSETUGID */
 
 /*
  * Defined if _malloc_thread_cleanup() exists.  At least in the case of
@@ -211,8 +211,8 @@
 /*
  * Darwin (OS X) uses zones to work around Mach-O symbol override shortcomings.
  */
-#define JEMALLOC_ZONE 
-#define JEMALLOC_ZONE_VERSION 8
+/* #define JEMALLOC_ZONE */
+/* #define JEMALLOC_ZONE_VERSION 8 */
 
 /*
  * Methods for purging unused pages differ between operating systems.

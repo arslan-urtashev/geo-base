@@ -1,7 +1,5 @@
 #include "jemalloc/internal/jemalloc_internal.h"
-#ifndef JEMALLOC_ZONE
-#  error "This source file is for zones on Darwin (OS X)."
-#endif
+#ifdef JEMALLOC_ZONE
 
 /*
  * The malloc_default_purgeable_zone function is only available on >= 10.6.
@@ -274,3 +272,5 @@ register_zone(void)
 		}
 	} while (malloc_default_zone() != &zone);
 }
+
+#endif
