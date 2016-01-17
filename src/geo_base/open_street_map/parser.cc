@@ -203,16 +203,13 @@ message_t *create_message(google::protobuf::Arena *arena)
 void parser_t::parse(reader_t *reader)
 {
 	google::protobuf::ArenaOptions options;
-	
-	std::function<void *(size_t)> block_alloc = [&] (size_t n) {
+
+	options.block_alloc = [&] (size_t n) {
 		return allocator_->allocate(n);
 	};
-	std::function<void (void *, size_t)> block_dealloc = [&] (void *ptr, size_t n) {
+	options.block_dealloc = [&] (void *ptr, size_t n) {
 		allocator_->deallocate(ptr, n);
 	};
-
-	options.block_alloc = block_alloc.target<void *(size_t)>();
-	options.block_dealloc = block_dealloc.target<void (void *, size_t)>();
 
 	google::protobuf::Arena arena(options);
 

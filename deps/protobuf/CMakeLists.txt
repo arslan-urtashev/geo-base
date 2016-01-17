@@ -12,7 +12,7 @@ ADD_DEFINITIONS(
 	-Wno-unused-parameter
 	-Wno-unused-const-variable
 	-Wno-ignored-qualifiers
-	-Wno-maybe-uninitialized
+	-Wno-uninitialized
 )
 
 INCLUDE_DIRECTORIES(

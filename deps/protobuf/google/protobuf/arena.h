@@ -32,6 +32,7 @@
 #define GOOGLE_PROTOBUF_ARENA_H__
 
 #include <limits>
+#include <functional>
 #ifdef max
 #undef max  // Visual Studio defines this macro
 #endif
@@ -109,11 +110,11 @@ struct ArenaOptions {
   //
   // NOTE: block_alloc and dealloc functions are expected to behave like
   // malloc and free, including Asan poisoning.
-  void* (*block_alloc)(size_t);
+  std::function<void *(size_t)> block_alloc;
   // A function pointer to a dealloc method that takes ownership of the blocks
   // from the arena. By default, it contains a ptr to a wrapper function that
   // calls free.
-  void (*block_dealloc)(void*, size_t);
+  std::function<void (void *, size_t)> block_dealloc;
 
   // Hooks for adding external functionality such as user-specific metrics
   // collection, specific debugging abilities, etc.
