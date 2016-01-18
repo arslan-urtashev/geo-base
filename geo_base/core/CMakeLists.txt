@@ -5,5 +5,4 @@ ADD_LIBRARY(
 	geo_data_map.cc
 	part.cc
 	polygon.cc
-	system.cc
 )

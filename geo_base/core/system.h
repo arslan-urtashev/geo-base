@@ -18,8 +18,9 @@
 
 #pragma once
 
-#include <type_traits>
+#include <arpa/inet.h>
 #include <stdint.h>
+#include <type_traits>
 
 // Workaround missing builtin functions in g++ < 5.0
 #if __GNUG__ && __GNUC__ < 5
@@ -34,8 +35,6 @@
 
 namespace geo_base {
 
-typedef uint32_t endian_flag_t;
-
-endian_flag_t system_endian_flag();
+uint32_t const SYSTEM_ENDIAN_FLAG = htonl(337);
 
 } // namespace geo_base

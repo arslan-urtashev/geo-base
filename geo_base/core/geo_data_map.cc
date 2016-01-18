@@ -46,7 +46,7 @@ static uint64_t header_space()
 	space += sizeof(uint64_t);
 
 	// Endian flag.
-	space += sizeof(system_endian_flag());
+	space += sizeof(SYSTEM_ENDIAN_FLAG);
 
 #define GEO_BASE_DEF_VAR(var_t, var) \
 	space += sizeof(var_t);
@@ -86,7 +86,7 @@ static char const *serialize(geo_data_t const &geo_data,
 	size_t const pre_allocated_size = allocator->total_allocated_size();
 	char *begin = (char *) allocator->allocate(header_space()), *ptr = begin;
 	
-	serialize_value(&ptr, system_endian_flag());
+	serialize_value(&ptr, SYSTEM_ENDIAN_FLAG);
 	serialize_value(&ptr, header_space());
 
 #define GEO_BASE_DEF_VAR(var_t, var) \
@@ -139,10 +139,10 @@ void geo_data_map_t::remap()
 {
 	char const *ptr = data_;
 
-	endian_flag_t endian_flag = 0;
+	uint32_t endian_flag = 0;
 	deserialize_value(data_ + size_, &ptr, &endian_flag);
 
-	if (endian_flag != system_endian_flag())
+	if (endian_flag != SYSTEM_ENDIAN_FLAG)
 		throw exception_t("Not compatible flag in serialized data");
 
 	uint64_t header_space = 0;
