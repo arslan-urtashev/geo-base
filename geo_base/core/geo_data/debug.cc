@@ -19,8 +19,9 @@
 #include <geo_base/core/geo_data/debug.h>
 
 namespace geo_base {
+namespace geo_data {
 
-size_t geo_data_space(geo_data_t const &g)
+size_t space(geo_data_t const &g)
 {
 	size_t space = 0;
 
@@ -44,9 +45,9 @@ static float array_space(number_t number)
 	return number * sizeof(arr_t) / (1024.0 * 1024.0);
 }
 
-void geo_data_show(int fd, geo_data_t const &g)
+void show(int fd, geo_data_t const &g)
 {
-	dprintf(fd, "geo_data = %.3f Gb\n", geo_data_space(g) / (1024.0 * 1024.0 * 1024.0));
+	dprintf(fd, "geo_data = %.3f Gb\n", geo_data::space(g) / (1024.0 * 1024.0 * 1024.0));
 
 #define GEO_BASE_DEF_VAR(var_t, var) \
 	dprintf(fd, "  geo_data.%s = %llu\n", #var, (unsigned long long) g.var());
@@ -61,4 +62,5 @@ void geo_data_show(int fd, geo_data_t const &g)
 #undef GEO_BASE_DEF_ARR
 }
 
+} // namespace geo_data
 } // namespace geo_base

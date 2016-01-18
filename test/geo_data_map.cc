@@ -118,5 +118,5 @@ TEST_F(geo_data_map_test_t, fake_data_serialize)
 	EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(4, 0)));
 	EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(5, 5)));
 
-	geo_data_show(log_fd(), geo_data_map2);
+	geo_data::show(log_fd(), geo_data_map2);
 }

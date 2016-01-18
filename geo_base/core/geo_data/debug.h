@@ -21,9 +21,11 @@
 #include <geo_base/core/geo_data/geo_data.h>
 
 namespace geo_base {
+namespace geo_data {
 
-size_t geo_data_space(geo_data_t const &g);
+size_t space(geo_data_t const &g);
 
-void geo_data_show(int fd, geo_data_t const &g);
+void show(int fd, geo_data_t const &g);
 
+} // namespace geo_data
 } // namespace geo_base
