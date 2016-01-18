@@ -21,7 +21,7 @@
 #include <geo_base/open_street_map/parser.h>
 #include <geo_base/proto/region.pb.h>
 #include <geo_base/proto_util/proto_writer.h>
-#include <geo_base/util/std.h>
+#include <geo_base/wrappers/std.h>
 
 namespace geo_base {
 namespace open_street_map {

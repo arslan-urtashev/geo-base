@@ -9,4 +9,5 @@ ADD_LIBRARY(
 TARGET_LINK_LIBRARIES(
 	geo-base
 	geo-base-geo-data
+	geo-base-util
 )

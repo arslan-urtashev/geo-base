@@ -20,7 +20,7 @@
 
 #include <geo_base/open_street_map/parser.h>
 #include <geo_base/util/log.h>
-#include <geo_base/util/std.h>
+#include <geo_base/wrappers/std.h>
 
 namespace geo_base {
 namespace open_street_map {

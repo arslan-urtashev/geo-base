@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <geo_base/util/je_allocator.h>
+#include <geo_base/wrappers/je_allocator.h>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>

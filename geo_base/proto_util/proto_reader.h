@@ -23,7 +23,7 @@
 #include <geo_base/proto/region.pb.h>
 #include <geo_base/util/allocator.h>
 #include <geo_base/util/mem_file.h>
-#include <geo_base/util/std.h>
+#include <geo_base/wrappers/std.h>
 
 namespace geo_base {
 
