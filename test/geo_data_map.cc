@@ -16,11 +16,11 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <generator/generator.h>
-#include <geo_base/geo_data_map.h>
-#include <geo_base/geo_data_debug.h>
-#include <util/pool_allocator.h>
-#include <util/stop_watch.h>
+#include <geo_base/generator/generator.h>
+#include <geo_base/core/geo_data_map.h>
+#include <geo_base/core/geo_data_debug.h>
+#include <geo_base/util/pool_allocator.h>
+#include <geo_base/util/stop_watch.h>
 
 #include "geo_base_test.h"
 

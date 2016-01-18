@@ -1,9 +1,6 @@
-ADD_LIBRARY(
-	geo-base
-	geo_data.cc
-	geo_data_debug.cc
-	geo_data_map.cc
-	part.cc
-	polygon.cc
-	system.cc
-)
+ADD_SUBDIRECTORY(core)
+ADD_SUBDIRECTORY(open_street_map)
+ADD_SUBDIRECTORY(generator)
+ADD_SUBDIRECTORY(util)
+ADD_SUBDIRECTORY(proto)
+ADD_SUBDIRECTORY(proto_util)

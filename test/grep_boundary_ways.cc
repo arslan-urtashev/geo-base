@@ -17,10 +17,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <gmock/gmock.h>
-#include <open_street_map/converter.h>
-#include <util/file.h>
-#include <util/file_stream.h>
-#include <util/pool_allocator.h>
+#include <geo_base/open_street_map/converter.h>
+#include <geo_base/util/file.h>
+#include <geo_base/util/file_stream.h>
+#include <geo_base/util/pool_allocator.h>
 
 using namespace geo_base;
 using namespace open_street_map;

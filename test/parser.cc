@@ -19,16 +19,16 @@
 #include <fcntl.h>
 #include <gtest/gtest.h>
 
-#include <open_street_map/open_street_map.h>
-#include <open_street_map/parser.h>
-#include <open_street_map/reader.h>
-#include <open_street_map/simple_counter.h>
-#include <util/fd_guard.h>
-#include <util/file.h>
-#include <util/file_stream.h>
-#include <util/io_stream.h>
-#include <util/memory.h>
-#include <util/pool_allocator.h>
+#include <geo_base/open_street_map/open_street_map.h>
+#include <geo_base/open_street_map/parser.h>
+#include <geo_base/open_street_map/reader.h>
+#include <geo_base/open_street_map/simple_counter.h>
+#include <geo_base/util/fd_guard.h>
+#include <geo_base/util/file.h>
+#include <geo_base/util/file_stream.h>
+#include <geo_base/util/io_stream.h>
+#include <geo_base/util/memory.h>
+#include <geo_base/util/pool_allocator.h>
 
 using namespace geo_base;
 using namespace open_street_map;
