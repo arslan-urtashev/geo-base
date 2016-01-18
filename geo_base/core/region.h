@@ -34,6 +34,7 @@ struct region_t {
 		OPTION_PLACE_VILLAGE           = 1u << 5,
 		OPTION_PLACE_BOROUGH           = 1u << 6,
 		OPTION_PLACE_SUBURB            = 1u << 7,
+		OPTION_PLACE_CONTINENT         = 1u << 8,
 	};
 
 	geo_id_t region_id;

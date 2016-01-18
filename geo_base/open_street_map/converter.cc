@@ -62,6 +62,7 @@ static region_t::options_t get_region_place_options(kvs_t const &kvs)
 			op("suburb", OPTION_PLACE_SUBURB);
 			op("town", OPTION_PLACE_TOWN);
 			op("village", OPTION_PLACE_VILLAGE);
+			op("continent", OPTION_PLACE_CONTINENT);
 			return 0;
 		}
 	}

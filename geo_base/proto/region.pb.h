@@ -71,11 +71,12 @@ enum region_t_option_t {
   region_t_option_t_OPTION_PLACE_CITY = 4,
   region_t_option_t_OPTION_PLACE_VILLAGE = 5,
   region_t_option_t_OPTION_PLACE_BOROUGH = 6,
-  region_t_option_t_OPTION_PLACE_SUBURB = 7
+  region_t_option_t_OPTION_PLACE_SUBURB = 7,
+  region_t_option_t_OPTION_PLACE_CONTINENT = 8
 };
 bool region_t_option_t_IsValid(int value);
 const region_t_option_t region_t_option_t_option_t_MIN = region_t_option_t_OPTION_ZERO;
-const region_t_option_t region_t_option_t_option_t_MAX = region_t_option_t_OPTION_PLACE_SUBURB;
+const region_t_option_t region_t_option_t_option_t_MAX = region_t_option_t_OPTION_PLACE_CONTINENT;
 const int region_t_option_t_option_t_ARRAYSIZE = region_t_option_t_option_t_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* region_t_option_t_descriptor();
@@ -570,6 +571,7 @@ class region_t : public ::google::protobuf::Message {
   static const option_t OPTION_PLACE_VILLAGE = region_t_option_t_OPTION_PLACE_VILLAGE;
   static const option_t OPTION_PLACE_BOROUGH = region_t_option_t_OPTION_PLACE_BOROUGH;
   static const option_t OPTION_PLACE_SUBURB = region_t_option_t_OPTION_PLACE_SUBURB;
+  static const option_t OPTION_PLACE_CONTINENT = region_t_option_t_OPTION_PLACE_CONTINENT;
   static inline bool option_t_IsValid(int value) {
     return region_t_option_t_IsValid(value);
   }

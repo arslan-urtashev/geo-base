@@ -60,6 +60,7 @@ message region_t {
 		OPTION_PLACE_VILLAGE = 5;
 		OPTION_PLACE_BOROUGH = 6;
 		OPTION_PLACE_SUBURB = 7;
+		OPTION_PLACE_CONTINENT = 8;
 	}
 
 	required uint64 options = 6;
