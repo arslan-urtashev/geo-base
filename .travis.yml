@@ -9,11 +9,6 @@ compiler:
   - g++
   - clang
 
-# matrix:
-#   exclude:
-#     - os: linux
-#       compiler: clang
-
 branches:
   only:
     - master
@@ -28,17 +23,7 @@ notifications:
 addons:
   apt:
     packages:
-      - zlib1g-dev
-      - libprotobuf-dev
-      - protobuf-compiler
-      - cmake
       - valgrind
-
-before_install:
-  - if [ $TRAVIS_OS_NAME == osx ]; then
-      brew update;
-      brew install protobuf;
-    fi
 
 script: 
   - if [ $TRAVIS_OS_NAME == linux ]; then
