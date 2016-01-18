@@ -14,4 +14,5 @@ TARGET_LINK_LIBRARIES(
 	geo-base-proto
 	geo-base-util
 	z
+	jemalloc
 )

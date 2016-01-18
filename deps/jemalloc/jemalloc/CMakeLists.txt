@@ -25,3 +25,8 @@ ADD_LIBRARY(
 	util.c
 	zone.c
 )
+
+TARGET_LINK_LIBRARIES(
+	jemalloc
+	pthread
+)
