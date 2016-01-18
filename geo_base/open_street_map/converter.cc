@@ -19,6 +19,7 @@
 #include <geo_base/core/polygon.h>
 #include <geo_base/core/region.h>
 #include <geo_base/open_street_map/converter.h>
+#include <geo_base/proto/region.pb.h>
 #include <geo_base/proto_util/proto_writer.h>
 #include <geo_base/util/pool_allocator.h>
 #include <geo_base/util/safe_stream.h>
@@ -37,13 +38,14 @@ static bool eq(char const *a, char const *b)
 
 #define op(ev, opt) \
 	if (eq(ev, kv.v)) \
-		return opt;
+		return region_t::opt; \
+	static_assert(region_t::opt == (1ull << ::geo_base::proto::region_t::opt), "Options should be equal");
 
 static region_t::options_t get_region_boundary_options(kvs_t const &kvs)
 {
 	for (kv_t const &kv : kvs) {
 		if (eq(kv.k, "boundary")) {
-			op("administrative", region_t::OPTION_BOUNDARY_ADMINISTRATIVE);
+			op("administrative", OPTION_BOUNDARY_ADMINISTRATIVE);
 			return 0;
 		}
 	}
@@ -54,12 +56,12 @@ static region_t::options_t get_region_place_options(kvs_t const &kvs)
 {
 	for (kv_t const &kv : kvs) {
 		if (eq(kv.k, "place")) {
-			op("island", region_t::OPTION_PLACE_ISLAND);
-			op("town", region_t::OPTION_PLACE_TOWN);
-			op("city", region_t::OPTION_PLACE_CITY);
-			op("village", region_t::OPTION_PLACE_VILLAGE);
-			op("borough", region_t::OPTION_PLACE_BOROUGH);
-			op("suburb", region_t::OPTION_PLACE_SUBURB);
+			op("borough", OPTION_PLACE_BOROUGH);
+			op("city", OPTION_PLACE_CITY);
+			op("island", OPTION_PLACE_ISLAND);
+			op("suburb", OPTION_PLACE_SUBURB);
+			op("town", OPTION_PLACE_TOWN);
+			op("village", OPTION_PLACE_VILLAGE);
 			return 0;
 		}
 	}

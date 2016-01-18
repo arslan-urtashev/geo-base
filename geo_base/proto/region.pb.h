@@ -64,17 +64,18 @@ inline bool polygon_t_type_t_Parse(
     polygon_t_type_t_descriptor(), name, value);
 }
 enum region_t_option_t {
-  region_t_option_t_BOUNDARY_ADMINISTRATIVE = 0,
-  region_t_option_t_PLACE_ISLAND = 1,
-  region_t_option_t_PLACE_TOWN = 2,
-  region_t_option_t_PLACE_CITY = 3,
-  region_t_option_t_PLACE_VILLAGE = 4,
-  region_t_option_t_PLACE_BOROUGH = 5,
-  region_t_option_t_PLACE_SUBURB = 6
+  region_t_option_t_OPTION_ZERO = 0,
+  region_t_option_t_OPTION_BOUNDARY_ADMINISTRATIVE = 1,
+  region_t_option_t_OPTION_PLACE_ISLAND = 2,
+  region_t_option_t_OPTION_PLACE_TOWN = 3,
+  region_t_option_t_OPTION_PLACE_CITY = 4,
+  region_t_option_t_OPTION_PLACE_VILLAGE = 5,
+  region_t_option_t_OPTION_PLACE_BOROUGH = 6,
+  region_t_option_t_OPTION_PLACE_SUBURB = 7
 };
 bool region_t_option_t_IsValid(int value);
-const region_t_option_t region_t_option_t_option_t_MIN = region_t_option_t_BOUNDARY_ADMINISTRATIVE;
-const region_t_option_t region_t_option_t_option_t_MAX = region_t_option_t_PLACE_SUBURB;
+const region_t_option_t region_t_option_t_option_t_MIN = region_t_option_t_OPTION_ZERO;
+const region_t_option_t region_t_option_t_option_t_MAX = region_t_option_t_OPTION_PLACE_SUBURB;
 const int region_t_option_t_option_t_ARRAYSIZE = region_t_option_t_option_t_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* region_t_option_t_descriptor();
@@ -561,13 +562,14 @@ class region_t : public ::google::protobuf::Message {
   // nested types ----------------------------------------------------
 
   typedef region_t_option_t option_t;
-  static const option_t BOUNDARY_ADMINISTRATIVE = region_t_option_t_BOUNDARY_ADMINISTRATIVE;
-  static const option_t PLACE_ISLAND = region_t_option_t_PLACE_ISLAND;
-  static const option_t PLACE_TOWN = region_t_option_t_PLACE_TOWN;
-  static const option_t PLACE_CITY = region_t_option_t_PLACE_CITY;
-  static const option_t PLACE_VILLAGE = region_t_option_t_PLACE_VILLAGE;
-  static const option_t PLACE_BOROUGH = region_t_option_t_PLACE_BOROUGH;
-  static const option_t PLACE_SUBURB = region_t_option_t_PLACE_SUBURB;
+  static const option_t OPTION_ZERO = region_t_option_t_OPTION_ZERO;
+  static const option_t OPTION_BOUNDARY_ADMINISTRATIVE = region_t_option_t_OPTION_BOUNDARY_ADMINISTRATIVE;
+  static const option_t OPTION_PLACE_ISLAND = region_t_option_t_OPTION_PLACE_ISLAND;
+  static const option_t OPTION_PLACE_TOWN = region_t_option_t_OPTION_PLACE_TOWN;
+  static const option_t OPTION_PLACE_CITY = region_t_option_t_OPTION_PLACE_CITY;
+  static const option_t OPTION_PLACE_VILLAGE = region_t_option_t_OPTION_PLACE_VILLAGE;
+  static const option_t OPTION_PLACE_BOROUGH = region_t_option_t_OPTION_PLACE_BOROUGH;
+  static const option_t OPTION_PLACE_SUBURB = region_t_option_t_OPTION_PLACE_SUBURB;
   static inline bool option_t_IsValid(int value) {
     return region_t_option_t_IsValid(value);
   }

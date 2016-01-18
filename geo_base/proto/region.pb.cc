@@ -166,15 +166,16 @@ void protobuf_AddDesc_region_2eproto() {
     "\003 \002(\0162 .geo_base.proto.polygon_t.type_t\""
     ":\n\006type_t\022\020\n\014TYPE_UNKNOWN\020\000\022\016\n\nTYPE_INNE"
     "R\020\001\022\016\n\nTYPE_OUTER\020\002\"\034\n\004kv_t\022\t\n\001k\030\001 \002(\t\022\t"
-    "\n\001v\030\002 \002(\t\"\264\002\n\010region_t\022\021\n\tregion_id\030\001 \002("
+    "\n\001v\030\002 \002(\t\"\366\002\n\010region_t\022\021\n\tregion_id\030\001 \002("
     "\004\022\021\n\tparent_id\030\002 \001(\004\022+\n\010polygons\030\003 \003(\0132\031"
     ".geo_base.proto.polygon_t\022!\n\003kvs\030\004 \003(\0132\024"
     ".geo_base.proto.kv_t\022\r\n\005blobs\030\005 \003(\t\022\017\n\007o"
-    "ptions\030\006 \002(\004\"\221\001\n\010option_t\022\033\n\027BOUNDARY_AD"
-    "MINISTRATIVE\020\000\022\020\n\014PLACE_ISLAND\020\001\022\016\n\nPLAC"
-    "E_TOWN\020\002\022\016\n\nPLACE_CITY\020\003\022\021\n\rPLACE_VILLAG"
-    "E\020\004\022\021\n\rPLACE_BOROUGH\020\005\022\020\n\014PLACE_SUBURB\020\006"
-    "B\003\370\001\001", 605);
+    "ptions\030\006 \002(\004\"\323\001\n\010option_t\022\017\n\013OPTION_ZERO"
+    "\020\000\022\"\n\036OPTION_BOUNDARY_ADMINISTRATIVE\020\001\022\027"
+    "\n\023OPTION_PLACE_ISLAND\020\002\022\025\n\021OPTION_PLACE_"
+    "TOWN\020\003\022\025\n\021OPTION_PLACE_CITY\020\004\022\030\n\024OPTION_"
+    "PLACE_VILLAGE\020\005\022\030\n\024OPTION_PLACE_BOROUGH\020"
+    "\006\022\027\n\023OPTION_PLACE_SUBURB\020\007B\003\370\001\001", 671);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "region.proto", &protobuf_RegisterTypes);
   location_t::default_instance_ = new location_t();
@@ -1567,6 +1568,7 @@ bool region_t_option_t_IsValid(int value) {
     case 4:
     case 5:
     case 6:
+    case 7:
       return true;
     default:
       return false;
@@ -1574,13 +1576,14 @@ bool region_t_option_t_IsValid(int value) {
 }
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const region_t_option_t region_t::BOUNDARY_ADMINISTRATIVE;
-const region_t_option_t region_t::PLACE_ISLAND;
-const region_t_option_t region_t::PLACE_TOWN;
-const region_t_option_t region_t::PLACE_CITY;
-const region_t_option_t region_t::PLACE_VILLAGE;
-const region_t_option_t region_t::PLACE_BOROUGH;
-const region_t_option_t region_t::PLACE_SUBURB;
+const region_t_option_t region_t::OPTION_ZERO;
+const region_t_option_t region_t::OPTION_BOUNDARY_ADMINISTRATIVE;
+const region_t_option_t region_t::OPTION_PLACE_ISLAND;
+const region_t_option_t region_t::OPTION_PLACE_TOWN;
+const region_t_option_t region_t::OPTION_PLACE_CITY;
+const region_t_option_t region_t::OPTION_PLACE_VILLAGE;
+const region_t_option_t region_t::OPTION_PLACE_BOROUGH;
+const region_t_option_t region_t::OPTION_PLACE_SUBURB;
 const region_t_option_t region_t::option_t_MIN;
 const region_t_option_t region_t::option_t_MAX;
 const int region_t::option_t_ARRAYSIZE;

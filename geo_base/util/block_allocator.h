@@ -56,11 +56,11 @@ public:
 		return *this;
 	}
 
-	void *allocate(size_t count) override;
+	void *allocate(size_t number) override;
 
-	size_t allocate_size(size_t count) const;
+	size_t allocate_size(size_t number) const;
 
-	void deallocate(void *ptr, size_t count) override;
+	void deallocate(void *ptr, size_t number) override;
 
 	size_t total_allocated_size() const
 	{

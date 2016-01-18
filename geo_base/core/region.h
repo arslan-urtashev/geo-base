@@ -19,7 +19,6 @@
 #pragma once
 
 #include <geo_base/core/geo_base.h>
-#include <geo_base/proto/region.pb.h>
 
 namespace geo_base {
 
@@ -27,14 +26,14 @@ struct region_t {
 	using options_t = uint64_t;
 
 	enum option_t : options_t {
-		OPTION_ZERO                    = 0ull,
-		OPTION_BOUNDARY_ADMINISTRATIVE = 1ull << proto::region_t::BOUNDARY_ADMINISTRATIVE,
-		OPTION_PLACE_ISLAND            = 1ull << proto::region_t::PLACE_ISLAND,
-		OPTION_PLACE_TOWN              = 1ull << proto::region_t::PLACE_TOWN,
-		OPTION_PLACE_CITY              = 1ull << proto::region_t::PLACE_CITY,
-		OPTION_PLACE_VILLAGE           = 1ull << proto::region_t::PLACE_VILLAGE,
-		OPTION_PLACE_BOROUGH           = 1ull << proto::region_t::PLACE_BOROUGH,
-		OPTION_PLACE_SUBURB            = 1ull << proto::region_t::PLACE_SUBURB,
+		OPTION_ZERO                    = 0u,
+		OPTION_BOUNDARY_ADMINISTRATIVE = 1u << 1,
+		OPTION_PLACE_ISLAND            = 1u << 2,
+		OPTION_PLACE_TOWN              = 1u << 3,
+		OPTION_PLACE_CITY              = 1u << 4,
+		OPTION_PLACE_VILLAGE           = 1u << 5,
+		OPTION_PLACE_BOROUGH           = 1u << 6,
+		OPTION_PLACE_SUBURB            = 1u << 7,
 	};
 
 	geo_id_t region_id;

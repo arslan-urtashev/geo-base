@@ -52,13 +52,14 @@ message region_t {
 	repeated string blobs = 5;
 
 	enum option_t {
-		BOUNDARY_ADMINISTRATIVE = 0;
-		PLACE_ISLAND = 1;
-		PLACE_TOWN = 2;
-		PLACE_CITY = 3;
-		PLACE_VILLAGE = 4;
-		PLACE_BOROUGH = 5;
-		PLACE_SUBURB = 6;
+		OPTION_ZERO = 0;
+		OPTION_BOUNDARY_ADMINISTRATIVE = 1;
+		OPTION_PLACE_ISLAND = 2;
+		OPTION_PLACE_TOWN = 3;
+		OPTION_PLACE_CITY = 4;
+		OPTION_PLACE_VILLAGE = 5;
+		OPTION_PLACE_BOROUGH = 6;
+		OPTION_PLACE_SUBURB = 7;
 	}
 
 	required uint64 options = 6;

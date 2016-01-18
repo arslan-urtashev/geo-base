@@ -24,16 +24,15 @@
 #include <geo_base/core/point.h>
 #include <geo_base/core/rectangle.h>
 #include <geo_base/core/region.h>
-#include <geo_base/proto/region.pb.h>
 
 namespace geo_base {
 
 // Polygon is a representation of persistent scanline data structure.
 struct polygon_t {
 	enum type_t {
-		TYPE_UNKNOWN = proto::polygon_t::TYPE_UNKNOWN,
-		TYPE_INNER   = proto::polygon_t::TYPE_INNER,
-		TYPE_OUTER   = proto::polygon_t::TYPE_OUTER,
+		TYPE_UNKNOWN = 0,
+		TYPE_INNER   = 1,
+		TYPE_OUTER   = 2,
 	};
 
 	// If TYPE_INNER and polygon contains given point, this means that region with region_id

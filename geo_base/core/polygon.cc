@@ -57,9 +57,13 @@ bool polygon_t::better(polygon_t const &p, region_t const *regions, number_t reg
 		return true;
 
 	if (square == p.square) {
-		region_t const *r1 = find(regions, regions_number, region_id);
-		region_t const *r2 = find(regions, regions_number, p.region_id);
-		return r1->better(*r2);
+		region_t const *begin = regions;
+		region_t const *end = regions + regions_number;
+
+		region_t const *r1 = std::lower_bound(begin, end, region_id);
+		region_t const *r2 = std::lower_bound(begin, end, p.region_id);
+
+		return r1 && r2 && r1->better(*r2);
 	}
 
 	return false;
