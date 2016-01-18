@@ -39,4 +39,4 @@ inline double to_double(coordinate_t x)
 	return x / 1e6;
 }
 
-}
+} // namespace geo_base

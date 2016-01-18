@@ -20,7 +20,8 @@
 
 #include <geo_base/core/common.h>
 #include <geo_base/core/point.h>
-#include <geo_base/util/algo.h>
+
+#include <algorithm>
 
 namespace geo_base {
 

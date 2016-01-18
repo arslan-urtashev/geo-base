@@ -37,4 +37,4 @@ struct location_t {
 	}
 };
 
-}
+} // namespace geo_base
