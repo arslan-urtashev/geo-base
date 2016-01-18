@@ -16,11 +16,11 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/generator/generator.h>
+#include <generator/generator.h>
 #include <geo_base/geo_data_map.h>
 #include <geo_base/geo_data_debug.h>
-#include <geo_base/util/pool_allocator.h>
-#include <geo_base/util/stop_watch.h>
+#include <util/pool_allocator.h>
+#include <util/stop_watch.h>
 
 #include "geo_base_test.h"
 
@@ -36,9 +36,9 @@ static bool is_equal(val_t const &a, val_t const &b)
 }
 
 template<typename arr_t>
-static bool is_equal(arr_t const *a, arr_t const *b, count_t count)
+static bool is_equal(arr_t const *a, arr_t const *b, number_t number)
 {
-	for (count_t i = 0; i < count; ++i)
+	for (number_t i = 0; i < number; ++i)
 		if (!is_equal(a[i], b[i]))
 			return false;
 	return true;
@@ -51,9 +51,9 @@ static bool operator == (geo_data_t const &a, geo_data_t const &b)
 		return false;
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
-	if (a.arr##_count() != b.arr##_count()) \
+	if (a.arr##_number() != b.arr##_number()) \
 		return false; \
-	if (!is_equal(a.arr(), b.arr(), a.arr##_count())) \
+	if (!is_equal(a.arr(), b.arr(), a.arr##_number())) \
 		return false;
 
 	GEO_BASE_DEF_GEO_DATA

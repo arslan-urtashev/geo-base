@@ -16,9 +16,9 @@
 // damages or other liability, whether in an action of contract, tort or otherwise, arising from,
 // out of or in connection with the software or the use or other dealings in the software.
 
-#include <geo_base/util/dynarray.h>
-#include <geo_base/util/memory.h>
-#include <geo_base/util/pool_allocator.h>
+#include <util/dynarray.h>
+#include <util/memory.h>
+#include <util/pool_allocator.h>
 
 #include "geo_base_test.h"
 

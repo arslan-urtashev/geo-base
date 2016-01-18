@@ -17,9 +17,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <gmock/gmock.h>
-#include <geo_base/open_street_map/converter.h>
-#include <geo_base/proto_util/proto_reader.h>
-#include <geo_base/util/pool_allocator.h>
+#include <open_street_map/converter.h>
+#include <proto_util/proto_reader.h>
+#include <util/pool_allocator.h>
 
 #include "geo_base_test.h"
 

@@ -17,7 +17,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <gmock/gmock.h>
-#include <geo_base/util/mem_file.h>
+#include <util/mem_file.h>
 
 using namespace geo_base;
 

@@ -23,7 +23,13 @@ ADD_EXECUTABLE(
 TARGET_LINK_LIBRARIES(
 	run_test
 	geo-base
+	geo-base-generator
+	geo-base-open-street-map
+	geo-base-proto
+	geo-base-proto-util
+	geo-base-util
 	gmock
+	jemalloc
 )
 
 FILE(COPY andorra-latest.osm.pbf DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

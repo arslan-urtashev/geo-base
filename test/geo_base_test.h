@@ -18,10 +18,10 @@
 
 #include <gmock/gmock.h>
 
+#include <generator/geo_data.h>
 #include <geo_base/edge.h>
-#include <geo_base/generator/geo_data.h>
 #include <geo_base/geo_data.h>
-#include <geo_base/util/log.h>
+#include <util/log.h>
 
 namespace geo_base {
 
@@ -49,7 +49,7 @@ public: \
 	{ \
 		return arr##_.data(); \
 	} \
-	count_t arr##_count() const override \
+	number_t arr##_number() const override \
 	{ \
 		return arr##_.size(); \
 	} \
@@ -78,11 +78,11 @@ public:
 };
 
 struct part_helper_t : public part_t {
-	count_t edge_refs_count;
+	number_t edge_refs_number;
 
 	bool contains(point_t const &point, geo_data_t const &geo_data) const
 	{
-		return part_t::contains(point, edge_refs_count, geo_data.edge_refs(), geo_data.edges(),
+		return part_t::contains(point, edge_refs_number, geo_data.edge_refs(), geo_data.edges(),
 			geo_data.points());
 	}
 };
@@ -107,7 +107,7 @@ public:
 			edges_.push_back(e);
 		}
 
-		helper.edge_refs_count = edge_refs_.size();
+		helper.edge_refs_number = edge_refs_.size();
 
 		std::sort(edge_refs_.begin() + helper.edge_refs_offset, edge_refs_.end(),
 			[&] (ref_t const &a, ref_t const &b)
@@ -155,7 +155,7 @@ public: \
 	{ \
 		return arr##_.data(); \
 	} \
-	count_t arr##_count() const override \
+	number_t arr##_number() const override \
 	{ \
 		return arr##_.size(); \
 	} \
