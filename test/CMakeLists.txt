@@ -30,6 +30,7 @@ TARGET_LINK_LIBRARIES(
 	geo-base-util
 	gmock
 	jemalloc
+	pthread
 )
 
 FILE(COPY andorra-latest.osm.pbf DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

@@ -9,10 +9,10 @@ compiler:
   - g++
   - clang
 
-matrix:
-  exclude:
-    - os: linux
-      compiler: clang
+# matrix:
+#   exclude:
+#     - os: linux
+#       compiler: clang
 
 branches:
   only:
