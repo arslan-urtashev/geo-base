@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <geo_base/core/geo_data.h>
+#include <geo_base/core/geo_data/geo_data.h>
 
 namespace geo_base {
 namespace generator {

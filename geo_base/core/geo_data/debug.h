@@ -1,4 +1,4 @@
-// Copyright (c) 2015, 2016 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,29 +18,12 @@
 
 #pragma once
 
-#include <geo_base/core/geo_data_def.h>
+#include <geo_base/core/geo_data/geo_data.h>
 
 namespace geo_base {
 
-class geo_data_t {
-#define GEO_BASE_DEF_VAR(var_t, var) \
-	virtual var_t const &var() const = 0;
+size_t geo_data_space(geo_data_t const &g);
 
-#define GEO_BASE_DEF_ARR(arr_t, arr) \
-	virtual arr_t const *arr() const = 0; \
-	virtual number_t arr##_number() const = 0;
-
-public:
-	GEO_BASE_DEF_GEO_DATA
-
-#undef GEO_BASE_DEF_VAR
-#undef GEO_BASE_DEF_ARR
-
-	geo_id_t lookup(location_t const &l);
-
-	virtual ~geo_data_t()
-	{
-	}
-};
+void geo_data_show(int fd, geo_data_t const &g);
 
 } // namespace geo_base

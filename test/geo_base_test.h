@@ -18,9 +18,9 @@
 
 #include <gmock/gmock.h>
 
-#include <geo_base/generator/geo_data.h>
 #include <geo_base/core/edge.h>
-#include <geo_base/core/geo_data.h>
+#include <geo_base/core/geo_data/geo_data.h>
+#include <geo_base/generator/geo_data.h>
 #include <geo_base/util/log.h>
 
 namespace geo_base {
