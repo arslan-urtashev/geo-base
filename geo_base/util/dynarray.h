@@ -24,191 +24,196 @@
 
 #include <algorithm>
 
-namespace geo_base {
+namespace NGeoBase
+{
 
-template<typename data_t>
-class dynarray_t {
+template<typename TData>
+class TDynArray
+{
 public:
-	dynarray_t()
-		: size_(0)
-		, capacity_(0)
-		, data_(nullptr)
-		, allocator_(nullptr)
-	{
-	}
+    TDynArray() noexcept
+        : Size_(0)
+        , Capacity_(0)
+        , Data_(nullptr)
+        , Allocator_(nullptr)
+    {
+    }
 
-	dynarray_t(size_t capacity, allocator_t *allocator)
-		: size_(0)
-		, capacity_(capacity)
-		, data_(nullptr)
-		, allocator_(allocator)
-	{
-		data_ = (data_t *) allocator_->allocate(capacity * sizeof(data_t));
-	}
+    TDynArray(size_t capacity, TAllocator *Allocator)
+        : Size_(0)
+        , Capacity_(capacity)
+        , Data_(nullptr)
+        , Allocator_(Allocator)
+    {
+        Data_ = (TData*) Allocator_->Allocate(capacity * sizeof(TData));
+    }
 
-	dynarray_t(size_t size, size_t capacity, allocator_t *allocator)
-		: size_(0)
-		, capacity_(capacity)
-		, data_(nullptr)
-		, allocator_(allocator)
-	{
-		data_ = (data_t *) allocator_->allocate(capacity * sizeof(data_t));
-		resize(size);
-	}
+    TDynArray(size_t size, size_t capacity, TAllocator *Allocator)
+        : Size_(0)
+        , Capacity_(capacity)
+        , Data_(nullptr)
+        , Allocator_(Allocator)
+    {
+        Data_ = (TData*) Allocator_->Allocate(capacity * sizeof(TData));
+        Resize(size);
+    }
 
-	data_t const &operator [] (size_t index) const
-	{
-		if (index >= size_)
-			throw exception_t("Index %lu out of bounds %lu", index, size_);
-		return data_[index];
-	}
+    const TData& Back() const noexcept
+    {
+        return Data_[Size_ - 1];
+    }
 
-	data_t const &back() const
-	{
-		return data_[size_ - 1];
-	}
+    const TData& Front() const noexcept
+    {
+        return Data_[0];
+    }
 
-	data_t const &front() const
-	{
-		return data_[0];
-	}
-
-	data_t &operator [] (size_t index)
-	{
-		if (index >= size_)
-			throw exception_t("Index %lu out of bounds %lu", index, size_);
-		return data_[index];
-	}
-
-	data_t *begin()
-	{
-		return data_;
-	}
-
-	data_t const *begin() const
-	{
-		return data_;
-	}
-
-	data_t *end()
-	{
-		return data_ + size_;
-	}
-
-	data_t const *end() const
-	{
-		return data_ + size_;
-	}
-
-	data_t *data()
-	{
-		return data_;
-	}
-
-	data_t const *data() const
-	{
-		return data_;
-	}
-
-	size_t size() const
-	{
-		return size_;
-	}
-
-	void resize(size_t size)
-	{
-		resize_down(size);
-		resize_up(size);
-	}
-
-	void clear()
-	{
-		resize(0);
-	}
-
-	bool empty() const
-	{
-		return size_ == 0;
-	}
-
-	void push_back(data_t const &data)
-	{
+    TData& operator [] (size_t index)
+    {
 #ifndef NDEBUG
-		if (size_ == capacity_)
-			throw exception_t("Out of bounds push_back");
+        if (index >= Size_)
+            throw TException("Index %lu out of bounds %lu", index, Size_);
 #endif
-		data_[size_++] = data;
-	}
+        return Data_[index];
+    }
 
-	void pop_back()
-	{
+    const TData& operator [] (size_t index) const
+    {
 #ifndef NDEBUG
-		if (size_ == 0)
-			throw exception_t("Out of bounds pop_back");
+        if (index >= Size_)
+            throw TException("Index %lu out of bounds %lu", index, Size_);
 #endif
-		size_--;
-		data_[size_].~data_t();
-	}
+        return Data_[index];
+    }
 
-	~dynarray_t()
-	{
-		if (data_) {
-			clear();
-			allocator_->deallocate(data_, capacity_ * sizeof(data_t));
-		}
-	}
+    TData* Begin() noexcept
+    {
+        return Data_;
+    }
 
-	dynarray_t(dynarray_t &&a)
-		: size_(0)
-		, capacity_(0)
-		, data_(nullptr)
-		, allocator_(nullptr)
-	{
-		std::swap(size_, a.size_);
-		std::swap(capacity_, a.capacity_);
-		std::swap(data_, a.data_);
-		std::swap(allocator_, a.allocator_);
-	}
+    const TData* Begin() const noexcept
+    {
+        return Data_;
+    }
 
-	dynarray_t &operator = (dynarray_t &&a)
-	{
-		std::swap(size_, a.size_);
-		std::swap(capacity_, a.capacity_);
-		std::swap(data_, a.data_);
-		std::swap(allocator_, a.allocator_);
-		return *this;
-	}
+    TData* End() noexcept
+    {
+        return Data_ + Size_;
+    }
+
+    const TData* End() const noexcept
+    {
+        return Data_ + Size_;
+    }
+
+    TData* Data() noexcept
+    {
+        return Data_;
+    }
+
+    const TData* Data() const noexcept
+    {
+        return Data_;
+    }
+
+    size_t Size() const noexcept
+    {
+        return Size_;
+    }
+
+    void Resize(size_t size) noexcept
+    {
+        ResizeDown(size);
+        ResizeUp(size);
+    }
+
+    void Clear() noexcept
+    {
+        Resize(0);
+    }
+
+    bool Empty() const noexcept
+    {
+        return Size_ == 0;
+    }
+
+    void PushBack(const TData& Data)
+    {
+#ifndef NDEBUG
+        if (Size_ == Capacity_)
+            throw TException("Out of bounds PushBack");
+        Data_[Size_++] = Data;
+#endif
+    }
+
+    void PopBack()
+    {
+#ifndef NDEBUG
+        if (Size_ == 0)
+            throw TException("Out of bounds PopBack");
+#endif
+        Size_--;
+        Data_[Size_].~TData();
+    }
+
+    ~TDynArray()
+    {
+        if (Data_) {
+            clear();
+            Allocator_->Deallocate(Data_, Capacity_ * sizeof(TData));
+        }
+    }
+
+    TDynArray(TDynArray&& a) noexcept
+        : Size_(0)
+        , Capacity_(0)
+        , Data_(nullptr)
+        , Allocator_(nullptr)
+    {
+        std::swap(Size_, a.Size_);
+        std::swap(Capacity_, a.Capacity_);
+        std::swap(Data_, a.Data_);
+        std::swap(Allocator_, a.Allocator_);
+    }
+
+    TDynArray& operator = (TDynArray&& a) noexcept
+    {
+        std::swap(Size_, a.Size_);
+        std::swap(Capacity_, a.Capacity_);
+        std::swap(Data_, a.Data_);
+        std::swap(Allocator_, a.Allocator_);
+        return *this;
+    }
 
 private:
-	void resize_down(size_t size)
-	{
-		if (IS_TRIVIALLY_DESTRUCTIBLE(data_t)) {
-			if (size_ > size)
-				size_ = size;
-		} else {
-			while (size_ > size)
-				pop_back();
-		}
-	}
+    void ResizeDown(size_t size)
+    {
+        if (IS_TRIVIALLY_DESTRUCTIBLE(TData)) {
+            if (Size_ > size)
+                Size_ = size;
+        } else {
+            while (Size_ > size)
+                PopBack();
+        }
+    }
 
-	void resize_up(size_t size)
-	{
-		if (IS_TRIVIALLY_CONSTRUCTIBLE(data_t)) {
-			if (size_ < size)
-				size_ = size;
-		} else {
-			while (size_ < size)
-				push_back(data_t());
-		}
-	}
+    void ResizeUp(size_t size)
+    {
+        if (IS_TRIVIALLY_CONSTRUCTIBLE(TData)) {
+            if (Size_ < size)
+                Size_ = size;
+        } else {
+            while (Size_ < size)
+                PushBack(TData());
+        }
+    }
 
-	size_t size_;
-	size_t capacity_;
-	data_t *data_;
-	allocator_t *allocator_;
+    size_t Size_;
+    size_t Capacity_;
+    TData *Data_;
+    TAllocator *Allocator_;
 
-	dynarray_t(dynarray_t const &) = delete;
-	dynarray_t &operator = (dynarray_t const &) = delete;
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(TDynArray);
 };
 
 } // namespace geo_base
