@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,33 +16,31 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/proto_util/proto_reader.h>
-#include <geo_base/library/log.h>
-#include <geo_base/library/stop_watch.h>
+#include <geo_base/lib/base_allocator.h>
+#include <geo_base/lib/memory.h>
+
+#include <errno.h>
 
 namespace geo_base {
 
-void proto_reader_t::generate_index()
+base_allocator_t::base_allocator_t(char const *path)
 {
-    if (!index_.empty()) {
-        log_warning("Index already generated!");
-        return;
-    }
+    read_write_open(path);
+    setup(data(), size());
+}
 
-    log_debug("Generating proto reader index...");
+void *base_allocator_t::allocate(size_t count)
+{
+    if (ftruncate(fd(), total_allocated_size() + allocate_size(count)) < 0)
+        throw exception_t("Unable ftrancate: %s", strerror(errno));
+    return block_allocator_t::allocate(count);
+}
 
-    stop_watch_t stop_watch;
-    stop_watch.run();
-
-    each_with_ptr([&] (char const *ptr, proto::region_t const &region) {
-        if (index_.find(region.region_id()) != index_.end())
-            log_warning("Region %lu already exists in index", region.region_id());
-        index_[region.region_id()] = ptr;
-    });
-
-    float const seconds = stop_watch.get();
-    log_debug("Proto reader index generated in %.3f seconds (%.3f minutes)",
-        seconds, seconds / 60.0);
+void base_allocator_t::deallocate(void *ptr, size_t count)
+{
+    block_allocator_t::deallocate(ptr, count);
+    if (ftruncate(fd(), total_allocated_size()) < 0)
+        throw exception_t("Unable ftrancate: %s", strerror(errno));
 }
 
 } // namespace geo_base

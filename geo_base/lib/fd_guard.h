@@ -18,65 +18,56 @@
 
 #pragma once
 
-#include <geo_base/library/algo.h>
-#include <geo_base/library/log.h>
+#include <geo_base/lib/algo.h>
+#include <geo_base/lib/common.h>
+#include <geo_base/lib/log.h>
 
-#include <sys/mman.h>
+#include <unistd.h>
 
 namespace geo_base {
 
-class mem_guard_t {
+class fd_guard_t {
 public:
-    mem_guard_t()
-        : addr_(nullptr)
-        , length_(0)
+    fd_guard_t()
+        : fd_(-1)
     { }
 
-    mem_guard_t(void *addr, size_t length)
-        : addr_(addr)
-        , length_(length)
+    explicit fd_guard_t(int fd)
+        : fd_(fd)
     {
-        if (addr_)
-            log_debug("Guard memory %p, %lu", addr_, length_);
+        if (fd_ != -1)
+            log_debug("Guard fd %d", fd_);
     }
 
-    mem_guard_t(mem_guard_t &&g)
-        : mem_guard_t()
+    fd_guard_t(fd_guard_t&& g)
+        : fd_(-1)
     {
-        std::swap(addr_, g.addr_);
-        std::swap(length_, g.length_);
+        std::swap(fd_, g.fd_);
     }
 
-    mem_guard_t &operator = (mem_guard_t&& g)
+    fd_guard_t &operator = (fd_guard_t&& g)
     {
-        std::swap(addr_, g.addr_);
-        std::swap(length_, g.length_);
+        std::swap(fd_, g.fd_);
         return *this;
     }
 
-    void *data() const
+    int fd() const
     {
-        return addr_;
+        return fd_;
     }
 
-    size_t size() const
+    ~fd_guard_t()
     {
-        return length_;
-    }
-
-    ~mem_guard_t()
-    {
-        if (addr_) {
-            log_debug("Unmap memory %p, %lu", addr_, length_);
-            munmap(addr_, length_);
+        if (fd_ != -1) {
+            log_debug("Close fd %d", fd_);
+            close(fd_);
         }
     }
 
 private:
-    void *addr_;
-    size_t length_;
+    int fd_;
 
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mem_guard_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(fd_guard_t);
 };
 
 } // namespace geo_base

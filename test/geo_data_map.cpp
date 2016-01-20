@@ -19,8 +19,8 @@
 #include <geo_base/generator/generator.h>
 #include <geo_base/core/geo_data/map.h>
 #include <geo_base/core/geo_data/debug.h>
-#include <geo_base/library/pool_allocator.h>
-#include <geo_base/library/stop_watch.h>
+#include <geo_base/lib/pool_allocator.h>
+#include <geo_base/lib/stop_watch.h>
 
 #include "geo_base_test.h"
 

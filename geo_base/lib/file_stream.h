@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,51 +18,48 @@
 
 #pragma once
 
-#include <geo_base/library/file.h>
-#include <geo_base/library/mem_guard.h>
-#include <geo_base/library/memory.h>
+#include <geo_base/lib/io_stream.h>
 
 namespace geo_base {
 
-class mem_file_t : public file_t {
+class file_output_stream_t : public output_stream_t {
 public:
-    static size_t const DEFAULT_MMAP_SIZE = 8_gb;
-
-    mem_file_t()
-        : mem_guard_()
+    file_output_stream_t()
+        : fd_(-1)
     { }
 
-    mem_file_t(mem_file_t &&f)
-        : file_t(std::forward<file_t>(f))
-    {
-        std::swap(mem_guard_, f.mem_guard_);
-    }
+    explicit file_output_stream_t(int fd)
+        : fd_(fd)
+    { }
 
-    mem_file_t &operator = (mem_file_t &&f)
-    {
-        file_t::operator = (std::forward<file_t>(f));
-        std::swap(mem_guard_, f.mem_guard_);
-        return *this;
-    }
+    file_output_stream_t(file_output_stream_t const &s)
+        : fd_(s.fd_)
+    { }
 
-    void read_open(char const *path);
-
-    void read_write_open(char const *path, size_t mmap_size = DEFAULT_MMAP_SIZE);
-
-    void *data() const
-    {
-        return mem_guard_.data();
-    }
-
-    size_t size() const
-    {
-        return mem_guard_.size();
-    }
+    bool write(char const *ptr, size_t count) override;
 
 private:
-    mem_guard_t mem_guard_;
+    int fd_;
+};
 
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mem_file_t);
+class file_input_stream_t : public input_stream_t {
+public:
+    file_input_stream_t()
+        : fd_(-1)
+    { }
+
+    explicit file_input_stream_t(int fd)
+        : fd_(fd)
+    { }
+
+    file_input_stream_t(file_input_stream_t const &s)
+        : fd_(s.fd_)
+    { }
+
+    bool read(char *ptr, size_t count) override;
+
+private:
+    int fd_;
 };
 
 } // namespace geo_base

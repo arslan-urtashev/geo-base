@@ -16,33 +16,25 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/library/exception.h>
-#include <geo_base/library/file.h>
-#include <geo_base/library/log.h>
+#pragma once
 
-#include <errno.h>
-#include <fcntl.h>
-#include <string.h>
-#include <unistd.h>
+#include <geo_base/lib/block_allocator.h>
+#include <geo_base/lib/exception.h>
+#include <geo_base/lib/file.h>
+#include <geo_base/lib/mem_file.h>
 
 namespace geo_base {
 
-void file_t::read_open(char const *path)
-{
-    log_debug("Read open %s", path);
-    int fd = open(path, O_RDONLY);
-    if (fd < 0)
-        throw exception_t("Unable open %s: %s", path, strerror(errno));
-    fd_guard_ = fd_guard_t(fd);
-}
+class base_allocator_t : public mem_file_t, public block_allocator_t {
+public:
+    explicit base_allocator_t(char const *path);
 
-void file_t::read_write_open(char const *path)
-{
-    log_debug("Write/read open %s", path);
-    int fd = open(path, O_RDWR | O_CREAT | O_TRUNC, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
-    if (fd < 0)
-        throw exception_t("Unable open %s: %s", path, strerror(errno));
-    fd_guard_ = fd_guard_t(fd);
-}
+    void *allocate(size_t count) override;
+
+    void deallocate(void *, size_t) override;
+
+private:
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(base_allocator_t);
+};
 
 } // namespace geo_base

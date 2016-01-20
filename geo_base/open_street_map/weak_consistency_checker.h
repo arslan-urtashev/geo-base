@@ -19,7 +19,7 @@
 #pragma once
 
 #include <geo_base/open_street_map/parser.h>
-#include <geo_base/library/log.h>
+#include <geo_base/lib/log.h>
 #include <geo_base/wrappers/std.h>
 
 namespace geo_base {

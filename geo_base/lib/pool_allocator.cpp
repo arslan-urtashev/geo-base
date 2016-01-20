@@ -16,50 +16,23 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
+#include <geo_base/lib/exception.h>
+#include <geo_base/lib/memory.h>
+#include <geo_base/lib/pool_allocator.h>
 
-#include <geo_base/library/io_stream.h>
+#include <errno.h>
+#include <string.h>
 
 namespace geo_base {
 
-class file_output_stream_t : public output_stream_t {
-public:
-    file_output_stream_t()
-        : fd_(-1)
-    { }
-
-    explicit file_output_stream_t(int fd)
-        : fd_(fd)
-    { }
-
-    file_output_stream_t(file_output_stream_t const &s)
-        : fd_(s.fd_)
-    { }
-
-    bool write(char const *ptr, size_t count) override;
-
-private:
-    int fd_;
-};
-
-class file_input_stream_t : public input_stream_t {
-public:
-    file_input_stream_t()
-        : fd_(-1)
-    { }
-
-    explicit file_input_stream_t(int fd)
-        : fd_(fd)
-    { }
-
-    file_input_stream_t(file_input_stream_t const &s)
-        : fd_(s.fd_)
-    { }
-
-    bool read(char *ptr, size_t count) override;
-
-private:
-    int fd_;
-};
+pool_allocator_t::pool_allocator_t(size_t pool_size)
+    : mem_guard_()
+{
+    void *memory = mmap(nullptr, pool_size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_SHARED, -1, 0);
+    if (memory == MAP_FAILED)
+        throw exception_t("Can't init pool allocator: %s", strerror(errno));
+    mem_guard_ = mem_guard_t(memory, pool_size);
+    setup(mem_guard_.data(), mem_guard_.size());
+}
 
 } // namespace geo_base

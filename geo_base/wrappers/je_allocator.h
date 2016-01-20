@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <geo_base/library/allocator.h>
+#include <geo_base/lib/allocator.h>
 #include <jemalloc/jemalloc.h>
 
 namespace geo_base {

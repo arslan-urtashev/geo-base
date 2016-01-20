@@ -21,7 +21,7 @@
 #include <geo_base/core/edge.h>
 #include <geo_base/core/geo_data/geo_data.h>
 #include <geo_base/generator/geo_data.h>
-#include <geo_base/library/log.h>
+#include <geo_base/lib/log.h>
 
 namespace geo_base {
 

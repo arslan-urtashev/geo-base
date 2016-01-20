@@ -17,7 +17,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
-#include <geo_base/proto_util/proto_reader.h>
+#include <geo_base/libproto/proto_reader.h>
 
 using namespace geo_base;
 

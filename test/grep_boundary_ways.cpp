@@ -18,9 +18,9 @@
 
 #include <gmock/gmock.h>
 #include <geo_base/open_street_map/converter.h>
-#include <geo_base/library/file.h>
-#include <geo_base/library/file_stream.h>
-#include <geo_base/library/pool_allocator.h>
+#include <geo_base/lib/file.h>
+#include <geo_base/lib/file_stream.h>
+#include <geo_base/lib/pool_allocator.h>
 
 using namespace geo_base;
 using namespace open_street_map;

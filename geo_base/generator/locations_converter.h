@@ -19,8 +19,8 @@
 #include <geo_base/core/location.h>
 #include <geo_base/core/point.h>
 #include <geo_base/proto/region.pb.h>
-#include <geo_base/library/allocator.h>
-#include <geo_base/library/dynarray.h>
+#include <geo_base/lib/allocator.h>
+#include <geo_base/lib/dynarray.h>
 
 namespace geo_base {
 namespace generator {

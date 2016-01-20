@@ -25,12 +25,12 @@
 #include <geo_base/open_street_map/open_street_map.h>
 #include <geo_base/open_street_map/proto/open_street_map.pb.h>
 #include <geo_base/open_street_map/reader.h>
-#include <geo_base/library/allocator.h>
-#include <geo_base/library/dynarray.h>
-#include <geo_base/library/file.h>
-#include <geo_base/library/file_stream.h>
-#include <geo_base/library/log.h>
-#include <geo_base/library/stop_watch.h>
+#include <geo_base/lib/allocator.h>
+#include <geo_base/lib/dynarray.h>
+#include <geo_base/lib/file.h>
+#include <geo_base/lib/file_stream.h>
+#include <geo_base/lib/log.h>
+#include <geo_base/lib/stop_watch.h>
 
 namespace geo_base {
 namespace open_street_map {

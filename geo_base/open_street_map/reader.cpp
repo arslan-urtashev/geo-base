@@ -19,8 +19,8 @@
 #include <arpa/inet.h>
 
 #include <geo_base/open_street_map/reader.h>
-#include <geo_base/library/dynarray.h>
-#include <geo_base/library/log.h>
+#include <geo_base/lib/dynarray.h>
+#include <geo_base/lib/log.h>
 
 namespace geo_base {
 namespace open_street_map {
