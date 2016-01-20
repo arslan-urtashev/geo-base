@@ -27,19 +27,19 @@ using namespace open_street_map;
 
 TEST(grep_boundary_ways_t, check_boundary_ways)
 {
-	pool_allocator_t allocator(16_mb);
+    pool_allocator_t allocator(16_mb);
 
-	file_t file;
-	file.read_open("test/andorra-latest.osm.pbf");
-	file_input_stream_t stream(file.fd());
+    file_t file;
+    file.read_open("test/andorra-latest.osm.pbf");
+    file_input_stream_t stream(file.fd());
 
-	reader_t reader(&stream);
-	grep_boundary_ways_t grep(&allocator);
+    reader_t reader(&stream);
+    grep_boundary_ways_t grep(&allocator);
 
-	grep.parse(&reader);
+    grep.parse(&reader);
 
-	log_info("Found %lu boundary ways", grep.ways().size());
+    log_info("Found %lu boundary ways", grep.ways().size());
 
-	ASSERT_NE(0u, grep.ways().size());
-	ASSERT_EQ(3411u, grep.ways().size());
+    ASSERT_NE(0u, grep.ways().size());
+    ASSERT_EQ(3411u, grep.ways().size());
 }

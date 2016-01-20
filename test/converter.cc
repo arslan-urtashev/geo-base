@@ -31,21 +31,21 @@ class open_street_map_convert_t : public test_t {
 
 TEST_F(open_street_map_convert_t, convert)
 {
-	ASSERT_NO_THROW(run_pool_convert("test/andorra-latest.osm.pbf", "andorra-latest.pbf", 2));
+    ASSERT_NO_THROW(run_pool_convert("test/andorra-latest.osm.pbf", "andorra-latest.pbf", 2));
 
-	proto_reader_t reader("andorra-latest.pbf");
+    proto_reader_t reader("andorra-latest.pbf");
 
 
-	size_t regions_number = 0;
-	size_t polygons_number = 0;
+    size_t regions_number = 0;
+    size_t polygons_number = 0;
 
-	reader.each([&] (::geo_base::proto::region_t const &r) {
-		++regions_number;
-		polygons_number += r.polygons_size();
-	});
+    reader.each([&] (::geo_base::proto::region_t const &r) {
+        ++regions_number;
+        polygons_number += r.polygons_size();
+    });
 
-	EXPECT_EQ(11ul, regions_number);
-	EXPECT_EQ(11ul, polygons_number);
+    EXPECT_EQ(11ul, regions_number);
+    EXPECT_EQ(11ul, polygons_number);
 
-	remove("andorra-latest.pbf");
+    remove("andorra-latest.pbf");
 }

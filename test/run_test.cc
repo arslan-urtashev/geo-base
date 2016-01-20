@@ -22,12 +22,12 @@
 
 int main(int argc, char *argv[])
 {
-	std::cout << "Running unit tests" << std::endl;
+    std::cout << "Running unit tests" << std::endl;
 
-	testing::InitGoogleMock(&argc, argv);
-	int const ret = RUN_ALL_TESTS();
+    testing::InitGoogleMock(&argc, argv);
+    int const ret = RUN_ALL_TESTS();
 
-	google::protobuf::ShutdownProtobufLibrary();
+    google::protobuf::ShutdownProtobufLibrary();
 
-	return ret;
+    return ret;
 }

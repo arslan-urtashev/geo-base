@@ -32,91 +32,91 @@ class geo_data_map_test_t : public test_t {
 template<typename val_t>
 static bool is_equal(val_t const &a, val_t const &b)
 {
-	return !memcmp(&a, &b, sizeof(val_t));
+    return !memcmp(&a, &b, sizeof(val_t));
 }
 
 template<typename arr_t>
 static bool is_equal(arr_t const *a, arr_t const *b, number_t number)
 {
-	for (number_t i = 0; i < number; ++i)
-		if (!is_equal(a[i], b[i]))
-			return false;
-	return true;
+    for (number_t i = 0; i < number; ++i)
+        if (!is_equal(a[i], b[i]))
+            return false;
+    return true;
 }
 
 static bool operator == (geo_data_t const &a, geo_data_t const &b)
 {
 #define GEO_BASE_DEF_VAR(var_t, var) \
-	if (a.var() != b.var()) \
-		return false;
+    if (a.var() != b.var()) \
+        return false;
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
-	if (a.arr##_number() != b.arr##_number()) \
-		return false; \
-	if (!is_equal(a.arr(), b.arr(), a.arr##_number())) \
-		return false;
+    if (a.arr##_number() != b.arr##_number()) \
+        return false; \
+    if (!is_equal(a.arr(), b.arr(), a.arr##_number())) \
+        return false;
 
-	GEO_BASE_DEF_GEO_DATA
+    GEO_BASE_DEF_GEO_DATA
 
 #undef GEO_BASE_DEF_VAR
 #undef GEO_BASE_DEF_ARR
 
-	return true;
+    return true;
 }
 
 TEST_F(geo_data_map_test_t, simple_serialize)
 {
-	pool_allocator_t allocator(1_mb);
+    pool_allocator_t allocator(1_mb);
 
-	generator::geo_data_test_t geo_data;
-	geo_data.set_version(GEO_DATA_CURRENT_VERSION);
+    generator::geo_data_test_t geo_data;
+    geo_data.set_version(GEO_DATA_CURRENT_VERSION);
 
-	geo_data_map_t geo_data_map1(geo_data, &allocator);
-	geo_data_map_t geo_data_map2(geo_data_map1.data(), geo_data_map1.size());
+    geo_data_map_t geo_data_map1(geo_data, &allocator);
+    geo_data_map_t geo_data_map2(geo_data_map1.data(), geo_data_map1.size());
 
-	EXPECT_TRUE(geo_data_map1 == geo_data);
-	EXPECT_TRUE(geo_data_map1 == geo_data_map2);
+    EXPECT_TRUE(geo_data_map1 == geo_data);
+    EXPECT_TRUE(geo_data_map1 == geo_data_map2);
 }
 
 TEST_F(geo_data_map_test_t, check_version)
 {
-	pool_allocator_t allocator(1_mb);
+    pool_allocator_t allocator(1_mb);
 
-	generator::geo_data_test_t geo_data;
-	geo_data.set_version(GEO_DATA_VERSION_0);
+    generator::geo_data_test_t geo_data;
+    geo_data.set_version(GEO_DATA_VERSION_0);
 
-	EXPECT_THROW(geo_data_map_t(geo_data, &allocator), exception_t);
+    EXPECT_THROW(geo_data_map_t(geo_data, &allocator), exception_t);
 }
 
 TEST_F(geo_data_map_test_t, fake_data_serialize)
 {
-	pool_allocator_t allocator(1_mb);
-	pool_allocator_t serialize_allocator(1_mb);
+    pool_allocator_t allocator(1_mb);
+    pool_allocator_t serialize_allocator(1_mb);
 
-	generator::geo_data_test_t geo_data;
-	generator::generator_t generator(&geo_data, &allocator);
+    generator::geo_data_test_t geo_data;
+    generator::generator_t generator(&geo_data, &allocator);
 
-	dynarray_t<point_t> points(4, &allocator);
-	points.push_back(point_t(to_coordinate(0), to_coordinate(0)));
-	points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
-	points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
-	points.push_back(point_t(to_coordinate(10), to_coordinate(10)));
+    dynarray_t<point_t> points(4, &allocator);
+    points.push_back(point_t(to_coordinate(0), to_coordinate(0)));
+    points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
+    points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
+    points.push_back(point_t(to_coordinate(10), to_coordinate(10)));
 
-	generator.init();
-	generator.update(123, 123, points, polygon_t::TYPE_OUTER);
-	generator.fini();
+    generator.init();
+    generator.update(123, 123, points, polygon_t::TYPE_OUTER);
+    generator.fini();
 
-	geo_data_map_t geo_data_map1(geo_data, &serialize_allocator);
-	geo_data_map_t geo_data_map2(geo_data_map1.data(), geo_data_map1.size());
+    geo_data_map_t geo_data_map1(geo_data, &serialize_allocator);
+    geo_data_map_t geo_data_map2(geo_data_map1.data(), geo_data_map1.size());
 
-	EXPECT_TRUE(geo_data_map1 == geo_data);
-	EXPECT_TRUE(geo_data_map1 == geo_data_map2);
+    EXPECT_TRUE(geo_data_map1 == geo_data);
+    EXPECT_TRUE(geo_data_map1 == geo_data_map2);
 
-	EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(5, 5)));
-	EXPECT_EQ(UNKNOWN_GEO_ID, geo_data_map2.lookup(location_t(-1, -1)));
-	EXPECT_EQ(UNKNOWN_GEO_ID, geo_data_map2.lookup(location_t(0, 3)));
-	EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(4, 0)));
-	EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(5, 5)));
+    EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(5, 5)));
+    EXPECT_EQ(UNKNOWN_GEO_ID, geo_data_map2.lookup(location_t(-1, -1)));
+    EXPECT_EQ(UNKNOWN_GEO_ID, geo_data_map2.lookup(location_t(0, 3)));
+    EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(4, 0)));
+    EXPECT_EQ(123ull, geo_data_map2.lookup(location_t(5, 5)));
 
-	geo_data::show(log_fd(), geo_data_map2);
+    geo_data::show(log_fd(), geo_data_map2);
 }

@@ -23,25 +23,25 @@ using namespace geo_base;
 
 TEST(base_allocator, base_allocator)
 {
-	static std::string const FILENAME = "base_allocator_test.txt";
-	static std::string const TEXT = "Hello, base_allocator_t world!\0";
+    static std::string const FILENAME = "base_allocator_test.txt";
+    static std::string const TEXT = "Hello, base_allocator_t world!\0";
 
-	{
-		base_allocator_t allocator(FILENAME.data());
+    {
+        base_allocator_t allocator(FILENAME.data());
 
-		char *ptr = (char *) allocator.allocate(TEXT.size());
-		ASSERT_NE(nullptr, ptr);
+        char *ptr = (char *) allocator.allocate(TEXT.size());
+        ASSERT_NE(nullptr, ptr);
 
-		std::copy(TEXT.begin(), TEXT.end(), ptr);
-	}
+        std::copy(TEXT.begin(), TEXT.end(), ptr);
+    }
 
-	{
-		mem_file_t mem_file;
-		mem_file.read_open(FILENAME.data());
+    {
+        mem_file_t mem_file;
+        mem_file.read_open(FILENAME.data());
 
-		ASSERT_EQ(align_memory(TEXT.size()) + align_memory(sizeof(size_t)), mem_file.size());
-		ASSERT_STREQ(TEXT.data(), (char const *) mem_file.data());
-	}
+        ASSERT_EQ(align_memory(TEXT.size()) + align_memory(sizeof(size_t)), mem_file.size());
+        ASSERT_STREQ(TEXT.data(), (char const *) mem_file.data());
+    }
 
-	ASSERT_EQ(0, remove(FILENAME.data()));
+    ASSERT_EQ(0, remove(FILENAME.data()));
 }

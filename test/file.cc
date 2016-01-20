@@ -23,59 +23,59 @@ using namespace geo_base;
 
 TEST(file_t, read_open)
 {
-	file_t file;
-	ASSERT_EQ(-1, file.fd());
+    file_t file;
+    ASSERT_EQ(-1, file.fd());
 
-	file.read_open("test/andorra-latest.osm.pbf");
-	ASSERT_NE(-1, file.fd());
+    file.read_open("test/andorra-latest.osm.pbf");
+    ASSERT_NE(-1, file.fd());
 }
 
 TEST(file_t, read_open_wrong_file)
 {
-	file_t file;
-	ASSERT_EQ(-1, file.fd());
-	EXPECT_THROW(file.read_open("wrong_file"), exception_t);
+    file_t file;
+    ASSERT_EQ(-1, file.fd());
+    EXPECT_THROW(file.read_open("wrong_file"), exception_t);
 }
 
 TEST(file_t, move)
 {
-	file_t file;
-	ASSERT_EQ(-1, file.fd());
+    file_t file;
+    ASSERT_EQ(-1, file.fd());
 
-	{
-		file_t file1;
-		file1.read_open("test/andorra-latest.osm.pbf");
+    {
+        file_t file1;
+        file1.read_open("test/andorra-latest.osm.pbf");
 
-		ASSERT_NE(-1, file1.fd());
+        ASSERT_NE(-1, file1.fd());
 
-		file = std::move(file1);
+        file = std::move(file1);
 
-		ASSERT_NE(-1, file.fd());
-		ASSERT_EQ(-1, file1.fd());
-	}
+        ASSERT_NE(-1, file.fd());
+        ASSERT_EQ(-1, file1.fd());
+    }
 }
 
 TEST(file_t, read_write)
 {
-	static std::string const FILENAME = "file_test.txt";
-	static std::string const TEXT = "Hello, world!";
+    static std::string const FILENAME = "file_test.txt";
+    static std::string const TEXT = "Hello, world!";
 
-	{
-		file_t file;
-		file.read_write_open(FILENAME.data());
-		ASSERT_EQ((int) TEXT.size(), write(file.fd(), TEXT.data(), TEXT.size()));
-	}
+    {
+        file_t file;
+        file.read_write_open(FILENAME.data());
+        ASSERT_EQ((int) TEXT.size(), write(file.fd(), TEXT.data(), TEXT.size()));
+    }
 
-	{
-		file_t file;
-		file.read_open(FILENAME.data());
+    {
+        file_t file;
+        file.read_open(FILENAME.data());
 
-		char buffer[TEXT.size() + 1];
-		buffer[TEXT.size()] = '\0';
-		ASSERT_EQ((int) TEXT.size(), read(file.fd(), buffer, TEXT.size()));
+        char buffer[TEXT.size() + 1];
+        buffer[TEXT.size()] = '\0';
+        ASSERT_EQ((int) TEXT.size(), read(file.fd(), buffer, TEXT.size()));
 
-		ASSERT_STREQ(TEXT.data(), buffer);
-	}
+        ASSERT_STREQ(TEXT.data(), buffer);
+    }
 
-	ASSERT_EQ(0, remove(FILENAME.data()));
+    ASSERT_EQ(0, remove(FILENAME.data()));
 }

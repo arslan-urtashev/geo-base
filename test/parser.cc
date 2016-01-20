@@ -37,46 +37,46 @@ static char const *OSM_PBF_TEST_FILE = "test/andorra-latest.osm.pbf";
 
 TEST(open_street_map_parser, parse)
 {
-	pool_allocator_t allocator(16_mb);
-	
-	file_t file;
-	file.read_open(OSM_PBF_TEST_FILE);
-	file_input_stream_t input_stream(file.fd());
+    pool_allocator_t allocator(16_mb);
 
-	reader_t reader(&input_stream);
-	simple_counter_t count(&allocator);
+    file_t file;
+    file.read_open(OSM_PBF_TEST_FILE);
+    file_input_stream_t input_stream(file.fd());
 
-	count.parse(&reader);
+    reader_t reader(&input_stream);
+    simple_counter_t count(&allocator);
 
-	EXPECT_EQ(123736ull, count.nodes_number());
-	EXPECT_EQ(142ull, count.relations_number());
-	EXPECT_EQ(5750ull, count.ways_number());
+    count.parse(&reader);
 
-	EXPECT_EQ(count.nodes_processed() + count.dense_nodes_processed(), count.nodes_number());
-	EXPECT_EQ(count.ways_processed(), count.ways_number());
-	EXPECT_EQ(count.relations_processed(), count.relations_number());
+    EXPECT_EQ(123736ull, count.nodes_number());
+    EXPECT_EQ(142ull, count.relations_number());
+    EXPECT_EQ(5750ull, count.ways_number());
 
-	log_info("Parsed %lu relations, %lu ways and %lu nodes",
-		count.relations_number(), count.ways_number(), count.nodes_number());
+    EXPECT_EQ(count.nodes_processed() + count.dense_nodes_processed(), count.nodes_number());
+    EXPECT_EQ(count.ways_processed(), count.ways_number());
+    EXPECT_EQ(count.relations_processed(), count.relations_number());
+
+    log_info("Parsed %lu relations, %lu ways and %lu nodes",
+        count.relations_number(), count.ways_number(), count.nodes_number());
 }
 
 TEST(open_street_map_parser, run_pool_parse)
 {
-	std::vector<pool_allocator_t> allocators;
-	std::vector<simple_counter_t> simple_counters;
+    std::vector<pool_allocator_t> allocators;
+    std::vector<simple_counter_t> simple_counters;
 
-	allocators.emplace_back(16_mb);
-	allocators.emplace_back(16_mb);
+    allocators.emplace_back(16_mb);
+    allocators.emplace_back(16_mb);
 
-	simple_counters.emplace_back(&allocators[0]);
-	simple_counters.emplace_back(&allocators[1]);
+    simple_counters.emplace_back(&allocators[0]);
+    simple_counters.emplace_back(&allocators[1]);
 
-	run_pool_parse(OSM_PBF_TEST_FILE, simple_counters);
+    run_pool_parse(OSM_PBF_TEST_FILE, simple_counters);
 
-	EXPECT_EQ(123736ull, simple_counters[0].nodes_number() + simple_counters[1].nodes_number());
-	EXPECT_EQ(142ull, simple_counters[0].relations_number() + simple_counters[1].relations_number());
-	EXPECT_EQ(5750ull, simple_counters[0].ways_number() + simple_counters[1].ways_number());
+    EXPECT_EQ(123736ull, simple_counters[0].nodes_number() + simple_counters[1].nodes_number());
+    EXPECT_EQ(142ull, simple_counters[0].relations_number() + simple_counters[1].relations_number());
+    EXPECT_EQ(5750ull, simple_counters[0].ways_number() + simple_counters[1].ways_number());
 
-	log_info("Blocks processed 1 = %lu", simple_counters[0].blocks_processed());
-	log_info("Blobks processed 2 = %lu", simple_counters[1].blocks_processed());
+    log_info("Blocks processed 1 = %lu", simple_counters[0].blocks_processed());
+    log_info("Blobks processed 2 = %lu", simple_counters[1].blocks_processed());
 }

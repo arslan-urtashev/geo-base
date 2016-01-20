@@ -25,30 +25,30 @@ class part_test_t : public geo_base_test_t {
 
 TEST_F(part_test_t, two_edges)
 {
-	part_helper_t part = make_part(0, {
-		make_edge(point_t(0, 0), point_t(3, 0)),
-		make_edge(point_t(0, 3), point_t(5, 5))   
-	});
+    part_helper_t part = make_part(0, {
+        make_edge(point_t(0, 0), point_t(3, 0)),
+        make_edge(point_t(0, 3), point_t(5, 5))
+    });
 
-	EXPECT_EQ(0, part.coordinate);
-	EXPECT_TRUE(part.contains(point_t(1, 1), geo_data()));
+    EXPECT_EQ(0, part.coordinate);
+    EXPECT_TRUE(part.contains(point_t(1, 1), geo_data()));
 }
 
 TEST_F(part_test_t, contains)
 {
-	part_helper_t part = make_part(0, {
-		make_edge(point_t(0, 0), point_t(3, 0)),
-		make_edge(point_t(0, 3), point_t(3, 0)),
-		make_edge(point_t(-1, 10), point_t(10, 10)),
-		make_edge(point_t(-1, 10), point_t(10, 100))
-	});
+    part_helper_t part = make_part(0, {
+        make_edge(point_t(0, 0), point_t(3, 0)),
+        make_edge(point_t(0, 3), point_t(3, 0)),
+        make_edge(point_t(-1, 10), point_t(10, 10)),
+        make_edge(point_t(-1, 10), point_t(10, 100))
+    });
 
-	EXPECT_TRUE(part.contains(point_t(1, 1), geo_data()));
-	EXPECT_TRUE(part.contains(point_t(3, 0), geo_data()));
-	EXPECT_TRUE(part.contains(point_t(0, 11), geo_data()));
-	EXPECT_TRUE(part.contains(point_t(0, 3), geo_data()));
+    EXPECT_TRUE(part.contains(point_t(1, 1), geo_data()));
+    EXPECT_TRUE(part.contains(point_t(3, 0), geo_data()));
+    EXPECT_TRUE(part.contains(point_t(0, 11), geo_data()));
+    EXPECT_TRUE(part.contains(point_t(0, 3), geo_data()));
 
-	EXPECT_FALSE(part.contains(point_t(2, 5), geo_data()));
-	EXPECT_FALSE(part.contains(point_t(2, -1), geo_data()));
-	EXPECT_FALSE(part.contains(point_t(2, 101), geo_data()));
+    EXPECT_FALSE(part.contains(point_t(2, 5), geo_data()));
+    EXPECT_FALSE(part.contains(point_t(2, -1), geo_data()));
+    EXPECT_FALSE(part.contains(point_t(2, 101), geo_data()));
 }

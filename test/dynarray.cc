@@ -30,49 +30,49 @@ struct dynarray_test_t : geo_base_test_t {
 };
 
 struct data_t {
-	size_t *counter;
-	size_t plus;
+    size_t *counter;
+    size_t plus;
 
-	data_t()
-	{
-		assert(false);
-	}
+    data_t()
+    {
+        assert(false);
+    }
 
-	data_t(size_t *counter, size_t plus)
-		: counter(counter)
-		, plus(plus)
-	{
-		*counter += plus;
-	}
+    data_t(size_t *counter, size_t plus)
+        : counter(counter)
+        , plus(plus)
+    {
+        *counter += plus;
+    }
 
-	data_t &operator = (data_t const &d)
-	{
-		counter = d.counter;
-		plus = d.plus;
-		*counter += plus;
-		return *this;
-	}
+    data_t &operator = (data_t const &d)
+    {
+        counter = d.counter;
+        plus = d.plus;
+        *counter += plus;
+        return *this;
+    }
 
-	~data_t()
-	{
-		*counter -= plus;
-	}
+    ~data_t()
+    {
+        *counter -= plus;
+    }
 };
 
 TEST_F(dynarray_test_t, destructor)
 {
-	pool_allocator_t allocator(1_kb);
+    pool_allocator_t allocator(1_kb);
 
-	size_t counter = 13ull;
+    size_t counter = 13ull;
 
-	{
-		dynarray_t<data_t> arr(50, &allocator);
+    {
+        dynarray_t<data_t> arr(50, &allocator);
 
-		for (size_t i = 0; i < 20; ++i)
-			arr.push_back(data_t(&counter, i + 1));
+        for (size_t i = 0; i < 20; ++i)
+            arr.push_back(data_t(&counter, i + 1));
 
-		ASSERT_EQ(223ull, counter);
-	}
+        ASSERT_EQ(223ull, counter);
+    }
 
-	ASSERT_EQ(13ull, counter);
+    ASSERT_EQ(13ull, counter);
 }

@@ -23,9 +23,9 @@ using namespace geo_base;
 
 TEST(exception, format)
 {
-	try {
-		throw exception_t("%d %s %u", 12, "Hello, world!", 22u);
-	} catch (exception_t const &e) {
-		ASSERT_STREQ("12 Hello, world! 22", e.what());
-	}
+    try {
+        throw exception_t("%d %s %u", 12, "Hello, world!", 22u);
+    } catch (exception_t const &e) {
+        ASSERT_STREQ("12 Hello, world! 22", e.what());
+    }
 }

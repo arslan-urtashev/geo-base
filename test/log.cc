@@ -25,8 +25,8 @@ struct log_test_t : public geo_base_test_t {
 
 TEST_F(log_test_t, log_test)
 {
-	log_debug("Hello, wordl!");
-	log_info("Hello, world!");
-	log_warning("Hello, world!");
-	log_error("Hello, world!");
+    log_debug("Hello, wordl!");
+    log_info("Hello, world!");
+    log_warning("Hello, world!");
+    log_error("Hello, world!");
 }

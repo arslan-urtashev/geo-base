@@ -27,69 +27,69 @@ static char const *FILE_NAME = "fd_guard_test.txt";
 
 static int read_write_open_fd(char const *path)
 {
-	return open(path, O_RDWR | O_CREAT | O_TRUNC, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+    return open(path, O_RDWR | O_CREAT | O_TRUNC, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
 }
 
 TEST(fd_guard_t, close)
 {
-	int fd = read_write_open_fd(FILE_NAME);
-	ASSERT_EQ(0, fcntl(fd, F_GETFD));
+    int fd = read_write_open_fd(FILE_NAME);
+    ASSERT_EQ(0, fcntl(fd, F_GETFD));
 
-	{
-		fd_guard_t guard(fd);
-		ASSERT_EQ(0, fcntl(guard.fd(), F_GETFD));
-		ASSERT_EQ(fd, guard.fd());
-	}
+    {
+        fd_guard_t guard(fd);
+        ASSERT_EQ(0, fcntl(guard.fd(), F_GETFD));
+        ASSERT_EQ(fd, guard.fd());
+    }
 
-	ASSERT_NE(0, fcntl(fd, F_GETFD));
+    ASSERT_NE(0, fcntl(fd, F_GETFD));
 
-	remove(FILE_NAME);
+    remove(FILE_NAME);
 }
 
 TEST(fd_guard_t, move_asign)
 {
-	int fd = read_write_open_fd(FILE_NAME);
-	ASSERT_EQ(0, fcntl(fd, F_GETFD));
+    int fd = read_write_open_fd(FILE_NAME);
+    ASSERT_EQ(0, fcntl(fd, F_GETFD));
 
-	{
-		fd_guard_t guard0;
+    {
+        fd_guard_t guard0;
 
-		{
-			fd_guard_t guard(fd);
-			ASSERT_EQ(0, fcntl(guard.fd(), F_GETFD));
-			ASSERT_EQ(fd, guard.fd());
+        {
+            fd_guard_t guard(fd);
+            ASSERT_EQ(0, fcntl(guard.fd(), F_GETFD));
+            ASSERT_EQ(fd, guard.fd());
 
-			guard0 = std::move(guard);
-		}
+            guard0 = std::move(guard);
+        }
 
-		ASSERT_EQ(0, fcntl(guard0.fd(), F_GETFD));
-		ASSERT_EQ(fd, guard0.fd());
-	}
+        ASSERT_EQ(0, fcntl(guard0.fd(), F_GETFD));
+        ASSERT_EQ(fd, guard0.fd());
+    }
 
-	ASSERT_NE(0, fcntl(fd, F_GETFD));
+    ASSERT_NE(0, fcntl(fd, F_GETFD));
 
-	remove(FILE_NAME);
+    remove(FILE_NAME);
 }
 
 TEST(fd_guard_t, move_construct)
 {
-	int fd = read_write_open_fd(FILE_NAME);
-	ASSERT_EQ(0, fcntl(fd, F_GETFD));
+    int fd = read_write_open_fd(FILE_NAME);
+    ASSERT_EQ(0, fcntl(fd, F_GETFD));
 
-	{
-		fd_guard_t guard(fd);
+    {
+        fd_guard_t guard(fd);
 
-		ASSERT_EQ(0, fcntl(guard.fd(), F_GETFD));
-		ASSERT_EQ(fd, guard.fd());
+        ASSERT_EQ(0, fcntl(guard.fd(), F_GETFD));
+        ASSERT_EQ(fd, guard.fd());
 
-		fd_guard_t guard1(std::move(guard));
+        fd_guard_t guard1(std::move(guard));
 
-		ASSERT_EQ(-1, guard.fd());
-		ASSERT_EQ(0, fcntl(guard1.fd(), F_GETFD));
-		ASSERT_EQ(fd, guard1.fd());
-	}
+        ASSERT_EQ(-1, guard.fd());
+        ASSERT_EQ(0, fcntl(guard1.fd(), F_GETFD));
+        ASSERT_EQ(fd, guard1.fd());
+    }
 
-	ASSERT_NE(0, fcntl(fd, F_GETFD));
+    ASSERT_NE(0, fcntl(fd, F_GETFD));
 
-	remove(FILE_NAME);
+    remove(FILE_NAME);
 }

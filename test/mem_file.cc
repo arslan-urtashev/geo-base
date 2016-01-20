@@ -22,64 +22,64 @@
 using namespace geo_base;
 
 #define ASSERT_MEM_EQ(file) \
-	ASSERT_EQ(-1, file.fd()); \
-	ASSERT_EQ(nullptr, file.data()); \
-	ASSERT_EQ(0ull, file.size());
+    ASSERT_EQ(-1, file.fd()); \
+    ASSERT_EQ(nullptr, file.data()); \
+    ASSERT_EQ(0ull, file.size());
 
 #define ASSERT_MEM_NE(file) \
-	ASSERT_NE(-1, file.fd()); \
-	ASSERT_NE(nullptr, file.data()); \
-	ASSERT_NE(0ull, file.size());
+    ASSERT_NE(-1, file.fd()); \
+    ASSERT_NE(nullptr, file.data()); \
+    ASSERT_NE(0ull, file.size());
 
 TEST(mem_file_t, read_open)
 {
-	mem_file_t file;
-	ASSERT_MEM_EQ(file);
+    mem_file_t file;
+    ASSERT_MEM_EQ(file);
 
-	file.read_open("test/andorra-latest.osm.pbf");
-	ASSERT_MEM_NE(file);
+    file.read_open("test/andorra-latest.osm.pbf");
+    ASSERT_MEM_NE(file);
 }
 
 TEST(mem_file_t, read_open_wrong_file)
 {
-	mem_file_t file;
-	ASSERT_MEM_EQ(file);
-	EXPECT_THROW(file.read_open("wrong_file"), exception_t);
+    mem_file_t file;
+    ASSERT_MEM_EQ(file);
+    EXPECT_THROW(file.read_open("wrong_file"), exception_t);
 }
 
 TEST(mem_file_t, move)
 {
-	mem_file_t file;
-	ASSERT_MEM_EQ(file);
+    mem_file_t file;
+    ASSERT_MEM_EQ(file);
 
-	{
-		mem_file_t file1;
-		file1.read_open("test/andorra-latest.osm.pbf");
-		ASSERT_MEM_NE(file1);
+    {
+        mem_file_t file1;
+        file1.read_open("test/andorra-latest.osm.pbf");
+        ASSERT_MEM_NE(file1);
 
-		file = std::move(file1);
+        file = std::move(file1);
 
-		ASSERT_MEM_EQ(file1);
-		ASSERT_MEM_NE(file);
-	}
+        ASSERT_MEM_EQ(file1);
+        ASSERT_MEM_NE(file);
+    }
 }
 
 TEST(mem_file_t, read_mmap)
 {
-	static std::string const FILENAME = "mem_file_test.txt";
-	static std::string const TEXT = "Hello, world!\0";
+    static std::string const FILENAME = "mem_file_test.txt";
+    static std::string const TEXT = "Hello, world!\0";
 
-	{
-		file_t file;
-		file.read_write_open(FILENAME.data());
-		ASSERT_EQ((int) TEXT.size(), write(file.fd(), TEXT.data(), TEXT.size()));
-	}
+    {
+        file_t file;
+        file.read_write_open(FILENAME.data());
+        ASSERT_EQ((int) TEXT.size(), write(file.fd(), TEXT.data(), TEXT.size()));
+    }
 
-	{
-		mem_file_t mem_file;
-		mem_file.read_open(FILENAME.data());
-		ASSERT_STREQ(TEXT.data(), (char const *) mem_file.data());
-	}
+    {
+        mem_file_t mem_file;
+        mem_file.read_open(FILENAME.data());
+        ASSERT_STREQ(TEXT.data(), (char const *) mem_file.data());
+    }
 
-	ASSERT_EQ(0, remove(FILENAME.data()));
+    ASSERT_EQ(0, remove(FILENAME.data()));
 }
