@@ -17,7 +17,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <gmock/gmock.h>
-#include <geo_base/library/algo.h>
+#include <geo_base/lib/algo.h>
 #include <vector>
 
 using namespace geo_base;

@@ -18,7 +18,7 @@
 
 #include <fcgiapp.h>
 #include <errno.h>
-#include <geo_base/proto_util/proto_reader.h>
+#include <geo_base/libproto/proto_reader.h>
 
 using namespace geo_base;
 

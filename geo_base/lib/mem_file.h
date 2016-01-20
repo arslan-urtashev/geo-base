@@ -18,48 +18,51 @@
 
 #pragma once
 
-#include <arpa/inet.h>
-#include <geo_base/proto/region.pb.h>
-#include <geo_base/library/dynarray.h>
-#include <geo_base/library/file.h>
-#include <geo_base/library/file_stream.h>
-#include <geo_base/library/safe_stream.h>
+#include <geo_base/lib/file.h>
+#include <geo_base/lib/mem_guard.h>
+#include <geo_base/lib/memory.h>
 
 namespace geo_base {
 
-class proto_writer_t {
+class mem_file_t : public file_t {
 public:
-    proto_writer_t(char const *path)
-        : file_()
-        , output_stream_()
-        , safe_output_stream_()
+    static size_t const DEFAULT_MMAP_SIZE = 8_gb;
+
+    mem_file_t()
+        : mem_guard_()
+    { }
+
+    mem_file_t(mem_file_t &&f)
+        : file_t(std::forward<file_t>(f))
     {
-        file_.read_write_open(path);
-        output_stream_ = file_output_stream_t(file_.fd());
-        safe_output_stream_ = safe_output_stream_t(&output_stream_);
+        std::swap(mem_guard_, f.mem_guard_);
     }
 
-    template<typename message_t>
-    void write(message_t const &message, allocator_t *allocator)
+    mem_file_t &operator = (mem_file_t &&f)
     {
-        uint32_t const byte_size = message.ByteSize();
-        uint32_t const total_size = byte_size + sizeof(byte_size);
+        file_t::operator = (std::forward<file_t>(f));
+        std::swap(mem_guard_, f.mem_guard_);
+        return *this;
+    }
 
-        dynarray_t<char> buffer(total_size, total_size, allocator);
+    void read_open(char const *path);
 
-        *((uint32_t *) buffer.data()) = htonl(byte_size);
+    void read_write_open(char const *path, size_t mmap_size = DEFAULT_MMAP_SIZE);
 
-        if (!message.SerializeToArray(buffer.data() + sizeof(byte_size), byte_size))
-            throw exception_t("Unable to serialize message to array");
+    void *data() const
+    {
+        return mem_guard_.data();
+    }
 
-        if (!safe_output_stream_.write(buffer.data(), buffer.size()))
-            throw exception_t("Unable writer serialized message");
+    size_t size() const
+    {
+        return mem_guard_.size();
     }
 
 private:
-    file_t file_;
-    file_output_stream_t output_stream_;
-    safe_output_stream_t safe_output_stream_;
+    mem_guard_t mem_guard_;
+
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mem_file_t);
 };
 
 } // namespace geo_base

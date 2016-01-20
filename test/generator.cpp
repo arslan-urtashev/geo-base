@@ -18,8 +18,8 @@
 
 #include <geo_base/generator/generator.h>
 #include <geo_base/generator/geo_data.h>
-#include <geo_base/library/memory.h>
-#include <geo_base/library/pool_allocator.h>
+#include <geo_base/lib/memory.h>
+#include <geo_base/lib/pool_allocator.h>
 
 #include "geo_base_test.h"
 

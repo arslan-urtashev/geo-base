@@ -20,7 +20,7 @@
 
 #include <geo_base/core/common.h>
 #include <geo_base/open_street_map/proto/open_street_map.pb.h>
-#include <geo_base/library/dynarray.h>
+#include <geo_base/lib/dynarray.h>
 
 namespace geo_base {
 namespace open_street_map {

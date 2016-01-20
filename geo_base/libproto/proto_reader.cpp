@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,44 +16,33 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
-
-#include <geo_base/library/fd_guard.h>
-#include <geo_base/library/common.h>
+#include <geo_base/libproto/proto_reader.h>
+#include <geo_base/lib/log.h>
+#include <geo_base/lib/stop_watch.h>
 
 namespace geo_base {
 
-class file_t {
-public:
-    file_t()
-        : fd_guard_()
-    { }
-
-    file_t(file_t &&f)
-        : fd_guard_()
-    {
-        std::swap(fd_guard_, f.fd_guard_);
+void proto_reader_t::generate_index()
+{
+    if (!index_.empty()) {
+        log_warning("Index already generated!");
+        return;
     }
 
-    file_t &operator = (file_t &&f)
-    {
-        std::swap(fd_guard_, f.fd_guard_);
-        return *this;
-    }
+    log_debug("Generating proto reader index...");
 
-    void read_open(char const *path);
+    stop_watch_t stop_watch;
+    stop_watch.run();
 
-    void read_write_open(char const *path);
+    each_with_ptr([&] (char const *ptr, proto::region_t const &region) {
+        if (index_.find(region.region_id()) != index_.end())
+            log_warning("Region %lu already exists in index", region.region_id());
+        index_[region.region_id()] = ptr;
+    });
 
-    int fd() const
-    {
-        return fd_guard_.fd();
-    }
-
-private:
-    fd_guard_t fd_guard_;
-
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(file_t);
-};
+    float const seconds = stop_watch.get();
+    log_debug("Proto reader index generated in %.3f seconds (%.3f minutes)",
+        seconds, seconds / 60.0);
+}
 
 } // namespace geo_base

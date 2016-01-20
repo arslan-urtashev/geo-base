@@ -9,5 +9,5 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
     geo-base
-    geo-base-library
+    geo-base-lib
 )

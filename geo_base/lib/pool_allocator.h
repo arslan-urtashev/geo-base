@@ -16,34 +16,39 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/library/file_stream.h>
+#pragma once
 
-#include <unistd.h>
+#include <geo_base/lib/block_allocator.h>
+#include <geo_base/lib/mem_guard.h>
 
 namespace geo_base {
 
-bool file_output_stream_t::write(char const *ptr, size_t count)
-{
-    while (count > 0) {
-        ssize_t ret = ::write(fd_, ptr, count);
-        if (ret < 0)
-            return false;
-        ptr += ret;
-        count -= ret;
-    }
-    return true;
-}
+class pool_allocator_t : public block_allocator_t {
+public:
+    pool_allocator_t()
+        : mem_guard_()
+    { }
 
-bool file_input_stream_t::read(char *ptr, size_t count)
-{
-    while (count > 0) {
-        ssize_t ret = ::read(fd_, ptr, count);
-        if (ret <= 0)
-            return false;
-        ptr += ret;
-        count -= ret;
+    pool_allocator_t(pool_allocator_t &&a)
+        : block_allocator_t(std::forward<block_allocator_t>(a))
+        , mem_guard_()
+    {
+        std::swap(mem_guard_, a.mem_guard_);
     }
-    return true;
-}
+
+    pool_allocator_t &operator = (pool_allocator_t &&a)
+    {
+        block_allocator_t::operator = (std::forward<block_allocator_t>(a));
+        std::swap(mem_guard_, a.mem_guard_);
+        return *this;
+    }
+
+    explicit pool_allocator_t(size_t pool_size);
+
+private:
+    mem_guard_t mem_guard_;
+
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(pool_allocator_t);
+};
 
 } // namespace geo_base

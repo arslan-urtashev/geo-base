@@ -16,37 +16,54 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/library/mem_file.h>
+#pragma once
 
-#include <errno.h>
-#include <sys/stat.h>
+#include <geo_base/lib/io_stream.h>
+#include <mutex>
+#include <algorithm>
 
 namespace geo_base {
 
-void mem_file_t::read_open(char const *path)
-{
-    file_t::read_open(path);
+class safe_output_stream_t : public output_stream_t {
+public:
+    safe_output_stream_t()
+        : mutex_()
+        , output_stream_(nullptr)
+    { }
 
-    struct stat buf;
-    if (fstat(fd(), &buf) < 0)
-        throw exception_t("Unable fstat %s: %s", path, strerror(errno));
+    explicit safe_output_stream_t(output_stream_t *output_stream)
+        : mutex_()
+        , output_stream_(output_stream)
+    { }
 
-    void *memory = mmap(nullptr, buf.st_size, PROT_READ, MAP_SHARED, fd(), 0);
-    if (memory == MAP_FAILED)
-        throw exception_t("Unable mmap file %s: %s", path, strerror(errno));
+    safe_output_stream_t(safe_output_stream_t &&s)
+        : mutex_()
+        , output_stream_(nullptr)
+    {
+        std::lock_guard<std::mutex> lock1(mutex_);
+        std::lock_guard<std::mutex> lock2(s.mutex_);
+        std::swap(output_stream_, s.output_stream_);
+    }
 
-    mem_guard_ = mem_guard_t(memory, buf.st_size);
-}
+    safe_output_stream_t &operator = (safe_output_stream_t &&s)
+    {
+        std::lock_guard<std::mutex> lock1(mutex_);
+        std::lock_guard<std::mutex> lock2(s.mutex_);
+        std::swap(output_stream_, s.output_stream_);
+        return *this;
+    }
 
-void mem_file_t::read_write_open(char const *path, size_t mmap_size)
-{
-    file_t::read_write_open(path);
+    bool write(char const *ptr, size_t count) override
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        return output_stream_->write(ptr, count);
+    }
 
-    void *memory = mmap(nullptr, mmap_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd(), 0);
-    if (memory == MAP_FAILED)
-        throw exception_t("Unable mmap file %s: %s", path, strerror(errno));
+private:
+    std::mutex mutex_;
+    output_stream_t *output_stream_;
 
-    mem_guard_ = mem_guard_t(memory, mmap_size);
-}
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(safe_output_stream_t);
+};
 
 } // namespace geo_base

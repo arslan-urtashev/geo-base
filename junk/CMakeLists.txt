@@ -3,7 +3,7 @@ SET(LIBS
     geo-base-open-street-map
     geo-base-open-street-map-proto
     geo-base-proto
-    geo-base-proto-util
+    geo-base-libproto
     geo-base-generator
     pthread
     jemalloc

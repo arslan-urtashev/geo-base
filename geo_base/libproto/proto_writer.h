@@ -18,52 +18,48 @@
 
 #pragma once
 
-#include <geo_base/library/io_stream.h>
-#include <mutex>
-#include <algorithm>
+#include <arpa/inet.h>
+#include <geo_base/proto/region.pb.h>
+#include <geo_base/lib/dynarray.h>
+#include <geo_base/lib/file.h>
+#include <geo_base/lib/file_stream.h>
+#include <geo_base/lib/safe_stream.h>
 
 namespace geo_base {
 
-class safe_output_stream_t : public output_stream_t {
+class proto_writer_t {
 public:
-    safe_output_stream_t()
-        : mutex_()
-        , output_stream_(nullptr)
-    { }
-
-    explicit safe_output_stream_t(output_stream_t *output_stream)
-        : mutex_()
-        , output_stream_(output_stream)
-    { }
-
-    safe_output_stream_t(safe_output_stream_t &&s)
-        : mutex_()
-        , output_stream_(nullptr)
+    proto_writer_t(char const *path)
+        : file_()
+        , output_stream_()
+        , safe_output_stream_()
     {
-        std::lock_guard<std::mutex> lock1(mutex_);
-        std::lock_guard<std::mutex> lock2(s.mutex_);
-        std::swap(output_stream_, s.output_stream_);
+        file_.read_write_open(path);
+        output_stream_ = file_output_stream_t(file_.fd());
+        safe_output_stream_ = safe_output_stream_t(&output_stream_);
     }
 
-    safe_output_stream_t &operator = (safe_output_stream_t &&s)
+    template<typename message_t>
+    void write(message_t const &message, allocator_t *allocator)
     {
-        std::lock_guard<std::mutex> lock1(mutex_);
-        std::lock_guard<std::mutex> lock2(s.mutex_);
-        std::swap(output_stream_, s.output_stream_);
-        return *this;
-    }
+        uint32_t const byte_size = message.ByteSize();
+        uint32_t const total_size = byte_size + sizeof(byte_size);
 
-    bool write(char const *ptr, size_t count) override
-    {
-        std::lock_guard<std::mutex> lock(mutex_);
-        return output_stream_->write(ptr, count);
+        dynarray_t<char> buffer(total_size, total_size, allocator);
+
+        *((uint32_t *) buffer.data()) = htonl(byte_size);
+
+        if (!message.SerializeToArray(buffer.data() + sizeof(byte_size), byte_size))
+            throw exception_t("Unable to serialize message to array");
+
+        if (!safe_output_stream_.write(buffer.data(), buffer.size()))
+            throw exception_t("Unable writer serialized message");
     }
 
 private:
-    std::mutex mutex_;
-    output_stream_t *output_stream_;
-
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(safe_output_stream_t);
+    file_t file_;
+    file_output_stream_t output_stream_;
+    safe_output_stream_t safe_output_stream_;
 };
 
 } // namespace geo_base

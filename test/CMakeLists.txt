@@ -26,8 +26,8 @@ TARGET_LINK_LIBRARIES(
     geo-base-generator
     geo-base-open-street-map
     geo-base-proto
-    geo-base-proto-util
-    geo-base-library
+    geo-base-libproto
+    geo-base-lib
     gmock
     jemalloc
     pthread

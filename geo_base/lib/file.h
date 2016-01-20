@@ -16,31 +16,44 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/library/base_allocator.h>
-#include <geo_base/library/memory.h>
+#pragma once
 
-#include <errno.h>
+#include <geo_base/lib/fd_guard.h>
+#include <geo_base/lib/common.h>
 
 namespace geo_base {
 
-base_allocator_t::base_allocator_t(char const *path)
-{
-    read_write_open(path);
-    setup(data(), size());
-}
+class file_t {
+public:
+    file_t()
+        : fd_guard_()
+    { }
 
-void *base_allocator_t::allocate(size_t count)
-{
-    if (ftruncate(fd(), total_allocated_size() + allocate_size(count)) < 0)
-        throw exception_t("Unable ftrancate: %s", strerror(errno));
-    return block_allocator_t::allocate(count);
-}
+    file_t(file_t &&f)
+        : fd_guard_()
+    {
+        std::swap(fd_guard_, f.fd_guard_);
+    }
 
-void base_allocator_t::deallocate(void *ptr, size_t count)
-{
-    block_allocator_t::deallocate(ptr, count);
-    if (ftruncate(fd(), total_allocated_size()) < 0)
-        throw exception_t("Unable ftrancate: %s", strerror(errno));
-}
+    file_t &operator = (file_t &&f)
+    {
+        std::swap(fd_guard_, f.fd_guard_);
+        return *this;
+    }
+
+    void read_open(char const *path);
+
+    void read_write_open(char const *path);
+
+    int fd() const
+    {
+        return fd_guard_.fd();
+    }
+
+private:
+    fd_guard_t fd_guard_;
+
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(file_t);
+};
 
 } // namespace geo_base
