@@ -18,29 +18,6 @@
 
 #pragma once
 
-#include <geo_base/util/allocator.h>
-
-namespace geo_base {
-
-// FIXME: Rewrite this terrible abstraction.
-// base_output_stream_t is a wrapper on base_allocator_t for geo_data serialize. In unit tests
-// allocator can be switch to other.
-class base_output_stream_t : public output_stream_t {
-public:
-	explicit base_output_stream_t(allocator_t *allocator)
-		: allocator_(allocator)
-	{
-	}
-
-	bool write(char const *ptr, size_t count) override
-	{
-		char *dst = (char *) allocator_->allocate(count);
-		memcpy(dst, ptr, count);
-		return true;
-	}
-
-private:
-	allocator_t *allocator_;
-};
-
-} // namespace geo_base
+#define GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(type_t) \
+	type_t(type_t const &) = delete; \
+	type_t &operator = (type_t const &) = delete;
