@@ -45,8 +45,7 @@ public:
         , relations_processed_(0)
         , ways_processed_(0)
         , processing_disabled_mask_(0)
-    {
-    }
+    { }
 
     explicit parser_t(allocator_t *allocator)
         : allocator_(allocator)
@@ -56,8 +55,7 @@ public:
         , relations_processed_(0)
         , ways_processed_(0)
         , processing_disabled_mask_(0)
-    {
-    }
+    { }
 
     parser_t(parser_t &&p)
         : parser_t()

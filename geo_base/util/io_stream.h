@@ -27,8 +27,7 @@ public:
     virtual bool write(char const *ptr, size_t count) = 0;
 
     virtual ~output_stream_t()
-    {
-    }
+    { }
 };
 
 class input_stream_t {
@@ -36,8 +35,7 @@ public:
     virtual bool read(char *ptr, size_t count) = 0;
 
     virtual ~input_stream_t()
-    {
-    }
+    { }
 };
 
 } // namespace geo_base

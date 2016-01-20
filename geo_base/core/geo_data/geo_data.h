@@ -39,8 +39,7 @@ public:
     geo_id_t lookup(location_t const &l);
 
     virtual ~geo_data_t()
-    {
-    }
+    { }
 };
 
 } // namespace geo_base

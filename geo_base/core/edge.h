@@ -32,14 +32,12 @@ struct edge_t {
     edge_t()
         : beg(0)
         , end(0)
-    {
-    }
+    { }
 
     edge_t(ref_t const &a, ref_t const &b)
         : beg(a)
         , end(b)
-    {
-    }
+    { }
 
     bool operator == (edge_t const &e) const
     {

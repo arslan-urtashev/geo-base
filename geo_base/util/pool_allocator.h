@@ -27,8 +27,7 @@ class pool_allocator_t : public block_allocator_t {
 public:
     pool_allocator_t()
         : mem_guard_()
-    {
-    }
+    { }
 
     pool_allocator_t(pool_allocator_t &&a)
         : block_allocator_t(std::forward<block_allocator_t>(a))

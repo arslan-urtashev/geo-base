@@ -26,13 +26,13 @@
 namespace geo_base {
 
 template<typename v_t>
-using vector_t = std::vector<v_t, je_temp_alloc_t<v_t>>;
+using vector_t = std::vector<v_t, je_allocator_t<v_t>>;
 
 template<typename k_t>
-using set_t = std::unordered_set<k_t, std::hash<k_t>, std::equal_to<k_t>, je_temp_alloc_t<k_t>>;
+using set_t = std::unordered_set<k_t, std::hash<k_t>, std::equal_to<k_t>, je_allocator_t<k_t>>;
 
 template<typename k_t, typename v_t>
 using map_t = std::unordered_map<k_t, v_t, std::hash<k_t>, std::equal_to<k_t>,
-    je_temp_alloc_t<std::pair<k_t const, v_t>>>;
+    je_allocator_t<std::pair<k_t const, v_t>>>;
 
 }

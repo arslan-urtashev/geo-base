@@ -1,12 +1,15 @@
 PROJECT(geo_base CXX C)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.7)
 
+ADD_DEFINITIONS(
+    -funroll-loops
+)
+
 ADD_SUBDIRECTORY(deps)
 
 ADD_DEFINITIONS(
 	-Wall
 	-Werror
-	-funroll-loops
 	-std=c++0x
 )
 

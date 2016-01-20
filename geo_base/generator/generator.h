@@ -33,8 +33,7 @@ public:
         : stop_watch_()
         , geo_data_(geo_data)
         , allocator_(allocator)
-    {
-    }
+    { }
 
     void init();
 

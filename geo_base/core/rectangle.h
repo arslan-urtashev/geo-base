@@ -36,16 +36,14 @@ struct rectangle_t {
         , y1(0)
         , x2(0)
         , y2(0)
-    {
-    }
+    { }
 
     rectangle_t(coordinate_t x1, coordinate_t y1, coordinate_t x2, coordinate_t y2)
         : x1(x1)
         , y1(y1)
         , x2(x2)
         , y2(y2)
-    {
-    }
+    { }
 
     rectangle_t(point_t const *points, number_t number)
     {

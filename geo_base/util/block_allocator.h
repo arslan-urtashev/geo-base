@@ -31,15 +31,13 @@ public:
         : data_(nullptr)
         , bytes_allocated_(0)
         , bytes_limit_(0)
-    {
-    }
+    { }
 
     block_allocator_t(void *data, size_t bytes_limit)
         : data_(data)
         , bytes_allocated_(0)
         , bytes_limit_(bytes_limit)
-    {
-    }
+    { }
 
     block_allocator_t(block_allocator_t &&a)
         : block_allocator_t()

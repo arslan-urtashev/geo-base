@@ -31,8 +31,7 @@ class reader_t {
 public:
     explicit reader_t(input_stream_t *input_stream)
         : input_stream_(input_stream)
-    {
-    }
+    { }
 
     bool read(proto::blob_header_t *header, proto::blob_t *blob, allocator_t *allocator);
 

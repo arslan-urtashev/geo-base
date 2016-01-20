@@ -61,8 +61,7 @@ class locations_converter_t {
 public:
     explicit locations_converter_t(allocator_t *allocator)
         : allocator_(allocator)
-    {
-    }
+    { }
 
     template<typename locations_t, typename callback_t>
     void each(locations_t const &raw_locations, callback_t callback)

@@ -35,7 +35,6 @@ TEST_F(open_street_map_convert_t, convert)
 
     proto_reader_t reader("andorra-latest.pbf");
 
-
     size_t regions_number = 0;
     size_t polygons_number = 0;
 

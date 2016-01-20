@@ -30,8 +30,7 @@ public:
     mem_guard_t()
         : addr_(nullptr)
         , length_(0)
-    {
-    }
+    { }
 
     mem_guard_t(void *addr, size_t length)
         : addr_(addr)

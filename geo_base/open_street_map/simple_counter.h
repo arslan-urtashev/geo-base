@@ -30,8 +30,7 @@ public:
         , nodes_number_(0)
         , ways_number_(0)
         , relations_number_(0)
-    {
-    }
+    { }
 
     simple_counter_t(simple_counter_t &&c)
         : parser_t(std::forward<parser_t>(c))

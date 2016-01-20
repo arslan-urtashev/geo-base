@@ -29,14 +29,12 @@ public:
     safe_output_stream_t()
         : mutex_()
         , output_stream_(nullptr)
-    {
-    }
+    { }
 
     explicit safe_output_stream_t(output_stream_t *output_stream)
         : mutex_()
         , output_stream_(output_stream)
-    {
-    }
+    { }
 
     safe_output_stream_t(safe_output_stream_t &&s)
         : mutex_()

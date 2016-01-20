@@ -30,8 +30,7 @@ public:
 
     mem_file_t()
         : mem_guard_()
-    {
-    }
+    { }
 
     mem_file_t(mem_file_t &&f)
         : file_t(std::forward<file_t>(f))

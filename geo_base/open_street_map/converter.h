@@ -34,8 +34,7 @@ class grep_boundary_ways_t : public parser_t {
 public:
     grep_boundary_ways_t(allocator_t *allocator)
         : parser_t(allocator)
-    {
-    }
+    { }
 
     void process_way(geo_id_t, kvs_t const &, geo_ids_t const &) override;
 
@@ -60,8 +59,7 @@ public:
     grep_boundary_node_ids_t(geo_ids_set_t const &ways, allocator_t *allocator)
         : parser_t(allocator)
         , need_ways_(&ways)
-    {
-    }
+    { }
 
     void process_way(geo_id_t geo_id, kvs_t const &, geo_ids_t const &node_ids) override;
 
@@ -92,8 +90,7 @@ public:
     grep_boundary_nodes_t(geo_ids_set_t const &nodes, allocator_t *allocator)
         : parser_t(allocator)
         , need_nodes_(&nodes)
-    {
-    }
+    { }
 
     void process_node(geo_id_t geo_id, location_t const &location, kvs_t const &) override
     {
@@ -125,8 +122,7 @@ public:
         , ways_(&ways)
         , nodes_(&nodes)
         , regions_number_(0)
-    {
-    }
+    { }
 
     void process_way(geo_id_t geo_id, kvs_t const &kvs, geo_ids_t const &nodes) override;
 

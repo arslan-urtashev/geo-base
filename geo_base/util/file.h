@@ -27,8 +27,7 @@ class file_t {
 public:
     file_t()
         : fd_guard_()
-    {
-    }
+    { }
 
     file_t(file_t &&f)
         : fd_guard_()

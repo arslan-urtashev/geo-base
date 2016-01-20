@@ -23,21 +23,8 @@
 
 namespace geo_base {
 
-class je_allocator_t : public allocator_t {
-public:
-    void *allocate(size_t count) override
-    {
-        return yesmalloc(count);
-    }
-
-    void deallocate(void *ptr, size_t) override
-    {
-        yesfree(ptr);
-    }
-};
-
 template<typename value_t>
-class je_temp_alloc_t {
+class je_allocator_t {
 public:
     typedef value_t value_type;
     typedef value_t* pointer;
@@ -47,28 +34,28 @@ public:
     typedef size_t size_type;
     typedef ptrdiff_t difference_type;
 
-    je_temp_alloc_t()
+    je_allocator_t()
     {
     }
 
     template<typename other_t>
-    je_temp_alloc_t(je_temp_alloc_t<other_t> const &)
+    je_allocator_t(je_allocator_t<other_t> const &)
     {
     }
 
     template<typename other_t>
     struct rebind {
-        typedef je_temp_alloc_t<other_t> other;
+        typedef je_allocator_t<other_t> other;
     };
 
     pointer allocate(size_type n)
     {
-        return (pointer) allocator_.allocate(n * sizeof(value_type));
+        return (pointer) yesmalloc(n * sizeof(value_type));
     }
 
-    void deallocate(pointer p, size_type n)
+    void deallocate(pointer p, size_type)
     {
-        allocator_.deallocate(p, n);
+        yesfree(p);
     }
 
     template<typename p_t, typename... args_t>
@@ -92,9 +79,6 @@ public:
     {
         return &x;
     }
-
-private:
-    je_allocator_t allocator_;
 };
 
 }

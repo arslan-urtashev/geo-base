@@ -35,8 +35,7 @@ public:
         , capacity_(0)
         , data_(nullptr)
         , allocator_(nullptr)
-    {
-    }
+    { }
 
     dynarray_t(size_t capacity, allocator_t *allocator)
         : size_(0)

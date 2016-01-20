@@ -30,20 +30,17 @@ struct point_t {
     point_t()
         : x(0)
         , y(0)
-    {
-    }
+    { }
 
     point_t(coordinate_t const &x1, coordinate_t const &y1)
         : x(x1)
         , y(y1)
-    {
-    }
+    { }
 
     explicit point_t(location_t const &l)
         : x(to_coordinate(l.lon))
         , y(to_coordinate(l.lat))
-    {
-    }
+    { }
 
     point_t operator - (point_t const &p) const
     {

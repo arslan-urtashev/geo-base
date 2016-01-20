@@ -60,8 +60,7 @@ private:
     logger_t()
         : fd_(-1)
         , level_(LOG_LEVEL_DISABLE)
-    {
-    }
+    { }
 
     int fd_;
     log_level_t level_;

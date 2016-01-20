@@ -27,14 +27,12 @@ struct location_t {
     location_t()
         : lon(0)
         , lat(0)
-    {
-    }
+    { }
 
     location_t(double lon, double lat)
         : lon(lon)
         , lat(lat)
-    {
-    }
+    { }
 };
 
 } // namespace geo_base

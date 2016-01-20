@@ -30,8 +30,7 @@ class fd_guard_t {
 public:
     fd_guard_t()
         : fd_(-1)
-    {
-    }
+    { }
 
     explicit fd_guard_t(int fd)
         : fd_(fd)

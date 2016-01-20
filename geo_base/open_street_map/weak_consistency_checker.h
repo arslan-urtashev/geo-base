@@ -29,8 +29,7 @@ class weak_consistency_checker_t : public parser_t {
 public:
     weak_consistency_checker_t(allocator_t *allocator)
         : parser_t(allocator)
-    {
-    }
+    { }
 
     void process_node(geo_id_t geo_id, location_t const &, kvs_t const &) override
     {
