@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include <geo_base/util/allocator.h>
-#include <geo_base/util/exception.h>
-#include <geo_base/util/memory.h>
-#include <geo_base/util/common.h>
+#include <geo_base/library/allocator.h>
+#include <geo_base/library/exception.h>
+#include <geo_base/library/memory.h>
+#include <geo_base/library/common.h>
 
 namespace geo_base {
 

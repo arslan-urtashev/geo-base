@@ -16,25 +16,34 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
+#include <geo_base/library/file_stream.h>
 
-#include <geo_base/util/block_allocator.h>
-#include <geo_base/util/exception.h>
-#include <geo_base/util/file.h>
-#include <geo_base/util/mem_file.h>
+#include <unistd.h>
 
 namespace geo_base {
 
-class base_allocator_t : public mem_file_t, public block_allocator_t {
-public:
-    explicit base_allocator_t(char const *path);
+bool file_output_stream_t::write(char const *ptr, size_t count)
+{
+    while (count > 0) {
+        ssize_t ret = ::write(fd_, ptr, count);
+        if (ret < 0)
+            return false;
+        ptr += ret;
+        count -= ret;
+    }
+    return true;
+}
 
-    void *allocate(size_t count) override;
-
-    void deallocate(void *, size_t) override;
-
-private:
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(base_allocator_t);
-};
+bool file_input_stream_t::read(char *ptr, size_t count)
+{
+    while (count > 0) {
+        ssize_t ret = ::read(fd_, ptr, count);
+        if (ret <= 0)
+            return false;
+        ptr += ret;
+        count -= ret;
+    }
+    return true;
+}
 
 } // namespace geo_base

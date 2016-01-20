@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,42 +18,52 @@
 
 #pragma once
 
-#include <geo_base/util/fd_guard.h>
-#include <geo_base/util/common.h>
+#include <geo_base/library/io_stream.h>
+#include <mutex>
+#include <algorithm>
 
 namespace geo_base {
 
-class file_t {
+class safe_output_stream_t : public output_stream_t {
 public:
-    file_t()
-        : fd_guard_()
+    safe_output_stream_t()
+        : mutex_()
+        , output_stream_(nullptr)
     { }
 
-    file_t(file_t &&f)
-        : fd_guard_()
+    explicit safe_output_stream_t(output_stream_t *output_stream)
+        : mutex_()
+        , output_stream_(output_stream)
+    { }
+
+    safe_output_stream_t(safe_output_stream_t &&s)
+        : mutex_()
+        , output_stream_(nullptr)
     {
-        std::swap(fd_guard_, f.fd_guard_);
+        std::lock_guard<std::mutex> lock1(mutex_);
+        std::lock_guard<std::mutex> lock2(s.mutex_);
+        std::swap(output_stream_, s.output_stream_);
     }
 
-    file_t &operator = (file_t &&f)
+    safe_output_stream_t &operator = (safe_output_stream_t &&s)
     {
-        std::swap(fd_guard_, f.fd_guard_);
+        std::lock_guard<std::mutex> lock1(mutex_);
+        std::lock_guard<std::mutex> lock2(s.mutex_);
+        std::swap(output_stream_, s.output_stream_);
         return *this;
     }
 
-    void read_open(char const *path);
-
-    void read_write_open(char const *path);
-
-    int fd() const
+    bool write(char const *ptr, size_t count) override
     {
-        return fd_guard_.fd();
+        std::lock_guard<std::mutex> lock(mutex_);
+        return output_stream_->write(ptr, count);
     }
 
 private:
-    fd_guard_t fd_guard_;
+    std::mutex mutex_;
+    output_stream_t *output_stream_;
 
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(file_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(safe_output_stream_t);
 };
 
 } // namespace geo_base

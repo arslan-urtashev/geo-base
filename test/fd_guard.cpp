@@ -17,7 +17,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <fcntl.h>
-#include <geo_base/util/fd_guard.h>
+#include <geo_base/library/fd_guard.h>
 #include <gmock/gmock.h>
 #include <unistd.h>
 

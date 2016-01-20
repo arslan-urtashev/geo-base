@@ -21,8 +21,8 @@
 #include <geo_base/open_street_map/converter.h>
 #include <geo_base/proto/region.pb.h>
 #include <geo_base/proto_util/proto_writer.h>
-#include <geo_base/util/pool_allocator.h>
-#include <geo_base/util/safe_stream.h>
+#include <geo_base/library/pool_allocator.h>
+#include <geo_base/library/safe_stream.h>
 
 namespace geo_base {
 namespace open_street_map {

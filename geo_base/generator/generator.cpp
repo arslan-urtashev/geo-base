@@ -19,8 +19,8 @@
 #include <geo_base/generator/generator.h>
 #include <geo_base/generator/geo_data.h>
 #include <geo_base/generator/locations_converter.h>
-#include <geo_base/util/log.h>
-#include <geo_base/util/stop_watch.h>
+#include <geo_base/library/log.h>
+#include <geo_base/library/stop_watch.h>
 
 namespace geo_base {
 namespace generator {

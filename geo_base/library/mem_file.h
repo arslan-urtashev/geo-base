@@ -16,37 +16,53 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/util/mem_file.h>
+#pragma once
 
-#include <errno.h>
-#include <sys/stat.h>
+#include <geo_base/library/file.h>
+#include <geo_base/library/mem_guard.h>
+#include <geo_base/library/memory.h>
 
 namespace geo_base {
 
-void mem_file_t::read_open(char const *path)
-{
-    file_t::read_open(path);
+class mem_file_t : public file_t {
+public:
+    static size_t const DEFAULT_MMAP_SIZE = 8_gb;
 
-    struct stat buf;
-    if (fstat(fd(), &buf) < 0)
-        throw exception_t("Unable fstat %s: %s", path, strerror(errno));
+    mem_file_t()
+        : mem_guard_()
+    { }
 
-    void *memory = mmap(nullptr, buf.st_size, PROT_READ, MAP_SHARED, fd(), 0);
-    if (memory == MAP_FAILED)
-        throw exception_t("Unable mmap file %s: %s", path, strerror(errno));
+    mem_file_t(mem_file_t &&f)
+        : file_t(std::forward<file_t>(f))
+    {
+        std::swap(mem_guard_, f.mem_guard_);
+    }
 
-    mem_guard_ = mem_guard_t(memory, buf.st_size);
-}
+    mem_file_t &operator = (mem_file_t &&f)
+    {
+        file_t::operator = (std::forward<file_t>(f));
+        std::swap(mem_guard_, f.mem_guard_);
+        return *this;
+    }
 
-void mem_file_t::read_write_open(char const *path, size_t mmap_size)
-{
-    file_t::read_write_open(path);
+    void read_open(char const *path);
 
-    void *memory = mmap(nullptr, mmap_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd(), 0);
-    if (memory == MAP_FAILED)
-        throw exception_t("Unable mmap file %s: %s", path, strerror(errno));
+    void read_write_open(char const *path, size_t mmap_size = DEFAULT_MMAP_SIZE);
 
-    mem_guard_ = mem_guard_t(memory, mmap_size);
-}
+    void *data() const
+    {
+        return mem_guard_.data();
+    }
+
+    size_t size() const
+    {
+        return mem_guard_.size();
+    }
+
+private:
+    mem_guard_t mem_guard_;
+
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mem_file_t);
+};
 
 } // namespace geo_base

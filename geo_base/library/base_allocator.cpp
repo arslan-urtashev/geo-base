@@ -16,50 +16,31 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
+#include <geo_base/library/base_allocator.h>
+#include <geo_base/library/memory.h>
 
-#include <geo_base/util/io_stream.h>
+#include <errno.h>
 
 namespace geo_base {
 
-class file_output_stream_t : public output_stream_t {
-public:
-    file_output_stream_t()
-        : fd_(-1)
-    { }
+base_allocator_t::base_allocator_t(char const *path)
+{
+    read_write_open(path);
+    setup(data(), size());
+}
 
-    explicit file_output_stream_t(int fd)
-        : fd_(fd)
-    { }
+void *base_allocator_t::allocate(size_t count)
+{
+    if (ftruncate(fd(), total_allocated_size() + allocate_size(count)) < 0)
+        throw exception_t("Unable ftrancate: %s", strerror(errno));
+    return block_allocator_t::allocate(count);
+}
 
-    file_output_stream_t(file_output_stream_t const &s)
-        : fd_(s.fd_)
-    { }
-
-    bool write(char const *ptr, size_t count) override;
-
-private:
-    int fd_;
-};
-
-class file_input_stream_t : public input_stream_t {
-public:
-    file_input_stream_t()
-        : fd_(-1)
-    { }
-
-    explicit file_input_stream_t(int fd)
-        : fd_(fd)
-    { }
-
-    file_input_stream_t(file_input_stream_t const &s)
-        : fd_(s.fd_)
-    { }
-
-    bool read(char *ptr, size_t count) override;
-
-private:
-    int fd_;
-};
+void base_allocator_t::deallocate(void *ptr, size_t count)
+{
+    block_allocator_t::deallocate(ptr, count);
+    if (ftruncate(fd(), total_allocated_size()) < 0)
+        throw exception_t("Unable ftrancate: %s", strerror(errno));
+}
 
 } // namespace geo_base

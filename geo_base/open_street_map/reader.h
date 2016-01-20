@@ -19,8 +19,8 @@
 #pragma once
 
 #include <geo_base/open_street_map/proto/open_street_map.pb.h>
-#include <geo_base/util/allocator.h>
-#include <geo_base/util/io_stream.h>
+#include <geo_base/library/allocator.h>
+#include <geo_base/library/io_stream.h>
 
 #include <mutex>
 

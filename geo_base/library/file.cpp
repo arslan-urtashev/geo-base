@@ -16,31 +16,33 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/util/base_allocator.h>
-#include <geo_base/util/memory.h>
+#include <geo_base/library/exception.h>
+#include <geo_base/library/file.h>
+#include <geo_base/library/log.h>
 
 #include <errno.h>
+#include <fcntl.h>
+#include <string.h>
+#include <unistd.h>
 
 namespace geo_base {
 
-base_allocator_t::base_allocator_t(char const *path)
+void file_t::read_open(char const *path)
 {
-    read_write_open(path);
-    setup(data(), size());
+    log_debug("Read open %s", path);
+    int fd = open(path, O_RDONLY);
+    if (fd < 0)
+        throw exception_t("Unable open %s: %s", path, strerror(errno));
+    fd_guard_ = fd_guard_t(fd);
 }
 
-void *base_allocator_t::allocate(size_t count)
+void file_t::read_write_open(char const *path)
 {
-    if (ftruncate(fd(), total_allocated_size() + allocate_size(count)) < 0)
-        throw exception_t("Unable ftrancate: %s", strerror(errno));
-    return block_allocator_t::allocate(count);
-}
-
-void base_allocator_t::deallocate(void *ptr, size_t count)
-{
-    block_allocator_t::deallocate(ptr, count);
-    if (ftruncate(fd(), total_allocated_size()) < 0)
-        throw exception_t("Unable ftrancate: %s", strerror(errno));
+    log_debug("Write/read open %s", path);
+    int fd = open(path, O_RDWR | O_CREAT | O_TRUNC, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+    if (fd < 0)
+        throw exception_t("Unable open %s: %s", path, strerror(errno));
+    fd_guard_ = fd_guard_t(fd);
 }
 
 } // namespace geo_base

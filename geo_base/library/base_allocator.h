@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,51 +18,23 @@
 
 #pragma once
 
-#include <geo_base/util/file.h>
-#include <geo_base/util/mem_guard.h>
-#include <geo_base/util/memory.h>
+#include <geo_base/library/block_allocator.h>
+#include <geo_base/library/exception.h>
+#include <geo_base/library/file.h>
+#include <geo_base/library/mem_file.h>
 
 namespace geo_base {
 
-class mem_file_t : public file_t {
+class base_allocator_t : public mem_file_t, public block_allocator_t {
 public:
-    static size_t const DEFAULT_MMAP_SIZE = 8_gb;
+    explicit base_allocator_t(char const *path);
 
-    mem_file_t()
-        : mem_guard_()
-    { }
+    void *allocate(size_t count) override;
 
-    mem_file_t(mem_file_t &&f)
-        : file_t(std::forward<file_t>(f))
-    {
-        std::swap(mem_guard_, f.mem_guard_);
-    }
-
-    mem_file_t &operator = (mem_file_t &&f)
-    {
-        file_t::operator = (std::forward<file_t>(f));
-        std::swap(mem_guard_, f.mem_guard_);
-        return *this;
-    }
-
-    void read_open(char const *path);
-
-    void read_write_open(char const *path, size_t mmap_size = DEFAULT_MMAP_SIZE);
-
-    void *data() const
-    {
-        return mem_guard_.data();
-    }
-
-    size_t size() const
-    {
-        return mem_guard_.size();
-    }
+    void deallocate(void *, size_t) override;
 
 private:
-    mem_guard_t mem_guard_;
-
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mem_file_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(base_allocator_t);
 };
 
 } // namespace geo_base

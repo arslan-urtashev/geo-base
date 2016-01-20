@@ -16,39 +16,23 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
+#include <geo_base/library/exception.h>
+#include <geo_base/library/memory.h>
+#include <geo_base/library/pool_allocator.h>
 
-#include <geo_base/util/block_allocator.h>
-#include <geo_base/util/mem_guard.h>
+#include <errno.h>
+#include <string.h>
 
 namespace geo_base {
 
-class pool_allocator_t : public block_allocator_t {
-public:
-    pool_allocator_t()
-        : mem_guard_()
-    { }
-
-    pool_allocator_t(pool_allocator_t &&a)
-        : block_allocator_t(std::forward<block_allocator_t>(a))
-        , mem_guard_()
-    {
-        std::swap(mem_guard_, a.mem_guard_);
-    }
-
-    pool_allocator_t &operator = (pool_allocator_t &&a)
-    {
-        block_allocator_t::operator = (std::forward<block_allocator_t>(a));
-        std::swap(mem_guard_, a.mem_guard_);
-        return *this;
-    }
-
-    explicit pool_allocator_t(size_t pool_size);
-
-private:
-    mem_guard_t mem_guard_;
-
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(pool_allocator_t);
-};
+pool_allocator_t::pool_allocator_t(size_t pool_size)
+    : mem_guard_()
+{
+    void *memory = mmap(nullptr, pool_size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_SHARED, -1, 0);
+    if (memory == MAP_FAILED)
+        throw exception_t("Can't init pool allocator: %s", strerror(errno));
+    mem_guard_ = mem_guard_t(memory, pool_size);
+    setup(mem_guard_.data(), mem_guard_.size());
+}
 
 } // namespace geo_base

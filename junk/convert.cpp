@@ -18,9 +18,9 @@
 
 #include <algorithm>
 #include <geo_base/open_street_map/converter.h>
-#include <geo_base/util/log.h>
-#include <geo_base/util/memory.h>
-#include <geo_base/util/pool_allocator.h>
+#include <geo_base/library/log.h>
+#include <geo_base/library/memory.h>
+#include <geo_base/library/pool_allocator.h>
 
 using namespace geo_base;
 using namespace open_street_map;

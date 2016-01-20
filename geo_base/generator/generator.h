@@ -20,9 +20,9 @@
 
 #include <geo_base/generator/geo_data.h>
 #include <geo_base/proto/region.pb.h>
-#include <geo_base/util/allocator.h>
-#include <geo_base/util/dynarray.h>
-#include <geo_base/util/stop_watch.h>
+#include <geo_base/library/allocator.h>
+#include <geo_base/library/dynarray.h>
+#include <geo_base/library/stop_watch.h>
 
 namespace geo_base {
 namespace generator {
