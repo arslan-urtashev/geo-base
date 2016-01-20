@@ -134,8 +134,7 @@ private:
 	size_t ways_processed_;
 	uint64_t processing_disabled_mask_;
 
-	parser_t(parser_t const &) = delete;
-	parser_t &operator = (parser_t const &) = delete;
+	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(parser_t);
 };
 
 // Run parser_t::parse in different threads.

@@ -34,8 +34,7 @@ public:
 	void deallocate(void *, size_t) override;
 
 private:
-	base_allocator_t(base_allocator_t const &) = delete;
-	base_allocator_t &operator = (base_allocator_t const &) = delete;
+	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(base_allocator_t);
 };
 
 } // namespace geo_base

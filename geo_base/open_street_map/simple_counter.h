@@ -79,8 +79,7 @@ private:
 	size_t ways_number_;
 	size_t relations_number_;
 
-	simple_counter_t(simple_counter_t const &) = delete;
-	simple_counter_t &operator = (simple_counter_t const) = delete;
+	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(simple_counter_t);
 };
 
 } // namespace open_street_map

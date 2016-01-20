@@ -77,8 +77,7 @@ private:
 	void *addr_;
 	size_t length_;
 
-	mem_guard_t(mem_guard_t const &) = delete;
-	mem_guard_t &operator = (mem_guard_t const &) = delete;
+	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mem_guard_t);
 };
 
 } // namespace geo_base

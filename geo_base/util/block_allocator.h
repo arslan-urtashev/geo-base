@@ -21,6 +21,7 @@
 #include <geo_base/util/allocator.h>
 #include <geo_base/util/exception.h>
 #include <geo_base/util/memory.h>
+#include <geo_base/util/common.h>
 
 namespace geo_base {
 
@@ -78,9 +79,8 @@ private:
 	void *data_;
 	size_t bytes_allocated_;
 	size_t bytes_limit_;
-
-	block_allocator_t(block_allocator_t const &) = delete;
-	block_allocator_t &operator = (block_allocator_t const &) = delete;
+	
+	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(block_allocator_t);
 };
 
 } // namespace geo_base

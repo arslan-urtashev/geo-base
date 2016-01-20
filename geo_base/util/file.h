@@ -19,6 +19,7 @@
 #pragma once
 
 #include <geo_base/util/fd_guard.h>
+#include <geo_base/util/common.h>
 
 namespace geo_base {
 
@@ -53,8 +54,7 @@ public:
 private:
 	fd_guard_t fd_guard_;
 
-	file_t(file_t const &) = delete;
-	file_t &operator = (file_t const &) = delete;
+	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(file_t);
 };
 
 } // namespace geo_base

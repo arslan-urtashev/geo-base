@@ -21,6 +21,7 @@
 #include <geo_base/core/system.h>
 #include <geo_base/util/allocator.h>
 #include <geo_base/util/exception.h>
+#include <geo_base/util/common.h>
 
 #include <algorithm>
 
@@ -207,8 +208,7 @@ private:
 	data_t *data_;
 	allocator_t *allocator_;
 
-	dynarray_t(dynarray_t const &) = delete;
-	dynarray_t &operator = (dynarray_t const &) = delete;
+	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(dynarray_t);
 };
 
 } // namespace geo_base

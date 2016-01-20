@@ -65,8 +65,7 @@ private:
 	std::mutex mutex_;
 	output_stream_t *output_stream_;
 
-	safe_output_stream_t(safe_output_stream_t const &) = delete;
-	safe_output_stream_t &operator = (safe_output_stream_t const &) = delete;
+	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(safe_output_stream_t);
 };
 
 } // namespace geo_base

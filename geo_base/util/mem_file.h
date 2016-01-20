@@ -63,8 +63,7 @@ public:
 private:
 	mem_guard_t mem_guard_;
 
-	mem_file_t(mem_file_t const &) = delete;
-	mem_file_t &operator = (mem_file_t const &) = delete;
+	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mem_file_t);
 };
 
 } // namespace geo_base

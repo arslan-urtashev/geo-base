@@ -19,6 +19,7 @@
 #pragma once
 
 #include <geo_base/util/algo.h>
+#include <geo_base/util/common.h>
 #include <geo_base/util/log.h>
 
 #include <unistd.h>
@@ -67,8 +68,7 @@ public:
 private:
 	int fd_;
 
-	fd_guard_t(fd_guard_t const &) = delete;
-	fd_guard_t &operator = (fd_guard_t const &) = delete;
+	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(fd_guard_t);
 };
 
 } // namespace geo_base

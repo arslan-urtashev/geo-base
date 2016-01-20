@@ -49,8 +49,7 @@ public:
 private:
 	mem_guard_t mem_guard_;
 
-	pool_allocator_t(pool_allocator_t const &) = delete;
-	pool_allocator_t &operator = (pool_allocator_t const &) = delete;
+	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(pool_allocator_t);
 };
 
 } // namespace geo_base

@@ -19,6 +19,7 @@
 #pragma once
 
 #include <geo_base/core/geo_data/geo_data.h>
+#include <geo_base/util/common.h>
 #include <geo_base/util/block_allocator.h>
 
 namespace geo_base {
@@ -99,8 +100,7 @@ private:
 	char const *data_;
 	size_t size_;
 
-	geo_data_map_t(geo_data_map_t const &) = delete;
-	geo_data_map_t &operator = (geo_data_map_t const &) = delete;
+	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(geo_data_map_t);
 };
 
 } // namespace geo_base
