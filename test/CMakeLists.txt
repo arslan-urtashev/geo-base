@@ -1,23 +1,23 @@
 ADD_EXECUTABLE(
     run_test
-    algo.cc
-    base_allocator.cc
-    converter.cc
-    dynarray.cc
-    edge.cc
-    exception.cc
-    fd_guard.cc
-    file.cc
-    generator.cc
-    geo_data_map.cc
-    grep_boundary_ways.cc
-    locations_converter.cc
-    log.cc
-    mem_file.cc
-    parser.cc
-    part.cc
-    pool_allocator.cc
-    run_test.cc
+    algo.cpp
+    base_allocator.cpp
+    converter.cpp
+    dynarray.cpp
+    edge.cpp
+    exception.cpp
+    fd_guard.cpp
+    file.cpp
+    generator.cpp
+    geo_data_map.cpp
+    grep_boundary_ways.cpp
+    locations_converter.cpp
+    log.cpp
+    mem_file.cpp
+    parser.cpp
+    part.cpp
+    pool_allocator.cpp
+    run_test.cpp
 )
 
 TARGET_LINK_LIBRARIES(

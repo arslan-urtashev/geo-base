@@ -1,4 +1,4 @@
 ADD_LIBRARY(
     geo-base-proto-util
-    proto_reader.cc
+    proto_reader.cpp
 )

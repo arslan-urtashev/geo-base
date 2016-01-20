@@ -1,10 +1,10 @@
 ADD_LIBRARY(
     geo-base
-    geo_data/debug.cc
-    geo_data/geo_data.cc
-    geo_data/map.cc
-    part.cc
-    polygon.cc
+    geo_data/debug.cpp
+    geo_data/geo_data.cpp
+    geo_data/map.cpp
+    part.cpp
+    polygon.cpp
 )
 
 TARGET_LINK_LIBRARIES(

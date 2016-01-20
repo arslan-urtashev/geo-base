@@ -2,10 +2,10 @@ ADD_SUBDIRECTORY(proto)
 
 ADD_LIBRARY(
     geo-base-open-street-map
-    converter.cc
-    parser.cc
-    reader.cc
-    open_street_map.cc
+    converter.cpp
+    parser.cpp
+    reader.cpp
+    open_street_map.cpp
 )
 
 TARGET_LINK_LIBRARIES(

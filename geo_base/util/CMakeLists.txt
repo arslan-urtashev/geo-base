@@ -1,10 +1,10 @@
 ADD_LIBRARY(
     geo-base-util
-    base_allocator.cc
-    block_allocator.cc
-    file.cc
-    file_stream.cc
-    log.cc
-    mem_file.cc
-    pool_allocator.cc
+    base_allocator.cpp
+    block_allocator.cpp
+    file.cpp
+    file_stream.cpp
+    log.cpp
+    mem_file.cpp
+    pool_allocator.cpp
 )
