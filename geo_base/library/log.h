@@ -48,13 +48,18 @@ void log_write(log_level_t level, char const *message);
 // Log output file descriptor.
 int log_fd();
 
+// Current log level.
+log_level_t log_level();
+
 template<typename... args_t>
 void log_write(log_level_t level, char const *fmt, args_t... args)
 {
-    char buffer[LOG_MESSAGE_LIMIT];
-    // Ignore logger snprintf errors.
-    snprintf(buffer, LOG_MESSAGE_LIMIT, fmt, std::forward<args_t>(args)...);
-    log_write(level, buffer);
+    if (level <= log_level()) {
+        char buffer[LOG_MESSAGE_LIMIT];
+        // Ignore logger snprintf errors.
+        snprintf(buffer, LOG_MESSAGE_LIMIT, fmt, std::forward<args_t>(args)...);
+        log_write(level, buffer);
+    }
 }
 
 template<typename... args_t>

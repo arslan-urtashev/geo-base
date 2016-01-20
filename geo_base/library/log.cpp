@@ -56,6 +56,11 @@ public:
         return fd_;
     }
 
+    log_level_t level() const
+    {
+        return level_;
+    }
+
 private:
     logger_t()
         : fd_(-1)
@@ -66,6 +71,11 @@ private:
     log_level_t level_;
     std::mutex lock_;
 };
+
+log_level_t log_level()
+{
+    return logger_t::inst().level();
+}
 
 void log_setup(int fd, log_level_t level)
 {
@@ -93,6 +103,9 @@ static char const *t(char *buffer)
 
 void log_write(log_level_t level, char const *message)
 {
+    if (level > log_level())
+        return;
+
     static char const *A[LOG_LEVEL_COUNT] = {
         "", // LOG_LEVEL_DISABLE
         "\033[90m", // LOG_LEVEL_ERROR
