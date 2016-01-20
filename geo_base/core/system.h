@@ -24,13 +24,13 @@
 
 // Workaround missing builtin functions in g++ < 5.0
 #if __GNUG__ && __GNUC__ < 5
-#	define IS_TRIVIALLY_COPYABLE(T) __has_trivial_copy(T)
-#	define IS_TRIVIALLY_DESTRUCTIBLE(T) __has_trivial_destructor(T)
-#	define IS_TRIVIALLY_CONSTRUCTIBLE(T) __has_trivial_constructor(T)
+#    define IS_TRIVIALLY_COPYABLE(T) __has_trivial_copy(T)
+#    define IS_TRIVIALLY_DESTRUCTIBLE(T) __has_trivial_destructor(T)
+#    define IS_TRIVIALLY_CONSTRUCTIBLE(T) __has_trivial_constructor(T)
 #else
-#	define IS_TRIVIALLY_COPYABLE(T) std::is_trivially_copyable<T>::value
-#	define IS_TRIVIALLY_DESTRUCTIBLE(T) std::is_trivially_destructible<T>::value
-#	define IS_TRIVIALLY_CONSTRUCTIBLE(T) std::is_trivially_constructible<T>::value
+#    define IS_TRIVIALLY_COPYABLE(T) std::is_trivially_copyable<T>::value
+#    define IS_TRIVIALLY_DESTRUCTIBLE(T) std::is_trivially_destructible<T>::value
+#    define IS_TRIVIALLY_CONSTRUCTIBLE(T) std::is_trivially_constructible<T>::value
 #endif
 
 namespace geo_base {

@@ -1,13 +1,13 @@
 ADD_DEFINITIONS(
-	-Wno-unused-parameter
+    -Wno-unused-parameter
 )
 
 ADD_LIBRARY(
-	geo-base-proto
-	region.pb.cc
+    geo-base-proto
+    region.pb.cc
 )
 
 TARGET_LINK_LIBRARIES(
-	geo-base-proto
-	protobuf
+    geo-base-proto
+    protobuf
 )

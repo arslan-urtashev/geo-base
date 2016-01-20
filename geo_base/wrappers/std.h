@@ -33,6 +33,6 @@ using set_t = std::unordered_set<k_t, std::hash<k_t>, std::equal_to<k_t>, je_tem
 
 template<typename k_t, typename v_t>
 using map_t = std::unordered_map<k_t, v_t, std::hash<k_t>, std::equal_to<k_t>,
-	je_temp_alloc_t<std::pair<k_t const, v_t>>>;
+    je_temp_alloc_t<std::pair<k_t const, v_t>>>;
 
 }

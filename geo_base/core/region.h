@@ -1,6 +1,6 @@
 // Copyright (c) 2015, 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
-//   
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 // and associated documentation files (the "Software"), to deal in the Software without
 // restriction, including without limitation the rights to use, copy, modify, merge, publish,
@@ -23,50 +23,50 @@
 namespace geo_base {
 
 struct region_t {
-	using options_t = uint64_t;
+    using options_t = uint64_t;
 
-	enum option_t : options_t {
-		OPTION_ZERO                    = 0u,
-		OPTION_BOUNDARY_ADMINISTRATIVE = 1u << 1,
-		OPTION_PLACE_ISLAND            = 1u << 2,
-		OPTION_PLACE_TOWN              = 1u << 3,
-		OPTION_PLACE_CITY              = 1u << 4,
-		OPTION_PLACE_VILLAGE           = 1u << 5,
-		OPTION_PLACE_BOROUGH           = 1u << 6,
-		OPTION_PLACE_SUBURB            = 1u << 7,
-		OPTION_PLACE_CONTINENT         = 1u << 8,
-	};
+    enum option_t : options_t {
+        OPTION_ZERO                    = 0u,
+        OPTION_BOUNDARY_ADMINISTRATIVE = 1u << 1,
+        OPTION_PLACE_ISLAND            = 1u << 2,
+        OPTION_PLACE_TOWN              = 1u << 3,
+        OPTION_PLACE_CITY              = 1u << 4,
+        OPTION_PLACE_VILLAGE           = 1u << 5,
+        OPTION_PLACE_BOROUGH           = 1u << 6,
+        OPTION_PLACE_SUBURB            = 1u << 7,
+        OPTION_PLACE_CONTINENT         = 1u << 8,
+    };
 
-	geo_id_t region_id;
-	number_t kvs_offset;
-	number_t kvs_number;
-	square_t square;
-	options_t options;
+    geo_id_t region_id;
+    number_t kvs_offset;
+    number_t kvs_number;
+    square_t square;
+    options_t options;
 
-	bool operator == (region_t const &r) const
-	{
-		return region_id == r.region_id;
-	}
+    bool operator == (region_t const &r) const
+    {
+        return region_id == r.region_id;
+    }
 
-	bool operator < (region_t const &r) const
-	{
-		return region_id < r.region_id;
-	}
+    bool operator < (region_t const &r) const
+    {
+        return region_id < r.region_id;
+    }
 
-	bool operator < (geo_id_t const &r) const
-	{
-		return region_id < r;
-	}
+    bool operator < (geo_id_t const &r) const
+    {
+        return region_id < r;
+    }
 
-	friend bool operator < (geo_id_t const &region_id, region_t const &r)
-	{
-		return region_id < r.region_id;
-	}
+    friend bool operator < (geo_id_t const &region_id, region_t const &r)
+    {
+        return region_id < r.region_id;
+    }
 
-	bool better(region_t const &r) const
-	{
-		return square < r.square;
-	}
+    bool better(region_t const &r) const
+    {
+        return square < r.square;
+    }
 };
 
 } // namespace geo_base

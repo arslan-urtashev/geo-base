@@ -25,8 +25,8 @@ namespace geo_base {
 // k and v is offsets on blobs in geographical data blobs array. See geo_data.h
 // for details.
 struct kv_t {
-	number_t k;
-	number_t v;
+    number_t k;
+    number_t v;
 };
 
 } // namespace geo_base

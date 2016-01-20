@@ -27,14 +27,14 @@ using namespace open_street_map;
 
 int main(int argc, char *argv[])
 {
-	log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
+    log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
 
-	if (argc != 3) {
-		log_error("USAGE: convert <planet-latest.osm.pbf> <geo-base.pbf>");
-		return -1;
-	}
+    if (argc != 3) {
+        log_error("USAGE: convert <planet-latest.osm.pbf> <geo-base.pbf>");
+        return -1;
+    }
 
-	run_pool_convert(argv[1], argv[2], optimal_threads_number());
+    run_pool_convert(argv[1], argv[2], optimal_threads_number());
 
-	return 0;
+    return 0;
 }

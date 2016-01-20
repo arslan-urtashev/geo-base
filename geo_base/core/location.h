@@ -21,20 +21,20 @@
 namespace geo_base {
 
 struct location_t {
-	double lon;
-	double lat;
+    double lon;
+    double lat;
 
-	location_t()
-		: lon(0)
-		, lat(0)
-	{
-	}
+    location_t()
+        : lon(0)
+        , lat(0)
+    {
+    }
 
-	location_t(double lon, double lat)
-		: lon(lon)
-		, lat(lat)
-	{
-	}
+    location_t(double lon, double lat)
+        : lon(lon)
+        , lat(lat)
+    {
+    }
 };
 
 } // namespace geo_base

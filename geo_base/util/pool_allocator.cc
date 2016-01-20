@@ -26,13 +26,13 @@
 namespace geo_base {
 
 pool_allocator_t::pool_allocator_t(size_t pool_size)
-	: mem_guard_()
+    : mem_guard_()
 {
-	void *memory = mmap(nullptr, pool_size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_SHARED, -1, 0);
-	if (memory == MAP_FAILED)
-		throw exception_t("Can't init pool allocator: %s", strerror(errno));
-	mem_guard_ = mem_guard_t(memory, pool_size);
-	setup(mem_guard_.data(), mem_guard_.size());
+    void *memory = mmap(nullptr, pool_size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_SHARED, -1, 0);
+    if (memory == MAP_FAILED)
+        throw exception_t("Can't init pool allocator: %s", strerror(errno));
+    mem_guard_ = mem_guard_t(memory, pool_size);
+    setup(mem_guard_.data(), mem_guard_.size());
 }
 
 } // namespace geo_base

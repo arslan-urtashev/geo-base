@@ -39,9 +39,9 @@ coordinate_t const number_y = (upper_y - lower_y) / delta_y;
 // area. Geo map is divided into equal rectangles from (area_box::lower_x, area_box::lower_y) to
 // (area_box::upper_x, area_box::upper_y) with delta_x and delta_y sizes. Logic of filling is in
 // generator.
-struct area_box_t {	
-	number_t polygon_refs_offset;
-	number_t polygon_refs_number;
+struct area_box_t {
+    number_t polygon_refs_offset;
+    number_t polygon_refs_number;
 };
 
 } // namespace geo_base

@@ -27,26 +27,26 @@ namespace geo_base {
 
 class exception_t : public std::exception {
 public:
-	static size_t const MESSAGE_LIMIT = 128;
+    static size_t const MESSAGE_LIMIT = 128;
 
-	template<typename... args_t>
-	exception_t(char const *fmt, args_t... args) noexcept
-	{
-		snprintf(buffer_, MESSAGE_LIMIT, fmt, std::forward<args_t>(args)...);
-	}
+    template<typename... args_t>
+    exception_t(char const *fmt, args_t... args) noexcept
+    {
+        snprintf(buffer_, MESSAGE_LIMIT, fmt, std::forward<args_t>(args)...);
+    }
 
-	exception_t(char const *message) noexcept
-	{
-		strncpy(buffer_, message, MESSAGE_LIMIT);
-	}
+    exception_t(char const *message) noexcept
+    {
+        strncpy(buffer_, message, MESSAGE_LIMIT);
+    }
 
-	char const *what() const noexcept override
-	{
-		return buffer_;
-	}
+    char const *what() const noexcept override
+    {
+        return buffer_;
+    }
 
 private:
-	char buffer_[MESSAGE_LIMIT];
+    char buffer_[MESSAGE_LIMIT];
 };
 
 }

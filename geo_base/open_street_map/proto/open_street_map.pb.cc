@@ -665,7 +665,7 @@ int blob_t::ByteSize() const {
 
 void blob_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const blob_t* source = 
+  const blob_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const blob_t>(
           &from);
   if (source == NULL) {
@@ -1296,7 +1296,7 @@ int blob_header_t::ByteSize() const {
 
 void blob_header_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const blob_header_t* source = 
+  const blob_header_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const blob_header_t>(
           &from);
   if (source == NULL) {
@@ -1741,7 +1741,7 @@ int string_table_t::ByteSize() const {
 
 void string_table_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const string_table_t* source = 
+  const string_table_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const string_table_t>(
           &from);
   if (source == NULL) {
@@ -1890,12 +1890,12 @@ void basic_group_t::_slow_mutable_dense_nodes() {
 }
 void basic_group_t::_slow_set_allocated_dense_nodes(
     ::google::protobuf::Arena* message_arena, ::geo_base::open_street_map::proto::dense_nodes_t** dense_nodes) {
-    if (message_arena != NULL && 
+    if (message_arena != NULL &&
         ::google::protobuf::Arena::GetArena(*dense_nodes) == NULL) {
       message_arena->Own(*dense_nodes);
     } else if (message_arena !=
                ::google::protobuf::Arena::GetArena(*dense_nodes)) {
-      ::geo_base::open_street_map::proto::dense_nodes_t* new_dense_nodes = 
+      ::geo_base::open_street_map::proto::dense_nodes_t* new_dense_nodes =
             ::google::protobuf::Arena::CreateMessage< ::geo_base::open_street_map::proto::dense_nodes_t >(
             message_arena);
       new_dense_nodes->CopyFrom(**dense_nodes);
@@ -2226,7 +2226,7 @@ int basic_group_t::ByteSize() const {
 
 void basic_group_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const basic_group_t* source = 
+  const basic_group_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const basic_group_t>(
           &from);
   if (source == NULL) {
@@ -2477,12 +2477,12 @@ void basic_block_t::_slow_mutable_string_table() {
 }
 void basic_block_t::_slow_set_allocated_string_table(
     ::google::protobuf::Arena* message_arena, ::geo_base::open_street_map::proto::string_table_t** string_table) {
-    if (message_arena != NULL && 
+    if (message_arena != NULL &&
         ::google::protobuf::Arena::GetArena(*string_table) == NULL) {
       message_arena->Own(*string_table);
     } else if (message_arena !=
                ::google::protobuf::Arena::GetArena(*string_table)) {
-      ::geo_base::open_street_map::proto::string_table_t* new_string_table = 
+      ::geo_base::open_street_map::proto::string_table_t* new_string_table =
             ::google::protobuf::Arena::CreateMessage< ::geo_base::open_street_map::proto::string_table_t >(
             message_arena);
       new_string_table->CopyFrom(**string_table);
@@ -2851,7 +2851,7 @@ int basic_block_t::ByteSize() const {
 
 void basic_block_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const basic_block_t* source = 
+  const basic_block_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const basic_block_t>(
           &from);
   if (source == NULL) {
@@ -3514,7 +3514,7 @@ int node_t::ByteSize() const {
 
 void node_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const node_t* source = 
+  const node_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const node_t>(
           &from);
   if (source == NULL) {
@@ -4133,7 +4133,7 @@ int dense_nodes_t::ByteSize() const {
 
 void dense_nodes_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const dense_nodes_t* source = 
+  const dense_nodes_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const dense_nodes_t>(
           &from);
   if (source == NULL) {
@@ -4701,7 +4701,7 @@ int way_t::ByteSize() const {
 
 void way_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const way_t* source = 
+  const way_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const way_t>(
           &from);
   if (source == NULL) {
@@ -5435,7 +5435,7 @@ int relation_t::ByteSize() const {
 
 void relation_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const relation_t* source = 
+  const relation_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const relation_t>(
           &from);
   if (source == NULL) {

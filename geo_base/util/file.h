@@ -25,36 +25,36 @@ namespace geo_base {
 
 class file_t {
 public:
-	file_t()
-		: fd_guard_()
-	{
-	}
+    file_t()
+        : fd_guard_()
+    {
+    }
 
-	file_t(file_t &&f)
-		: fd_guard_()
-	{
-		std::swap(fd_guard_, f.fd_guard_);
-	}
+    file_t(file_t &&f)
+        : fd_guard_()
+    {
+        std::swap(fd_guard_, f.fd_guard_);
+    }
 
-	file_t &operator = (file_t &&f)
-	{
-		std::swap(fd_guard_, f.fd_guard_);
-		return *this;
-	}
+    file_t &operator = (file_t &&f)
+    {
+        std::swap(fd_guard_, f.fd_guard_);
+        return *this;
+    }
 
-	void read_open(char const *path);
+    void read_open(char const *path);
 
-	void read_write_open(char const *path);
+    void read_write_open(char const *path);
 
-	int fd() const
-	{
-		return fd_guard_.fd();
-	}
+    int fd() const
+    {
+        return fd_guard_.fd();
+    }
 
 private:
-	fd_guard_t fd_guard_;
+    fd_guard_t fd_guard_;
 
-	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(file_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(file_t);
 };
 
 } // namespace geo_base

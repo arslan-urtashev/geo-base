@@ -1,12 +1,12 @@
 SET(LIBS
-	geo-base
-	geo-base-open-street-map
-	geo-base-open-street-map-proto
-	geo-base-proto
-	geo-base-proto-util
-	geo-base-generator
-	pthread
-	jemalloc
+    geo-base
+    geo-base-open-street-map
+    geo-base-open-street-map-proto
+    geo-base-proto
+    geo-base-proto-util
+    geo-base-generator
+    pthread
+    jemalloc
 )
 
 ADD_EXECUTABLE(simple-counter simple_counter.cc)

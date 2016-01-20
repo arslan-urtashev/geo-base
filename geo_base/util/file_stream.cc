@@ -24,26 +24,26 @@ namespace geo_base {
 
 bool file_output_stream_t::write(char const *ptr, size_t count)
 {
-	while (count > 0) {
-		ssize_t ret = ::write(fd_, ptr, count);
-		if (ret < 0)
-			return false;
-		ptr += ret;
-		count -= ret;
-	}
-	return true;
+    while (count > 0) {
+        ssize_t ret = ::write(fd_, ptr, count);
+        if (ret < 0)
+            return false;
+        ptr += ret;
+        count -= ret;
+    }
+    return true;
 }
 
 bool file_input_stream_t::read(char *ptr, size_t count)
 {
-	while (count > 0) {
-		ssize_t ret = ::read(fd_, ptr, count);
-		if (ret <= 0)
-			return false;
-		ptr += ret;
-		count -= ret;
-	}
-	return true;
+    while (count > 0) {
+        ssize_t ret = ::read(fd_, ptr, count);
+        if (ret <= 0)
+            return false;
+        ptr += ret;
+        count -= ret;
+    }
+    return true;
 }
 
 } // namespace geo_base

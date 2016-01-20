@@ -31,12 +31,12 @@ using version_t    = uint64_t;
 
 inline coordinate_t to_coordinate(double x)
 {
-	return x * 1e6;
+    return x * 1e6;
 }
 
 inline double to_double(coordinate_t x)
 {
-	return x / 1e6;
+    return x / 1e6;
 }
 
 } // namespace geo_base

@@ -19,5 +19,5 @@
 #pragma once
 
 #define GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(type_t) \
-	type_t(type_t const &) = delete; \
-	type_t &operator = (type_t const &) = delete;
+    type_t(type_t const &) = delete; \
+    type_t &operator = (type_t const &) = delete;

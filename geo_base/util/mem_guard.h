@@ -27,57 +27,57 @@ namespace geo_base {
 
 class mem_guard_t {
 public:
-	mem_guard_t()
-		: addr_(nullptr)
-		, length_(0)
-	{
-	}
+    mem_guard_t()
+        : addr_(nullptr)
+        , length_(0)
+    {
+    }
 
-	mem_guard_t(void *addr, size_t length)
-		: addr_(addr)
-		, length_(length)
-	{
-		if (addr_)
-			log_debug("Guard memory %p, %lu", addr_, length_);
-	}
+    mem_guard_t(void *addr, size_t length)
+        : addr_(addr)
+        , length_(length)
+    {
+        if (addr_)
+            log_debug("Guard memory %p, %lu", addr_, length_);
+    }
 
-	mem_guard_t(mem_guard_t &&g)
-		: mem_guard_t()
-	{
-		std::swap(addr_, g.addr_);
-		std::swap(length_, g.length_);
-	}
+    mem_guard_t(mem_guard_t &&g)
+        : mem_guard_t()
+    {
+        std::swap(addr_, g.addr_);
+        std::swap(length_, g.length_);
+    }
 
-	mem_guard_t &operator = (mem_guard_t&& g)
-	{
-		std::swap(addr_, g.addr_);
-		std::swap(length_, g.length_);
-		return *this;
-	}
+    mem_guard_t &operator = (mem_guard_t&& g)
+    {
+        std::swap(addr_, g.addr_);
+        std::swap(length_, g.length_);
+        return *this;
+    }
 
-	void *data() const
-	{
-		return addr_;
-	}
+    void *data() const
+    {
+        return addr_;
+    }
 
-	size_t size() const
-	{
-		return length_;
-	}
+    size_t size() const
+    {
+        return length_;
+    }
 
-	~mem_guard_t()
-	{
-		if (addr_) {
-			log_debug("Unmap memory %p, %lu", addr_, length_);
-			munmap(addr_, length_);
-		}
-	}
-	
+    ~mem_guard_t()
+    {
+        if (addr_) {
+            log_debug("Unmap memory %p, %lu", addr_, length_);
+            munmap(addr_, length_);
+        }
+    }
+
 private:
-	void *addr_;
-	size_t length_;
+    void *addr_;
+    size_t length_;
 
-	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mem_guard_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mem_guard_t);
 };
 
 } // namespace geo_base

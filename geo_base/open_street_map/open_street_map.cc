@@ -23,13 +23,13 @@ namespace open_street_map {
 
 char const *find_name(kvs_t const &kvs)
 {
-	for (kv_t const &kv : kvs)
-		if (!strcmp(kv.k, "name:en"))
-			return kv.v;
-	for (kv_t const &kv : kvs)
-		if (!strcmp(kv.k, "name"))
-			return kv.v;
-	return nullptr;
+    for (kv_t const &kv : kvs)
+        if (!strcmp(kv.k, "name:en"))
+            return kv.v;
+    for (kv_t const &kv : kvs)
+        if (!strcmp(kv.k, "name"))
+            return kv.v;
+    return nullptr;
 }
 
 } // namespace open_street_map

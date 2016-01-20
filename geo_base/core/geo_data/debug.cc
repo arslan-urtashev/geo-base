@@ -23,40 +23,40 @@ namespace geo_data {
 
 size_t space(geo_data_t const &g)
 {
-	size_t space = 0;
+    size_t space = 0;
 
 #define GEO_BASE_DEF_VAR(var_t, var) \
-	space += sizeof(var_t);
+    space += sizeof(var_t);
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
-	space += sizeof(number_t) + sizeof(arr_t) * g.arr##_number();
+    space += sizeof(number_t) + sizeof(arr_t) * g.arr##_number();
 
-	GEO_BASE_DEF_GEO_DATA
+    GEO_BASE_DEF_GEO_DATA
 
 #undef GEO_BASE_DEF_VAR
 #undef GEO_BASE_DEF_ARR
-	
-	return space;
+
+    return space;
 }
 
 template<typename arr_t>
 static float array_space(number_t number)
 {
-	return number * sizeof(arr_t) / (1024.0 * 1024.0);
+    return number * sizeof(arr_t) / (1024.0 * 1024.0);
 }
 
 void show(int fd, geo_data_t const &g)
 {
-	dprintf(fd, "geo_data = %.3f Gb\n", geo_data::space(g) / (1024.0 * 1024.0 * 1024.0));
+    dprintf(fd, "geo_data = %.3f Gb\n", geo_data::space(g) / (1024.0 * 1024.0 * 1024.0));
 
 #define GEO_BASE_DEF_VAR(var_t, var) \
-	dprintf(fd, "  geo_data.%s = %llu\n", #var, (unsigned long long) g.var());
+    dprintf(fd, "  geo_data.%s = %llu\n", #var, (unsigned long long) g.var());
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
-	dprintf(fd, "  geo_data.%s = %u x %lu = %.3f Mb\n", \
-		#arr, g.arr##_number(), sizeof(arr_t), array_space<arr_t>(g.arr##_number()));
+    dprintf(fd, "  geo_data.%s = %u x %lu = %.3f Mb\n", \
+        #arr, g.arr##_number(), sizeof(arr_t), array_space<arr_t>(g.arr##_number()));
 
-	GEO_BASE_DEF_GEO_DATA
+    GEO_BASE_DEF_GEO_DATA
 
 #undef GEO_BASE_DEF_VAR
 #undef GEO_BASE_DEF_ARR

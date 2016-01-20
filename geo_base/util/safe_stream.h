@@ -26,46 +26,46 @@ namespace geo_base {
 
 class safe_output_stream_t : public output_stream_t {
 public:
-	safe_output_stream_t()
-		: mutex_()
-		, output_stream_(nullptr)
-	{
-	}
+    safe_output_stream_t()
+        : mutex_()
+        , output_stream_(nullptr)
+    {
+    }
 
-	explicit safe_output_stream_t(output_stream_t *output_stream)
-		: mutex_()
-		, output_stream_(output_stream)
-	{
-	}
+    explicit safe_output_stream_t(output_stream_t *output_stream)
+        : mutex_()
+        , output_stream_(output_stream)
+    {
+    }
 
-	safe_output_stream_t(safe_output_stream_t &&s)
-		: mutex_()
-		, output_stream_(nullptr)
-	{
-		std::lock_guard<std::mutex> lock1(mutex_);
-		std::lock_guard<std::mutex> lock2(s.mutex_);
-		std::swap(output_stream_, s.output_stream_);
-	}
-	
-	safe_output_stream_t &operator = (safe_output_stream_t &&s)
-	{
-		std::lock_guard<std::mutex> lock1(mutex_);
-		std::lock_guard<std::mutex> lock2(s.mutex_);
-		std::swap(output_stream_, s.output_stream_);
-		return *this;
-	}
+    safe_output_stream_t(safe_output_stream_t &&s)
+        : mutex_()
+        , output_stream_(nullptr)
+    {
+        std::lock_guard<std::mutex> lock1(mutex_);
+        std::lock_guard<std::mutex> lock2(s.mutex_);
+        std::swap(output_stream_, s.output_stream_);
+    }
 
-	bool write(char const *ptr, size_t count) override
-	{
-		std::lock_guard<std::mutex> lock(mutex_);
-		return output_stream_->write(ptr, count);
-	}
+    safe_output_stream_t &operator = (safe_output_stream_t &&s)
+    {
+        std::lock_guard<std::mutex> lock1(mutex_);
+        std::lock_guard<std::mutex> lock2(s.mutex_);
+        std::swap(output_stream_, s.output_stream_);
+        return *this;
+    }
+
+    bool write(char const *ptr, size_t count) override
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        return output_stream_->write(ptr, count);
+    }
 
 private:
-	std::mutex mutex_;
-	output_stream_t *output_stream_;
+    std::mutex mutex_;
+    output_stream_t *output_stream_;
 
-	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(safe_output_stream_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(safe_output_stream_t);
 };
 
 } // namespace geo_base

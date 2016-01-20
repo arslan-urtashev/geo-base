@@ -1,6 +1,6 @@
 // Copyright (c) 2015, 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
-//   
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 // and associated documentation files (the "Software"), to deal in the Software without
 // restriction, including without limitation the rights to use, copy, modify, merge, publish,
@@ -9,7 +9,7 @@
 //
 //   The above copyright notice and this permission notice shall be included in all copies or
 //   substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
 // BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -24,51 +24,51 @@
 namespace geo_base {
 
 struct point_t {
-	coordinate_t x;
-	coordinate_t y;
+    coordinate_t x;
+    coordinate_t y;
 
-	point_t()
-		: x(0)
-		, y(0)
-	{
-	}
+    point_t()
+        : x(0)
+        , y(0)
+    {
+    }
 
-	point_t(coordinate_t const &x1, coordinate_t const &y1)
-		: x(x1)
-		, y(y1)
-	{
-	}
+    point_t(coordinate_t const &x1, coordinate_t const &y1)
+        : x(x1)
+        , y(y1)
+    {
+    }
 
-	explicit point_t(location_t const &l)
-		: x(to_coordinate(l.lon))
-		, y(to_coordinate(l.lat))
-	{
-	}
+    explicit point_t(location_t const &l)
+        : x(to_coordinate(l.lon))
+        , y(to_coordinate(l.lat))
+    {
+    }
 
-	point_t operator - (point_t const &p) const
-	{
-		return point_t(x - p.x, y - p.y);
-	}
+    point_t operator - (point_t const &p) const
+    {
+        return point_t(x - p.x, y - p.y);
+    }
 
-	bool operator == (point_t const &b) const
-	{
-		return x == b.x && y == b.y;
-	}
+    bool operator == (point_t const &b) const
+    {
+        return x == b.x && y == b.y;
+    }
 
-	bool operator != (point_t const &b) const
-	{
-		return x != b.x || y != b.y;
-	}
+    bool operator != (point_t const &b) const
+    {
+        return x != b.x || y != b.y;
+    }
 
-	bool operator < (point_t const &b)
-	{
-		return x < b.x || (x == b.x && y < b.y);
-	}
+    bool operator < (point_t const &b)
+    {
+        return x < b.x || (x == b.x && y < b.y);
+    }
 
-	square_t cross(point_t const &p) const
-	{
-		return 1ll * x * p.y - 1ll * y * p.x;
-	}
+    square_t cross(point_t const &p) const
+    {
+        return 1ll * x * p.y - 1ll * y * p.x;
+    }
 };
 
 } // namespace geo_base

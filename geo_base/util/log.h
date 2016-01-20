@@ -27,12 +27,12 @@ namespace geo_base {
 size_t const LOG_MESSAGE_LIMIT = 256;
 
 enum log_level_t {
-	LOG_LEVEL_DISABLE = 0,
-	LOG_LEVEL_ERROR,
-	LOG_LEVEL_WARNING,
-	LOG_LEVEL_INFO,
-	LOG_LEVEL_DEBUG,
-	LOG_LEVEL_COUNT
+    LOG_LEVEL_DISABLE = 0,
+    LOG_LEVEL_ERROR,
+    LOG_LEVEL_WARNING,
+    LOG_LEVEL_INFO,
+    LOG_LEVEL_DEBUG,
+    LOG_LEVEL_COUNT
 };
 
 // Init logger. Setup fd output and logger level.
@@ -51,34 +51,34 @@ int log_fd();
 template<typename... args_t>
 void log_write(log_level_t level, char const *fmt, args_t... args)
 {
-	char buffer[LOG_MESSAGE_LIMIT];
-	// Ignore logger snprintf errors.
-	snprintf(buffer, LOG_MESSAGE_LIMIT, fmt, std::forward<args_t>(args)...);
-	log_write(level, buffer);
+    char buffer[LOG_MESSAGE_LIMIT];
+    // Ignore logger snprintf errors.
+    snprintf(buffer, LOG_MESSAGE_LIMIT, fmt, std::forward<args_t>(args)...);
+    log_write(level, buffer);
 }
 
 template<typename... args_t>
 void log_error(args_t... args)
 {
-	log_write(LOG_LEVEL_ERROR, std::forward<args_t>(args)...);
+    log_write(LOG_LEVEL_ERROR, std::forward<args_t>(args)...);
 }
 
 template<typename... args_t>
 void log_warning(args_t... args)
 {
-	log_write(LOG_LEVEL_WARNING, std::forward<args_t>(args)...);
+    log_write(LOG_LEVEL_WARNING, std::forward<args_t>(args)...);
 }
 
 template<typename... args_t>
 void log_info(args_t... args)
 {
-	log_write(LOG_LEVEL_INFO, std::forward<args_t>(args)...);
+    log_write(LOG_LEVEL_INFO, std::forward<args_t>(args)...);
 }
 
 template<typename... args_t>
 void log_debug(args_t... args)
 {
-	log_write(LOG_LEVEL_DEBUG, std::forward<args_t>(args)...);
+    log_write(LOG_LEVEL_DEBUG, std::forward<args_t>(args)...);
 }
 
 }

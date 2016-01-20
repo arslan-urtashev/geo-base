@@ -28,47 +28,47 @@ namespace geo_base {
 
 class fd_guard_t {
 public:
-	fd_guard_t()
-		: fd_(-1)
-	{
-	}
+    fd_guard_t()
+        : fd_(-1)
+    {
+    }
 
-	explicit fd_guard_t(int fd)
-		: fd_(fd)
-	{
-		if (fd_ != -1)
-			log_debug("Guard fd %d", fd_);
-	}
+    explicit fd_guard_t(int fd)
+        : fd_(fd)
+    {
+        if (fd_ != -1)
+            log_debug("Guard fd %d", fd_);
+    }
 
-	fd_guard_t(fd_guard_t&& g)
-		: fd_(-1)
-	{
-		std::swap(fd_, g.fd_);
-	}
+    fd_guard_t(fd_guard_t&& g)
+        : fd_(-1)
+    {
+        std::swap(fd_, g.fd_);
+    }
 
-	fd_guard_t &operator = (fd_guard_t&& g)
-	{
-		std::swap(fd_, g.fd_);
-		return *this;
-	}
+    fd_guard_t &operator = (fd_guard_t&& g)
+    {
+        std::swap(fd_, g.fd_);
+        return *this;
+    }
 
-	int fd() const
-	{
-		return fd_;
-	}
+    int fd() const
+    {
+        return fd_;
+    }
 
-	~fd_guard_t()
-	{
-		if (fd_ != -1) {
-			log_debug("Close fd %d", fd_);
-			close(fd_);
-		}
-	}
+    ~fd_guard_t()
+    {
+        if (fd_ != -1) {
+            log_debug("Close fd %d", fd_);
+            close(fd_);
+        }
+    }
 
 private:
-	int fd_;
+    int fd_;
 
-	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(fd_guard_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(fd_guard_t);
 };
 
 } // namespace geo_base

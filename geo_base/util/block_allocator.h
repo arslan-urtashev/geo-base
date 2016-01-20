@@ -27,60 +27,60 @@ namespace geo_base {
 
 class block_allocator_t : public allocator_t {
 public:
-	block_allocator_t()
-		: data_(nullptr)
-		, bytes_allocated_(0)
-		, bytes_limit_(0)
-	{
-	}
+    block_allocator_t()
+        : data_(nullptr)
+        , bytes_allocated_(0)
+        , bytes_limit_(0)
+    {
+    }
 
-	block_allocator_t(void *data, size_t bytes_limit)
-		: data_(data)
-		, bytes_allocated_(0)
-		, bytes_limit_(bytes_limit)
-	{
-	}
+    block_allocator_t(void *data, size_t bytes_limit)
+        : data_(data)
+        , bytes_allocated_(0)
+        , bytes_limit_(bytes_limit)
+    {
+    }
 
-	block_allocator_t(block_allocator_t &&a)
-		: block_allocator_t()
-	{
-		std::swap(data_, a.data_);
-		std::swap(bytes_allocated_, a.bytes_allocated_);
-		std::swap(bytes_limit_, a.bytes_limit_);
-	}
+    block_allocator_t(block_allocator_t &&a)
+        : block_allocator_t()
+    {
+        std::swap(data_, a.data_);
+        std::swap(bytes_allocated_, a.bytes_allocated_);
+        std::swap(bytes_limit_, a.bytes_limit_);
+    }
 
-	block_allocator_t &operator = (block_allocator_t &&a)
-	{
-		std::swap(data_, a.data_);
-		std::swap(bytes_allocated_, a.bytes_allocated_);
-		std::swap(bytes_limit_, a.bytes_limit_);
-		return *this;
-	}
+    block_allocator_t &operator = (block_allocator_t &&a)
+    {
+        std::swap(data_, a.data_);
+        std::swap(bytes_allocated_, a.bytes_allocated_);
+        std::swap(bytes_limit_, a.bytes_limit_);
+        return *this;
+    }
 
-	void *allocate(size_t number) override;
+    void *allocate(size_t number) override;
 
-	size_t allocate_size(size_t number) const;
+    size_t allocate_size(size_t number) const;
 
-	void deallocate(void *ptr, size_t number) override;
+    void deallocate(void *ptr, size_t number) override;
 
-	size_t total_allocated_size() const
-	{
-		return bytes_allocated_;
-	}
+    size_t total_allocated_size() const
+    {
+        return bytes_allocated_;
+    }
 
-	void setup(void *data, size_t bytes_limit)
-	{
-		data_ = data;
-		bytes_limit_ = bytes_limit;
-		bytes_allocated_ = 0;
-	}
+    void setup(void *data, size_t bytes_limit)
+    {
+        data_ = data;
+        bytes_limit_ = bytes_limit;
+        bytes_allocated_ = 0;
+    }
 
 private:
-	void *data_;
-	size_t bytes_allocated_;
-	size_t bytes_limit_;
-	
-	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(block_allocator_t);
+    void *data_;
+    size_t bytes_allocated_;
+    size_t bytes_limit_;
+
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(block_allocator_t);
 };
 
 } // namespace geo_base

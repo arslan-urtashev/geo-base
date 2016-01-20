@@ -25,28 +25,28 @@ namespace geo_base {
 
 void mem_file_t::read_open(char const *path)
 {
-	file_t::read_open(path);
+    file_t::read_open(path);
 
-	struct stat buf;
-	if (fstat(fd(), &buf) < 0)
-		throw exception_t("Unable fstat %s: %s", path, strerror(errno));
+    struct stat buf;
+    if (fstat(fd(), &buf) < 0)
+        throw exception_t("Unable fstat %s: %s", path, strerror(errno));
 
-	void *memory = mmap(nullptr, buf.st_size, PROT_READ, MAP_SHARED, fd(), 0);
-	if (memory == MAP_FAILED)
-		throw exception_t("Unable mmap file %s: %s", path, strerror(errno));
+    void *memory = mmap(nullptr, buf.st_size, PROT_READ, MAP_SHARED, fd(), 0);
+    if (memory == MAP_FAILED)
+        throw exception_t("Unable mmap file %s: %s", path, strerror(errno));
 
-	mem_guard_ = mem_guard_t(memory, buf.st_size);
+    mem_guard_ = mem_guard_t(memory, buf.st_size);
 }
 
 void mem_file_t::read_write_open(char const *path, size_t mmap_size)
 {
-	file_t::read_write_open(path);
+    file_t::read_write_open(path);
 
-	void *memory = mmap(nullptr, mmap_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd(), 0);
-	if (memory == MAP_FAILED)
-		throw exception_t("Unable mmap file %s: %s", path, strerror(errno));
+    void *memory = mmap(nullptr, mmap_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd(), 0);
+    if (memory == MAP_FAILED)
+        throw exception_t("Unable mmap file %s: %s", path, strerror(errno));
 
-	mem_guard_ = mem_guard_t(memory, mmap_size);
+    mem_guard_ = mem_guard_t(memory, mmap_size);
 }
 
 } // namespace geo_base

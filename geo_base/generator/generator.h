@@ -29,30 +29,30 @@ namespace generator {
 
 class generator_t {
 public:
-	generator_t(geo_data_t *geo_data, allocator_t *allocator)
-		: stop_watch_()
-		, geo_data_(geo_data)
-		, allocator_(allocator)
-	{
-	}
+    generator_t(geo_data_t *geo_data, allocator_t *allocator)
+        : stop_watch_()
+        , geo_data_(geo_data)
+        , allocator_(allocator)
+    {
+    }
 
-	void init();
+    void init();
 
-	void update(proto::region_t const &region);
+    void update(proto::region_t const &region);
 
-	void update(geo_id_t region_id, proto::polygon_t const &polygon);
+    void update(geo_id_t region_id, proto::polygon_t const &polygon);
 
-	void update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<point_t> const &points,
-		polygon_t::type_t type);
+    void update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<point_t> const &points,
+        polygon_t::type_t type);
 
-	void fini();
+    void fini();
 
 private:
-	void generate_area_boxes();
+    void generate_area_boxes();
 
-	stop_watch_t stop_watch_;
-	geo_data_t *geo_data_;
-	allocator_t *allocator_;
+    stop_watch_t stop_watch_;
+    geo_data_t *geo_data_;
+    allocator_t *allocator_;
 };
 
 } // namespace generator

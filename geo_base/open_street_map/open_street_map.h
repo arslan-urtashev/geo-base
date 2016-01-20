@@ -26,20 +26,20 @@ namespace geo_base {
 namespace open_street_map {
 
 struct kv_t {
-	char const *k;
-	char const *v;
+    char const *k;
+    char const *v;
 };
 
 struct reference_t {
-	enum type_t {
-		TYPE_NODE     = proto::relation_t::NODE,
-		TYPE_WAY      = proto::relation_t::WAY,
-		TYPE_RELATION = proto::relation_t::RELATION,
-	};
-	
-	geo_id_t geo_id;
-	type_t type;
-	char const *role;
+    enum type_t {
+        TYPE_NODE     = proto::relation_t::NODE,
+        TYPE_WAY      = proto::relation_t::WAY,
+        TYPE_RELATION = proto::relation_t::RELATION,
+    };
+
+    geo_id_t geo_id;
+    type_t type;
+    char const *role;
 };
 
 typedef dynarray_t<kv_t> kvs_t;

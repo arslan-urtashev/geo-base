@@ -27,61 +27,61 @@ namespace open_street_map {
 
 class weak_consistency_checker_t : public parser_t {
 public:
-	weak_consistency_checker_t(allocator_t *allocator)
-		: parser_t(allocator)
-	{
-	}
+    weak_consistency_checker_t(allocator_t *allocator)
+        : parser_t(allocator)
+    {
+    }
 
-	void process_node(geo_id_t geo_id, location_t const &, kvs_t const &) override
-	{
-		nodes_.insert(geo_id);
-	}
+    void process_node(geo_id_t geo_id, location_t const &, kvs_t const &) override
+    {
+        nodes_.insert(geo_id);
+    }
 
-	void process_way(geo_id_t geo_id, kvs_t const &, geo_ids_t const &nodes) override
-	{
-		for (geo_id_t const &id : nodes)
-			expect_nodes_.insert(id);
-		ways_.insert(geo_id);
-	}
+    void process_way(geo_id_t geo_id, kvs_t const &, geo_ids_t const &nodes) override
+    {
+        for (geo_id_t const &id : nodes)
+            expect_nodes_.insert(id);
+        ways_.insert(geo_id);
+    }
 
-	void process_relation(geo_id_t, kvs_t const &, references_t const &refs) override
-	{
-		for (reference_t const &r: refs)
-			if (r.type == reference_t::TYPE_WAY)
-				expect_ways_.insert(r.geo_id);
-	}
+    void process_relation(geo_id_t, kvs_t const &, references_t const &refs) override
+    {
+        for (reference_t const &r: refs)
+            if (r.type == reference_t::TYPE_WAY)
+                expect_ways_.insert(r.geo_id);
+    }
 
-	size_t check_nodes() const
-	{
-		size_t not_found = 0;
-		for (geo_id_t const &id : expect_nodes_)
-			if (nodes_.find(id) == nodes_.end())
-				++not_found;
-		return not_found;
-	}
+    size_t check_nodes() const
+    {
+        size_t not_found = 0;
+        for (geo_id_t const &id : expect_nodes_)
+            if (nodes_.find(id) == nodes_.end())
+                ++not_found;
+        return not_found;
+    }
 
-	size_t check_ways() const
-	{
-		size_t not_found = 0;
-		for (geo_id_t const &id : expect_ways_)
-			if (ways_.find(id) == ways_.end())
-				++not_found;
-		return not_found;
-	}
+    size_t check_ways() const
+    {
+        size_t not_found = 0;
+        for (geo_id_t const &id : expect_ways_)
+            if (ways_.find(id) == ways_.end())
+                ++not_found;
+        return not_found;
+    }
 
-	void merge(weak_consistency_checker_t const &c)
-	{
-		nodes_.insert(c.nodes_.begin(), c.nodes_.end());
-		expect_nodes_.insert(c.expect_nodes_.begin(), c.expect_nodes_.end());
-		ways_.insert(c.ways_.begin(), c.ways_.end());
-		expect_ways_.insert(c.expect_ways_.begin(), c.expect_ways_.end());
-	}
+    void merge(weak_consistency_checker_t const &c)
+    {
+        nodes_.insert(c.nodes_.begin(), c.nodes_.end());
+        expect_nodes_.insert(c.expect_nodes_.begin(), c.expect_nodes_.end());
+        ways_.insert(c.ways_.begin(), c.ways_.end());
+        expect_ways_.insert(c.expect_ways_.begin(), c.expect_ways_.end());
+    }
 
 private:
-	set_t<geo_id_t> nodes_;
-	set_t<geo_id_t> expect_nodes_;
-	set_t<geo_id_t> ways_;
-	set_t<geo_id_t> expect_ways_;
+    set_t<geo_id_t> nodes_;
+    set_t<geo_id_t> expect_nodes_;
+    set_t<geo_id_t> ways_;
+    set_t<geo_id_t> expect_ways_;
 };
 
 } // namespace open_street_map

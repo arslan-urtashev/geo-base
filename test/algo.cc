@@ -24,24 +24,24 @@ using namespace geo_base;
 
 TEST(lower_bound, lower_bound)
 {
-	std::vector<int> const a = {1, 2, 3, 3, 5, 10, 10, 10, 22, 33};
+    std::vector<int> const a = {1, 2, 3, 3, 5, 10, 10, 10, 22, 33};
 
-	ASSERT_EQ(a.data() + 2, lower_bound(a.data(), a.size(), 3));
-	ASSERT_EQ(a.data() + 5, lower_bound(a.data(), a.size(), 10));
-	ASSERT_EQ(a.data() + 9, lower_bound(a.data(), a.size(), 23));
+    ASSERT_EQ(a.data() + 2, lower_bound(a.data(), a.size(), 3));
+    ASSERT_EQ(a.data() + 5, lower_bound(a.data(), a.size(), 10));
+    ASSERT_EQ(a.data() + 9, lower_bound(a.data(), a.size(), 23));
 
-	ASSERT_EQ(a.data() + 1, lower_bound(a.data(), a.size(), 2));
-	ASSERT_EQ(a.data() + 4, lower_bound(a.data(), a.size(), 4));
+    ASSERT_EQ(a.data() + 1, lower_bound(a.data(), a.size(), 2));
+    ASSERT_EQ(a.data() + 4, lower_bound(a.data(), a.size(), 4));
 }
 
 TEST(find, find)
 {
-	std::vector<int> const a = {1, 2, 3, 3, 5, 10, 10, 10, 22, 33};
+    std::vector<int> const a = {1, 2, 3, 3, 5, 10, 10, 10, 22, 33};
 
-	ASSERT_EQ(a.data() + 2, find(a.data(), a.size(), 3));
-	ASSERT_EQ(a.data() + 5, find(a.data(), a.size(), 10));
-	ASSERT_EQ(a.data() + 1, find(a.data(), a.size(), 2));
+    ASSERT_EQ(a.data() + 2, find(a.data(), a.size(), 3));
+    ASSERT_EQ(a.data() + 5, find(a.data(), a.size(), 10));
+    ASSERT_EQ(a.data() + 1, find(a.data(), a.size(), 2));
 
-	ASSERT_EQ(nullptr, find(a.data(), a.size(), 23));
-	ASSERT_EQ(nullptr, find(a.data(), a.size(), 4));
+    ASSERT_EQ(nullptr, find(a.data(), a.size(), 23));
+    ASSERT_EQ(nullptr, find(a.data(), a.size(), 4));
 }

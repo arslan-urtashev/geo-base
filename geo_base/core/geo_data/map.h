@@ -27,80 +27,80 @@ namespace geo_base {
 class geo_data_map_t : public geo_data_t {
 #define GEO_BASE_DEF_VAR(var_t, var) \
 public: \
-	var_t const &var() const override \
-	{ \
-		return var##_; \
-	} \
+    var_t const &var() const override \
+    { \
+        return var##_; \
+    } \
 private: \
-	var_t var##_;
+    var_t var##_;
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
 public: \
-	arr_t const *arr() const override \
-	{ \
-		return arr##_; \
-	} \
-	number_t arr##_number() const override \
-	{ \
-		return arr##_number_; \
-	} \
+    arr_t const *arr() const override \
+    { \
+        return arr##_; \
+    } \
+    number_t arr##_number() const override \
+    { \
+        return arr##_number_; \
+    } \
 private: \
-	number_t arr##_number_; \
-	arr_t const *arr##_;
+    number_t arr##_number_; \
+    arr_t const *arr##_;
 
-	GEO_BASE_DEF_GEO_DATA
+    GEO_BASE_DEF_GEO_DATA
 
 #undef GEO_BASE_DEF_VAR
 #undef GEO_BASE_DEF_ARR
 
 public:
-	geo_data_map_t();
+    geo_data_map_t();
 
-	geo_data_map_t(geo_data_t const &data, block_allocator_t *allocator);
+    geo_data_map_t(geo_data_t const &data, block_allocator_t *allocator);
 
-	geo_data_map_t(char const *data, size_t size)
-		: geo_data_map_t()
-	{
-		data_ = data;
-		size_ = size;
-		remap();
-	}
+    geo_data_map_t(char const *data, size_t size)
+        : geo_data_map_t()
+    {
+        data_ = data;
+        size_ = size;
+        remap();
+    }
 
-	geo_data_map_t(geo_data_map_t &&dat)
-		: geo_data_map_t()
-	{
-		std::swap(data_, dat.data_);
-		std::swap(size_, dat.size_);
-		remap();
-		dat.remap();
-	}
+    geo_data_map_t(geo_data_map_t &&dat)
+        : geo_data_map_t()
+    {
+        std::swap(data_, dat.data_);
+        std::swap(size_, dat.size_);
+        remap();
+        dat.remap();
+    }
 
-	geo_data_map_t &operator =(geo_data_map_t &&dat)
-	{
-		std::swap(data_, dat.data_);
-		std::swap(size_, dat.size_);
-		remap();
-		dat.remap();
-		return *this;
-	}
+    geo_data_map_t &operator =(geo_data_map_t &&dat)
+    {
+        std::swap(data_, dat.data_);
+        std::swap(size_, dat.size_);
+        remap();
+        dat.remap();
+        return *this;
+    }
 
-	char const *data() const
-	{
-		return data_;
-	}
-	
-	size_t size() const
-	{
-		return size_;
-	}
+    char const *data() const
+    {
+        return data_;
+    }
+
+    size_t size() const
+    {
+        return size_;
+    }
 
 private:
-	void remap();
+    void remap();
 
-	char const *data_;
-	size_t size_;
+    char const *data_;
+    size_t size_;
 
-	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(geo_data_map_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(geo_data_map_t);
 };
 
 } // namespace geo_base

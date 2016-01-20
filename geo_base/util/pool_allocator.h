@@ -25,31 +25,31 @@ namespace geo_base {
 
 class pool_allocator_t : public block_allocator_t {
 public:
-	pool_allocator_t()
-		: mem_guard_()
-	{
-	}
+    pool_allocator_t()
+        : mem_guard_()
+    {
+    }
 
-	pool_allocator_t(pool_allocator_t &&a)
-		: block_allocator_t(std::forward<block_allocator_t>(a))
-		, mem_guard_()
-	{
-		std::swap(mem_guard_, a.mem_guard_);
-	}
+    pool_allocator_t(pool_allocator_t &&a)
+        : block_allocator_t(std::forward<block_allocator_t>(a))
+        , mem_guard_()
+    {
+        std::swap(mem_guard_, a.mem_guard_);
+    }
 
-	pool_allocator_t &operator = (pool_allocator_t &&a)
-	{
-		block_allocator_t::operator = (std::forward<block_allocator_t>(a));
-		std::swap(mem_guard_, a.mem_guard_);
-		return *this;
-	}
+    pool_allocator_t &operator = (pool_allocator_t &&a)
+    {
+        block_allocator_t::operator = (std::forward<block_allocator_t>(a));
+        std::swap(mem_guard_, a.mem_guard_);
+        return *this;
+    }
 
-	explicit pool_allocator_t(size_t pool_size);
+    explicit pool_allocator_t(size_t pool_size);
 
 private:
-	mem_guard_t mem_guard_;
+    mem_guard_t mem_guard_;
 
-	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(pool_allocator_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(pool_allocator_t);
 };
 
 } // namespace geo_base

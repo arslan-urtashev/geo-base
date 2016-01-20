@@ -26,40 +26,40 @@ using namespace open_street_map;
 
 int main(int argc, char *argv[])
 {
-	log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
+    log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
 
-	if (argc != 2) {
-		log_error("USAGE: weak-consistency-check <planet-latest.osm.pbf>");
-		return -1;
-	}
+    if (argc != 2) {
+        log_error("USAGE: weak-consistency-check <planet-latest.osm.pbf>");
+        return -1;
+    }
 
-	pool_allocator_t allocator(128_mb);
+    pool_allocator_t allocator(128_mb);
 
-	file_t file;
-	file.read_open(argv[1]);
-	file_input_stream_t stream(file.fd());
+    file_t file;
+    file.read_open(argv[1]);
+    file_input_stream_t stream(file.fd());
 
-	reader_t reader(&stream);
-	weak_consistency_checker_t checker(&allocator);
+    reader_t reader(&stream);
+    weak_consistency_checker_t checker(&allocator);
 
-	checker.parse(&reader);
+    checker.parse(&reader);
 
-	log_info("Processed %llu nodes", checker.nodes_processed());
-	log_info("Processed %llu dense nodes", checker.dense_nodes_processed());
-	log_info("Processed %llu ways", checker.ways_processed());
-	log_info("Processed %llu relations", checker.relations_processed());
+    log_info("Processed %llu nodes", checker.nodes_processed());
+    log_info("Processed %llu dense nodes", checker.dense_nodes_processed());
+    log_info("Processed %llu ways", checker.ways_processed());
+    log_info("Processed %llu relations", checker.relations_processed());
 
-	size_t const nodes_not_found = checker.check_nodes();
-	size_t const ways_not_found = checker.check_ways();
+    size_t const nodes_not_found = checker.check_nodes();
+    size_t const ways_not_found = checker.check_ways();
 
-	if (nodes_not_found == 0 && ways_not_found == 0) {
-		log_info("Ok");
-	} else {
-		if (nodes_not_found > 0)
-			log_error("%llu nodes not found!", nodes_not_found);
-		if (ways_not_found > 0)
-			log_error("%llu ways not found!", ways_not_found);
-	}
+    if (nodes_not_found == 0 && ways_not_found == 0) {
+        log_info("Ok");
+    } else {
+        if (nodes_not_found > 0)
+            log_error("%llu nodes not found!", nodes_not_found);
+        if (ways_not_found > 0)
+            log_error("%llu ways not found!", ways_not_found);
+    }
 
-	return 0;
+    return 0;
 }

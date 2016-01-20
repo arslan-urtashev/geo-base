@@ -23,27 +23,27 @@ using namespace geo_base;
 
 int main(int argc, char *argv[])
 {
-	log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
+    log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
 
-	if (argc < 2) {
-		log_error("USAGE: write-proto <geo-base.pbf>");
-		return -1;
-	}
+    if (argc < 2) {
+        log_error("USAGE: write-proto <geo-base.pbf>");
+        return -1;
+    }
 
-	proto_reader_t reader(argv[1]);
+    proto_reader_t reader(argv[1]);
 
-	if (argc == 2) {
-		reader.each([&] (proto::region_t const &region) {
-			std::string const debug_string = region.Utf8DebugString();
-			std::cout << debug_string << std::endl;
-		});
-	} else {
-		geo_id_t geo_id = strtoull(argv[2], nullptr, 10);
-		reader.region(geo_id, [&] (proto::region_t const &region) {
-			std::string const debug_string = region.Utf8DebugString();
-			std::cout << debug_string << std::endl;
-		});
-	}
+    if (argc == 2) {
+        reader.each([&] (proto::region_t const &region) {
+            std::string const debug_string = region.Utf8DebugString();
+            std::cout << debug_string << std::endl;
+        });
+    } else {
+        geo_id_t geo_id = strtoull(argv[2], nullptr, 10);
+        reader.region(geo_id, [&] (proto::region_t const &region) {
+            std::string const debug_string = region.Utf8DebugString();
+            std::cout << debug_string << std::endl;
+        });
+    }
 
-	return 0;
+    return 0;
 }

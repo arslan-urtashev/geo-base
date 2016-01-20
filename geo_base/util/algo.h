@@ -23,24 +23,24 @@
 namespace geo_base {
 
 struct less_t {
-	template<typename a_t, typename b_t>
-	bool operator () (a_t const &a, b_t const &b) const
-	{
-		return a < b;
-	}
+    template<typename a_t, typename b_t>
+    bool operator () (a_t const &a, b_t const &b) const
+    {
+        return a < b;
+    }
 };
 
 template<typename arr_t, typename val_t, typename cmp_t = less_t>
 arr_t lower_bound(arr_t arr, size_t count, val_t const &val, cmp_t cmp = cmp_t())
 {
-	return std::lower_bound(arr, arr + count, val, cmp);
+    return std::lower_bound(arr, arr + count, val, cmp);
 }
 
 template<typename arr_t, typename val_t, typename cmp_t = less_t>
 arr_t find(arr_t arr, size_t count, val_t const &val, cmp_t cmp = cmp_t())
 {
-	arr_t ret = lower_bound(arr, count, val, cmp);
-	return !cmp(*ret, val) && !cmp(val, *ret) ? ret : nullptr;
+    arr_t ret = lower_bound(arr, count, val, cmp);
+    return !cmp(*ret, val) && !cmp(val, *ret) ? ret : nullptr;
 }
 
 } // namespace geo_base

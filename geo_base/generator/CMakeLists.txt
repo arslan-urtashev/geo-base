@@ -1,4 +1,4 @@
 ADD_LIBRARY(
-	geo-base-generator
-	generator.cc
+    geo-base-generator
+    generator.cc
 )

@@ -24,23 +24,23 @@ namespace geo_base {
 
 class geo_data_t {
 #define GEO_BASE_DEF_VAR(var_t, var) \
-	virtual var_t const &var() const = 0;
+    virtual var_t const &var() const = 0;
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
-	virtual arr_t const *arr() const = 0; \
-	virtual number_t arr##_number() const = 0;
+    virtual arr_t const *arr() const = 0; \
+    virtual number_t arr##_number() const = 0;
 
 public:
-	GEO_BASE_DEF_GEO_DATA
+    GEO_BASE_DEF_GEO_DATA
 
 #undef GEO_BASE_DEF_VAR
 #undef GEO_BASE_DEF_ARR
 
-	geo_id_t lookup(location_t const &l);
+    geo_id_t lookup(location_t const &l);
 
-	virtual ~geo_data_t()
-	{
-	}
+    virtual ~geo_data_t()
+    {
+    }
 };
 
 } // namespace geo_base

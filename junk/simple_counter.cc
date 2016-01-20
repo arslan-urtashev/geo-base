@@ -26,30 +26,30 @@ using namespace open_street_map;
 
 int main(int argc, char *argv[])
 {
-	log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
+    log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
 
-	if (argc != 2) {
-		log_error("USAGE: simple-counter <planet-latest.osm.pbf>");
-		return -1;
-	}
+    if (argc != 2) {
+        log_error("USAGE: simple-counter <planet-latest.osm.pbf>");
+        return -1;
+    }
 
-	size_t const threads_count = optimal_threads_number();
-	log_info("Threads count: %lu", threads_count);
+    size_t const threads_count = optimal_threads_number();
+    log_info("Threads count: %lu", threads_count);
 
-	std::vector<pool_allocator_t> allocators;
-	for (size_t i = 0; i < threads_count; ++i)
-		allocators.emplace_back(128_mb);
+    std::vector<pool_allocator_t> allocators;
+    for (size_t i = 0; i < threads_count; ++i)
+        allocators.emplace_back(128_mb);
 
-	std::vector<simple_counter_t> counters;
-	for (size_t i = 0; i < threads_count; ++i)
-		counters.emplace_back(&allocators[i]);
+    std::vector<simple_counter_t> counters;
+    for (size_t i = 0; i < threads_count; ++i)
+        counters.emplace_back(&allocators[i]);
 
-	run_pool_parse(argv[1], counters);
+    run_pool_parse(argv[1], counters);
 
-	for (size_t i = 0; i < counters.size(); ++i)
-		log_info("Parsed by %lu counter: %lu nodes, %lu ways, %lu relations (%lu blocks)", i + 1,
-			counters[i].nodes_number(), counters[i].ways_number(),
-			counters[i].relations_number(), counters[i].blocks_processed());
+    for (size_t i = 0; i < counters.size(); ++i)
+        log_info("Parsed by %lu counter: %lu nodes, %lu ways, %lu relations (%lu blocks)", i + 1,
+            counters[i].nodes_number(), counters[i].ways_number(),
+            counters[i].relations_number(), counters[i].blocks_processed());
 
-	return 0;
+    return 0;
 }

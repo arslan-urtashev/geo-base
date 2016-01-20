@@ -24,26 +24,26 @@ namespace geo_base {
 
 class stop_watch_t {
 public:
-	void run()
-	{
-		gettimeofday(&time_val_start_, nullptr);
-	}
+    void run()
+    {
+        gettimeofday(&time_val_start_, nullptr);
+    }
 
-	// Return seconds with microseconds after floating point.
-	double get()
-	{
-		struct timeval time_val_stop_;
-		gettimeofday(&time_val_stop_, nullptr);
+    // Return seconds with microseconds after floating point.
+    double get()
+    {
+        struct timeval time_val_stop_;
+        gettimeofday(&time_val_stop_, nullptr);
 
-		double microseconds = 0;
-		microseconds += 1e6 * (time_val_stop_.tv_sec - time_val_start_.tv_sec);
-		microseconds += (time_val_stop_.tv_usec - time_val_start_.tv_usec);
+        double microseconds = 0;
+        microseconds += 1e6 * (time_val_stop_.tv_sec - time_val_start_.tv_sec);
+        microseconds += (time_val_stop_.tv_usec - time_val_start_.tv_usec);
 
-		return microseconds * 1e-6;
-	}
+        return microseconds * 1e-6;
+    }
 
 private:
-	struct timeval time_val_start_;
+    struct timeval time_val_start_;
 };
 
 } // namespace geo_base

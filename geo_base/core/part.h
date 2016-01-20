@@ -32,12 +32,12 @@ namespace geo_base {
 // edge_refs_offset. Refs in edge_refs are in ascending order for each part. It is necessary to
 // quickly determine how many edges is under the point. See geo_base/generator/ for details.
 struct part_t {
-	coordinate_t coordinate;
-	number_t edge_refs_offset;
+    coordinate_t coordinate;
+    number_t edge_refs_offset;
 
-	// Checks point lying under odd numbers of edges or on edge.
-	bool contains(point_t const &point, number_t edge_refs_number, ref_t const *edge_refs,
-		edge_t const *edges, point_t const *points) const;
+    // Checks point lying under odd numbers of edges or on edge.
+    bool contains(point_t const &point, number_t edge_refs_number, ref_t const *edge_refs,
+        edge_t const *edges, point_t const *points) const;
 };
 
 } // namespace geo_base

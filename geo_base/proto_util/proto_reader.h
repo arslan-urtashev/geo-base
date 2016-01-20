@@ -29,70 +29,70 @@ namespace geo_base {
 
 class proto_reader_t {
 public:
-	proto_reader_t(char const *path)
-		: mem_file_()
-		, index_()
-	{
-		mem_file_.read_open(path);
-	}
+    proto_reader_t(char const *path)
+        : mem_file_()
+        , index_()
+    {
+        mem_file_.read_open(path);
+    }
 
-	template<typename callback_t>
-	void each(callback_t callback)
-	{
-		each_with_ptr([&] (char const *, proto::region_t const &region) {
-			callback(region);
-		});
-	}
-	
-	template<typename callback_t>
-	bool region(geo_id_t geo_id, callback_t callback)
-	{
-		if (index_.empty()) {
-			each([&] (proto::region_t const &region) {
-				if (region.region_id() == geo_id)
-					callback(region);
-			});
+    template<typename callback_t>
+    void each(callback_t callback)
+    {
+        each_with_ptr([&] (char const *, proto::region_t const &region) {
+            callback(region);
+        });
+    }
 
-		} else {
-			if (index_.find(geo_id)	== index_.end())
-				return false;
+    template<typename callback_t>
+    bool region(geo_id_t geo_id, callback_t callback)
+    {
+        if (index_.empty()) {
+            each([&] (proto::region_t const &region) {
+                if (region.region_id() == geo_id)
+                    callback(region);
+            });
 
-			char const *ptr = index_[geo_id];
-			uint32_t const byte_size = ntohl(*((uint32_t *) ptr));
+        } else {
+            if (index_.find(geo_id)    == index_.end())
+                return false;
 
-			proto::region_t region;
-			if (!region.ParseFromArray(ptr + sizeof(byte_size), byte_size))
-				throw exception_t("Unable parse region from array");
+            char const *ptr = index_[geo_id];
+            uint32_t const byte_size = ntohl(*((uint32_t *) ptr));
 
-			callback(region);
-		}
+            proto::region_t region;
+            if (!region.ParseFromArray(ptr + sizeof(byte_size), byte_size))
+                throw exception_t("Unable parse region from array");
 
-		return true;
-	}
+            callback(region);
+        }
 
-	void generate_index();
+        return true;
+    }
+
+    void generate_index();
 
 private:
-	template<typename callback_t>
-	void each_with_ptr(callback_t callback)
-	{
-		char const *begin = (char const *) mem_file_.data();
-		char const *end = begin + mem_file_.size();
+    template<typename callback_t>
+    void each_with_ptr(callback_t callback)
+    {
+        char const *begin = (char const *) mem_file_.data();
+        char const *end = begin + mem_file_.size();
 
-		char const *ptr = begin;
-		proto::region_t region;
+        char const *ptr = begin;
+        proto::region_t region;
 
-		while (ptr < end) {
-			uint32_t const byte_size = ntohl(*((uint32_t *) ptr));
-			if (!region.ParseFromArray(ptr + sizeof(byte_size), byte_size))
-				throw exception_t("Unable parse region from array");
-			callback(ptr, (proto::region_t const &) region);
-			ptr += byte_size + sizeof(byte_size);
-		}
-	}
+        while (ptr < end) {
+            uint32_t const byte_size = ntohl(*((uint32_t *) ptr));
+            if (!region.ParseFromArray(ptr + sizeof(byte_size), byte_size))
+                throw exception_t("Unable parse region from array");
+            callback(ptr, (proto::region_t const &) region);
+            ptr += byte_size + sizeof(byte_size);
+        }
+    }
 
-	mem_file_t mem_file_;
-	map_t<geo_id_t, char const *> index_;
+    mem_file_t mem_file_;
+    map_t<geo_id_t, char const *> index_;
 };
 
 } // namespace geo_base

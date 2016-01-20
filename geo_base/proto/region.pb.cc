@@ -450,7 +450,7 @@ int location_t::ByteSize() const {
 
 void location_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const location_t* source = 
+  const location_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const location_t>(
           &from);
   if (source == NULL) {
@@ -889,7 +889,7 @@ int polygon_t::ByteSize() const {
 
 void polygon_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const polygon_t* source = 
+  const polygon_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const polygon_t>(
           &from);
   if (source == NULL) {
@@ -1326,7 +1326,7 @@ int kv_t::ByteSize() const {
 
 void kv_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const kv_t* source = 
+  const kv_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const kv_t>(
           &from);
   if (source == NULL) {
@@ -2008,7 +2008,7 @@ int region_t::ByteSize() const {
 
 void region_t::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const region_t* source = 
+  const region_t* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const region_t>(
           &from);
   if (source == NULL) {

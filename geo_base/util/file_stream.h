@@ -24,48 +24,48 @@ namespace geo_base {
 
 class file_output_stream_t : public output_stream_t {
 public:
-	file_output_stream_t()
-		: fd_(-1)
-	{
-	}
+    file_output_stream_t()
+        : fd_(-1)
+    {
+    }
 
-	explicit file_output_stream_t(int fd)
-		: fd_(fd)
-	{
-	}
+    explicit file_output_stream_t(int fd)
+        : fd_(fd)
+    {
+    }
 
-	file_output_stream_t(file_output_stream_t const &s)
-		: fd_(s.fd_)
-	{
-	}
+    file_output_stream_t(file_output_stream_t const &s)
+        : fd_(s.fd_)
+    {
+    }
 
-	bool write(char const *ptr, size_t count) override;
+    bool write(char const *ptr, size_t count) override;
 
 private:
-	int fd_;
+    int fd_;
 };
 
 class file_input_stream_t : public input_stream_t {
 public:
-	file_input_stream_t()
-		: fd_(-1)
-	{
-	}
+    file_input_stream_t()
+        : fd_(-1)
+    {
+    }
 
-	explicit file_input_stream_t(int fd)
-		: fd_(fd)
-	{
-	}
+    explicit file_input_stream_t(int fd)
+        : fd_(fd)
+    {
+    }
 
-	file_input_stream_t(file_input_stream_t const &s)
-		: fd_(s.fd_)
-	{
-	}
+    file_input_stream_t(file_input_stream_t const &s)
+        : fd_(s.fd_)
+    {
+    }
 
-	bool read(char *ptr, size_t count) override;
+    bool read(char *ptr, size_t count) override;
 
 private:
-	int fd_;
+    int fd_;
 };
 
 } // namespace geo_base

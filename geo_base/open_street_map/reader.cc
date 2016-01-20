@@ -27,39 +27,39 @@ namespace open_street_map {
 
 bool reader_t::read(proto::blob_header_t *header, proto::blob_t *blob, allocator_t *allocator)
 {
-	std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
-	int32_t header_size = 0;
-	if (!input_stream_->read((char *) &header_size, sizeof(header_size)))
-		return false;
+    int32_t header_size = 0;
+    if (!input_stream_->read((char *) &header_size, sizeof(header_size)))
+        return false;
 
-	header_size = ntohl(header_size);
+    header_size = ntohl(header_size);
 
-	dynarray_t<char> raw_header(header_size, header_size, allocator);
-	if (!input_stream_->read(raw_header.data(), raw_header.size())) {
-		log_error("Unable read header!");
-		return false;
-	}
+    dynarray_t<char> raw_header(header_size, header_size, allocator);
+    if (!input_stream_->read(raw_header.data(), raw_header.size())) {
+        log_error("Unable read header!");
+        return false;
+    }
 
-	if (!header->ParseFromArray(raw_header.data(), raw_header.size())) {
-		log_error("Unable parse header!");
-		return false;
-	}
+    if (!header->ParseFromArray(raw_header.data(), raw_header.size())) {
+        log_error("Unable parse header!");
+        return false;
+    }
 
-	int32_t blob_size = header->data_size();
-	
-	dynarray_t<char> raw_blob(blob_size, blob_size, allocator);
-	if (!input_stream_->read(raw_blob.data(), raw_blob.size())) {
-		log_error("Unable read blob!");
-		return false;
-	}
+    int32_t blob_size = header->data_size();
 
-	if (!blob->ParseFromArray(raw_blob.data(), raw_blob.size())) {
-		log_error("Unable parse blob!");
-		return false;
-	}
+    dynarray_t<char> raw_blob(blob_size, blob_size, allocator);
+    if (!input_stream_->read(raw_blob.data(), raw_blob.size())) {
+        log_error("Unable read blob!");
+        return false;
+    }
 
-	return true;
+    if (!blob->ParseFromArray(raw_blob.data(), raw_blob.size())) {
+        log_error("Unable parse blob!");
+        return false;
+    }
+
+    return true;
 }
 
 } // namespace open_street_map

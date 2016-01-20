@@ -24,9 +24,9 @@ namespace geo_base {
 
 class allocator_t {
 public:
-	virtual void *allocate(size_t count) = 0;
+    virtual void *allocate(size_t count) = 0;
 
-	virtual void deallocate(void *ptr, size_t count) = 0;
+    virtual void deallocate(void *ptr, size_t count) = 0;
 };
 
 } // namespace geo_base

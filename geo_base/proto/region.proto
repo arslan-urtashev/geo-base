@@ -22,46 +22,46 @@ option cc_enable_arenas = true;
 package geo_base.proto;
 
 message location_t {
-	required double lat = 1;
-	required double lon = 2;
+    required double lat = 1;
+    required double lon = 2;
 }
 
 message polygon_t {
-	required uint64 polygon_id = 1;
-	repeated location_t locations = 2;
+    required uint64 polygon_id = 1;
+    repeated location_t locations = 2;
 
-	enum type_t {
-		TYPE_UNKNOWN = 0;
-		TYPE_INNER = 1;
-		TYPE_OUTER = 2;
-	}
+    enum type_t {
+        TYPE_UNKNOWN = 0;
+        TYPE_INNER = 1;
+        TYPE_OUTER = 2;
+    }
 
-	required type_t type = 3;
+    required type_t type = 3;
 }
 
 message kv_t {
-	required string k = 1;
-	required string v = 2;
+    required string k = 1;
+    required string v = 2;
 }
 
 message region_t {
-	required uint64 region_id = 1;
-	optional uint64 parent_id = 2;
-	repeated polygon_t polygons = 3;
-	repeated kv_t kvs = 4;
-	repeated string blobs = 5;
+    required uint64 region_id = 1;
+    optional uint64 parent_id = 2;
+    repeated polygon_t polygons = 3;
+    repeated kv_t kvs = 4;
+    repeated string blobs = 5;
 
-	enum option_t {
-		OPTION_ZERO = 0;
-		OPTION_BOUNDARY_ADMINISTRATIVE = 1;
-		OPTION_PLACE_ISLAND = 2;
-		OPTION_PLACE_TOWN = 3;
-		OPTION_PLACE_CITY = 4;
-		OPTION_PLACE_VILLAGE = 5;
-		OPTION_PLACE_BOROUGH = 6;
-		OPTION_PLACE_SUBURB = 7;
-		OPTION_PLACE_CONTINENT = 8;
-	}
+    enum option_t {
+        OPTION_ZERO = 0;
+        OPTION_BOUNDARY_ADMINISTRATIVE = 1;
+        OPTION_PLACE_ISLAND = 2;
+        OPTION_PLACE_TOWN = 3;
+        OPTION_PLACE_CITY = 4;
+        OPTION_PLACE_VILLAGE = 5;
+        OPTION_PLACE_BOROUGH = 6;
+        OPTION_PLACE_SUBURB = 7;
+        OPTION_PLACE_CONTINENT = 8;
+    }
 
-	required uint64 options = 6;
+    required uint64 options = 6;
 }

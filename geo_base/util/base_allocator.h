@@ -27,14 +27,14 @@ namespace geo_base {
 
 class base_allocator_t : public mem_file_t, public block_allocator_t {
 public:
-	explicit base_allocator_t(char const *path);
+    explicit base_allocator_t(char const *path);
 
-	void *allocate(size_t count) override;
+    void *allocate(size_t count) override;
 
-	void deallocate(void *, size_t) override;
+    void deallocate(void *, size_t) override;
 
 private:
-	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(base_allocator_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(base_allocator_t);
 };
 
 } // namespace geo_base

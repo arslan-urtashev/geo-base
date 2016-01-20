@@ -29,37 +29,37 @@ namespace geo_base {
 
 class proto_writer_t {
 public:
-	proto_writer_t(char const *path)
-		: file_()
-		, output_stream_()
-		, safe_output_stream_()
-	{
-		file_.read_write_open(path);
-		output_stream_ = file_output_stream_t(file_.fd());
-		safe_output_stream_ = safe_output_stream_t(&output_stream_);
-	}
+    proto_writer_t(char const *path)
+        : file_()
+        , output_stream_()
+        , safe_output_stream_()
+    {
+        file_.read_write_open(path);
+        output_stream_ = file_output_stream_t(file_.fd());
+        safe_output_stream_ = safe_output_stream_t(&output_stream_);
+    }
 
-	template<typename message_t>
-	void write(message_t const &message, allocator_t *allocator)
-	{
-		uint32_t const byte_size = message.ByteSize();
-		uint32_t const total_size = byte_size + sizeof(byte_size);
+    template<typename message_t>
+    void write(message_t const &message, allocator_t *allocator)
+    {
+        uint32_t const byte_size = message.ByteSize();
+        uint32_t const total_size = byte_size + sizeof(byte_size);
 
-		dynarray_t<char> buffer(total_size, total_size, allocator);
+        dynarray_t<char> buffer(total_size, total_size, allocator);
 
-		*((uint32_t *) buffer.data()) = htonl(byte_size);
+        *((uint32_t *) buffer.data()) = htonl(byte_size);
 
-		if (!message.SerializeToArray(buffer.data() + sizeof(byte_size), byte_size))
-			throw exception_t("Unable to serialize message to array");
+        if (!message.SerializeToArray(buffer.data() + sizeof(byte_size), byte_size))
+            throw exception_t("Unable to serialize message to array");
 
-		if (!safe_output_stream_.write(buffer.data(), buffer.size()))
-			throw exception_t("Unable writer serialized message");
-	}
+        if (!safe_output_stream_.write(buffer.data(), buffer.size()))
+            throw exception_t("Unable writer serialized message");
+    }
 
 private:
-	file_t file_;
-	file_output_stream_t output_stream_;
-	safe_output_stream_t safe_output_stream_;
+    file_t file_;
+    file_output_stream_t output_stream_;
+    safe_output_stream_t safe_output_stream_;
 };
 
 } // namespace geo_base

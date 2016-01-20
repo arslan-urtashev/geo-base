@@ -26,44 +26,44 @@ namespace geo_base {
 
 class mem_file_t : public file_t {
 public:
-	static size_t const DEFAULT_MMAP_SIZE = 8_gb;
+    static size_t const DEFAULT_MMAP_SIZE = 8_gb;
 
-	mem_file_t()
-		: mem_guard_()
-	{
-	}
+    mem_file_t()
+        : mem_guard_()
+    {
+    }
 
-	mem_file_t(mem_file_t &&f)
-		: file_t(std::forward<file_t>(f))
-	{
-		std::swap(mem_guard_, f.mem_guard_);
-	}
+    mem_file_t(mem_file_t &&f)
+        : file_t(std::forward<file_t>(f))
+    {
+        std::swap(mem_guard_, f.mem_guard_);
+    }
 
-	mem_file_t &operator = (mem_file_t &&f)
-	{
-		file_t::operator = (std::forward<file_t>(f));
-		std::swap(mem_guard_, f.mem_guard_);
-		return *this;
-	}
+    mem_file_t &operator = (mem_file_t &&f)
+    {
+        file_t::operator = (std::forward<file_t>(f));
+        std::swap(mem_guard_, f.mem_guard_);
+        return *this;
+    }
 
-	void read_open(char const *path);
+    void read_open(char const *path);
 
-	void read_write_open(char const *path, size_t mmap_size = DEFAULT_MMAP_SIZE);
+    void read_write_open(char const *path, size_t mmap_size = DEFAULT_MMAP_SIZE);
 
-	void *data() const
-	{
-		return mem_guard_.data();
-	}
+    void *data() const
+    {
+        return mem_guard_.data();
+    }
 
-	size_t size() const
-	{
-		return mem_guard_.size();
-	}
+    size_t size() const
+    {
+        return mem_guard_.size();
+    }
 
 private:
-	mem_guard_t mem_guard_;
+    mem_guard_t mem_guard_;
 
-	GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mem_file_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mem_file_t);
 };
 
 } // namespace geo_base

@@ -26,36 +26,36 @@ using namespace open_street_map;
 
 int main(int argc, char *argv[])
 {
-	log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
+    log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
 
-	if (argc != 2) {
-		log_error("USAGE: grep-boundary-ways <planet-latest.osm.pbf>");
-		return -1;
-	}
+    if (argc != 2) {
+        log_error("USAGE: grep-boundary-ways <planet-latest.osm.pbf>");
+        return -1;
+    }
 
-	size_t const threads_count = optimal_threads_number();
-	log_info("Threads count: %lu", threads_count);
+    size_t const threads_count = optimal_threads_number();
+    log_info("Threads count: %lu", threads_count);
 
-	std::vector<pool_allocator_t> allocators;
-	for (size_t i = 0; i < threads_count; ++i)
-		allocators.emplace_back(128_mb);
+    std::vector<pool_allocator_t> allocators;
+    for (size_t i = 0; i < threads_count; ++i)
+        allocators.emplace_back(128_mb);
 
-	std::vector<grep_boundary_ways_t> greps;
-	for (size_t i = 0; i < threads_count; ++i)
-		greps.emplace_back(&allocators[i]);
+    std::vector<grep_boundary_ways_t> greps;
+    for (size_t i = 0; i < threads_count; ++i)
+        greps.emplace_back(&allocators[i]);
 
-	run_pool_parse(argv[1], greps);
+    run_pool_parse(argv[1], greps);
 
-	for (size_t i = 0; i < greps.size(); ++i)
-		log_info("Parsed by %lu grep: %lu ways", i + 1, greps[i].ways().size());
+    for (size_t i = 0; i < greps.size(); ++i)
+        log_info("Parsed by %lu grep: %lu ways", i + 1, greps[i].ways().size());
 
-	std::unordered_set<geo_id_t> all_ways;
-	for (size_t i = 0; i < greps.size(); ++i) {
-		all_ways.insert(greps[i].ways().begin(), greps[i].ways().end());
-		greps[i].clear();
-	}
+    std::unordered_set<geo_id_t> all_ways;
+    for (size_t i = 0; i < greps.size(); ++i) {
+        all_ways.insert(greps[i].ways().begin(), greps[i].ways().end());
+        greps[i].clear();
+    }
 
-	log_info("Total grep %lu different ways", all_ways.size());
+    log_info("Total grep %lu different ways", all_ways.size());
 
-	return 0;
+    return 0;
 }

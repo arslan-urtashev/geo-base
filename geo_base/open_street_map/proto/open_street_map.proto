@@ -22,70 +22,70 @@ option cc_enable_arenas = true;
 package geo_base.open_street_map.proto;
 
 message blob_t {
-	optional bytes raw = 1;
-	optional int32 raw_size = 2;
-	optional bytes zlib_data = 3;
-	optional bytes lzma_data = 4;
+    optional bytes raw = 1;
+    optional int32 raw_size = 2;
+    optional bytes zlib_data = 3;
+    optional bytes lzma_data = 4;
 }
 
 message blob_header_t {
-	required string type = 1;
-	optional bytes index_data = 2;
-	required int32 data_size = 3;
+    required string type = 1;
+    optional bytes index_data = 2;
+    required int32 data_size = 3;
 }
 
 message string_table_t {
-	repeated bytes s = 1;
+    repeated bytes s = 1;
 }
 
 message basic_group_t {
-	repeated node_t nodes = 1;
-	optional dense_nodes_t dense_nodes = 2;
-	repeated way_t ways = 3;
-	repeated relation_t relations = 4;
+    repeated node_t nodes = 1;
+    optional dense_nodes_t dense_nodes = 2;
+    repeated way_t ways = 3;
+    repeated relation_t relations = 4;
 }
 
 message basic_block_t {
-	required string_table_t string_table = 1;
-	repeated basic_group_t basic_groups = 2;
-	optional int32 granularity = 17 [default = 100];
-	optional int64 lat_off = 19 [default = 0];
-	optional int64 lon_off = 20 [default = 0];
+    required string_table_t string_table = 1;
+    repeated basic_group_t basic_groups = 2;
+    optional int32 granularity = 17 [default = 100];
+    optional int64 lat_off = 19 [default = 0];
+    optional int64 lon_off = 20 [default = 0];
 }
 
 message node_t {
-	required sint64 id = 1;
-	repeated uint32 keys = 2 [packed = true];
-	repeated uint32 vals = 3 [packed = true];
-	required sint64 lat = 8;
-	required sint64 lon = 9;
+    required sint64 id = 1;
+    repeated uint32 keys = 2 [packed = true];
+    repeated uint32 vals = 3 [packed = true];
+    required sint64 lat = 8;
+    required sint64 lon = 9;
 }
 
 message dense_nodes_t {
-	repeated sint64 id = 1 [packed = true];
-	repeated sint64 lat = 8 [packed = true];
-	repeated sint64 lon = 9 [packed = true];
-	repeated int32 kvs = 10 [packed = true];
+    repeated sint64 id = 1 [packed = true];
+    repeated sint64 lat = 8 [packed = true];
+    repeated sint64 lon = 9 [packed = true];
+    repeated int32 kvs = 10 [packed = true];
 }
 
 message way_t {
-	required int64 id = 1;
-	repeated uint32 keys = 2 [packed = true];
-	repeated uint32 vals = 3 [packed = true];
-	repeated sint64 refs = 8 [packed = true];
+    required int64 id = 1;
+    repeated uint32 keys = 2 [packed = true];
+    repeated uint32 vals = 3 [packed = true];
+    repeated sint64 refs = 8 [packed = true];
 }
 
 message relation_t {
-	enum member_type_t {
-		NODE = 0;
-		WAY = 1;
-		RELATION = 2;
-	}
+    enum member_type_t {
+        NODE = 0;
+        WAY = 1;
+        RELATION = 2;
+    }
 
-	required int64 id = 1;
-	repeated uint32 keys = 2 [packed = true];
-	repeated uint32 vals = 3 [packed = true];
-	repeated int32 roles_sid = 8 [packed = true];
-	repeated sint64 member_ids = 9 [packed = true];
-	repeated member_type_t member_types = 10 [packed = true];
+    required int64 id = 1;
+    repeated uint32 keys = 2 [packed = true];
+    repeated uint32 vals = 3 [packed = true];
+    repeated int32 roles_sid = 8 [packed = true];
+    repeated sint64 member_ids = 9 [packed = true];
+    repeated member_type_t member_types = 10 [packed = true];
 }

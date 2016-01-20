@@ -25,76 +25,76 @@ namespace geo_base {
 
 class je_allocator_t : public allocator_t {
 public:
-	void *allocate(size_t count) override
-	{
-		return yesmalloc(count);
-	}
+    void *allocate(size_t count) override
+    {
+        return yesmalloc(count);
+    }
 
-	void deallocate(void *ptr, size_t) override
-	{
-		yesfree(ptr);
-	}
+    void deallocate(void *ptr, size_t) override
+    {
+        yesfree(ptr);
+    }
 };
 
 template<typename value_t>
 class je_temp_alloc_t {
 public:
-	typedef value_t value_type;
-	typedef value_t* pointer;
-	typedef value_t& reference;
-	typedef value_t const* const_pointer;
-	typedef value_t const& const_reference;
-	typedef size_t size_type;
-	typedef ptrdiff_t difference_type;
+    typedef value_t value_type;
+    typedef value_t* pointer;
+    typedef value_t& reference;
+    typedef value_t const* const_pointer;
+    typedef value_t const& const_reference;
+    typedef size_t size_type;
+    typedef ptrdiff_t difference_type;
 
-	je_temp_alloc_t()
-	{
-	}
+    je_temp_alloc_t()
+    {
+    }
 
-	template<typename other_t>
-	je_temp_alloc_t(je_temp_alloc_t<other_t> const &)
-	{
-	}
+    template<typename other_t>
+    je_temp_alloc_t(je_temp_alloc_t<other_t> const &)
+    {
+    }
 
-	template<typename other_t>
-	struct rebind {
-		typedef je_temp_alloc_t<other_t> other;
-	};
+    template<typename other_t>
+    struct rebind {
+        typedef je_temp_alloc_t<other_t> other;
+    };
 
-	pointer allocate(size_type n)
-	{
-		return (pointer) allocator_.allocate(n * sizeof(value_type));
-	}
+    pointer allocate(size_type n)
+    {
+        return (pointer) allocator_.allocate(n * sizeof(value_type));
+    }
 
-	void deallocate(pointer p, size_type n)
-	{
-		allocator_.deallocate(p, n);
-	}
+    void deallocate(pointer p, size_type n)
+    {
+        allocator_.deallocate(p, n);
+    }
 
-	template<typename p_t, typename... args_t>
-	void construct (p_t* p, args_t&&... args)
-	{
-		::new ((void *) p) p_t (std::forward<args_t>(args)...);
-	}
+    template<typename p_t, typename... args_t>
+    void construct (p_t* p, args_t&&... args)
+    {
+        ::new ((void *) p) p_t (std::forward<args_t>(args)...);
+    }
 
-	template<typename p_t>
-	void destroy(p_t *p)
-	{
-		p->~p_t();
-	}
+    template<typename p_t>
+    void destroy(p_t *p)
+    {
+        p->~p_t();
+    }
 
-	pointer address(reference x) const noexcept
-	{
-		return &x;
-	}
+    pointer address(reference x) const noexcept
+    {
+        return &x;
+    }
 
-	const_pointer address(const_reference x) const noexcept
-	{
-		return &x;
-	}
+    const_pointer address(const_reference x) const noexcept
+    {
+        return &x;
+    }
 
 private:
-	je_allocator_t allocator_;
+    je_allocator_t allocator_;
 };
 
 }

@@ -32,116 +32,116 @@ typedef map_t<geo_id_t, location_t> nodes_map_t;
 
 class grep_boundary_ways_t : public parser_t {
 public:
-	grep_boundary_ways_t(allocator_t *allocator)
-		: parser_t(allocator)
-	{
-	}
+    grep_boundary_ways_t(allocator_t *allocator)
+        : parser_t(allocator)
+    {
+    }
 
-	void process_way(geo_id_t, kvs_t const &, geo_ids_t const &) override;
+    void process_way(geo_id_t, kvs_t const &, geo_ids_t const &) override;
 
-	void process_relation(geo_id_t, kvs_t const &, references_t const &) override;
+    void process_relation(geo_id_t, kvs_t const &, references_t const &) override;
 
-	geo_ids_set_t const &ways() const
-	{
-		return ways_;
-	}
+    geo_ids_set_t const &ways() const
+    {
+        return ways_;
+    }
 
-	void clear()
-	{
-		ways_.clear();
-	}
+    void clear()
+    {
+        ways_.clear();
+    }
 
 private:
-	geo_ids_set_t ways_;
+    geo_ids_set_t ways_;
 };
 
 class grep_boundary_node_ids_t : public parser_t {
 public:
-	grep_boundary_node_ids_t(geo_ids_set_t const &ways, allocator_t *allocator)
-		: parser_t(allocator)
-		, need_ways_(&ways)
-	{
-	}
+    grep_boundary_node_ids_t(geo_ids_set_t const &ways, allocator_t *allocator)
+        : parser_t(allocator)
+        , need_ways_(&ways)
+    {
+    }
 
-	void process_way(geo_id_t geo_id, kvs_t const &, geo_ids_t const &node_ids) override;
+    void process_way(geo_id_t geo_id, kvs_t const &, geo_ids_t const &node_ids) override;
 
-	void clear()
-	{
-		ways_.clear();
-		nodes_.clear();
-	}
+    void clear()
+    {
+        ways_.clear();
+        nodes_.clear();
+    }
 
-	geo_ids_set_t const &nodes() const
-	{
-		return nodes_;
-	}
-	
-	ways_map_t const &ways() const
-	{
-		return ways_;
-	}
+    geo_ids_set_t const &nodes() const
+    {
+        return nodes_;
+    }
+
+    ways_map_t const &ways() const
+    {
+        return ways_;
+    }
 
 private:
-	ways_map_t ways_;
-	geo_ids_set_t const *need_ways_;
-	geo_ids_set_t nodes_;
+    ways_map_t ways_;
+    geo_ids_set_t const *need_ways_;
+    geo_ids_set_t nodes_;
 };
 
 class grep_boundary_nodes_t : public parser_t {
 public:
-	grep_boundary_nodes_t(geo_ids_set_t const &nodes, allocator_t *allocator)
-		: parser_t(allocator)
-		, need_nodes_(&nodes)
-	{
-	}
+    grep_boundary_nodes_t(geo_ids_set_t const &nodes, allocator_t *allocator)
+        : parser_t(allocator)
+        , need_nodes_(&nodes)
+    {
+    }
 
-	void process_node(geo_id_t geo_id, location_t const &location, kvs_t const &) override
-	{
-		if (need_nodes_->find(geo_id) != need_nodes_->end())
-			nodes_[geo_id] = location;
-	}
+    void process_node(geo_id_t geo_id, location_t const &location, kvs_t const &) override
+    {
+        if (need_nodes_->find(geo_id) != need_nodes_->end())
+            nodes_[geo_id] = location;
+    }
 
-	void clear()
-	{
-		nodes_.clear();
-	}
+    void clear()
+    {
+        nodes_.clear();
+    }
 
-	nodes_map_t const &nodes() const
-	{
-		return nodes_;
-	}
+    nodes_map_t const &nodes() const
+    {
+        return nodes_;
+    }
 
 private:
-	geo_ids_set_t const *need_nodes_;
-	nodes_map_t nodes_;
+    geo_ids_set_t const *need_nodes_;
+    nodes_map_t nodes_;
 };
 
 class converter_t : public parser_t {
 public:
-	converter_t(nodes_map_t const &nodes, ways_map_t const &ways, proto_writer_t *writer,
-	            allocator_t *allocator)
-		: parser_t(allocator)
-		, writer_(writer)
-		, ways_(&ways)
-		, nodes_(&nodes)
-		, regions_number_(0)
-	{
-	}
+    converter_t(nodes_map_t const &nodes, ways_map_t const &ways, proto_writer_t *writer,
+                allocator_t *allocator)
+        : parser_t(allocator)
+        , writer_(writer)
+        , ways_(&ways)
+        , nodes_(&nodes)
+        , regions_number_(0)
+    {
+    }
 
-	void process_way(geo_id_t geo_id, kvs_t const &kvs, geo_ids_t const &nodes) override;
+    void process_way(geo_id_t geo_id, kvs_t const &kvs, geo_ids_t const &nodes) override;
 
-	void process_relation(geo_id_t geo_id, kvs_t const &kvs, references_t const &refs) override;
+    void process_relation(geo_id_t geo_id, kvs_t const &kvs, references_t const &refs) override;
 
-	size_t regions_number() const
-	{
-		return regions_number_;
-	}
+    size_t regions_number() const
+    {
+        return regions_number_;
+    }
 
 private:
-	proto_writer_t *writer_;
-	ways_map_t const *ways_;
-	nodes_map_t const *nodes_;
-	size_t regions_number_;
+    proto_writer_t *writer_;
+    ways_map_t const *ways_;
+    nodes_map_t const *nodes_;
+    size_t regions_number_;
 };
 
 // Run all convertion in different threads. Read open_street_map data from input_path file

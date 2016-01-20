@@ -29,22 +29,22 @@ namespace {
 
 inline double lon(location_t const &l)
 {
-	return l.lon;
+    return l.lon;
 }
 
 inline double lat(location_t const &l)
 {
-	return l.lat;
+    return l.lat;
 }
 
 inline double lon(proto::location_t const &l)
 {
-	return l.lon();
+    return l.lon();
 }
 
 inline double lat(proto::location_t const &l)
 {
-	return l.lat();
+    return l.lat();
 }
 
 } // namespace
@@ -52,39 +52,39 @@ inline double lat(proto::location_t const &l)
 template<typename a_t, typename b_t>
 bool is_equal_locations(a_t const &a, b_t const &b)
 {
-	location_t a1(lon(a), lat(a));
-	location_t b1(lon(b), lat(b));
-	return point_t(a1) == point_t(b1);
+    location_t a1(lon(a), lat(a));
+    location_t b1(lon(b), lat(b));
+    return point_t(a1) == point_t(b1);
 }
 
 class locations_converter_t {
 public:
-	explicit locations_converter_t(allocator_t *allocator)
-		: allocator_(allocator)
-	{
-	}
+    explicit locations_converter_t(allocator_t *allocator)
+        : allocator_(allocator)
+    {
+    }
 
-	template<typename locations_t, typename callback_t>
-	void each(locations_t const &raw_locations, callback_t callback)
-	{
-		dynarray_t<location_t> locations(raw_locations.size(), allocator_);
-		for (auto const &l : raw_locations) {
-			if (locations.empty() || !is_equal_locations(locations.back(), l))
-				locations.push_back(location_t(lon(l), lat(l)));
+    template<typename locations_t, typename callback_t>
+    void each(locations_t const &raw_locations, callback_t callback)
+    {
+        dynarray_t<location_t> locations(raw_locations.size(), allocator_);
+        for (auto const &l : raw_locations) {
+            if (locations.empty() || !is_equal_locations(locations.back(), l))
+                locations.push_back(location_t(lon(l), lat(l)));
 
-			if (locations.size() > 3 && is_equal_locations(locations.front(), locations.back())) {
-				locations.pop_back();
-				callback(locations);
-				locations.clear();
-			}
-		}
+            if (locations.size() > 3 && is_equal_locations(locations.front(), locations.back())) {
+                locations.pop_back();
+                callback(locations);
+                locations.clear();
+            }
+        }
 
-		if (locations.size() > 2)
-			callback(locations);
-	}
+        if (locations.size() > 2)
+            callback(locations);
+    }
 
 private:
-	allocator_t *allocator_;
+    allocator_t *allocator_;
 };
 
 } // namespace generator

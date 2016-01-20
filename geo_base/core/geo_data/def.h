@@ -36,16 +36,16 @@ version_t const GEO_DATA_CURRENT_VERSION = GEO_DATA_VERSION_1;
 
 // Geographical data definition. This define need for reflection in map/unmap, show, etc.
 #define GEO_BASE_DEF_GEO_DATA \
-	GEO_BASE_DEF_VAR(version_t, version); \
-	GEO_BASE_DEF_ARR(point_t, points); \
-	GEO_BASE_DEF_ARR(edge_t, edges); \
-	GEO_BASE_DEF_ARR(ref_t, edge_refs); \
-	GEO_BASE_DEF_ARR(part_t, parts); \
-	GEO_BASE_DEF_ARR(polygon_t, polygons); \
-	GEO_BASE_DEF_ARR(ref_t, polygon_refs); \
-	GEO_BASE_DEF_ARR(area_box_t, boxes); \
-	GEO_BASE_DEF_ARR(char, blobs); \
-	GEO_BASE_DEF_ARR(kv_t, kvs); \
-	GEO_BASE_DEF_ARR(region_t, regions);
+    GEO_BASE_DEF_VAR(version_t, version); \
+    GEO_BASE_DEF_ARR(point_t, points); \
+    GEO_BASE_DEF_ARR(edge_t, edges); \
+    GEO_BASE_DEF_ARR(ref_t, edge_refs); \
+    GEO_BASE_DEF_ARR(part_t, parts); \
+    GEO_BASE_DEF_ARR(polygon_t, polygons); \
+    GEO_BASE_DEF_ARR(ref_t, polygon_refs); \
+    GEO_BASE_DEF_ARR(area_box_t, boxes); \
+    GEO_BASE_DEF_ARR(char, blobs); \
+    GEO_BASE_DEF_ARR(kv_t, kvs); \
+    GEO_BASE_DEF_ARR(region_t, regions);
 
 } // namespace geo_base
