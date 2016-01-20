@@ -27,7 +27,7 @@ TARGET_LINK_LIBRARIES(
     geo-base-open-street-map
     geo-base-proto
     geo-base-proto-util
-    geo-base-util
+    geo-base-library
     gmock
     jemalloc
     pthread

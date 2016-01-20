@@ -1,5 +1,5 @@
 ADD_LIBRARY(
-    geo-base-util
+    geo-base-library
     base_allocator.cpp
     block_allocator.cpp
     file.cpp
