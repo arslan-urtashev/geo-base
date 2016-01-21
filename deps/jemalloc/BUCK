@@ -1,0 +1,26 @@
+cxx_library(
+    name = "jemalloc",
+    srcs = glob([
+        "jemalloc/*.c"
+    ], excludes = [
+        "jemalloc/valgrind.c",
+    ]),
+    exported_headers = glob([
+        "jemalloc/*.h",
+        "jemalloc/internal/*.h",
+    ]),
+    header_namespace = "",
+    compiler_flags = [
+        "-O3",
+        "-Wall",
+        "-Werror=declaration-after-statement",
+        "-Wno-tautological-compare",
+        "-funroll-loops",
+        "-g3",
+        "-pipe",
+        "-std=gnu99",
+    ],
+    visibility = [
+        "PUBLIC",
+    ],
+)
