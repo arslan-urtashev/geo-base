@@ -200,7 +200,7 @@ message_t *create_message(google::protobuf::Arena *arena)
     return google::protobuf::Arena::CreateMessage<message_t>(arena);
 }
 
-#ifdef __GCC__
+#ifndef __APPLE__
 // Protobuf arena block_alloc and block_dealloc can't be customized yet. Create C like functions
 // for allocate/deallocate memory from preallocated buffer per thread.
 namespace arena_hack {
@@ -233,7 +233,7 @@ static google::protobuf::ArenaOptions get_arena_options(allocator_t *allocator_)
 
 void parser_t::parse(reader_t *reader)
 {
-#ifdef __GCC__
+#ifndef __APPLE__
     google::protobuf::Arena arena(arena_hack::get_arena_options(allocator_));
 #else
     google::protobuf::Arena arena;
