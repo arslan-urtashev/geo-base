@@ -1,3 +1,8 @@
+CXXFLAGS = [
+    "-O3",
+    "-funroll-loops",
+]
+
 cxx_library(
     name = "gmock",
     srcs = [
@@ -30,6 +35,7 @@ cxx_library(
         ":gtest",
     ],
     header_namespace = "",
+    compiler_flags = CXXFLAGS,
     visibility = [
         "PUBLIC",
     ],
@@ -74,6 +80,7 @@ cxx_library(
         "gtest/internal/gtest-type-util.h",
     ],
     header_namespace = "",
+    compiler_flags = CXXFLAGS,
     visibility = [
         "PUBLIC",
     ],

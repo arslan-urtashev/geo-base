@@ -1,15 +1,17 @@
 CXXFLAGS = [
     "-DHAVE_PTHREAD",
+    "-DNDEBUG",
+    "-O3",
     "-W",
     "-Wall",
-    "-Wwrite-strings",
-    "-Woverloaded-virtual",
+    "-Wno-ignored-qualifiers",
     "-Wno-sign-compare",
+    "-Wno-uninitialized",
+    "-Wno-unused-const-variable",
     "-Wno-unused-function",
     "-Wno-unused-parameter",
-    "-Wno-unused-const-variable",
-    "-Wno-ignored-qualifiers",
-    "-Wno-uninitialized",
+    "-Woverloaded-virtual",
+    "-Wwrite-strings",
     "-std=c++0x",
 ]
 
