@@ -4,7 +4,7 @@ CXXFLAGS = [
     "-Wall",
     "-Werror",
     "-funroll-loops",
-],
+]
 
 cxx_library(
     name = "geo-base-lib",
