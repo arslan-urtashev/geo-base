@@ -1,0 +1,18 @@
+CXXFLAGS = [
+    "-DNDEBUG",
+    "-O3",
+    "-Wall",
+    "-Werror",
+    "-funroll-loops",
+]
+
+cxx_binary(
+    name = "geo-base-convert",
+    srcs = [
+        "convert.cpp",
+    ],
+    deps = [
+        "//:open-street-map",
+    ],
+    compiler_flags = CXXFLAGS,
+)
