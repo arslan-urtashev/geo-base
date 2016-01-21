@@ -25,15 +25,15 @@ geo_id_t geo_data_t::lookup(location_t const &location)
     point_t point(location);
 
     // Determine in wich area box is point.
-    ref_t box_x = (point.x - area_box::lower_x) / area_box::delta_x;
-    ref_t box_y = (point.y - area_box::lower_y) / area_box::delta_y;
-    ref_t box_ref = box_x * area_box::number_y + box_y;
+    ref_t const box_x = (point.x - area_box::lower_x) / area_box::delta_x;
+    ref_t const box_y = (point.y - area_box::lower_y) / area_box::delta_y;
+    ref_t const box_ref = box_x * area_box::number_y + box_y;
 
     if (box_ref >= boxes_number())
         return UNKNOWN_GEO_ID;
 
-    number_t refs_offset = boxes()[box_ref].polygon_refs_offset;
-    number_t refs_number = boxes()[box_ref].polygon_refs_number;
+    number_t const refs_offset = boxes()[box_ref].polygon_refs_offset;
+    number_t const refs_number = boxes()[box_ref].polygon_refs_number;
 
     polygon_t const *answer = nullptr;
 

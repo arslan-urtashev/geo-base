@@ -29,7 +29,7 @@ namespace geo_base {
 
 class proto_writer_t {
 public:
-    proto_writer_t(char const *path)
+    explicit proto_writer_t(char const *path)
         : file_()
         , output_stream_()
         , safe_output_stream_()
@@ -60,6 +60,8 @@ private:
     file_t file_;
     file_output_stream_t output_stream_;
     safe_output_stream_t safe_output_stream_;
+
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(proto_writer_t);
 };
 
 } // namespace geo_base

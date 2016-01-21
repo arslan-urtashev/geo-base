@@ -27,7 +27,7 @@ namespace open_street_map {
 
 bool reader_t::read(proto::blob_header_t *header, proto::blob_t *blob, allocator_t *allocator)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> const lock(mutex_);
 
     int32_t header_size = 0;
     if (!input_stream_->read((char *) &header_size, sizeof(header_size)))
@@ -46,7 +46,7 @@ bool reader_t::read(proto::blob_header_t *header, proto::blob_t *blob, allocator
         return false;
     }
 
-    int32_t blob_size = header->data_size();
+    int32_t const blob_size = header->data_size();
 
     dynarray_t<char> raw_blob(blob_size, blob_size, allocator);
     if (!input_stream_->read(raw_blob.data(), raw_blob.size())) {

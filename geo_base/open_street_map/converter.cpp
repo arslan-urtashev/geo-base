@@ -37,9 +37,10 @@ static bool eq(char const *a, char const *b)
 }
 
 #define op(ev, opt) \
+    static_assert(region_t::opt == (1ull << ::geo_base::proto::region_t::opt), \
+        "Options should be equal"); \
     if (eq(ev, kv.v)) \
         return region_t::opt; \
-    static_assert(region_t::opt == (1ull << ::geo_base::proto::region_t::opt), "Options should be equal");
 
 static region_t::options_t get_region_boundary_options(kvs_t const &kvs)
 {
@@ -104,7 +105,7 @@ static bool is_boundary_way(kvs_t const &kvs, geo_ids_t const &nodes)
 
 static bool check_role(char const *role)
 {
-    polygon_t::type_t type = get_polygon_type(role);
+    polygon_t::type_t const type = get_polygon_type(role);
     return type == polygon_t::TYPE_INNER || type == polygon_t::TYPE_OUTER;
 }
 

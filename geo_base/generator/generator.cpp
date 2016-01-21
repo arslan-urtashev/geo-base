@@ -114,8 +114,8 @@ void generator_t::update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<poi
 
     polygon.parts_offset = geo_data_->parts_number();
 
-    dynarray_t<edge_t> edges = make_edges(points, geo_data_, allocator_);
-    dynarray_t<check_point_t> check_points = make_check_points(edges, geo_data_, allocator_);
+    dynarray_t<edge_t> const edges = make_edges(points, geo_data_, allocator_);
+    dynarray_t<check_point_t> const check_points = make_check_points(edges, geo_data_, allocator_);
 
     for (number_t l = 0, r = 0; l < check_points.size(); l = r) {
         r = l + 1;

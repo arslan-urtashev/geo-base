@@ -47,7 +47,7 @@ bool polygon_t::contains(point_t const &point, part_t const *parts, ref_t const 
     if (point.x < part->coordinate || point.x > (part + 1)->coordinate)
         return false;
 
-    number_t edge_refs_number = (part + 1)->edge_refs_offset - part->edge_refs_offset;
+    number_t const edge_refs_number = (part + 1)->edge_refs_offset - part->edge_refs_offset;
     return part->contains(point, edge_refs_number, edge_refs, edges, points);
 };
 

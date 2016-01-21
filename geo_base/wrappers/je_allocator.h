@@ -26,22 +26,20 @@ namespace geo_base {
 template<typename value_t>
 class je_allocator_t {
 public:
-    typedef value_t value_type;
-    typedef value_t* pointer;
-    typedef value_t& reference;
-    typedef value_t const* const_pointer;
-    typedef value_t const& const_reference;
-    typedef size_t size_type;
-    typedef ptrdiff_t difference_type;
+    using value_type = value_t;
+    using pointer = value_t*;
+    using reference = value_t&;
+    using const_pointer = value_t*;
+    using const_reference = value_t const &;
+    using size_type = size_t;
+    using difference_type = ptrdiff_t;
 
     je_allocator_t()
-    {
-    }
+    { }
 
     template<typename other_t>
     je_allocator_t(je_allocator_t<other_t> const &)
-    {
-    }
+    { }
 
     template<typename other_t>
     struct rebind {
