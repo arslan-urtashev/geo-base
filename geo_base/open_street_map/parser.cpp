@@ -200,18 +200,44 @@ message_t *create_message(google::protobuf::Arena *arena)
     return google::protobuf::Arena::CreateMessage<message_t>(arena);
 }
 
+#ifdef __GCC__
+// Protobuf arena block_alloc and block_dealloc can't be customized yet. Create C like functions
+// for allocate/deallocate memory from preallocated buffer per thread.
+namespace arena_hack {
+
+static thread_local allocator_t *allocator = nullptr;
+
+static void *block_alloc(size_t n)
+{
+    return allocator->allocate(n);
+}
+
+static void block_dealloc(void *ptr, size_t n)
+{
+    allocator->deallocate(ptr, n);
+}
+
+static google::protobuf::ArenaOptions get_arena_options(allocator_t *allocator_)
+{
+    google::protobuf::ArenaOptions opts;
+
+    allocator = allocator_;
+    opts.block_dealloc = block_dealloc;
+    opts.block_alloc = block_alloc;
+
+    return opts;
+}
+
+} // namespace protobuf_arena_hack
+#endif
+
 void parser_t::parse(reader_t *reader)
 {
-    google::protobuf::ArenaOptions options;
-
-    options.block_alloc = [&] (size_t n) {
-        return allocator_->allocate(n);
-    };
-    options.block_dealloc = [&] (void *ptr, size_t n) {
-        allocator_->deallocate(ptr, n);
-    };
-
-    google::protobuf::Arena arena(options);
+#ifdef __GCC__
+    google::protobuf::Arena arena(arena_hack::get_arena_options(allocator_));
+#else
+    google::protobuf::Arena arena;
+#endif
 
     while (true) {
         proto::blob_header_t *header = create_message<proto::blob_header_t>(&arena);
