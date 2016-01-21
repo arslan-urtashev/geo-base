@@ -1,3 +1,11 @@
+CXXFLAGS = [
+    "-DNDEBUG",
+    "-O3",
+    "-Wall",
+    "-Werror",
+    "-funroll-loops",
+],
+
 cxx_library(
     name = "geo-base-lib",
     srcs = [
@@ -30,6 +38,7 @@ cxx_library(
         "geo_base/lib/stop_watch.h",
         "geo_base/lib/system.h",
     ],
+    compiler_flags = CXXFLAGS,
     visibility = [
         "PUBLIC",
     ],
@@ -64,6 +73,7 @@ cxx_library(
     deps = [
         ":geo-base-lib",
     ],
+    compiler_flags = CXXFLAGS,
     visibility = [
         "PUBLIC",
     ],
@@ -85,6 +95,7 @@ cxx_library(
         ":geo-base-lib",
         ":geo-base-proto",
     ],
+    compiler_flags = CXXFLAGS,
     visibility = [
         "PUBLIC",
     ],
@@ -101,6 +112,7 @@ cxx_library(
     deps = [
         "//deps/protobuf:protobuf",
     ],
+    compiler_flags = CXXFLAGS,
     visibility = [
         "PUBLIC",
     ],
@@ -123,6 +135,7 @@ cxx_library(
         "//deps/protobuf:protobuf",
         "//deps/jemalloc:jemalloc",
     ],
+    compiler_flags = CXXFLAGS,
     visibility = [
         "PUBLIC",
     ],
@@ -139,6 +152,7 @@ cxx_library(
     deps = [
         "//deps/protobuf:protobuf",
     ],
+    compiler_flags = CXXFLAGS,
     visibility = [
         "PUBLIC",
     ],
@@ -153,6 +167,7 @@ cxx_library(
     deps = [
         "//deps/jemalloc:jemalloc",
     ],
+    compiler_flags = CXXFLAGS,
     visibility = [
         "PUBLIC",
     ],
@@ -185,6 +200,7 @@ cxx_library(
         "//deps/protobuf:protobuf",
         "//deps/zlib:zlib",
     ],
+    compiler_flags = CXXFLAGS,
     visibility = [
         "PUBLIC",
     ],
@@ -222,4 +238,5 @@ cxx_test(
         ":open-street-map-proto",
         "//deps/gmock:gmock",
     ],
+    compiler_flags = CXXFLAGS,
 )
