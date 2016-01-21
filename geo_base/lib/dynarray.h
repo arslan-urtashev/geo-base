@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include <geo_base/core/system.h>
 #include <geo_base/lib/allocator.h>
-#include <geo_base/lib/exception.h>
 #include <geo_base/lib/common.h>
+#include <geo_base/lib/exception.h>
+#include <geo_base/lib/system.h>
 
 #include <algorithm>
 
