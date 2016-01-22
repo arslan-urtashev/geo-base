@@ -222,4 +222,7 @@ cxx_binary(
         ":protobuf",
     ],
     compiler_flags = CXXFLAGS,
+    visibility = [
+        "PUBLIC",
+    ],
 )
