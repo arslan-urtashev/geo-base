@@ -110,11 +110,11 @@ struct ArenaOptions {
   //
   // NOTE: block_alloc and dealloc functions are expected to behave like
   // malloc and free, including Asan poisoning.
-  std::function<void *(size_t)> block_alloc;
+  void* (*block_alloc)(size_t n);
   // A function pointer to a dealloc method that takes ownership of the blocks
   // from the arena. By default, it contains a ptr to a wrapper function that
   // calls free.
-  std::function<void (void *, size_t)> block_dealloc;
+  void (*block_dealloc)(void* ptr, size_t n);
 
   // Hooks for adding external functionality such as user-specific metrics
   // collection, specific debugging abilities, etc.
