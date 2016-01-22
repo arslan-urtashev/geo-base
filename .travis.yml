@@ -23,7 +23,8 @@ notifications:
 before_install:
   - if [ $TRAVIS_OS_NAME == osx ]; then
       brew update;
-      brew install facebook/fb/buck;
+      brew brew tap facebook/fb;
+      brew install buck;
     fi
 
 addons:
