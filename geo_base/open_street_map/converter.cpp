@@ -285,8 +285,9 @@ void run_pool_convert(char const *input_path, char const *output_path, size_t th
         std::vector<grep_boundary_ways_t> greps;
         for (size_t i = 0; i < threads_number; ++i)
             greps.emplace_back(&allocators[i]);
-
-        run_pool_parse(input_path, greps);
+        
+        pool_parser_t parser;
+        parser.parse(input_path, greps);
 
         for (size_t i = 0; i < greps.size(); ++i) {
             way_ids.insert(greps[i].ways().begin(), greps[i].ways().end());
@@ -306,7 +307,8 @@ void run_pool_convert(char const *input_path, char const *output_path, size_t th
         for (size_t i = 0; i < threads_number; ++i)
             greps.emplace_back(way_ids, &allocators[i]);
 
-        run_pool_parse(input_path, greps);
+        pool_parser_t parser;
+        parser.parse(input_path, greps);
 
         for (size_t i = 0; i < greps.size(); ++i) {
             node_ids.insert(greps[i].nodes().begin(), greps[i].nodes().end());
@@ -327,7 +329,8 @@ void run_pool_convert(char const *input_path, char const *output_path, size_t th
         for (size_t i = 0; i < threads_number; ++i)
             greps.emplace_back(node_ids, &allocators[i]);
 
-        run_pool_parse(input_path, greps);
+        pool_parser_t parser;
+        parser.parse(input_path, greps);
 
         for (size_t i = 0; i < greps.size(); ++i) {
             nodes.insert(greps[i].nodes().begin(), greps[i].nodes().end());
@@ -346,7 +349,8 @@ void run_pool_convert(char const *input_path, char const *output_path, size_t th
         for (size_t i = 0; i < threads_number; ++i)
             converters.emplace_back(nodes, ways, &proto_writer, &allocators[i]);
 
-        run_pool_parse(input_path, converters);
+        pool_parser_t parser;
+        parser.parse(input_path, converters);
 
         size_t regions_number = 0;
         for (size_t i = 0; i < threads_number; ++i)

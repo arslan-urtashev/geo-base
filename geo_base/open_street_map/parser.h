@@ -31,7 +31,6 @@
 #include <geo_base/lib/file_stream.h>
 #include <geo_base/lib/log.h>
 #include <geo_base/lib/stop_watch.h>
-#include <geo_base/lib/thread_watcher.h>
 
 namespace geo_base {
 namespace open_street_map {
@@ -136,66 +135,48 @@ private:
     GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(parser_t);
 };
 
-namespace {
+class pool_parser_t {
+public:
+    pool_parser_t()
+    { }
 
-struct show_parser_t {
-    std::string operator () (parser_t const &parser) const
+    template<typename container_t>
+    void parse(reader_t *reader, container_t &container)
     {
-        static size_t const MAX_MESSAGE_SIZE = 1024;
-
-        char buffer[MAX_MESSAGE_SIZE];
-        snprintf(buffer, MAX_MESSAGE_SIZE, "[Blocks: %lu] [Nodes: %lu] [Ways: %lu] [Relations: %lu]",
-            parser.blocks_processed(), parser.nodes_processed() + parser.dense_nodes_processed(),
-            parser.ways_processed(), parser.relations_processed());
-
-        return std::string(buffer);
+        std::vector<std::thread> threads(container.size());
+        for (size_t i = 0; i < threads.size(); ++i) {
+            threads[i] = std::thread([&container, &reader, i] () {
+                container[i].parse(reader);
+            });
+        }
+        for (size_t i = 0; i < threads.size(); ++i)
+            threads[i].join();
     }
+
+    template<typename container_t>
+    void parse(char const *path, container_t &container)
+    {
+        char resolved_path[PATH_MAX];
+        log_info("Run parser on %s", realpath(path, resolved_path));
+
+        stop_watch_t stop_watch;
+        stop_watch.run();
+
+        {
+            file_t file;
+            file.read_open(path);
+            file_input_stream_t input_stream(file.fd());
+            reader_t reader(&input_stream);
+            parse(&reader, container);
+        }
+
+        float const seconds = stop_watch.get();
+        log_info("Parsed %s in %.3f seconds (%.3f minutes)", path, seconds, seconds / 60.0);
+    }
+
+private:
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(pool_parser_t);
 };
-
-template<typename parser_t>
-using parse_watcher_t = thread_watcher_t<std::vector<parser_t>, show_parser_t>;
-
-} // namespace
-
-// Run parser_t::parse in different threads.
-template<typename parser_t>
-void run_pool_parse(reader_t *reader, std::vector<parser_t> &parsers)
-{
-    parse_watcher_t<parser_t> watcher(parsers);
-    watcher.run();
-
-    std::vector<std::thread> threads(parsers.size());
-    for (size_t i = 0; i < threads.size(); ++i)
-        threads[i] = std::thread([&parsers, &reader, i] () {
-            parsers[i].parse(reader);
-        });
-    for (size_t i = 0; i < threads.size(); ++i)
-        threads[i].join();
-
-    watcher.stop();
-}
-
-// Run parser_t::parse in different threads.
-template<typename parser_t>
-void run_pool_parse(char const *path, std::vector<parser_t> &parsers)
-{
-    char resolved_path[PATH_MAX];
-    log_info("Parse %s...", realpath(path, resolved_path));
-
-    stop_watch_t stop_watch;
-    stop_watch.run();
-
-    {
-        file_t file;
-        file.read_open(path);
-        file_input_stream_t input_stream(file.fd());
-        reader_t reader(&input_stream);
-        run_pool_parse(&reader, parsers);
-    }
-
-    float const seconds = stop_watch.get();
-    log_info("Parsed %s in %.3f seconds (%.3f minutes)", path, seconds, seconds / 60.0);
-}
 
 size_t optimal_threads_number();
 

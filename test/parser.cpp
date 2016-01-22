@@ -60,7 +60,7 @@ TEST(open_street_map_parser, parse)
         count.relations_number(), count.ways_number(), count.nodes_number());
 }
 
-TEST(open_street_map_parser, run_pool_parse)
+TEST(open_street_map_parser, pool_parser)
 {
     std::vector<pool_allocator_t> allocators;
     std::vector<simple_counter_t> simple_counters;
@@ -71,7 +71,8 @@ TEST(open_street_map_parser, run_pool_parse)
     simple_counters.emplace_back(&allocators[0]);
     simple_counters.emplace_back(&allocators[1]);
 
-    run_pool_parse(OSM_PBF_TEST_FILE, simple_counters);
+    pool_parser_t parser;
+    parser.parse(OSM_PBF_TEST_FILE, simple_counters);
 
     EXPECT_EQ(123736ull, simple_counters[0].nodes_number() + simple_counters[1].nodes_number());
     EXPECT_EQ(142ull, simple_counters[0].relations_number() + simple_counters[1].relations_number());
