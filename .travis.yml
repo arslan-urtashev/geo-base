@@ -31,9 +31,10 @@ addons:
     packages:
       - valgrind
 
+# TODO: Install buck on linux
 script: 
   - if [ $TRAVIS_OS_NAME == linux ]; then
-      buck test; # TODO: Install buck
+      buck test;
     fi
   - if [ $TRAVIS_OS_NAME == osx ]; then
       buck test;
