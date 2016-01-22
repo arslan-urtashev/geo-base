@@ -152,7 +152,8 @@ void run_pool_parse(reader_t *reader, std::vector<parser_t> &parsers)
 template<typename parser_t>
 void run_pool_parse(char const *path, std::vector<parser_t> &parsers)
 {
-    log_info("Parse %s...", path);
+    char resolved_path[PATH_MAX];
+    log_info("Parse %s...", realpath(path, resolved_path));
 
     stop_watch_t stop_watch;
     stop_watch.run();
