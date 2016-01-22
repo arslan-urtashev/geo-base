@@ -37,6 +37,7 @@ cxx_library(
         "geo_base/lib/safe_stream.h",
         "geo_base/lib/stop_watch.h",
         "geo_base/lib/system.h",
+        "geo_base/lib/thread_watcher.h",
     ],
     compiler_flags = CXXFLAGS,
     visibility = [

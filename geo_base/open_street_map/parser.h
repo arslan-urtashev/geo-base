@@ -31,6 +31,7 @@
 #include <geo_base/lib/file_stream.h>
 #include <geo_base/lib/log.h>
 #include <geo_base/lib/stop_watch.h>
+#include <geo_base/lib/thread_watcher.h>
 
 namespace geo_base {
 namespace open_street_map {
@@ -135,10 +136,34 @@ private:
     GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(parser_t);
 };
 
+namespace {
+
+struct show_parser_t {
+    std::string operator () (parser_t const &parser) const
+    {
+        static size_t const MAX_MESSAGE_SIZE = 1024;
+
+        char buffer[MAX_MESSAGE_SIZE];
+        snprintf(buffer, MAX_MESSAGE_SIZE, "[Blocks: %lu] [Nodes: %lu] [Ways: %lu] [Relations: %lu]",
+            parser.blocks_processed(), parser.nodes_processed() + parser.dense_nodes_processed(),
+            parser.ways_processed(), parser.relations_processed());
+
+        return std::string(buffer);
+    }
+};
+
+template<typename parser_t>
+using parse_watcher_t = thread_watcher_t<std::vector<parser_t>, show_parser_t>;
+
+} // namespace
+
 // Run parser_t::parse in different threads.
 template<typename parser_t>
 void run_pool_parse(reader_t *reader, std::vector<parser_t> &parsers)
 {
+    parse_watcher_t<parser_t> watcher(parsers);
+    watcher.run();
+
     std::vector<std::thread> threads(parsers.size());
     for (size_t i = 0; i < threads.size(); ++i)
         threads[i] = std::thread([&parsers, &reader, i] () {
@@ -146,6 +171,8 @@ void run_pool_parse(reader_t *reader, std::vector<parser_t> &parsers)
         });
     for (size_t i = 0; i < threads.size(); ++i)
         threads[i].join();
+
+    watcher.stop();
 }
 
 // Run parser_t::parse in different threads.

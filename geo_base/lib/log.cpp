@@ -107,7 +107,7 @@ void log_write(log_level_t level, char const *message)
         return;
 
     static char const *A[LOG_LEVEL_COUNT] = {
-        "", // LOG_LEVEL_DISABLE
+        "",         // LOG_LEVEL_DISABLE
         "\033[90m", // LOG_LEVEL_ERROR
         "\033[90m", // LOG_LEVEL_WARNING
         "\033[90m", // LOG_LEVEL_INFO
@@ -115,18 +115,18 @@ void log_write(log_level_t level, char const *message)
     };
 
     static char const *B[LOG_LEVEL_COUNT] = {
-        "", // LOG_LEVEL_DISABLE
+        "",                       // LOG_LEVEL_DISABLE
         "\033[31;1mError\033[0m", // LOG_LEVEL_ERROR
-        "\033[33;1mWarn\033[0m", // LOG_LEVEL_WARNING
-        "\033[32;1mInfo\033[0m", // LOG_LEVEL_INFO
-        "Debug", // LOG_LEVEL_DEBUG
+        "\033[33;1mWarn\033[0m",  // LOG_LEVEL_WARNING
+        "\033[32;1mInfo\033[0m",  // LOG_LEVEL_INFO
+        "Debug",                  // LOG_LEVEL_DEBUG
     };
 
     static char const *C[LOG_LEVEL_COUNT] = {
-        "", // LOG_LEVEL_DISABLE
-        "\n", // LOG_LEVEL_ERROR
-        "\n", // LOG_LEVEL_WARNING
-        "\n", // LOG_LEVEL_INFO
+        "",          // LOG_LEVEL_DISABLE
+        "\n",        // LOG_LEVEL_ERROR
+        "\n",        // LOG_LEVEL_WARNING
+        "\n",        // LOG_LEVEL_INFO
         "\033[0m\n", // LOG_LEVEL_DEBUG
     };
 
