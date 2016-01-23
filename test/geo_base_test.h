@@ -197,6 +197,11 @@ public:
         edges_.push_back(e);
         return edges_.size() - 1;
     }
+
+    ref_t insert(std::string const &) override
+    {
+        throw exception_t("Not implemented");
+    }
 };
 
 } // namespace generator

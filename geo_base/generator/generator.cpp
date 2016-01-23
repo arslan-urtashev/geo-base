@@ -189,8 +189,11 @@ void generator_t::generate_area_boxes()
             area_box_t box;
             box.polygon_refs_offset = geo_data_->polygon_refs_number();
 
-            for (number_t i = 0; i < geo_data_->polygons_number(); ++i)
-                if (geo_data_->polygons()[i].rectangle.has_intersection(rect))
+            number_t const polygons_number = geo_data_->polygons_number();
+            polygon_t const *polygons = geo_data_->polygons();
+
+            for (number_t i = 0; i < polygons_number; ++i)
+                if (polygons[i].rectangle.has_intersection(rect))
                     geo_data_->polygon_refs_append(i);
 
             box.polygon_refs_number = geo_data_->polygon_refs_number() - box.polygon_refs_offset;
@@ -199,12 +202,11 @@ void generator_t::generate_area_boxes()
             ref_t *mut_polygon_refs_end = geo_data_->mut_polygon_refs() + geo_data_->polygon_refs_number();
 
             std::sort(mut_polygon_refs, mut_polygon_refs_end, [&] (ref_t const &a, ref_t const &b) {
-                polygon_t const *p = geo_data_->polygons();
-                return p[a].region_id < p[b].region_id
+                return polygons[a].region_id < polygons[b].region_id
                     || (
-                        p[a].region_id == p[b].region_id
-                        && p[a].type == polygon_t::TYPE_INNER
-                        && p[b].type != polygon_t::TYPE_INNER
+                        polygons[a].region_id == polygons[b].region_id
+                        && polygons[a].type == polygon_t::TYPE_INNER
+                        && polygons[b].type != polygon_t::TYPE_INNER
                     );
             });
 

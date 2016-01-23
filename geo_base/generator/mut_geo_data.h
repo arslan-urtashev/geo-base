@@ -102,10 +102,12 @@ public:
 private:
     template<typename type_t>
     struct hash64_t {
+        std::hash<uint64_t> hash;
+
         uint64_t operator () (type_t const &x) const
         {
-            static_assert(sizeof(x) == sizeof(uint64_t), "Data sizes must be equal");
-            return std::hash<uint64_t>()(*((uint64_t const *) &x));
+            static_assert(sizeof(x) == sizeof(uint64_t), "Data sizes must be equal to 8 bytes");
+            return hash(*((uint64_t const *) &x));
         }
     };
 
