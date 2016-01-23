@@ -19,6 +19,8 @@
 #pragma once
 
 #include <geo_base/generator/geo_data.h>
+#include <geo_base/lib/dynarray.h>
+#include <geo_base/lib/pool_allocator.h>
 #include <geo_base/wrappers/std.h>
 
 namespace geo_base {
@@ -57,7 +59,8 @@ public: \
         arr##_.push_back(a); \
     } \
 private: \
-    vector_t<arr_t> arr##_;
+    pool_allocator_t arr##_allocator_; \
+    dynarray_t<arr_t> arr##_;
 
     GEO_BASE_DEF_GEO_DATA
 
@@ -65,6 +68,20 @@ private: \
 #undef GEO_BASE_DEF_ARR
 
 public:
+    mut_geo_data_t()
+    {
+#define GEO_BASE_DEF_VAR(var_t, var) \
+    var##_ = var_t();
+
+#define GEO_BASE_DEF_ARR(arr_t, arr) \
+    arr##_ = dynarray_t<arr_t>(8_gb, &arr##_allocator_);
+
+        GEO_BASE_DEF_GEO_DATA;
+
+#undef GEO_BASE_DEF_VAR
+#undef GEO_BASE_DEF_ARR
+    }
+
     ref_t insert(point_t const &p) override
     {
         if (point_ref_.find(p) == point_ref_.end()) {
@@ -95,6 +112,8 @@ private:
 
     map_t<edge_t, ref_t, hash64_t<edge_t>> edge_ref_;
     map_t<point_t, ref_t, hash64_t<point_t>> point_ref_;
+
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mut_geo_data_t);
 };
 
 } // namespace generator
