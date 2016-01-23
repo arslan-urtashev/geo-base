@@ -24,12 +24,16 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <limits.h>
+#include <stdlib.h>
 
 namespace geo_base {
 
 void file_t::read_open(char const *path)
 {
-    log_debug("Read open %s", path);
+    char resolved_path[PATH_MAX];
+    log_debug("Read open %s", realpath(path, resolved_path));
     int fd = open(path, O_RDONLY);
     if (fd < 0)
         throw exception_t("Unable open %s: %s", path, strerror(errno));
