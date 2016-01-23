@@ -208,7 +208,7 @@ cc_library(
 )
 
 cc_test(
-    name = "test",
+    name = "geo_base_test",
     srcs = [
         "test/algo.cpp",
         "test/base_allocator.cpp",
@@ -239,6 +239,10 @@ cc_test(
         ":open-street-map-proto",
         "//deps/gmock:gmock",
     ],
+    data = [
+        "test/andorra-latest.osm.pbf",
+    ],
+    size = "small",
     includes = ["."],
     copts = CCFLAGS,
 )
