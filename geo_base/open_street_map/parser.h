@@ -171,7 +171,8 @@ public:
         }
 
         float const seconds = stop_watch.get();
-        log_info("Parsed %s in %.3f seconds (%.3f minutes)", path, seconds, seconds / 60.0);
+        log_info("Parsed %s in %.3f seconds (%.3f minutes)",
+            realpath(path, resolved_path), seconds, seconds / 60.0);
     }
 
 private:
