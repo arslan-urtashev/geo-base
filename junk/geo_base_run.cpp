@@ -43,5 +43,9 @@ int main(int argc, char *argv[])
 
     geo_data::show(log_fd(), data);
 
+    location_t location;
+    while (std::cin >> location.lat >> location.lon)
+        std::cout << data.lookup(location) << std::endl;
+
     return 0;
 }
