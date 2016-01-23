@@ -16,6 +16,7 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include <geo_base/core/geo_base.h>
 #include <geo_base/generator/generator.h>
 #include <geo_base/generator/geo_data.h>
 #include <geo_base/lib/memory.h>
@@ -45,11 +46,13 @@ TEST_F(generator_test_t, generator_test)
     generator.update(123, 123, points, polygon_t::TYPE_OUTER);
     generator.fini();
 
-    EXPECT_EQ(123ull, geo_data.lookup(location_t(5, 5)));
-    EXPECT_EQ(UNKNOWN_GEO_ID, geo_data.lookup(location_t(-1, -1)));
-    EXPECT_EQ(UNKNOWN_GEO_ID, geo_data.lookup(location_t(0, 3)));
-    EXPECT_EQ(123ull, geo_data.lookup(location_t(4, 0)));
-    EXPECT_EQ(123ull, geo_data.lookup(location_t(5, 5)));
+    geo_base_t geo_base(geo_data);
+
+    EXPECT_EQ(123ull, geo_base.lookup(location_t(5, 5)));
+    EXPECT_EQ(UNKNOWN_GEO_ID, geo_base.lookup(location_t(-1, -1)));
+    EXPECT_EQ(UNKNOWN_GEO_ID, geo_base.lookup(location_t(0, 3)));
+    EXPECT_EQ(123ull, geo_base.lookup(location_t(4, 0)));
+    EXPECT_EQ(123ull, geo_base.lookup(location_t(5, 5)));
 }
 
 TEST_F(generator_test_t, polygon)

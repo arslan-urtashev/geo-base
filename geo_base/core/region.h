@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <geo_base/core/geo_base.h>
+#include <geo_base/core/common.h>
 
 namespace geo_base {
 

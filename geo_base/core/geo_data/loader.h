@@ -18,26 +18,57 @@
 
 #pragma once
 
-#include <geo_base/core/geo_data/def.h>
+#include <geo_base/core/geo_data/geo_data.h>
+#include <geo_base/core/geo_data/map.h>
+#include <geo_base/lib/mem_file.h>
 
 namespace geo_base {
 
-class geo_data_t {
-#define GEO_BASE_DEF_VAR(var_t, var) \
-    virtual var_t const &var() const = 0;
-
-#define GEO_BASE_DEF_ARR(arr_t, arr) \
-    virtual arr_t const *arr() const = 0; \
-    virtual number_t arr##_number() const = 0;
-
+class geo_data_loader_t {
 public:
-    GEO_BASE_DEF_GEO_DATA
+    virtual geo_data_t const *geo_data() const = 0;
 
-#undef GEO_BASE_DEF_VAR
-#undef GEO_BASE_DEF_ARR
-
-    virtual ~geo_data_t()
+    virtual ~geo_data_loader_t()
     { }
+};
+
+using geo_data_loader_ptr_t = std::unique_ptr<geo_data_loader_t>;
+
+class geo_data_map_loader_t : public geo_data_loader_t {
+public:
+    explicit geo_data_map_loader_t(char const *path)
+    {
+        mem_file_.read_open(path);
+        geo_data_ = geo_data_map_t((char const *) mem_file_.data(), mem_file_.size());
+    }
+
+    geo_data_t const *geo_data() const override
+    {
+        return &geo_data_;
+    }
+
+private:
+    mem_file_t mem_file_;
+    geo_data_map_t geo_data_;
+
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(geo_data_map_loader_t);
+};
+
+class geo_data_wrapper_t : public geo_data_loader_t {
+public:
+    explicit geo_data_wrapper_t(geo_data_t const &g)
+        : geo_data_(&g)
+    { }
+
+    geo_data_t const *geo_data() const override
+    {
+        return geo_data_;
+    }
+
+private:
+    geo_data_t const *geo_data_;
+
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(geo_data_wrapper_t);
 };
 
 } // namespace geo_base

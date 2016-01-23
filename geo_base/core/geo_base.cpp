@@ -16,34 +16,40 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include <geo_base/core/geo_base.h>
 #include <geo_base/core/geo_data/geo_data.h>
 
 namespace geo_base {
 
-geo_id_t geo_data_t::lookup(location_t const &location)
+geo_id_t geo_base_t::lookup(location_t const &location) const
 {
-    point_t point(location);
+    geo_data_t const &geo_data = *geo_data_loader_->geo_data();
+
+    point_t const point(location);
 
     // Determine in wich area box is point.
     ref_t const box_x = (point.x - area_box::lower_x) / area_box::delta_x;
     ref_t const box_y = (point.y - area_box::lower_y) / area_box::delta_y;
     ref_t const box_ref = box_x * area_box::number_y + box_y;
 
-    if (box_ref >= boxes_number())
+    if (box_ref >= geo_data.boxes_number())
         return UNKNOWN_GEO_ID;
 
-    number_t const refs_offset = boxes()[box_ref].polygon_refs_offset;
-    number_t const refs_number = boxes()[box_ref].polygon_refs_number;
+    number_t const refs_offset = geo_data.boxes()[box_ref].polygon_refs_offset;
+    number_t const refs_number = geo_data.boxes()[box_ref].polygon_refs_number;
 
     polygon_t const *answer = nullptr;
 
     for (ref_t l = refs_offset, r = 0; l < refs_offset + refs_number; l = r) {
-        ref_t const *refs = polygon_refs();
-        polygon_t const *p = polygons();
+        ref_t const *refs = geo_data.polygon_refs();
+        polygon_t const *p = geo_data.polygons();
 
         r = l + 1;
 
-        if (p[refs[l]].contains(point, parts(), edge_refs(), edges(), points())) {
+        if (
+            p[refs[l]].contains(point, geo_data.parts(), geo_data.edge_refs(),
+                                geo_data.edges(), geo_data.points())
+        ) {
             if (p[refs[l]].type == polygon_t::TYPE_INNER) {
                 // All polygons with same region_id must be skipped if polygon is inner.
                 // In geo_data inner polygons stored before outer polygons.
@@ -51,7 +57,10 @@ geo_id_t geo_data_t::lookup(location_t const &location)
                     ++r;
 
             } else {
-                if (!answer || !answer->better(p[refs[l]], regions(), regions_number()))
+                if (
+                    !answer
+                    || !answer->better(p[refs[l]], geo_data.regions(), geo_data.regions_number())
+                )
                     answer = &(p[refs[l]]);
             }
         }
