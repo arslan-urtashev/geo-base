@@ -49,6 +49,8 @@ public:
 private:
     void generate_area_boxes();
 
+    void final_update_regions();
+
     stop_watch_t stop_watch_;
     geo_data_t *geo_data_;
     allocator_t *allocator_;

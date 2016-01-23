@@ -224,11 +224,31 @@ static void create_fake_part(geo_data_t *geo_data)
     geo_data->parts_append(fake_part);
 }
 
+void generator_t::final_update_regions()
+{
+    region_t *regions = geo_data_->mut_regions();
+    region_t *regions_end = geo_data_->regions_number() + regions;
+
+    std::sort(regions, regions_end);
+
+    for (size_t i = 0; i < geo_data_->polygons_number(); ++i) {
+        polygon_t const &p = geo_data_->polygons()[i];
+        region_t *r = std::lower_bound(regions, regions_end, p.region_id);
+        if (!r) {
+            log_warning("Region %lu not exists!", p.region_id);
+            continue;
+        }
+        r->square += p.square;
+        r->polygons_number++;
+    }
+}
+
 void generator_t::fini()
 {
     log_info("Polygons generated in %.3f seconds", stop_watch_.get());
 
     generate_area_boxes();
+    final_update_regions();
     create_fake_part(geo_data_);
 
     geo_data_->set_version(GEO_DATA_CURRENT_VERSION);
@@ -245,10 +265,25 @@ void generator_t::update(geo_id_t region_id, proto::polygon_t const &polygon)
     });
 }
 
-void generator_t::update(proto::region_t const &region)
+void generator_t::update(proto::region_t const &proto_region)
 {
-    for (proto::polygon_t const &polygon : region.polygons())
-        update(region.region_id(), polygon);
+    for (proto::polygon_t const &polygon : proto_region.polygons())
+        update(proto_region.region_id(), polygon);
+
+    region_t region;
+    region.region_id = proto_region.region_id();
+    region.options = proto_region.options();
+    region.kvs_offset = geo_data_->kvs_number();
+
+    for (proto::kv_t const &kv : proto_region.kvs()) {
+        kv_t x;
+        x.k = geo_data_->insert(kv.k());
+        x.v = geo_data_->insert(kv.v());
+        geo_data_->kvs_append(x);
+    }
+
+    region.kvs_number = geo_data_->kvs_number() - region.kvs_offset;
+    geo_data_->regions_append(region);
 }
 
 void generate(char const *in, char const *out)

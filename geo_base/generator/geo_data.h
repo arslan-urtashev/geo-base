@@ -42,6 +42,9 @@ public:
 
     // Insert unique edge into edges array.
     virtual ref_t insert(edge_t const &e) = 0;
+
+    // Inser unique blob into blobs array.
+    virtual ref_t insert(std::string const &s) = 0;
 };
 
 } // namespace generator

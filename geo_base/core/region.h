@@ -60,6 +60,7 @@ struct region_t {
     number_t kvs_number;
     square_t square;
     options_t options;
+    number_t polygons_number;
 
     bool operator == (region_t const &r) const
     {

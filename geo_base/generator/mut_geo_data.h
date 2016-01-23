@@ -67,6 +67,8 @@ private: \
 #undef GEO_BASE_DEF_ARR
 
 public:
+    mut_geo_data_t()
+    { }
 
     ref_t insert(point_t const &p) override
     {
@@ -86,6 +88,17 @@ public:
         return edge_ref_[e];
     }
 
+    ref_t insert(std::string const &s) override
+    {
+        if (blob_ref_.find(s) == blob_ref_.end()) {
+            blob_ref_[s] = blobs_.size();
+            for (size_t i = 0; i < s.size(); ++i)
+                blobs_.push_back(s[i]);
+            blobs_.push_back('\0');
+        }
+        return blob_ref_[s];
+    }
+
 private:
     template<typename type_t>
     struct hash64_t {
@@ -98,6 +111,7 @@ private:
 
     map_t<edge_t, ref_t, hash64_t<edge_t>> edge_ref_;
     map_t<point_t, ref_t, hash64_t<point_t>> point_ref_;
+    map_t<std::string, ref_t> blob_ref_;
 
     GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mut_geo_data_t);
 };
