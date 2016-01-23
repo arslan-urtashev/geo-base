@@ -29,5 +29,23 @@ cxx_binary(
         "//:geo-base-libproto",
         "//:geo-base-proto",
     ],
+    linker_flags = [
+        "-pthread",
+    ],
+    compiler_flags = CXXFLAGS,
+)
+
+cxx_binary(
+    name = "geo-base-run",
+    srcs = [
+        "geo_base_run.cpp",
+    ],
+    deps = [
+        "//:geo-base-lib",
+        "//:geo-base-core",
+    ],
+    linker_flags = [
+        "-pthread",
+    ],
     compiler_flags = CXXFLAGS,
 )
