@@ -54,5 +54,7 @@ private:
     allocator_t *allocator_;
 };
 
+void generate(char const *in, char const *out);
+
 } // namespace generator
 } // namespace geo_base

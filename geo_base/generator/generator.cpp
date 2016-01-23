@@ -16,11 +16,16 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include <geo_base/core/geo_data/map.h>
 #include <geo_base/generator/generator.h>
 #include <geo_base/generator/geo_data.h>
+#include <geo_base/generator/mut_geo_data.h>
 #include <geo_base/generator/locations_converter.h>
+#include <geo_base/lib/base_allocator.h>
+#include <geo_base/lib/pool_allocator.h>
 #include <geo_base/lib/log.h>
 #include <geo_base/lib/stop_watch.h>
+#include <geo_base/libproto/proto_reader.h>
 
 namespace geo_base {
 namespace generator {
@@ -244,6 +249,26 @@ void generator_t::update(proto::region_t const &region)
 {
     for (proto::polygon_t const &polygon : region.polygons())
         update(region.region_id(), polygon);
+}
+
+void generate(char const *in, char const *out)
+{
+    pool_allocator_t allocator(128_mb);
+
+    mut_geo_data_t geo_data;
+    generator_t generator(&geo_data, &allocator);
+
+    generator.init();
+
+    proto_reader_t reader(in);
+    reader.each([&] (proto::region_t const &region) {
+        generator.update(region);
+    });
+
+    generator.fini();
+
+    base_allocator_t base_allocator(out);
+    geo_data_map_t map(geo_data, &base_allocator);
 }
 
 } // namespace generator

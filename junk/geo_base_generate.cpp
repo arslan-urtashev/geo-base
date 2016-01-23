@@ -17,7 +17,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/lib/log.h>
-#include <geo_base/generator/generate.h>
+#include <geo_base/generator/generator.h>
 
 #include <stdio.h>
 #include <unistd.h>
