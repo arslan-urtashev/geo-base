@@ -42,6 +42,7 @@ public:
     geo_base_t &operator = (geo_base_t &&g)
     {
         std::swap(geo_data_loader_, g.geo_data_loader_);
+        return *this;
     }
 
     explicit geo_base_t(char const *path)
