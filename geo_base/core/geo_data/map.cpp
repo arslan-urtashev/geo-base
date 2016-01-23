@@ -110,11 +110,12 @@ static char const *serialize(geo_data_t const &geo_data,
 template<typename value_t>
 static bool deserialize_value(char const *end, char const **ptr, value_t *value)
 {
-    if (*ptr + sizeof(value_t) < end) {
+    if (*ptr + sizeof(value_t) <= end) {
         *value = *((value_t const *) *ptr);
         *ptr += sizeof(value_t);
         return true;
     }
+    log_warning("Older geo_data version detected");
     return false;
 }
 

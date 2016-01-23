@@ -24,7 +24,7 @@
 
 namespace geo_base {
 
-size_t const LOG_MESSAGE_LIMIT = 256;
+size_t const LOG_MESSAGE_LIMIT = 1024;
 
 enum log_level_t {
     LOG_LEVEL_DISABLE = 0,
