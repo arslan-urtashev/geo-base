@@ -17,6 +17,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/lib/system.h>
+#include <geo_base/lib/log.h>
 #include <geo_base/core/geo_data/map.h>
 
 namespace geo_base {
@@ -137,6 +138,9 @@ static bool deserialize_array(char const *begin, char const *end, char const **p
 
 void geo_data_map_t::remap()
 {
+    if (!data_)
+        return;
+
     char const *ptr = data_;
 
     uint32_t endian_flag = 0;

@@ -75,7 +75,7 @@ public:
         dat.remap();
     }
 
-    geo_data_map_t &operator =(geo_data_map_t &&dat)
+    geo_data_map_t &operator = (geo_data_map_t &&dat)
     {
         std::swap(data_, dat.data_);
         std::swap(size_, dat.size_);
