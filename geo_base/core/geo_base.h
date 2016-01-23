@@ -85,6 +85,8 @@ bool geo_base_t::kv(geo_id_t region_id, callback_t callback) const
         char const *v = blobs + kvs[i].v;
         callback(k, v);
     }
+
+    return true;
 }
 
 }

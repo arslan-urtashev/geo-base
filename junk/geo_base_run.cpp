@@ -54,9 +54,12 @@ int main(int argc, char *argv[])
         }
 
         std::cout << region_id << std::endl;
-        geo_base.kv(region_id, [&] (char const *k, char const *v) {
+        bool const ret = geo_base.kv(region_id, [&] (char const *k, char const *v) {
             log_debug("k=\"%s\" v=\"%s\"", k, v);
         });
+
+        if (!ret)
+            log_warning("kv not found for %lu region_id", region_id);
     }
 
     return 0;

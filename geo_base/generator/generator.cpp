@@ -259,7 +259,7 @@ void generator_t::final_update_regions()
     for (size_t i = 0; i < geo_data_->polygons_number(); ++i) {
         polygon_t const &p = geo_data_->polygons()[i];
         region_t *r = std::lower_bound(regions, regions_end, p.region_id);
-        if (!r) {
+        if (!r || r->region_id != p.region_id) {
             log_warning("Region %lu not exists!", p.region_id);
             continue;
         }

@@ -74,7 +74,7 @@ cc_library(
         ":geo-base-lib",
     ],
     includes = ["."],
-    copts = CCFLAGS,
+    copts = CCFLAGS + ["-W"],
     visibility = ["//visibility:public"],
 )
 
