@@ -75,7 +75,7 @@ public:
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
     arr##_allocator_ = pool_allocator_t(8_gb); \
-    arr##_ = dynarray_t<arr_t>(8_gb / sizeof(arr_t) - 1, &arr##_allocator_);
+    arr##_ = dynarray_t<arr_t>(6_gb / sizeof(arr_t), &arr##_allocator_);
 
         GEO_BASE_DEF_GEO_DATA;
 
