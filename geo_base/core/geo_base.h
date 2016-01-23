@@ -58,6 +58,11 @@ public:
     template<typename callback_t>
     bool kv(geo_id_t region_id, callback_t callback) const;
 
+    geo_data_t const &geo_data() const
+    {
+        return *geo_data_loader_->geo_data();
+    }
+
 private:
     geo_data_loader_ptr_t geo_data_loader_;
 

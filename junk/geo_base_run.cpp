@@ -39,6 +39,8 @@ int main(int argc, char *argv[])
 
     geo_base_t geo_base(argv[1]);
 
+    geo_data::show(log_fd(), geo_base.geo_data());
+
     while (true) {
         location_t location;
         if (!(std::cin >> location.lat))
