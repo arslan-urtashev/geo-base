@@ -18,6 +18,7 @@
 
 #include <iostream>
 
+#include <geo_base/core/geo_base.h>
 #include <geo_base/core/geo_data/map.h>
 #include <geo_base/core/location.h>
 #include <geo_base/core/geo_data/debug.h>
@@ -36,12 +37,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    mem_file_t mem_file;
-    mem_file.read_open(argv[1]);
-
-    geo_data_map_t data((char const *) mem_file.data(), mem_file.size());
-
-    geo_data::show(log_fd(), data);
+    geo_base_t geo_base(argv[1]);
 
     while (true) {
         location_t location;
@@ -50,7 +46,17 @@ int main(int argc, char *argv[])
         std::cin.ignore();
         if (!(std::cin >> location.lon))
             break;
-        std::cout << data.lookup(location) << std::endl;
+
+        geo_id_t region_id = geo_base.lookup(location);
+        if (region_id == UNKNOWN_GEO_ID) {
+            std::cout << "unknown" << std::endl;
+            continue;
+        }
+
+        std::cout << region_id << std::endl;
+        geo_base.kv(region_id, [&] (char const *k, char const *v) {
+            log_debug("k=\"%s\" v=\"%s\"", k, v);
+        });
     }
 
     return 0;
