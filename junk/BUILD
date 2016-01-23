@@ -6,6 +6,10 @@ CCFLAGS = [
     "-funroll-loops",
 ]
 
+LINKOPTS = [
+    "-pthread",
+]
+
 cc_binary(
     name = "geo-base-convert",
     srcs = [
@@ -14,6 +18,7 @@ cc_binary(
     deps = [
         "//:open-street-map",
     ],
+    linkopts = LINKOPTS,
     copts = CCFLAGS,
 )
 
@@ -29,9 +34,7 @@ cc_binary(
         "//:geo-base-libproto",
         "//:geo-base-proto",
     ],
-    linkopts = [
-        "-pthread",
-    ],
+    linkopts = LINKOPTS,
     copts = CCFLAGS,
 )
 
@@ -44,8 +47,6 @@ cc_binary(
         "//:geo-base-lib",
         "//:geo-base-core",
     ],
-    linkopts = [
-        "-pthread",
-    ],
+    linkopts = LINKOPTS,
     copts = CCFLAGS,
 )
