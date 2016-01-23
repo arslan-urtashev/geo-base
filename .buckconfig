@@ -1,3 +1,0 @@
-[cxx]
-    gtest_dep = //deps/gmock:gtest
-	cxxflags = -std=c++0x
