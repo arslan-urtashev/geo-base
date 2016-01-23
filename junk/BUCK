@@ -9,10 +9,25 @@ CXXFLAGS = [
 cxx_binary(
     name = "geo-base-convert",
     srcs = [
-        "convert.cpp",
+        "geo_base_convert.cpp",
     ],
     deps = [
         "//:open-street-map",
+    ],
+    compiler_flags = CXXFLAGS,
+)
+
+cxx_binary(
+    name = "geo-base-generate",
+    srcs = [
+        "geo_base_generate.cpp",
+    ],
+    deps = [
+        "//:geo-base-lib",
+        "//:geo-base-core",
+        "//:geo-base-generator",
+        "//:geo-base-libproto",
+        "//:geo-base-proto",
     ],
     compiler_flags = CXXFLAGS,
 )

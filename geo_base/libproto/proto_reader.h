@@ -54,7 +54,7 @@ public:
             });
 
         } else {
-            if (index_.find(geo_id)    == index_.end())
+            if (index_.find(geo_id) == index_.end())
                 return false;
 
             char const *ptr = index_[geo_id];

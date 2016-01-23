@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2015, 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,23 +16,10 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
-
-#include <geo_base/wrappers/je_allocator.h>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
-
 namespace geo_base {
+namespace generator {
 
-template<typename v_t>
-using vector_t = std::vector<v_t, je_allocator_t<v_t>>;
+void generate(char const *in, char const *out);
 
-template<typename k_t>
-using set_t = std::unordered_set<k_t, std::hash<k_t>, std::equal_to<k_t>, je_allocator_t<k_t>>;
-
-template<typename k_t, typename v_t, typename h_t = std::hash<k_t>>
-using map_t = std::unordered_map<k_t, v_t, h_t, std::equal_to<k_t>,
-    je_allocator_t<std::pair<k_t const, v_t>>>;
-
-}
+} // namespace generator
+} // namespace geo_base

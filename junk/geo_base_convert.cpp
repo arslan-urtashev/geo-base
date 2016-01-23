@@ -16,23 +16,25 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
+#include <algorithm>
+#include <geo_base/open_street_map/converter.h>
+#include <geo_base/lib/log.h>
+#include <geo_base/lib/memory.h>
+#include <geo_base/lib/pool_allocator.h>
 
-#include <geo_base/wrappers/je_allocator.h>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
+using namespace geo_base;
+using namespace open_street_map;
 
-namespace geo_base {
+int main(int argc, char *argv[])
+{
+    log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
 
-template<typename v_t>
-using vector_t = std::vector<v_t, je_allocator_t<v_t>>;
+    if (argc != 3) {
+        log_error("USAGE: geo-base-convert <planet-latest.osm.pbf> <geo-base.pbf>");
+        return -1;
+    }
 
-template<typename k_t>
-using set_t = std::unordered_set<k_t, std::hash<k_t>, std::equal_to<k_t>, je_allocator_t<k_t>>;
+    run_pool_convert(argv[1], argv[2], optimal_threads_number());
 
-template<typename k_t, typename v_t, typename h_t = std::hash<k_t>>
-using map_t = std::unordered_map<k_t, v_t, h_t, std::equal_to<k_t>,
-    je_allocator_t<std::pair<k_t const, v_t>>>;
-
+    return 0;
 }

@@ -83,10 +83,13 @@ cxx_library(
     name = "geo-base-generator",
     srcs = [
         "geo_base/generator/generator.cpp",
+        "geo_base/generator/generate.cpp",
     ],
     exported_headers = [
         "geo_base/generator/generator.h",
+        "geo_base/generator/generate.h",
         "geo_base/generator/geo_data.h",
+        "geo_base/generator/mut_geo_data.h",
         "geo_base/generator/locations_converter.h",
         "geo_base/generator/storage.h",
     ],
@@ -94,6 +97,8 @@ cxx_library(
         ":geo-base-core",
         ":geo-base-lib",
         ":geo-base-proto",
+        ":geo-base-wrappers",
+        ":geo-base-libproto",
     ],
     compiler_flags = CXXFLAGS,
     visibility = [
