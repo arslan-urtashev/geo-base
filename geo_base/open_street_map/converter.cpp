@@ -36,7 +36,8 @@ static bool eq(char const *a, char const *b)
     return !strcmp(a, b);
 }
 
-#define op(ev, opt) \
+// TODO: Make matching with bor here.
+#define OP(ev, opt) \
     static_assert(region_t::opt == (1ull << ::geo_base::proto::region_t::opt), \
         "Options should be equal"); \
     if (eq(ev, kv.v)) \
@@ -46,7 +47,12 @@ static region_t::options_t get_region_boundary_options(kvs_t const &kvs)
 {
     for (kv_t const &kv : kvs) {
         if (eq(kv.k, "boundary")) {
-            op("administrative", OPTION_BOUNDARY_ADMINISTRATIVE);
+            OP("administrative", OPTION_BOUNDARY_ADMINISTRATIVE);
+            OP("historic"      , OPTION_BOUNDARY_HISTORIC);
+            OP("maritime"      , OPTION_BOUNDARY_MARITIME);
+            OP("national_park" , OPTION_BOUNDARY_NATIONAL_PARK);
+            OP("political"     , OPTION_BOUNDARY_POLITICAL);
+            OP("protected_area", OPTION_BOUNDARY_PROTECTED_AREA);
             return 0;
         }
     }
@@ -57,20 +63,34 @@ static region_t::options_t get_region_place_options(kvs_t const &kvs)
 {
     for (kv_t const &kv : kvs) {
         if (eq(kv.k, "place")) {
-            op("borough", OPTION_PLACE_BOROUGH);
-            op("city", OPTION_PLACE_CITY);
-            op("island", OPTION_PLACE_ISLAND);
-            op("suburb", OPTION_PLACE_SUBURB);
-            op("town", OPTION_PLACE_TOWN);
-            op("village", OPTION_PLACE_VILLAGE);
-            op("continent", OPTION_PLACE_CONTINENT);
+            OP("allotments"   , OPTION_PLACE_ALLOTMENTS);
+            OP("borough"      , OPTION_PLACE_BOROUGH);
+            OP("city"         , OPTION_PLACE_CITY);
+            OP("city_block"   , OPTION_PLACE_CITY_BLOCK);
+            OP("continent"    , OPTION_PLACE_CONTINENT);
+            OP("county"       , OPTION_PLACE_COUNTRY);
+            OP("district"     , OPTION_PLACE_DISTRICT);
+            OP("farm"         , OPTION_PLACE_FARM);
+            OP("hamlet"       , OPTION_PLACE_HAMLET);
+            OP("island"       , OPTION_PLACE_ISLAND);
+            OP("locality"     , OPTION_PLACE_LOCALITY);
+            OP("municipality" , OPTION_PLACE_MUNICIPALITY);
+            OP("neighbourhood", OPTION_PLACE_NEIGHBOURHOOD);
+            OP("plot"         , OPTION_PLACE_PLOT);
+            OP("province"     , OPTION_PLACE_PROVINCE);
+            OP("quarter"      , OPTION_PLACE_QUARTER);
+            OP("region"       , OPTION_PLACE_REGION);
+            OP("state"        , OPTION_PLACE_STATE);
+            OP("suburb"       , OPTION_PLACE_SUBURB);
+            OP("town"         , OPTION_PLACE_TOWN);
+            OP("village"      , OPTION_PLACE_VILLAGE);
             return 0;
         }
     }
     return 0;
 }
 
-#undef op
+#undef OP
 
 static region_t::options_t get_region_options(kvs_t const &kvs)
 {
