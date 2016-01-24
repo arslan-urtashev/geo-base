@@ -35,7 +35,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* region_t_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   region_t_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* region_t_option_t_descriptor_ = NULL;
 
 }  // namespace
 
@@ -97,13 +96,12 @@ void protobuf_AssignDesc_geo_5fbase_2fproto_2fregion_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(kv_t, _internal_metadata_),
       -1);
   region_t_descriptor_ = file->message_type(3);
-  static const int region_t_offsets_[6] = {
+  static const int region_t_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(region_t, region_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(region_t, parent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(region_t, polygons_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(region_t, kvs_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(region_t, blobs_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(region_t, options_),
   };
   region_t_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -116,7 +114,6 @@ void protobuf_AssignDesc_geo_5fbase_2fproto_2fregion_2eproto() {
       sizeof(region_t),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(region_t, _internal_metadata_),
       -1);
-  region_t_option_t_descriptor_ = region_t_descriptor_->enum_type(0);
 }
 
 namespace {
@@ -166,30 +163,11 @@ void protobuf_AddDesc_geo_5fbase_2fproto_2fregion_2eproto() {
     "tion_t\022.\n\004type\030\003 \002(\0162 .geo_base.proto.po"
     "lygon_t.type_t\":\n\006type_t\022\020\n\014TYPE_UNKNOWN"
     "\020\000\022\016\n\nTYPE_INNER\020\001\022\016\n\nTYPE_OUTER\020\002\"\034\n\004kv"
-    "_t\022\t\n\001k\030\001 \002(\t\022\t\n\001v\030\002 \002(\t\"\231\007\n\010region_t\022\021\n"
+    "_t\022\t\n\001k\030\001 \002(\t\022\t\n\001v\030\002 \002(\t\"\217\001\n\010region_t\022\021\n"
     "\tregion_id\030\001 \002(\004\022\021\n\tparent_id\030\002 \001(\004\022+\n\010p"
     "olygons\030\003 \003(\0132\031.geo_base.proto.polygon_t"
     "\022!\n\003kvs\030\004 \003(\0132\024.geo_base.proto.kv_t\022\r\n\005b"
-    "lobs\030\005 \003(\t\022\017\n\007options\030\006 \002(\004\"\366\005\n\010option_t"
-    "\022\"\n\036OPTION_BOUNDARY_ADMINISTRATIVE\020\000\022\034\n\030"
-    "OPTION_BOUNDARY_HISTORIC\020\001\022\034\n\030OPTION_BOU"
-    "NDARY_MARITIME\020\002\022!\n\035OPTION_BOUNDARY_NATI"
-    "ONAL_PARK\020\003\022\035\n\031OPTION_BOUNDARY_POLITICAL"
-    "\020\004\022\"\n\036OPTION_BOUNDARY_PROTECTED_AREA\020\005\022\033"
-    "\n\027OPTION_PLACE_ALLOTMENTS\020\006\022\030\n\024OPTION_PL"
-    "ACE_BOROUGH\020\007\022\025\n\021OPTION_PLACE_CITY\020\010\022\033\n\027"
-    "OPTION_PLACE_CITY_BLOCK\020\t\022\032\n\026OPTION_PLAC"
-    "E_CONTINENT\020\n\022\030\n\024OPTION_PLACE_COUNTRY\020\013\022"
-    "\031\n\025OPTION_PLACE_DISTRICT\020\014\022\025\n\021OPTION_PLA"
-    "CE_FARM\020\r\022\027\n\023OPTION_PLACE_HAMLET\020\016\022\027\n\023OP"
-    "TION_PLACE_ISLAND\020\017\022\031\n\025OPTION_PLACE_LOCA"
-    "LITY\020\020\022\035\n\031OPTION_PLACE_MUNICIPALITY\020\021\022\036\n"
-    "\032OPTION_PLACE_NEIGHBOURHOOD\020\022\022\025\n\021OPTION_"
-    "PLACE_PLOT\020\023\022\031\n\025OPTION_PLACE_PROVINCE\020\024\022"
-    "\030\n\024OPTION_PLACE_QUARTER\020\025\022\027\n\023OPTION_PLAC"
-    "E_REGION\020\026\022\026\n\022OPTION_PLACE_STATE\020\027\022\027\n\023OP"
-    "TION_PLACE_SUBURB\020\030\022\025\n\021OPTION_PLACE_TOWN"
-    "\020\031\022\030\n\024OPTION_PLACE_VILLAGE\020\032B\003\370\001\001", 1233);
+    "lobs\030\005 \003(\tB\003\370\001\001", 455);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "geo_base/proto/region.proto", &protobuf_RegisterTypes);
   location_t::default_instance_ = new location_t();
@@ -1569,84 +1547,12 @@ void kv_t::clear_v() {
 
 // ===================================================================
 
-const ::google::protobuf::EnumDescriptor* region_t_option_t_descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return region_t_option_t_descriptor_;
-}
-bool region_t_option_t_IsValid(int value) {
-  switch(value) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-    case 7:
-    case 8:
-    case 9:
-    case 10:
-    case 11:
-    case 12:
-    case 13:
-    case 14:
-    case 15:
-    case 16:
-    case 17:
-    case 18:
-    case 19:
-    case 20:
-    case 21:
-    case 22:
-    case 23:
-    case 24:
-    case 25:
-    case 26:
-      return true;
-    default:
-      return false;
-  }
-}
-
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const region_t_option_t region_t::OPTION_BOUNDARY_ADMINISTRATIVE;
-const region_t_option_t region_t::OPTION_BOUNDARY_HISTORIC;
-const region_t_option_t region_t::OPTION_BOUNDARY_MARITIME;
-const region_t_option_t region_t::OPTION_BOUNDARY_NATIONAL_PARK;
-const region_t_option_t region_t::OPTION_BOUNDARY_POLITICAL;
-const region_t_option_t region_t::OPTION_BOUNDARY_PROTECTED_AREA;
-const region_t_option_t region_t::OPTION_PLACE_ALLOTMENTS;
-const region_t_option_t region_t::OPTION_PLACE_BOROUGH;
-const region_t_option_t region_t::OPTION_PLACE_CITY;
-const region_t_option_t region_t::OPTION_PLACE_CITY_BLOCK;
-const region_t_option_t region_t::OPTION_PLACE_CONTINENT;
-const region_t_option_t region_t::OPTION_PLACE_COUNTRY;
-const region_t_option_t region_t::OPTION_PLACE_DISTRICT;
-const region_t_option_t region_t::OPTION_PLACE_FARM;
-const region_t_option_t region_t::OPTION_PLACE_HAMLET;
-const region_t_option_t region_t::OPTION_PLACE_ISLAND;
-const region_t_option_t region_t::OPTION_PLACE_LOCALITY;
-const region_t_option_t region_t::OPTION_PLACE_MUNICIPALITY;
-const region_t_option_t region_t::OPTION_PLACE_NEIGHBOURHOOD;
-const region_t_option_t region_t::OPTION_PLACE_PLOT;
-const region_t_option_t region_t::OPTION_PLACE_PROVINCE;
-const region_t_option_t region_t::OPTION_PLACE_QUARTER;
-const region_t_option_t region_t::OPTION_PLACE_REGION;
-const region_t_option_t region_t::OPTION_PLACE_STATE;
-const region_t_option_t region_t::OPTION_PLACE_SUBURB;
-const region_t_option_t region_t::OPTION_PLACE_TOWN;
-const region_t_option_t region_t::OPTION_PLACE_VILLAGE;
-const region_t_option_t region_t::option_t_MIN;
-const region_t_option_t region_t::option_t_MAX;
-const int region_t::option_t_ARRAYSIZE;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int region_t::kRegionIdFieldNumber;
 const int region_t::kParentIdFieldNumber;
 const int region_t::kPolygonsFieldNumber;
 const int region_t::kKvsFieldNumber;
 const int region_t::kBlobsFieldNumber;
-const int region_t::kOptionsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 region_t::region_t()
@@ -1682,7 +1588,6 @@ void region_t::SharedCtor() {
   _cached_size_ = 0;
   region_id_ = GOOGLE_ULONGLONG(0);
   parent_id_ = GOOGLE_ULONGLONG(0);
-  options_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1736,10 +1641,7 @@ void region_t::Clear() {
            ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
 } while (0)
 
-  if (_has_bits_[0 / 32] & 35u) {
-    ZR_(region_id_, parent_id_);
-    options_ = GOOGLE_ULONGLONG(0);
-  }
+  ZR_(region_id_, parent_id_);
 
 #undef ZR_HELPER_
 #undef ZR_
@@ -1840,21 +1742,6 @@ bool region_t::MergePartialFromCodedStream(
           goto handle_unusual;
         }
         if (input->ExpectTag(42)) goto parse_blobs;
-        if (input->ExpectTag(48)) goto parse_options;
-        break;
-      }
-
-      // required uint64 options = 6;
-      case 6: {
-        if (tag == 48) {
-         parse_options:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &options_)));
-          set_has_options();
-        } else {
-          goto handle_unusual;
-        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1916,11 +1803,6 @@ void region_t::SerializeWithCachedSizes(
       5, this->blobs(i), output);
   }
 
-  // required uint64 options = 6;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(6, this->options(), output);
-  }
-
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1965,11 +1847,6 @@ void region_t::SerializeWithCachedSizes(
       WriteStringToArray(5, this->blobs(i), target);
   }
 
-  // required uint64 options = 6;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(6, this->options(), target);
-  }
-
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1978,41 +1855,14 @@ void region_t::SerializeWithCachedSizes(
   return target;
 }
 
-int region_t::RequiredFieldsByteSizeFallback() const {
-  int total_size = 0;
-
-  if (has_region_id()) {
-    // required uint64 region_id = 1;
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt64Size(
-        this->region_id());
-  }
-
-  if (has_options()) {
-    // required uint64 options = 6;
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt64Size(
-        this->options());
-  }
-
-  return total_size;
-}
 int region_t::ByteSize() const {
   int total_size = 0;
 
-  if (((_has_bits_[0] & 0x00000021) ^ 0x00000021) == 0) {  // All required fields are present.
-    // required uint64 region_id = 1;
+  // required uint64 region_id = 1;
+  if (has_region_id()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::UInt64Size(
         this->region_id());
-
-    // required uint64 options = 6;
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt64Size(
-        this->options());
-
-  } else {
-    total_size += RequiredFieldsByteSizeFallback();
   }
   // optional uint64 parent_id = 2;
   if (has_parent_id()) {
@@ -2079,9 +1929,6 @@ void region_t::MergeFrom(const region_t& from) {
     if (from.has_parent_id()) {
       set_parent_id(from.parent_id());
     }
-    if (from.has_options()) {
-      set_options(from.options());
-    }
   }
   if (from._internal_metadata_.have_unknown_fields()) {
     mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2101,7 +1948,7 @@ void region_t::CopyFrom(const region_t& from) {
 }
 
 bool region_t::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000021) != 0x00000021) return false;
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   if (!::google::protobuf::internal::AllAreInitialized(this->polygons())) return false;
   if (!::google::protobuf::internal::AllAreInitialized(this->kvs())) return false;
@@ -2130,7 +1977,6 @@ void region_t::InternalSwap(region_t* other) {
   polygons_.UnsafeArenaSwap(&other->polygons_);
   kvs_.UnsafeArenaSwap(&other->kvs_);
   blobs_.UnsafeArenaSwap(&other->blobs_);
-  std::swap(options_, other->options_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -2307,30 +2153,6 @@ region_t::blobs() const {
 region_t::mutable_blobs() {
   // @@protoc_insertion_point(field_mutable_list:geo_base.proto.region_t.blobs)
   return &blobs_;
-}
-
-// required uint64 options = 6;
-bool region_t::has_options() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-void region_t::set_has_options() {
-  _has_bits_[0] |= 0x00000020u;
-}
-void region_t::clear_has_options() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-void region_t::clear_options() {
-  options_ = GOOGLE_ULONGLONG(0);
-  clear_has_options();
-}
- ::google::protobuf::uint64 region_t::options() const {
-  // @@protoc_insertion_point(field_get:geo_base.proto.region_t.options)
-  return options_;
-}
- void region_t::set_options(::google::protobuf::uint64 value) {
-  set_has_options();
-  options_ = value;
-  // @@protoc_insertion_point(field_set:geo_base.proto.region_t.options)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

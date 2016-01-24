@@ -297,7 +297,6 @@ void generator_t::update(proto::region_t const &proto_region)
 
     region_t region;
     region.region_id = proto_region.region_id();
-    region.options = proto_region.options();
     region.kvs_offset = geo_data_->kvs_number();
 
     for (proto::kv_t const &kv : proto_region.kvs()) {

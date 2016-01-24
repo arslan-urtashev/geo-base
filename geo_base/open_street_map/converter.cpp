@@ -37,65 +37,52 @@ static bool eq(char const *a, char const *b)
 }
 
 // TODO: Make matching with bor here.
-#define OP(ev, opt) \
-    static_assert(region_t::opt == (1ull << ::geo_base::proto::region_t::opt), \
-        "Options should be equal"); \
+#define OP(ev) \
     if (eq(ev, kv.v)) \
-        return region_t::opt; \
+        return true; \
 
-static region_t::options_t get_region_boundary_options(kvs_t const &kvs)
+static bool check_region_options(kvs_t const &kvs)
 {
     for (kv_t const &kv : kvs) {
         if (eq(kv.k, "boundary")) {
-            OP("administrative", OPTION_BOUNDARY_ADMINISTRATIVE);
-            OP("historic"      , OPTION_BOUNDARY_HISTORIC);
-            OP("maritime"      , OPTION_BOUNDARY_MARITIME);
-            OP("national_park" , OPTION_BOUNDARY_NATIONAL_PARK);
-            OP("political"     , OPTION_BOUNDARY_POLITICAL);
-            OP("protected_area", OPTION_BOUNDARY_PROTECTED_AREA);
-            return 0;
+            OP("administrative");
+            OP("historic");
+            OP("maritime");
+            OP("national_park");
+            OP("political");
+            OP("protected_area");
         }
-    }
-    return 0;
-}
-
-static region_t::options_t get_region_place_options(kvs_t const &kvs)
-{
-    for (kv_t const &kv : kvs) {
         if (eq(kv.k, "place")) {
-            OP("allotments"   , OPTION_PLACE_ALLOTMENTS);
-            OP("borough"      , OPTION_PLACE_BOROUGH);
-            OP("city"         , OPTION_PLACE_CITY);
-            OP("city_block"   , OPTION_PLACE_CITY_BLOCK);
-            OP("continent"    , OPTION_PLACE_CONTINENT);
-            OP("county"       , OPTION_PLACE_COUNTRY);
-            OP("district"     , OPTION_PLACE_DISTRICT);
-            OP("farm"         , OPTION_PLACE_FARM);
-            OP("hamlet"       , OPTION_PLACE_HAMLET);
-            OP("island"       , OPTION_PLACE_ISLAND);
-            OP("locality"     , OPTION_PLACE_LOCALITY);
-            OP("municipality" , OPTION_PLACE_MUNICIPALITY);
-            OP("neighbourhood", OPTION_PLACE_NEIGHBOURHOOD);
-            OP("plot"         , OPTION_PLACE_PLOT);
-            OP("province"     , OPTION_PLACE_PROVINCE);
-            OP("quarter"      , OPTION_PLACE_QUARTER);
-            OP("region"       , OPTION_PLACE_REGION);
-            OP("state"        , OPTION_PLACE_STATE);
-            OP("suburb"       , OPTION_PLACE_SUBURB);
-            OP("town"         , OPTION_PLACE_TOWN);
-            OP("village"      , OPTION_PLACE_VILLAGE);
-            return 0;
+            OP("allotments");
+            OP("borough");
+            OP("city");
+            OP("city_block");
+            OP("continent");
+            OP("county");
+            OP("district");
+            OP("farm");
+            OP("hamlet");
+            OP("island");
+            OP("locality");
+            OP("municipality");
+            OP("neighbourhood");
+            OP("plot");
+            OP("province");
+            OP("quarter");
+            OP("region");
+            OP("state");
+            OP("suburb");
+            OP("town");
+            OP("village");
+        }
+        if (eq(kv.k, "type")) {
+            OP("multipolygon");
         }
     }
-    return 0;
+    return false;
 }
 
 #undef OP
-
-static region_t::options_t get_region_options(kvs_t const &kvs)
-{
-    return get_region_boundary_options(kvs) | get_region_place_options(kvs);
-}
 
 static polygon_t::type_t get_polygon_type(char const *role)
 {
@@ -110,7 +97,7 @@ static polygon_t::type_t get_polygon_type(char const *role)
 
 static bool is_boundary(kvs_t const &kvs)
 {
-    if (get_region_options(kvs) == 0)
+    if (!check_region_options(kvs))
         return false;
     for (kv_t const &kv : kvs)
         if (strstr(kv.k, "name") == kv.k)
@@ -188,7 +175,6 @@ void converter_t::process_way(geo_id_t geo_id, kvs_t const &kvs, geo_ids_t const
 
     ::geo_base::proto::region_t region;
     region.set_region_id(geo_id);
-    region.set_options(get_region_options(kvs));
 
     ::geo_base::proto::polygon_t *polygon = region.add_polygons();
     polygon->set_polygon_id(generate_polygon_id());
@@ -256,7 +242,6 @@ void converter_t::process_relation(geo_id_t geo_id, kvs_t const &kvs, references
 
     ::geo_base::proto::region_t region;
     region.set_region_id(geo_id);
-    region.set_options(get_region_options(kvs));
 
     used_t used;
 

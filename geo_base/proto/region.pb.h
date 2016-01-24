@@ -63,50 +63,6 @@ inline bool polygon_t_type_t_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<polygon_t_type_t>(
     polygon_t_type_t_descriptor(), name, value);
 }
-enum region_t_option_t {
-  region_t_option_t_OPTION_BOUNDARY_ADMINISTRATIVE = 0,
-  region_t_option_t_OPTION_BOUNDARY_HISTORIC = 1,
-  region_t_option_t_OPTION_BOUNDARY_MARITIME = 2,
-  region_t_option_t_OPTION_BOUNDARY_NATIONAL_PARK = 3,
-  region_t_option_t_OPTION_BOUNDARY_POLITICAL = 4,
-  region_t_option_t_OPTION_BOUNDARY_PROTECTED_AREA = 5,
-  region_t_option_t_OPTION_PLACE_ALLOTMENTS = 6,
-  region_t_option_t_OPTION_PLACE_BOROUGH = 7,
-  region_t_option_t_OPTION_PLACE_CITY = 8,
-  region_t_option_t_OPTION_PLACE_CITY_BLOCK = 9,
-  region_t_option_t_OPTION_PLACE_CONTINENT = 10,
-  region_t_option_t_OPTION_PLACE_COUNTRY = 11,
-  region_t_option_t_OPTION_PLACE_DISTRICT = 12,
-  region_t_option_t_OPTION_PLACE_FARM = 13,
-  region_t_option_t_OPTION_PLACE_HAMLET = 14,
-  region_t_option_t_OPTION_PLACE_ISLAND = 15,
-  region_t_option_t_OPTION_PLACE_LOCALITY = 16,
-  region_t_option_t_OPTION_PLACE_MUNICIPALITY = 17,
-  region_t_option_t_OPTION_PLACE_NEIGHBOURHOOD = 18,
-  region_t_option_t_OPTION_PLACE_PLOT = 19,
-  region_t_option_t_OPTION_PLACE_PROVINCE = 20,
-  region_t_option_t_OPTION_PLACE_QUARTER = 21,
-  region_t_option_t_OPTION_PLACE_REGION = 22,
-  region_t_option_t_OPTION_PLACE_STATE = 23,
-  region_t_option_t_OPTION_PLACE_SUBURB = 24,
-  region_t_option_t_OPTION_PLACE_TOWN = 25,
-  region_t_option_t_OPTION_PLACE_VILLAGE = 26
-};
-bool region_t_option_t_IsValid(int value);
-const region_t_option_t region_t_option_t_option_t_MIN = region_t_option_t_OPTION_BOUNDARY_ADMINISTRATIVE;
-const region_t_option_t region_t_option_t_option_t_MAX = region_t_option_t_OPTION_PLACE_VILLAGE;
-const int region_t_option_t_option_t_ARRAYSIZE = region_t_option_t_option_t_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* region_t_option_t_descriptor();
-inline const ::std::string& region_t_option_t_Name(region_t_option_t value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    region_t_option_t_descriptor(), value);
-}
-inline bool region_t_option_t_Parse(
-    const ::std::string& name, region_t_option_t* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<region_t_option_t>(
-    region_t_option_t_descriptor(), name, value);
-}
 // ===================================================================
 
 class location_t : public ::google::protobuf::Message {
@@ -580,55 +536,6 @@ class region_t : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef region_t_option_t option_t;
-  static const option_t OPTION_BOUNDARY_ADMINISTRATIVE = region_t_option_t_OPTION_BOUNDARY_ADMINISTRATIVE;
-  static const option_t OPTION_BOUNDARY_HISTORIC = region_t_option_t_OPTION_BOUNDARY_HISTORIC;
-  static const option_t OPTION_BOUNDARY_MARITIME = region_t_option_t_OPTION_BOUNDARY_MARITIME;
-  static const option_t OPTION_BOUNDARY_NATIONAL_PARK = region_t_option_t_OPTION_BOUNDARY_NATIONAL_PARK;
-  static const option_t OPTION_BOUNDARY_POLITICAL = region_t_option_t_OPTION_BOUNDARY_POLITICAL;
-  static const option_t OPTION_BOUNDARY_PROTECTED_AREA = region_t_option_t_OPTION_BOUNDARY_PROTECTED_AREA;
-  static const option_t OPTION_PLACE_ALLOTMENTS = region_t_option_t_OPTION_PLACE_ALLOTMENTS;
-  static const option_t OPTION_PLACE_BOROUGH = region_t_option_t_OPTION_PLACE_BOROUGH;
-  static const option_t OPTION_PLACE_CITY = region_t_option_t_OPTION_PLACE_CITY;
-  static const option_t OPTION_PLACE_CITY_BLOCK = region_t_option_t_OPTION_PLACE_CITY_BLOCK;
-  static const option_t OPTION_PLACE_CONTINENT = region_t_option_t_OPTION_PLACE_CONTINENT;
-  static const option_t OPTION_PLACE_COUNTRY = region_t_option_t_OPTION_PLACE_COUNTRY;
-  static const option_t OPTION_PLACE_DISTRICT = region_t_option_t_OPTION_PLACE_DISTRICT;
-  static const option_t OPTION_PLACE_FARM = region_t_option_t_OPTION_PLACE_FARM;
-  static const option_t OPTION_PLACE_HAMLET = region_t_option_t_OPTION_PLACE_HAMLET;
-  static const option_t OPTION_PLACE_ISLAND = region_t_option_t_OPTION_PLACE_ISLAND;
-  static const option_t OPTION_PLACE_LOCALITY = region_t_option_t_OPTION_PLACE_LOCALITY;
-  static const option_t OPTION_PLACE_MUNICIPALITY = region_t_option_t_OPTION_PLACE_MUNICIPALITY;
-  static const option_t OPTION_PLACE_NEIGHBOURHOOD = region_t_option_t_OPTION_PLACE_NEIGHBOURHOOD;
-  static const option_t OPTION_PLACE_PLOT = region_t_option_t_OPTION_PLACE_PLOT;
-  static const option_t OPTION_PLACE_PROVINCE = region_t_option_t_OPTION_PLACE_PROVINCE;
-  static const option_t OPTION_PLACE_QUARTER = region_t_option_t_OPTION_PLACE_QUARTER;
-  static const option_t OPTION_PLACE_REGION = region_t_option_t_OPTION_PLACE_REGION;
-  static const option_t OPTION_PLACE_STATE = region_t_option_t_OPTION_PLACE_STATE;
-  static const option_t OPTION_PLACE_SUBURB = region_t_option_t_OPTION_PLACE_SUBURB;
-  static const option_t OPTION_PLACE_TOWN = region_t_option_t_OPTION_PLACE_TOWN;
-  static const option_t OPTION_PLACE_VILLAGE = region_t_option_t_OPTION_PLACE_VILLAGE;
-  static inline bool option_t_IsValid(int value) {
-    return region_t_option_t_IsValid(value);
-  }
-  static const option_t option_t_MIN =
-    region_t_option_t_option_t_MIN;
-  static const option_t option_t_MAX =
-    region_t_option_t_option_t_MAX;
-  static const int option_t_ARRAYSIZE =
-    region_t_option_t_option_t_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  option_t_descriptor() {
-    return region_t_option_t_descriptor();
-  }
-  static inline const ::std::string& option_t_Name(option_t value) {
-    return region_t_option_t_Name(value);
-  }
-  static inline bool option_t_Parse(const ::std::string& name,
-      option_t* value) {
-    return region_t_option_t_Parse(name, value);
-  }
-
   // accessors -------------------------------------------------------
 
   // required uint64 region_id = 1;
@@ -685,24 +592,12 @@ class region_t : public ::google::protobuf::Message {
   const ::google::protobuf::RepeatedPtrField< ::std::string>& blobs() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_blobs();
 
-  // required uint64 options = 6;
-  bool has_options() const;
-  void clear_options();
-  static const int kOptionsFieldNumber = 6;
-  ::google::protobuf::uint64 options() const;
-  void set_options(::google::protobuf::uint64 value);
-
   // @@protoc_insertion_point(class_scope:geo_base.proto.region_t)
  private:
   inline void set_has_region_id();
   inline void clear_has_region_id();
   inline void set_has_parent_id();
   inline void clear_has_parent_id();
-  inline void set_has_options();
-  inline void clear_has_options();
-
-  // helper for ByteSize()
-  int RequiredFieldsByteSizeFallback() const;
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   friend class ::google::protobuf::Arena;
@@ -715,7 +610,6 @@ class region_t : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::geo_base::proto::polygon_t > polygons_;
   ::google::protobuf::RepeatedPtrField< ::geo_base::proto::kv_t > kvs_;
   ::google::protobuf::RepeatedPtrField< ::std::string> blobs_;
-  ::google::protobuf::uint64 options_;
   friend void  protobuf_AddDesc_geo_5fbase_2fproto_2fregion_2eproto();
   friend void protobuf_AssignDesc_geo_5fbase_2fproto_2fregion_2eproto();
   friend void protobuf_ShutdownFile_geo_5fbase_2fproto_2fregion_2eproto();
@@ -1180,30 +1074,6 @@ region_t::mutable_blobs() {
   return &blobs_;
 }
 
-// required uint64 options = 6;
-inline bool region_t::has_options() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-inline void region_t::set_has_options() {
-  _has_bits_[0] |= 0x00000020u;
-}
-inline void region_t::clear_has_options() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-inline void region_t::clear_options() {
-  options_ = GOOGLE_ULONGLONG(0);
-  clear_has_options();
-}
-inline ::google::protobuf::uint64 region_t::options() const {
-  // @@protoc_insertion_point(field_get:geo_base.proto.region_t.options)
-  return options_;
-}
-inline void region_t::set_options(::google::protobuf::uint64 value) {
-  set_has_options();
-  options_ = value;
-  // @@protoc_insertion_point(field_set:geo_base.proto.region_t.options)
-}
-
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
 // -------------------------------------------------------------------
 
@@ -1225,11 +1095,6 @@ template <> struct is_proto_enum< ::geo_base::proto::polygon_t_type_t> : ::googl
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::geo_base::proto::polygon_t_type_t>() {
   return ::geo_base::proto::polygon_t_type_t_descriptor();
-}
-template <> struct is_proto_enum< ::geo_base::proto::region_t_option_t> : ::google::protobuf::internal::true_type {};
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::geo_base::proto::region_t_option_t>() {
-  return ::geo_base::proto::region_t_option_t_descriptor();
 }
 
 }  // namespace protobuf
