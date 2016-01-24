@@ -50,3 +50,16 @@ cc_binary(
     linkopts = LINKOPTS,
     copts = CCFLAGS,
 )
+
+cc_binary(
+    name = "geo-base-benchmark",
+    srcs = [
+        "geo_base_benchmark.cpp",
+    ],
+    deps = [
+        "//:geo-base-lib",
+        "//:geo-base-core",
+    ],
+    linkopts = LINKOPTS,
+    copts = CCFLAGS,
+)
