@@ -22,8 +22,8 @@ function install_osx_bazel() {
 }
 
 if [ $(uname -s) == "Linux" ]; then
-    install_linux_dependencies()
-    install_linux_bazel()
+    install_linux_dependencies
+    install_linux_bazel
 else
-    install_osx_bazel()
+    install_osx_bazel
 fi
