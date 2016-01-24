@@ -21,11 +21,7 @@ notifications:
     on_failure: change
 
 before_install:
-  - if [ $TRAVIS_OS_NAME == osx ]; then
-      brew update;
-      brew tap facebook/fb;
-      brew install buck;
-    fi
+  - ./.travis.sh
 
 addons:
   apt:
@@ -34,9 +30,4 @@ addons:
 
 # TODO: Install buck on linux
 script: 
-  - if [ $TRAVIS_OS_NAME == linux ]; then
-      buck test;
-    fi
-  - if [ $TRAVIS_OS_NAME == osx ]; then
-      buck test;
-    fi
+  - bazel build :all && bazel test :all
