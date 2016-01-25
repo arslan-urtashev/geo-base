@@ -157,7 +157,7 @@ void generator_t::update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<poi
         ref_t *mut_edge_refs = geo_data_->mut_edge_refs() + part.edge_refs_offset;
         ref_t *mut_edge_refs_end = geo_data_->mut_edge_refs() + geo_data_->edge_refs_number();
 
-        std::sort(mut_edge_refs, mut_edge_refs_end, [&] (ref_t const &a, ref_t const &b) {
+        std::stable_sort(mut_edge_refs, mut_edge_refs_end, [&] (ref_t const &a, ref_t const &b) {
             edge_t const &e1 = geo_data_->edges()[a];
             edge_t const &e2 = geo_data_->edges()[b];
             return e1.lower(e2, geo_data_->points());
@@ -302,6 +302,8 @@ void generator_t::update(proto::region_t const &proto_region)
         update(proto_region.region_id(), polygon);
 
     region_t region;
+    memset(&region, 0, sizeof(region));
+
     region.region_id = proto_region.region_id();
     region.kvs_offset = geo_data_->kvs_number();
 
