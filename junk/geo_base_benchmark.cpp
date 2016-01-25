@@ -85,8 +85,13 @@ int main(int argc, char *argv[])
         total.insert(total.end(), seconds[i].begin(), seconds[i].end());
 
     std::sort(total.begin(), total.end());
+
+    for (int i = 1; i <= 99; ++i)
+        log_info("[%2d%%] <= %.6f", i, total[std::min(total.size() - 1, i * total.size() / 100)]);
+
     for (int i = 1; i <= 100; ++i)
-        log_info("[%2d%%] <= %.6f", i, seconds[std::min(total.size() - 1, i * total.size() / 100)]);
+        log_info("[%2d%.2d] <= %6f", (i == 100 ? 100 : 99), (i == 100 ? 0 : i), 
+            total[std::min(total.size() - 1, (99 * 100 + i) * total.size() / 10000)]);
 
     return 0;
 }
