@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
             });
         } else {
             for (geo_id_t const &region_id : regions)
-                log_debug("%s", get_output(region_id, geo_base));
+                log_debug("%s (%lu)", get_output(region_id, geo_base), region_id);
         }
     }
 
