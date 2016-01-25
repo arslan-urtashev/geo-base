@@ -54,30 +54,39 @@ int main(int argc, char *argv[])
     geo_base_t geo_base(argv[1]);
 
     std::vector<std::thread> threads(THREADS_NUMBER);
+    std::vector<std::vector<float>> seconds(THREADS_NUMBER, std::vector<float>(LOOKUPS_NUMBER));
+
     for (size_t i = 0; i < THREADS_NUMBER; ++i) {
-        threads[i] = std::thread([&geo_base, i] () {
+        threads[i] = std::thread([&geo_base, &seconds, i] () {
             log_info("[%lu] Run benchmark", i + 1);
 
             std::mt19937 random(i + 337);
 
             std::vector<location_t> locations(LOOKUPS_NUMBER);
-            for (size_t i = 0; i < locations.size(); ++i)
-                locations[i] = random_location(random);
+            for (size_t j = 0; j < locations.size(); ++j)
+                locations[j] = random_location(random);
         
-            stop_watch_t stop_watch;
-            stop_watch.run();
-        
-            for (size_t i = 0; i < locations.size(); ++i)
-                geo_base.lookup(locations[i]);
-        
-            float const seconds = stop_watch.get();
-            log_info("[%lu] Spent %.3f seconds (%.6f per request)",
-                i + 1, seconds, seconds / LOOKUPS_NUMBER);
+            for (size_t j = 0; j < locations.size(); ++j) {
+                stop_watch_t stop_watch;
+                stop_watch.run();
+
+                geo_base.lookup(locations[j]);
+
+                seconds[i][j] = stop_watch.get();
+            }
         });
     }
 
     for (size_t i = 0; i < THREADS_NUMBER; ++i)
         threads[i].join();
+
+    std::vector<float> total;
+    for (size_t i = 0; i < THREADS_NUMBER; ++i)
+        total.insert(total.end(), seconds[i].begin(), seconds[i].end());
+
+    std::sort(total.begin(), total.end());
+    for (int i = 1; i <= 100; ++i)
+        log_info("[%2d%%] <= %.6f", i, seconds[std::min(total.size() - 1, i * total.size() / 100)]);
 
     return 0;
 }

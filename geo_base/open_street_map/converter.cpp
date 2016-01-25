@@ -78,6 +78,12 @@ static bool check_region_options(kvs_t const &kvs)
         if (eq(kv.k, "type")) {
             OP("multipolygon");
         }
+        if (eq(kv.k, "building")) {
+            return true;
+        }
+        if (eq(kv.v, "landuse")) {
+            return true;
+        }
     }
     return false;
 }
