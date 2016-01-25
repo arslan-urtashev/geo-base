@@ -35,4 +35,4 @@ addons:
 
 # TODO: Install buck on linux
 script: 
-  - if [ ! `bazel build :all && bazel test :all` ]; then find ~/.cache | grep test.log | xargs cat; fi
+  - bazel build :all && bazel test :all
