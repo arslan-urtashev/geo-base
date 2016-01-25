@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 
     std::sort(total.begin(), total.end());
     for (int i = 1; i <= 100; ++i)
-        log_info("[%2d%%] <= %.6f", i, seconds[std::min(total.size() - 1, i * total.size() / 100)]);
+        log_info("[%2d%%] <= %.6f", i, total[std::min(total.size() - 1, i * total.size() / 100)]);
 
     return 0;
 }
