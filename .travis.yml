@@ -37,3 +37,4 @@ addons:
 script: 
   - bazel build :all
   - ./bazel-bin/geo_base_test
+  - if [ $TRAVIS_OS_NAME == "linux" ]; then valgrind --error-exitcode=1 ./bazel-bin/geo_base_test; fi
