@@ -245,9 +245,6 @@ cc_test(
         "test/andorra-latest.dat.pre",
     ],
     size = "small",
-    includes = [
-        ".",
-        "test",
-    ],
+    includes = ["."],
     copts = CCFLAGS,
 )

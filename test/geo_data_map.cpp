@@ -22,8 +22,7 @@
 #include <geo_base/generator/generator.h>
 #include <geo_base/lib/pool_allocator.h>
 #include <geo_base/lib/stop_watch.h>
-
-#include "geo_base_test.h"
+#include <test/geo_base_test.h>
 
 using namespace geo_base;
 

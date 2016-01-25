@@ -18,8 +18,7 @@
 
 #include <geo_base/generator/locations_converter.h>
 #include <geo_base/lib/pool_allocator.h>
-
-#include "geo_base_test.h"
+#include <test/geo_base_test.h>
 
 using namespace geo_base;
 using namespace geo_base::generator;
