@@ -48,11 +48,7 @@ geo_id_t geo_base_t::lookup(location_t const &location) const
     geo_data_t const &geo_data = *geo_data_loader_->geo_data();
 
     point_t const point(location);
-
-    // Determine in wich area box is point.
-    ref_t const box_x = (point.x - area_box::lower_x) / area_box::delta_x;
-    ref_t const box_y = (point.y - area_box::lower_y) / area_box::delta_y;
-    ref_t const box_ref = box_x * area_box::number_y + box_y;
+    ref_t const box_ref = lookup_area_box(point);
 
     if (box_ref >= geo_data.boxes_number())
         return UNKNOWN_GEO_ID;

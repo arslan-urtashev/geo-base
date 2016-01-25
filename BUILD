@@ -46,6 +46,7 @@ cc_library(
 cc_library(
     name = "geo-base-core",
     srcs = [
+        "geo_base/core/area_box.cpp",
         "geo_base/core/geo_base.cpp",
         "geo_base/core/geo_data/debug.cpp",
         "geo_base/core/geo_data/map.cpp",
