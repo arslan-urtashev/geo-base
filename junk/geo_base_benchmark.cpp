@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     geo_base_t geo_base(argv[1]);
 
     std::vector<std::thread> threads(THREADS_NUMBER);
-    std::vector<std::vector<float>> seconds(THREADS_NUMBER, std::vector<float>(LOOKUPS_NUMBER));
+    std::vector<std::vector<float>> seconds(THREADS_NUMBER);
 
     for (size_t i = 0; i < THREADS_NUMBER; ++i) {
         threads[i] = std::thread([&geo_base, &seconds, i] () {
@@ -70,9 +70,12 @@ int main(int argc, char *argv[])
                 stop_watch_t stop_watch;
                 stop_watch.run();
 
-                geo_base.lookup(locations[j]);
+                geo_id_t const geo_id = geo_base.lookup(locations[j]);
 
-                seconds[i][j] = stop_watch.get();
+                float const secs = stop_watch.get();
+
+                if (geo_id != UNKNOWN_GEO_ID)
+                    seconds[i].push_back(secs);
             }
         });
     }
