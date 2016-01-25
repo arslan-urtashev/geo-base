@@ -39,7 +39,7 @@ static bool eq(char const *a, char const *b)
 // TODO: Make matching with bor here.
 #define OP(ev) \
     if (eq(ev, kv.v)) \
-        return true; \
+        return true;
 
 static bool check_region_options(kvs_t const &kvs)
 {
@@ -80,8 +80,11 @@ static bool check_region_options(kvs_t const &kvs)
         if (eq(kv.k, "building")) {
             return true;
         }
-        if (eq(kv.v, "landuse")) {
+        if (eq(kv.k, "landuse")) {
             return true;
+        }
+        if (eq(kv.k, "area")) {
+            OP("yes");
         }
     }
     return false;
