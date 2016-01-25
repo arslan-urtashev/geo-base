@@ -33,6 +33,9 @@ addons:
       - unzip
       - pkg-config
 
+jdk:
+  - oraclejdk8
+
 # TODO: Install buck on linux
 script: 
   - bazel build :all
