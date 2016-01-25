@@ -35,4 +35,5 @@ addons:
 
 # TODO: Install buck on linux
 script: 
-  - bazel build :all && bazel test :all
+  - bazel build :all
+  - ./bazel-bin/geo_base_test

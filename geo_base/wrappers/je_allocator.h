@@ -59,7 +59,7 @@ public:
     template<typename p_t, typename... args_t>
     void construct (p_t* p, args_t&&... args)
     {
-        ::new ((void *) p) p_t (std::forward<args_t>(args)...);
+        ::new ((void *) p) p_t(std::forward<args_t>(args)...);
     }
 
     template<typename p_t>

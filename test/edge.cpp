@@ -23,6 +23,65 @@ using namespace geo_base;
 class edge_test_t : public geo_base_test_t {
 };
 
+TEST_F(edge_test_t, default_constructor)
+{
+    char buf[sizeof(edge_t)];
+    for (size_t i = 0; i < sizeof(edge_t); ++i)
+        buf[i] = i + 1;
+
+    edge_t *e = ::new ((void *) buf) edge_t();
+
+    ASSERT_EQ(0u, e->beg);
+    ASSERT_EQ(0u, e->end);
+}
+
+TEST_F(edge_test_t, assignment_contructor)
+{
+    edge_t a(10, 22);
+    edge_t b(a);
+
+    ASSERT_EQ(a.beg, b.beg);
+    ASSERT_EQ(a.end, b.end);
+}
+
+TEST_F(edge_test_t, assignment_operator)
+{
+    edge_t a(10, 22);
+
+    edge_t b;
+    b = a;
+
+    ASSERT_EQ(a.beg, b.beg);
+    ASSERT_EQ(a.end, b.end);
+}
+
+TEST_F(edge_test_t, equals_operator)
+{
+    edge_t a(10, 22), b(10, 22);
+
+    ASSERT_EQ(a, b);
+}
+
+TEST_F(edge_test_t, not_equals_operator)
+{
+    edge_t a(10, 22), b(11, 22), c(10, 23), d(11, 23);
+
+    ASSERT_NE(a, b);
+    ASSERT_NE(a, c);
+    ASSERT_NE(a, d);
+}
+
+TEST_F(edge_test_t, less_operator)
+{
+    edge_t a(10, 22), b(9, 22), c(10, 21);
+
+    ASSERT_FALSE(a < b);
+    ASSERT_FALSE(a < c);
+
+    ASSERT_TRUE(b < a);
+    ASSERT_TRUE(c < a);
+}
+
 TEST_F(edge_test_t, contains_point)
 {
     edge_t a = make_edge(point_t(0, 0), point_t(2, 2));
