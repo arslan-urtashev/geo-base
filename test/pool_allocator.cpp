@@ -19,8 +19,7 @@
 #include <geo_base/lib/dynarray.h>
 #include <geo_base/lib/memory.h>
 #include <geo_base/lib/pool_allocator.h>
-
-#include "geo_base_test.h"
+#include <test/geo_base_test.h>
 
 using namespace geo_base;
 
