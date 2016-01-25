@@ -21,7 +21,6 @@
 #include <geo_base/core/geo_data/debug.h>
 #include <geo_base/lib/log.h>
 #include <geo_base/lib/exception.h>
-#include <geo_base/lib/hash.h>
 
 namespace geo_base {
 namespace geo_data {
