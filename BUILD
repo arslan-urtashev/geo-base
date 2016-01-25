@@ -230,9 +230,6 @@ cc_test(
         "test/pool_allocator.cpp",
         "test/run_test.cpp",
     ],
-    hdrs = [
-        "test/geo_base_test.h",
-    ],
     deps = [
         ":geo-base-lib",
         ":geo-base-core",
