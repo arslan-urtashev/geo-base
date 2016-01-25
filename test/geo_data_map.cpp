@@ -90,8 +90,8 @@ TEST_F(geo_data_map_test_t, check_version)
 
 TEST_F(geo_data_map_test_t, fake_data_serialize)
 {
-    pool_allocator_t allocator(1_mb);
-    pool_allocator_t serialize_allocator(1_mb);
+    pool_allocator_t allocator(64_mb);
+    pool_allocator_t serialize_allocator(64_mb);
 
     generator::geo_data_test_t geo_data;
     generator::generator_t generator(&geo_data, &allocator);

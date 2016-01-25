@@ -196,12 +196,11 @@ void generator_t::generate_area_boxes()
 
     sort_polygons(geo_data_);
 
-    std::vector<std::vector<ref_t>> area_boxes;
-    for (coordinate_t x0 = area_box::lower_x; x0 < area_box::upper_x; x0 += area_box::delta_x)
-        for (coordinate_t y0 = area_box::lower_y; y0 < area_box::upper_y; y0 += area_box::delta_y)
-            area_boxes.emplace_back();
+    vector_t<vector_t<ref_t>> area_boxes(area_box::number);
 
-    std::vector<rectangle_t> rectangles;
+    vector_t<rectangle_t> rectangles;
+    rectangles.reserve(area_box::number);
+
     for (coordinate_t x0 = area_box::lower_x; x0 < area_box::upper_x; x0 += area_box::delta_x)
         for (coordinate_t y0 = area_box::lower_y; y0 < area_box::upper_y; y0 += area_box::delta_y)
             rectangles.emplace_back(x0, y0, x0 + area_box::delta_x, y0 + area_box::delta_y);

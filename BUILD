@@ -213,6 +213,7 @@ cc_test(
     name = "geo_base_test",
     srcs = [
         "test/geo_base_test.h",
+        "test/area_box.cpp",
         "test/algo.cpp",
         "test/base_allocator.cpp",
         "test/converter.cpp",
