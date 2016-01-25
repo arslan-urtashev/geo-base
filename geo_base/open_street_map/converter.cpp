@@ -46,7 +46,6 @@ static bool check_region_options(kvs_t const &kvs)
     for (kv_t const &kv : kvs) {
         if (eq(kv.k, "boundary")) {
             OP("administrative");
-            OP("historic");
             OP("maritime");
             OP("national_park");
             OP("political");
