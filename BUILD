@@ -211,6 +211,7 @@ cc_library(
 cc_test(
     name = "geo_base_test",
     srcs = [
+        "test/geo_base_test.h",
         "test/algo.cpp",
         "test/base_allocator.cpp",
         "test/converter.cpp",
