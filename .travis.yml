@@ -21,7 +21,6 @@ notifications:
     on_failure: change
 
 before_install:
-  - if [ $TRAVIS_OS_NAME == "osx" ]; then jdk_switcher use oraclejdk8; fi
   - ./.travis.sh
 
 addons:
