@@ -20,5 +20,8 @@ cc_library(
         "-std=gnu99",
     ],
     includes = ["."],
+    linkopts = [
+        "-pthread",
+    ],
     visibility = ["//visibility:public"],
 )
