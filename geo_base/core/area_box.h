@@ -1,4 +1,4 @@
-// Copyright (c) 2015, 2016 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -29,8 +29,8 @@ coordinate_t const lower_x = to_coordinate(-180.0);
 coordinate_t const upper_x = to_coordinate(180.0);
 coordinate_t const lower_y = to_coordinate(-90.0);
 coordinate_t const upper_y = to_coordinate(90.0);
-coordinate_t const delta_x = to_coordinate(1.0);
-coordinate_t const delta_y = to_coordinate(1.0);
+coordinate_t const delta_x = to_coordinate(0.1);
+coordinate_t const delta_y = to_coordinate(0.1);
 coordinate_t const number_x = (upper_x - lower_x) / delta_x;
 coordinate_t const number_y = (upper_y - lower_y) / delta_y;
 

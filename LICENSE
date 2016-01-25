@@ -20,7 +20,7 @@ This license applies to all parts of geo-base except the following:
   - Zlib - general purpose compression library, located in deps/zlib.
     Files in this folder copyrighted by Jean-loup Gailly and Mark Adler.
 
-Copyright (c) 2015, 2016 Urtashev Arslan. All rights reserved.
+Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 Contacts: <urtashev@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
