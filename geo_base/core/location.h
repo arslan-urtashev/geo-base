@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <geo_base/core/common.h>
+
 namespace geo_base {
 
 struct location_t {

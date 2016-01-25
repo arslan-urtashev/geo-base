@@ -16,6 +16,8 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include <algorithm>
+
 #include <geo_base/core/geo_base.h>
 #include <geo_base/core/geo_data/geo_data.h>
 
@@ -43,9 +45,12 @@ static void update_answer(polygon_t const **answer, polygon_t const &polygon,
     }
 }
 
-geo_id_t geo_base_t::lookup(location_t const &location) const
+geo_id_t geo_base_t::lookup(location_t const &location, debug_t *debug) const
 {
     geo_data_t const &geo_data = *geo_data_loader_->geo_data();
+
+    if (debug)
+        debug->clear();
 
     point_t const point(location);
     ref_t const box_ref = lookup_area_box(point);
@@ -72,8 +77,22 @@ geo_id_t geo_base_t::lookup(location_t const &location) const
                     ++r;
             } else {
                 update_answer(&answer, p[refs[l]], geo_data);
+
+                if (debug)
+                    debug->push_back(p[refs[l]].region_id);
             }
         }
+    }
+
+    if (debug) {
+        region_t const *regions = geo_data.regions();
+        number_t const regions_number = geo_data.regions_number();
+
+        std::sort(debug->begin(), debug->end(), [&] (geo_id_t const &a, geo_id_t const &b) {
+            region_t const *r1 = std::lower_bound(regions, regions + regions_number, a);
+            region_t const *r2 = std::lower_bound(regions, regions + regions_number, b);
+            return r1->better(*r2);
+        });
     }
 
     return answer ? answer->region_id : UNKNOWN_GEO_ID;

@@ -27,19 +27,43 @@
 
 using namespace geo_base;
 
+static char const *get_output(geo_id_t const region_id, geo_base_t const &geo_base)
+{
+    char const *output = nullptr;
+    
+    geo_base.kv(region_id, [&] (char const *k, char const *v) {
+        if (!strcmp(k, "name:en"))
+            output = v;
+    });
+
+    if (output)
+        return output;
+
+    geo_base.kv(region_id, [&] (char const *k, char const *v) {
+        if (!strcmp(k, "name"))
+            output = v;
+    });
+
+    return output;
+}
+
 int main(int argc, char *argv[])
 {
     std::ios_base::sync_with_stdio(false);
     log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
 
-    if (argc != 2) {
-        log_error("USAGE: geo-base-run <geo-base.dat>");
+    if (argc < 2) {
+        log_error("USAGE: geo-base-run <geo-base.dat> [debug:0/1]");
         return -1;
     }
 
+    std::vector<geo_id_t> regions;
+    bool const debug = argc == 2 ? false : atoi(argv[2]);
+
     geo_base_t geo_base(argv[1]);
 
-    geo_data::show(log_fd(), geo_base.geo_data());
+    if (debug)
+        geo_data::show(log_fd(), geo_base.geo_data());
 
     while (true) {
         location_t location;
@@ -49,19 +73,22 @@ int main(int argc, char *argv[])
         if (!(std::cin >> location.lon))
             break;
 
-        geo_id_t region_id = geo_base.lookup(location);
+        geo_id_t region_id = geo_base.lookup(location, debug ? &regions : nullptr);
         if (region_id == UNKNOWN_GEO_ID) {
             std::cout << "unknown" << std::endl;
             continue;
         }
 
         std::cout << region_id << std::endl;
-        bool const ret = geo_base.kv(region_id, [&] (char const *k, char const *v) {
-            log_debug("k=\"%s\" v=\"%s\"", k, v);
-        });
 
-        if (!ret)
-            log_warning("kv not found for %lu region_id", region_id);
+        if (!debug) {
+            geo_base.kv(region_id, [&] (char const *k, char const *v) {
+                log_debug("k=\"%s\" v=\"%s\"", k, v);
+            });
+        } else {
+            for (geo_id_t const &region_id : regions)
+                log_debug("%s", get_output(region_id, geo_base));
+        }
     }
 
     return 0;

@@ -29,6 +29,8 @@ using ref_t        = uint32_t;
 using square_t     = int64_t;
 using version_t    = uint64_t;
 
+double const EARTH_RADIUS = 6371000.0;
+
 inline coordinate_t to_coordinate(double x)
 {
     return x * 1e6;

@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include <geo_base/core/common.h>
 #include <geo_base/core/geo_data/geo_data.h>
 #include <geo_base/core/geo_data/loader.h>
@@ -29,6 +31,8 @@ geo_id_t const UNKNOWN_GEO_ID = static_cast<geo_id_t>(-1);
 
 class geo_base_t {
 public:
+    using debug_t = std::vector<geo_id_t>;
+
     geo_base_t()
         : geo_data_loader_()
     { }
@@ -53,7 +57,7 @@ public:
         : geo_data_loader_(new geo_data_wrapper_t(geo_data))
     { }
 
-    geo_id_t lookup(location_t const &location) const;
+    geo_id_t lookup(location_t const &location, debug_t *debug = nullptr) const;
 
     template<typename callback_t>
     bool kv(geo_id_t region_id, callback_t callback) const;
