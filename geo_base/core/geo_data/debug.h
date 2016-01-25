@@ -27,5 +27,7 @@ size_t space(geo_data_t const &g);
 
 void show(int fd, geo_data_t const &g);
 
+bool equals(geo_data_t const &a, geo_data_t const &b);
+
 } // namespace geo_data
 } // namespace geo_base

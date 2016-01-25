@@ -51,7 +51,9 @@ static dynarray_t<edge_t> make_edges(dynarray_t<point_t> const &points, geo_data
         if (points[i] == points[j])
             continue;
 
-        edge_t e(geo_data->insert(points[i]), geo_data->insert(points[j]));
+        ref_t const &p1 = geo_data->insert(points[i]);
+        ref_t const &p2 = geo_data->insert(points[j]);
+        edge_t e(p1, p2);
 
         point_t const *p = geo_data->points();
         if (p[e.beg].x > p[e.end].x)
@@ -81,7 +83,7 @@ static dynarray_t<check_point_t> make_check_points(dynarray_t<edge_t> const &e,
         check_points.push_back(check_point_t{p[e[i].end].x, i, false});
     }
 
-    std::sort(check_points.begin(), check_points.end(),
+    std::stable_sort(check_points.begin(), check_points.end(),
         [&] (check_point_t const &a, check_point_t const &b) {
             return a.x < b.x;
         }
@@ -132,7 +134,7 @@ void generator_t::update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<poi
             if (!check_points[i].is_start)
                 erase.push_back(edges[check_points[i].idx]);
 
-        std::sort(erase.begin(), erase.end());
+        std::stable_sort(erase.begin(), erase.end());
 
         part_t part;
         part.edge_refs_offset = geo_data_->edge_refs_number();
@@ -180,7 +182,7 @@ static void sort_polygons(geo_data_t *g)
     polygon_t *begin = g->mut_polygons();
     polygon_t *end = begin + g->polygons_number();
 
-    std::sort(begin, end, [] (polygon_t const &a, polygon_t const &b) {
+    std::stable_sort(begin, end, [] (polygon_t const &a, polygon_t const &b) {
         return a.rectangle.x2 < b.rectangle.x2;
     });
 }
@@ -224,12 +226,16 @@ void generator_t::generate_area_boxes()
             ref_t *mut_polygon_refs = geo_data_->mut_polygon_refs() + box.polygon_refs_offset;
             ref_t *mut_polygon_refs_end = geo_data_->mut_polygon_refs() + geo_data_->polygon_refs_number();
 
-            std::sort(mut_polygon_refs, mut_polygon_refs_end, [&] (ref_t const &a, ref_t const &b) {
+            std::stable_sort(mut_polygon_refs, mut_polygon_refs_end, [&] (ref_t const &a, ref_t const &b) {
                 return polygons[a].region_id < polygons[b].region_id
                     || (
                         polygons[a].region_id == polygons[b].region_id
-                        && polygons[a].type == polygon_t::TYPE_INNER
-                        && polygons[b].type != polygon_t::TYPE_INNER
+                        && polygons[a].type < polygons[b].type
+                    )
+                    || (
+                        polygons[a].region_id == polygons[b].region_id
+                        && polygons[a].type == polygons[b].type
+                        && memcmp(&polygons[a], &polygons[b], sizeof(polygon_t)) < 0   
                     );
             });
 
@@ -254,7 +260,7 @@ void generator_t::final_update_regions()
     region_t *regions = geo_data_->mut_regions();
     region_t *regions_end = geo_data_->regions_number() + regions;
 
-    std::sort(regions, regions_end);
+    std::stable_sort(regions, regions_end);
 
     for (size_t i = 0; i < geo_data_->polygons_number(); ++i) {
         polygon_t const &p = geo_data_->polygons()[i];

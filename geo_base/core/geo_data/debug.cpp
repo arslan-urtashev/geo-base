@@ -16,7 +16,12 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include <vector>
+
 #include <geo_base/core/geo_data/debug.h>
+#include <geo_base/lib/log.h>
+#include <geo_base/lib/exception.h>
+#include <geo_base/lib/hash.h>
 
 namespace geo_base {
 namespace geo_data {
@@ -60,6 +65,35 @@ void show(int fd, geo_data_t const &g)
 
 #undef GEO_BASE_DEF_VAR
 #undef GEO_BASE_DEF_ARR
+}
+
+template<typename arr_t>
+static bool equals(arr_t const *a, arr_t const *b, size_t count)
+{
+    return !memcmp(a, b, sizeof(arr_t) * count);
+}
+
+bool equals(geo_data_t const &a, geo_data_t const &b)
+{
+#define GEO_BASE_DEF_VAR(var_t, var) \
+    if (a.var() != b.var()) { \
+        log_error(#var " not equal"); \
+        return false; \
+    }
+
+#define GEO_BASE_DEF_ARR(arr_t, arr) \
+    GEO_BASE_DEF_VAR(number_t, arr##_number); \
+    if (!equals(a.arr(), b.arr(), a.arr##_number())) { \
+        log_error(#arr " not equal"); \
+        return false; \
+    }
+
+    GEO_BASE_DEF_GEO_DATA
+
+#undef GEO_BASE_DEF_VAR
+#undef GEO_BASE_DEF_ARR
+
+    return true;
 }
 
 } // namespace geo_data

@@ -242,6 +242,7 @@ cc_test(
     ],
     data = [
         "test/andorra-latest.osm.pbf",
+        "test/andorra-latest.dat.pre",
     ],
     size = "small",
     includes = ["."],

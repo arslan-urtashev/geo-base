@@ -17,10 +17,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/core/geo_base.h>
+#include <geo_base/core/geo_data/debug.h>
 #include <geo_base/generator/generator.h>
 #include <geo_base/generator/geo_data.h>
 #include <geo_base/lib/memory.h>
 #include <geo_base/lib/pool_allocator.h>
+#include <geo_base/open_street_map/converter.h>
 
 #include "geo_base_test.h"
 
@@ -53,6 +55,27 @@ TEST_F(generator_test_t, generator_test)
     EXPECT_EQ(UNKNOWN_GEO_ID, geo_base.lookup(location_t(0, 3)));
     EXPECT_EQ(123ull, geo_base.lookup(location_t(4, 0)));
     EXPECT_EQ(123ull, geo_base.lookup(location_t(5, 5)));
+}
+
+TEST_F(generator_test_t, dump)
+{
+    ASSERT_NO_THROW(open_street_map::run_pool_convert("test/andorra-latest.osm.pbf", "andorra-latest.pbf", 1));
+    ASSERT_NO_THROW(generator::generate("andorra-latest.pbf", "andorra-latest.dat.test"));
+
+    mem_file_t pre;
+    pre.read_open("test/andorra-latest.dat.pre");
+
+    mem_file_t test;
+    test.read_open("andorra-latest.dat.test");
+
+    geo_data_map_t map1((char const *) pre.data(), pre.size());
+    geo_data_map_t map2((char const *) test.data(), test.size());
+
+    geo_data::show(log_fd(), map1);
+    geo_data::show(log_fd(), map2);
+
+    ASSERT_EQ(pre.size(), test.size());
+    ASSERT_TRUE(geo_data::equals(map1, map2));
 }
 
 TEST_F(generator_test_t, polygon)
