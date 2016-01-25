@@ -21,6 +21,28 @@
 
 namespace geo_base {
 
+static bool polygon_contains(polygon_t const &p, point_t const &point, geo_data_t const &geo_data)
+{
+    part_t const *parts = geo_data.parts();
+    ref_t const *edge_refs = geo_data.edge_refs();
+    edge_t const *edges = geo_data.edges();
+    point_t const *points = geo_data.points();
+    return p.contains(point, parts, edge_refs, edges, points);
+}
+
+static void update_answer(polygon_t const **answer, polygon_t const &polygon,
+    geo_data_t const &geo_data)
+{
+    if (!*answer) {
+        *answer = &polygon;
+    } else {
+        region_t const *regions = geo_data.regions();
+        number_t const regions_number = geo_data.regions_number();
+        if (!(*answer)->better(polygon, regions, regions_number))
+            *answer = &polygon;
+    }
+}
+
 geo_id_t geo_base_t::lookup(location_t const &location) const
 {
     geo_data_t const &geo_data = *geo_data_loader_->geo_data();
@@ -46,22 +68,14 @@ geo_id_t geo_base_t::lookup(location_t const &location) const
 
         r = l + 1;
 
-        if (
-            p[refs[l]].contains(point, geo_data.parts(), geo_data.edge_refs(),
-                                geo_data.edges(), geo_data.points())
-        ) {
+        if (polygon_contains(p[refs[l]], point, geo_data)) {
             if (p[refs[l]].type == polygon_t::TYPE_INNER) {
                 // All polygons with same region_id must be skipped if polygon is inner.
                 // In geo_data inner polygons stored before outer polygons.
                 while (r < refs_offset + refs_number && p[refs[l]].region_id == p[refs[r]].region_id)
                     ++r;
-
             } else {
-                if (
-                    !answer
-                    || !answer->better(p[refs[l]], geo_data.regions(), geo_data.regions_number())
-                )
-                    answer = &(p[refs[l]]);
+                update_answer(&answer, p[refs[l]], geo_data);
             }
         }
     }
