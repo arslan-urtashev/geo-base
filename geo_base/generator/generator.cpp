@@ -187,15 +187,6 @@ static void sort_polygons(geo_data_t *g)
     });
 }
 
-static number_t find_offset(geo_data_t const *g, coordinate_t x)
-{
-    polygon_t const *begin = g->polygons();
-    polygon_t const *end = begin + g->polygons_number();
-    return std::lower_bound(begin, end, x, [&] (polygon_t const &p, coordinate_t x) {
-        return p.rectangle.x2 < x;
-    }) - begin;
-}
-
 void generator_t::generate_area_boxes()
 {
     log_info("Generate area boxes...");
@@ -205,21 +196,41 @@ void generator_t::generate_area_boxes()
 
     sort_polygons(geo_data_);
 
+    std::vector<std::vector<ref_t>> area_boxes;
+    for (coordinate_t x0 = area_box::lower_x; x0 < area_box::upper_x; x0 += area_box::delta_x)
+        for (coordinate_t y0 = area_box::lower_y; y0 < area_box::upper_y; y0 += area_box::delta_y)
+            area_boxes.emplace_back();
+
+    std::vector<rectangle_t> rectangles;
+    for (coordinate_t x0 = area_box::lower_x; x0 < area_box::upper_x; x0 += area_box::delta_x)
+        for (coordinate_t y0 = area_box::lower_y; y0 < area_box::upper_y; y0 += area_box::delta_y)
+            rectangles.emplace_back(x0, y0, x0 + area_box::delta_x, y0 + area_box::delta_y);
+
+    number_t const polygons_number = geo_data_->polygons_number();
+    polygon_t const *polygons = geo_data_->polygons();
+
+    for (number_t i = 0; i < polygons_number; ++i) {
+        coordinate_t const x1 = polygons[i].rectangle.x1;
+        coordinate_t const y1 = polygons[i].rectangle.y1;
+        coordinate_t const x2 = polygons[i].rectangle.x2;
+        coordinate_t const y2 = polygons[i].rectangle.y2;
+        for (coordinate_t x0 = x1; x0 <= x2; x0 += area_box::delta_x) {
+            for (coordinate_t y0 = y1; y0 <= y2; y0 += area_box::delta_y) {
+                ref_t const box = lookup_area_box(point_t(x0, y0));
+                if (polygons[i].rectangle.has_intersection(rectangles[box]))
+                    area_boxes[box].push_back(i);
+            }
+        }
+    }
+
+    ref_t area_box_ref = 0;
     for (coordinate_t x0 = area_box::lower_x; x0 < area_box::upper_x; x0 += area_box::delta_x) {
-        number_t const offset = find_offset(geo_data_, x0);
-
         for (coordinate_t y0 = area_box::lower_y; y0 < area_box::upper_y; y0 += area_box::delta_y) {
-            rectangle_t rect(x0, y0, x0 + area_box::delta_x, y0 + area_box::delta_y);
-
             area_box_t box;
             box.polygon_refs_offset = geo_data_->polygon_refs_number();
 
-            number_t const polygons_number = geo_data_->polygons_number();
-            polygon_t const *polygons = geo_data_->polygons();
-
-            for (number_t i = offset; i < polygons_number; ++i)
-                if (polygons[i].rectangle.has_intersection(rect))
-                    geo_data_->polygon_refs_append(i);
+            for (ref_t const i : area_boxes[area_box_ref])
+                geo_data_->polygon_refs_append(i);
 
             box.polygon_refs_number = geo_data_->polygon_refs_number() - box.polygon_refs_offset;
 
@@ -240,6 +251,8 @@ void generator_t::generate_area_boxes()
             });
 
             geo_data_->boxes_append(box);
+
+            ++area_box_ref;
         }
     }
 
