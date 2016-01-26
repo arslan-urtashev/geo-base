@@ -42,8 +42,8 @@ TEST_F(open_street_map_convert_t, convert)
         polygons_number += r.polygons_size();
     });
 
-    EXPECT_EQ(148ul, regions_number);
-    EXPECT_EQ(153ul, polygons_number);
+    EXPECT_EQ(170u, regions_number);
+    EXPECT_EQ(175u, polygons_number);
 
     remove("andorra-latest.pbf");
 }

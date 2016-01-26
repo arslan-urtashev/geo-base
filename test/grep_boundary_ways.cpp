@@ -41,5 +41,5 @@ TEST(grep_boundary_ways_t, check_boundary_ways)
     log_info("Found %lu boundary ways", grep.ways().size());
 
     ASSERT_NE(0u, grep.ways().size());
-    ASSERT_EQ(6141u, grep.ways().size());
+    ASSERT_EQ(6163u, grep.ways().size());
 }
