@@ -56,7 +56,7 @@ static void show_geo_data(geo_base_t const &geo_base)
 
 static void show_max_edge_refs(geo_base_t const &geo_base)
 {
-    static size_t const REGIONS_NUMBER = 7;
+    static size_t const REGIONS_NUMBER = 17;
 
     std::unordered_map<geo_id_t, size_t> size;
     
@@ -74,8 +74,8 @@ static void show_max_edge_refs(geo_base_t const &geo_base)
     std::reverse(regions.begin(), regions.end());
 
     for (size_t i = 0; i < std::min(REGIONS_NUMBER, regions.size()); ++i)
-        log_info("(edge refs size) %s = %.3f Mb", get_output(regions[i].second, geo_base),
-            regions[i].first / (1024.0 * 1024.0));
+        log_info("(edge refs size) %s (%lu) = %.3f Mb", get_output(regions[i].second, geo_base),
+            regions[i].second, regions[i].first / (1024.0 * 1024.0));
 }
 
 int main(int argc, char *argv[])
