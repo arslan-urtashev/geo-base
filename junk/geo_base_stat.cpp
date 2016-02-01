@@ -72,7 +72,7 @@ static void show_max_edge_refs(geo_base_t const &geo_base)
 
     std::sort(regions.begin(), regions.end());
 
-    for (int i = 0; i < std::min(REGIONS_NUMBER, regions.size()); ++i)
+    for (size_t i = 0; i < std::min(REGIONS_NUMBER, regions.size()); ++i)
         log_info("(edge refs size) %s = %.3f Mb", get_output(regions[i].second, geo_base),
             regions[i].first / (1024.0 * 1024.0));
 }
