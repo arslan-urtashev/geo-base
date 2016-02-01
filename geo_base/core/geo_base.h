@@ -19,6 +19,7 @@
 #pragma once
 
 #include <vector>
+#include <functional>
 
 #include <geo_base/core/common.h>
 #include <geo_base/core/geo_data/geo_data.h>
@@ -32,6 +33,9 @@ geo_id_t const UNKNOWN_GEO_ID = static_cast<geo_id_t>(-1);
 class geo_base_t {
 public:
     using debug_t = std::vector<geo_id_t>;
+    using kv_callback_t = std::function<void (char const *, char const *)>;
+    using polygon_callback_t = std::function<void (polygon_t const &)>;
+    using part_callback_t = std::function<void (part_t const &, number_t)>;
 
     geo_base_t()
         : geo_data_loader_()
@@ -59,8 +63,11 @@ public:
 
     geo_id_t lookup(location_t const &location, debug_t *debug = nullptr) const;
 
-    template<typename callback_t>
-    bool kv(geo_id_t region_id, callback_t callback) const;
+    bool each_kv(geo_id_t region_id, kv_callback_t callback) const;
+
+    void each_polygon(polygon_callback_t callback) const;
+
+    void each_part(polygon_t const &polygon, part_callback_t callback) const;
 
     geo_data_t const &geo_data() const
     {
@@ -72,30 +79,5 @@ private:
 
     GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(geo_base_t);
 };
-
-template<typename callback_t>
-bool geo_base_t::kv(geo_id_t region_id, callback_t callback) const
-{
-    geo_data_t const &g = *geo_data_loader_->geo_data();
-
-    region_t const *begin = g.regions();
-    region_t const *end = begin + g.regions_number();
-
-    region_t const *region = std::lower_bound(begin, end, region_id);
-
-    if (region == end || region->region_id != region_id)
-        return false;
-
-    kv_t const *kvs = g.kvs() + region->kvs_offset;
-    char const *blobs = g.blobs();
-
-    for (number_t i = 0; i < region->kvs_number; ++i) {
-        char const *k = blobs + kvs[i].k;
-        char const *v = blobs + kvs[i].v;
-        callback(k, v);
-    }
-
-    return true;
-}
 
 }

@@ -17,11 +17,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
+#include <unordered_map>
+#include <vector>
 
 #include <geo_base/core/geo_base.h>
+#include <geo_base/core/geo_data/debug.h>
 #include <geo_base/core/geo_data/map.h>
 #include <geo_base/core/location.h>
-#include <geo_base/core/geo_data/debug.h>
 #include <geo_base/lib/log.h>
 #include <geo_base/lib/mem_file.h>
 
@@ -47,49 +49,47 @@ static char const *get_output(geo_id_t const region_id, geo_base_t const &geo_ba
     return output;
 }
 
+static void show_geo_data(geo_base_t const &geo_base)
+{
+    geo_data::show(log_fd(), geo_base.geo_data());
+}
+
+static void show_max_edge_refs(geo_base_t const &geo_base)
+{
+    static size_t const REGIONS_NUMBER = 7;
+
+    std::unordered_map<geo_id_t, size_t> size;
+    
+    geo_base.each_polygon([&] (polygon_t const &polygon) {
+        geo_base.each_part(polygon, [&] (part_t const &part, number_t const edge_refs_number) {
+            size[polygon.region_id] += edge_refs_number * sizeof(*geo_base.geo_data().edge_refs());
+        });
+    });
+
+    std::vector<std::pair<size_t, geo_id_t>> regions;
+    for (auto const &p : size)
+        regions.emplace_back(p.second, p.first);
+
+    std::sort(regions.begin(), regions.end());
+
+    for (int i = 0; i < std::min(REGIONS_NUMBER, regions.size()); ++i)
+        log_info("(edge refs size) %s = %.3f Mb", get_output(regions[i].second, geo_base),
+            regions[i].first / (1024.0 * 1024.0));
+}
+
 int main(int argc, char *argv[])
 {
-    std::ios_base::sync_with_stdio(false);
     log_setup(STDERR_FILENO, LOG_LEVEL_DEBUG);
 
     if (argc < 2) {
-        log_error("USAGE: geo-base-run <geo-base.dat> [debug:0/1]");
+        log_error("USAGE: geo-base-stat <geo-base.dat>");
         return -1;
     }
 
-    std::vector<geo_id_t> regions;
-    bool const debug = argc == 2 ? false : atoi(argv[2]);
-
     geo_base_t geo_base(argv[1]);
 
-    if (debug)
-        geo_data::show(log_fd(), geo_base.geo_data());
-
-    while (true) {
-        location_t location;
-        if (!(std::cin >> location.lat))
-            break;
-        std::cin.ignore();
-        if (!(std::cin >> location.lon))
-            break;
-
-        geo_id_t region_id = geo_base.lookup(location, debug ? &regions : nullptr);
-        if (region_id == UNKNOWN_GEO_ID) {
-            std::cout << "unknown" << std::endl;
-            continue;
-        }
-
-        std::cout << region_id << std::endl;
-
-        if (!debug) {
-            geo_base.each_kv(region_id, [&] (char const *k, char const *v) {
-                log_debug("k=\"%s\" v=\"%s\"", k, v);
-            });
-        } else {
-            for (geo_id_t const &region_id : regions)
-                log_debug("%s (%lu)", get_output(region_id, geo_base), region_id);
-        }
-    }
+    show_geo_data(geo_base);
+    show_max_edge_refs(geo_base);
 
     return 0;
 }

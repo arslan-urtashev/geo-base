@@ -98,4 +98,51 @@ geo_id_t geo_base_t::lookup(location_t const &location, debug_t *debug) const
     return answer ? answer->region_id : UNKNOWN_GEO_ID;
 }
 
+bool geo_base_t::each_kv(geo_id_t region_id, kv_callback_t callback) const
+{
+    geo_data_t const &g = *geo_data_loader_->geo_data();
+
+    region_t const *begin = g.regions();
+    region_t const *end = begin + g.regions_number();
+
+    region_t const *region = std::lower_bound(begin, end, region_id);
+
+    if (region == end || region->region_id != region_id)
+        return false;
+
+    kv_t const *kvs = g.kvs() + region->kvs_offset;
+    char const *blobs = g.blobs();
+
+    for (number_t i = 0; i < region->kvs_number; ++i) {
+        char const *k = blobs + kvs[i].k;
+        char const *v = blobs + kvs[i].v;
+        callback(k, v);
+    }
+
+    return true;
+}
+
+void geo_base_t::each_polygon(polygon_callback_t callback) const
+{
+    geo_data_t const &g = *geo_data_loader_->geo_data();
+
+    for (number_t i = 0; i < g.polygons_number(); ++i)
+        callback(g.polygons()[i]);
+}
+
+void geo_base_t::each_part(polygon_t const &polygon, part_callback_t callback) const
+{
+    geo_data_t const &g = *geo_data_loader_->geo_data();
+
+    number_t const parts_offset = polygon.parts_offset;
+    number_t const parts_number = polygon.parts_number;
+
+    for (number_t i = parts_offset; i < parts_offset + parts_number; ++i) {
+        part_t const &part = g.parts()[i];
+        part_t const &npart = g.parts()[i + 1];
+        number_t const edge_refs_number = npart.edge_refs_offset - part.edge_refs_offset;
+        callback(part, edge_refs_number);
+    }
+}
+
 } // namespace geo_base
