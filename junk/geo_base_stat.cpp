@@ -74,8 +74,48 @@ static void show_max_edge_refs(geo_base_t const &geo_base)
     std::reverse(regions.begin(), regions.end());
 
     for (size_t i = 0; i < std::min(REGIONS_NUMBER, regions.size()); ++i)
-        log_info("(edge refs size) %s (%lu) = %.3f Mb", get_output(regions[i].second, geo_base),
+        log_info("(EDGE_REFS_SIZE) %s (%lu) = %.3f Mb", get_output(regions[i].second, geo_base),
             regions[i].second, regions[i].first / (1024.0 * 1024.0));
+}
+
+static uint64_t get_bits_number(uint64_t x)
+{
+    uint64_t number = 0;
+    while (x) {
+        ++number;
+        x >>= 1;
+    }
+    return number;
+}
+
+static void show_possible_edge_refs_compression(geo_base_t const &geo_base)
+{
+    geo_data_t const &g = geo_base.geo_data();
+
+    uint64_t size = 0;
+    uint64_t possible_bits_size = 0;
+
+    geo_base.each_polygon([&] (polygon_t const &polygon) {
+        geo_base.each_part(polygon, [&] (part_t const &part, number_t const edge_refs_number) {
+            number_t const edge_refs_offset = part.edge_refs_offset;
+            size += edge_refs_number * sizeof(*geo_base.geo_data().edge_refs());
+
+            ref_t min_edge_ref = g.edge_refs()[edge_refs_offset];
+            for (number_t i = edge_refs_offset; i < edge_refs_offset + edge_refs_number; ++i)
+                min_edge_ref = std::min(min_edge_ref, g.edge_refs()[i]);
+
+            uint64_t bits_number = 0;
+            for (number_t i = edge_refs_offset; i < edge_refs_offset + edge_refs_number; ++i)
+                bits_number = std::max(bits_number, get_bits_number(g.edge_refs()[i] - min_edge_ref));
+
+            possible_bits_size += bits_number * edge_refs_number;
+        });
+    });
+
+    uint64_t possible_size = possible_bits_size / 8.0 + 1;
+
+    log_info("(POSSIBLE_EDGE_REFS_SIZE) %.3f Mb", possible_size / (1024.0 * 1024.0));
+    log_info("(POSSIBLE_EDGE_REFS_COMPRESSION) %.2f%%", possible_size * 100.0 / size);
 }
 
 int main(int argc, char *argv[])
@@ -91,6 +131,7 @@ int main(int argc, char *argv[])
 
     show_geo_data(geo_base);
     show_max_edge_refs(geo_base);
+    show_possible_edge_refs_compression(geo_base);
 
     return 0;
 }
