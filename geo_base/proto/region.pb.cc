@@ -255,7 +255,7 @@ void location_t::ArenaDtor(void* object) {
   location_t* _this = reinterpret_cast< location_t* >(object);
   (void)_this;
 }
-void location_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void location_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void location_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -651,7 +651,7 @@ void polygon_t::ArenaDtor(void* object) {
   polygon_t* _this = reinterpret_cast< polygon_t* >(object);
   (void)_this;
 }
-void polygon_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void polygon_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void polygon_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -1102,7 +1102,7 @@ void kv_t::ArenaDtor(void* object) {
   kv_t* _this = reinterpret_cast< kv_t* >(object);
   (void)_this;
 }
-void kv_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void kv_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void kv_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -1609,7 +1609,7 @@ void region_t::ArenaDtor(void* object) {
   region_t* _this = reinterpret_cast< region_t* >(object);
   (void)_this;
 }
-void region_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void region_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void region_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();

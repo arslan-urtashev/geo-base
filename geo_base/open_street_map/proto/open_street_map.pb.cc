@@ -422,7 +422,7 @@ void blob_t::ArenaDtor(void* object) {
   blob_t* _this = reinterpret_cast< blob_t* >(object);
   (void)_this;
 }
-void blob_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void blob_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void blob_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -1060,7 +1060,7 @@ void blob_header_t::ArenaDtor(void* object) {
   blob_header_t* _this = reinterpret_cast< blob_header_t* >(object);
   (void)_this;
 }
-void blob_header_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void blob_header_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void blob_header_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -1608,7 +1608,7 @@ void string_table_t::ArenaDtor(void* object) {
   string_table_t* _this = reinterpret_cast< string_table_t* >(object);
   (void)_this;
 }
-void string_table_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void string_table_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void string_table_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -1976,7 +1976,7 @@ void basic_group_t::ArenaDtor(void* object) {
   basic_group_t* _this = reinterpret_cast< basic_group_t* >(object);
   (void)_this;
 }
-void basic_group_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void basic_group_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void basic_group_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -2565,7 +2565,7 @@ void basic_block_t::ArenaDtor(void* object) {
   basic_block_t* _this = reinterpret_cast< basic_block_t* >(object);
   (void)_this;
 }
-void basic_block_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void basic_block_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void basic_block_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -3160,7 +3160,7 @@ void node_t::ArenaDtor(void* object) {
   node_t* _this = reinterpret_cast< node_t* >(object);
   (void)_this;
 }
-void node_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void node_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void node_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -3795,7 +3795,7 @@ void dense_nodes_t::ArenaDtor(void* object) {
   dense_nodes_t* _this = reinterpret_cast< dense_nodes_t* >(object);
   (void)_this;
 }
-void dense_nodes_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void dense_nodes_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void dense_nodes_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -4391,7 +4391,7 @@ void way_t::ArenaDtor(void* object) {
   way_t* _this = reinterpret_cast< way_t* >(object);
   (void)_this;
 }
-void way_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void way_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void way_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -4985,7 +4985,7 @@ void relation_t::ArenaDtor(void* object) {
   relation_t* _this = reinterpret_cast< relation_t* >(object);
   (void)_this;
 }
-void relation_t::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+void relation_t::RegisterArenaDtor(::google::protobuf::Arena* /* arena */) {
 }
 void relation_t::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
