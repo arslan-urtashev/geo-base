@@ -31,7 +31,7 @@ cc_binary(
         "//:geo-base-lib",
         "//:geo-base-core",
         "//:geo-base-generator",
-        "//:geo-base-libproto",
+        "//:geo-base-libpb",
         "//:geo-base-proto",
     ],
     linkopts = LINKOPTS,

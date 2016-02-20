@@ -25,19 +25,19 @@
 
 namespace geo_base {
 
-class geo_data_loader_t {
+class geo_data_proxy_t {
 public:
     virtual geo_data_t const *geo_data() const = 0;
 
-    virtual ~geo_data_loader_t()
+    virtual ~geo_data_proxy_t()
     { }
 };
 
-using geo_data_loader_ptr_t = std::unique_ptr<geo_data_loader_t>;
+using geo_data_proxy_ptr_t = std::unique_ptr<geo_data_proxy_t>;
 
-class geo_data_map_loader_t : public geo_data_loader_t {
+class geo_data_map_proxy_t : public geo_data_proxy_t {
 public:
-    explicit geo_data_map_loader_t(char const *path)
+    explicit geo_data_map_proxy_t(char const *path)
     {
         mem_file_.read_open(path);
         geo_data_ = geo_data_map_t((char const *) mem_file_.data(), mem_file_.size());
@@ -52,10 +52,10 @@ private:
     mem_file_t mem_file_;
     geo_data_map_t geo_data_;
 
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(geo_data_map_loader_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(geo_data_map_proxy_t);
 };
 
-class geo_data_wrapper_t : public geo_data_loader_t {
+class geo_data_wrapper_t : public geo_data_proxy_t {
 public:
     explicit geo_data_wrapper_t(geo_data_t const &g)
         : geo_data_(&g)

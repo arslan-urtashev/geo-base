@@ -47,7 +47,7 @@ static void update_answer(polygon_t const **answer, polygon_t const &polygon,
 
 geo_id_t geo_base_t::lookup(location_t const &location, debug_t *debug) const
 {
-    geo_data_t const &geo_data = *geo_data_loader_->geo_data();
+    geo_data_t const &geo_data = *geo_data_proxy_->geo_data();
 
     if (debug)
         debug->clear();
@@ -100,7 +100,7 @@ geo_id_t geo_base_t::lookup(location_t const &location, debug_t *debug) const
 
 bool geo_base_t::each_kv(geo_id_t region_id, kv_callback_t callback) const
 {
-    geo_data_t const &g = *geo_data_loader_->geo_data();
+    geo_data_t const &g = *geo_data_proxy_->geo_data();
 
     region_t const *begin = g.regions();
     region_t const *end = begin + g.regions_number();
@@ -124,7 +124,7 @@ bool geo_base_t::each_kv(geo_id_t region_id, kv_callback_t callback) const
 
 void geo_base_t::each_polygon(polygon_callback_t callback) const
 {
-    geo_data_t const &g = *geo_data_loader_->geo_data();
+    geo_data_t const &g = *geo_data_proxy_->geo_data();
 
     for (number_t i = 0; i < g.polygons_number(); ++i)
         callback(g.polygons()[i]);
@@ -132,7 +132,7 @@ void geo_base_t::each_polygon(polygon_callback_t callback) const
 
 void geo_base_t::each_part(polygon_t const &polygon, part_callback_t callback) const
 {
-    geo_data_t const &g = *geo_data_loader_->geo_data();
+    geo_data_t const &g = *geo_data_proxy_->geo_data();
 
     number_t const parts_offset = polygon.parts_offset;
     number_t const parts_number = polygon.parts_number;

@@ -25,7 +25,7 @@
 #include <geo_base/lib/pool_allocator.h>
 #include <geo_base/lib/log.h>
 #include <geo_base/lib/stop_watch.h>
-#include <geo_base/libproto/proto_reader.h>
+#include <geo_base/libpb/proto_reader.h>
 
 namespace geo_base {
 namespace generator {

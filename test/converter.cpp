@@ -18,7 +18,7 @@
 
 #include <gmock/gmock.h>
 #include <geo_base/open_street_map/converter.h>
-#include <geo_base/libproto/proto_reader.h>
+#include <geo_base/libpb/proto_reader.h>
 #include <geo_base/lib/pool_allocator.h>
 #include <test/geo_base_test.h>
 

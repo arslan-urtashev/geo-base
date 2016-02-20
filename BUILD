@@ -62,7 +62,7 @@ cc_library(
         "geo_base/core/geo_data/debug.h",
         "geo_base/core/geo_data/def.h",
         "geo_base/core/geo_data/geo_data.h",
-        "geo_base/core/geo_data/loader.h",
+        "geo_base/core/geo_data/proxy.h",
         "geo_base/core/geo_data/map.h",
         "geo_base/core/kv.h",
         "geo_base/core/location.h",
@@ -97,7 +97,7 @@ cc_library(
         ":geo-base-lib",
         ":geo-base-proto",
         ":geo-base-wrappers",
-        ":geo-base-libproto",
+        ":geo-base-libpb",
     ],
     includes = ["."],
     copts = CCFLAGS,
@@ -124,13 +124,13 @@ cc_library(
 )
 
 cc_library(
-    name = "geo-base-libproto",
+    name = "geo-base-libpb",
     srcs = [
-        "geo_base/libproto/proto_reader.cpp",
+        "geo_base/libpb/proto_reader.cpp",
     ],
     hdrs = [
-        "geo_base/libproto/proto_reader.h",
-        "geo_base/libproto/proto_writer.h",
+        "geo_base/libpb/proto_reader.h",
+        "geo_base/libpb/proto_writer.h",
     ],
     deps = [
         ":geo-base-core",
@@ -197,7 +197,7 @@ cc_library(
     deps = [
         ":geo-base-core",
         ":geo-base-lib",
-        ":geo-base-libproto",
+        ":geo-base-libpb",
         ":geo-base-proto",
         ":geo-base-wrappers",
         ":open-street-map-proto",
@@ -238,7 +238,7 @@ cc_test(
         ":geo-base-lib",
         ":geo-base-core",
         ":geo-base-generator",
-        ":geo-base-libproto",
+        ":geo-base-libpb",
         ":geo-base-proto",
         ":open-street-map",
         ":open-street-map-proto",

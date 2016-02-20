@@ -23,7 +23,7 @@
 
 #include <geo_base/core/common.h>
 #include <geo_base/core/geo_data/geo_data.h>
-#include <geo_base/core/geo_data/loader.h>
+#include <geo_base/core/geo_data/proxy.h>
 #include <geo_base/lib/mem_file.h>
 
 namespace geo_base {
@@ -38,27 +38,27 @@ public:
     using part_callback_t = std::function<void (part_t const &, number_t)>;
 
     geo_base_t()
-        : geo_data_loader_()
+        : geo_data_proxy_()
     { }
 
     geo_base_t(geo_base_t &&g)
-        : geo_data_loader_()
+        : geo_data_proxy_()
     {
-        std::swap(geo_data_loader_, g.geo_data_loader_);
+        std::swap(geo_data_proxy_, g.geo_data_proxy_);
     }
 
     geo_base_t &operator = (geo_base_t &&g)
     {
-        std::swap(geo_data_loader_, g.geo_data_loader_);
+        std::swap(geo_data_proxy_, g.geo_data_proxy_);
         return *this;
     }
 
     explicit geo_base_t(char const *path)
-        : geo_data_loader_(new geo_data_map_loader_t(path))
+        : geo_data_proxy_(new geo_data_map_proxy_t(path))
     { }
 
     explicit geo_base_t(geo_data_t const &geo_data)
-        : geo_data_loader_(new geo_data_wrapper_t(geo_data))
+        : geo_data_proxy_(new geo_data_wrapper_t(geo_data))
     { }
 
     geo_id_t lookup(location_t const &location, debug_t *debug = nullptr) const;
@@ -71,11 +71,11 @@ public:
 
     geo_data_t const &geo_data() const
     {
-        return *geo_data_loader_->geo_data();
+        return *geo_data_proxy_->geo_data();
     }
 
 private:
-    geo_data_loader_ptr_t geo_data_loader_;
+    geo_data_proxy_ptr_t geo_data_proxy_;
 
     GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(geo_base_t);
 };
