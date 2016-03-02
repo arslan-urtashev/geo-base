@@ -22,6 +22,8 @@
 #include <geo_base/lib/dynarray.h>
 #include <geo_base/lib/pool_allocator.h>
 
+#include <vector>
+#include <string>
 #include <unordered_map>
 
 namespace geo_base {
