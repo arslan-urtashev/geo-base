@@ -19,7 +19,7 @@
 #include <geo_base/core/polygon.h>
 #include <geo_base/core/region.h>
 #include <geo_base/open_street_map/converter.h>
-#include <geo_base/proto/region.pb.h>
+#include <geo_base/proto/def/region.pb.h>
 #include <geo_base/libpb/proto_writer.h>
 #include <geo_base/lib/pool_allocator.h>
 #include <geo_base/lib/safe_stream.h>

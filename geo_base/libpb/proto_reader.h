@@ -20,7 +20,7 @@
 
 #include <arpa/inet.h>
 #include <geo_base/core/common.h>
-#include <geo_base/proto/region.pb.h>
+#include <geo_base/proto/def/region.pb.h>
 #include <geo_base/lib/allocator.h>
 #include <geo_base/lib/mem_file.h>
 #include <geo_base/wrappers/std.h>

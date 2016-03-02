@@ -95,7 +95,7 @@ cc_library(
     deps = [
         ":geo-base-core",
         ":geo-base-lib",
-        ":geo-base-proto",
+        ":geo-base-proto-def",
         ":geo-base-wrappers",
         ":geo-base-libpb",
     ],
@@ -105,12 +105,12 @@ cc_library(
 )
 
 cc_library(
-    name = "geo-base-proto",
+    name = "geo-base-proto-def",
     srcs = [
-        "geo_base/proto/region.pb.cc",
+        "geo_base/proto/def/region.pb.cc",
     ],
     hdrs = [
-        "geo_base/proto/region.pb.h",
+        "geo_base/proto/def/region.pb.h",
     ],
     deps = [
         "//deps/protobuf:protobuf",
@@ -135,7 +135,7 @@ cc_library(
     deps = [
         ":geo-base-core",
         ":geo-base-lib",
-        ":geo-base-proto",
+        ":geo-base-proto-def",
         ":geo-base-wrappers",
         "//deps/protobuf:protobuf",
         "//deps/jemalloc:jemalloc",
@@ -198,7 +198,7 @@ cc_library(
         ":geo-base-core",
         ":geo-base-lib",
         ":geo-base-libpb",
-        ":geo-base-proto",
+        ":geo-base-proto-def",
         ":geo-base-wrappers",
         ":open-street-map-proto",
         "//deps/jemalloc:jemalloc",
@@ -239,7 +239,7 @@ cc_test(
         ":geo-base-core",
         ":geo-base-generator",
         ":geo-base-libpb",
-        ":geo-base-proto",
+        ":geo-base-proto-def",
         ":open-street-map",
         ":open-street-map-proto",
         "//deps/gmock:gmock",

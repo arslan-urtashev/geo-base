@@ -19,7 +19,7 @@
 #pragma once
 
 #include <geo_base/open_street_map/parser.h>
-#include <geo_base/proto/region.pb.h>
+#include <geo_base/proto/def/region.pb.h>
 #include <geo_base/libpb/proto_writer.h>
 #include <geo_base/wrappers/std.h>
 

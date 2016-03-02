@@ -19,7 +19,7 @@
 #pragma once
 
 #include <geo_base/generator/geo_data.h>
-#include <geo_base/proto/region.pb.h>
+#include <geo_base/proto/def/region.pb.h>
 #include <geo_base/lib/allocator.h>
 #include <geo_base/lib/dynarray.h>
 #include <geo_base/lib/stop_watch.h>
