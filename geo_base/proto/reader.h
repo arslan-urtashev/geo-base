@@ -23,7 +23,8 @@
 #include <geo_base/lib/allocator.h>
 #include <geo_base/lib/mem_file.h>
 #include <geo_base/proto/def/region.pb.h>
-#include <geo_base/wrappers/std.h>
+
+#include <unordered_map>
 
 namespace geo_base {
 namespace proto {
@@ -58,7 +59,7 @@ public:
             if (index_.find(geo_id) == index_.end())
                 return false;
 
-            char const *ptr = index_[geo_id];
+            char const *ptr = ((char const *) mem_file_.data()) + index_[geo_id];
             uint32_t const byte_size = ntohl(*((uint32_t *) ptr));
 
             proto::region_t region;
@@ -93,7 +94,7 @@ private:
     }
 
     mem_file_t mem_file_;
-    map_t<geo_id_t, char const *> index_;
+    std::unordered_map<geo_id_t, size_t> index_;
 
     GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(reader_t);
 };

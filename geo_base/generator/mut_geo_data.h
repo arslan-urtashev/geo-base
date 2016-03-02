@@ -21,7 +21,8 @@
 #include <geo_base/generator/geo_data.h>
 #include <geo_base/lib/dynarray.h>
 #include <geo_base/lib/pool_allocator.h>
-#include <geo_base/wrappers/std.h>
+
+#include <unordered_map>
 
 namespace geo_base {
 namespace generator {
@@ -59,7 +60,7 @@ public: \
         arr##_.push_back(a); \
     } \
 private: \
-    vector_t<arr_t> arr##_;
+    std::vector<arr_t> arr##_;
 
     GEO_BASE_DEF_GEO_DATA
 
@@ -111,9 +112,9 @@ private:
         }
     };
 
-    map_t<edge_t, ref_t, hash64_t<edge_t>> edge_ref_;
-    map_t<point_t, ref_t, hash64_t<point_t>> point_ref_;
-    map_t<std::string, ref_t> blob_ref_;
+    std::unordered_map<edge_t, ref_t, hash64_t<edge_t>> edge_ref_;
+    std::unordered_map<point_t, ref_t, hash64_t<point_t>> point_ref_;
+    std::unordered_map<std::string, ref_t> blob_ref_;
 
     GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mut_geo_data_t);
 };

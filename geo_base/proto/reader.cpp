@@ -38,7 +38,7 @@ void reader_t::generate_index()
     each_with_ptr([&] (char const *ptr, proto::region_t const &region) {
         if (index_.find(region.region_id()) != index_.end())
             log_warning("Region %lu already exists in index", region.region_id());
-        index_[region.region_id()] = ptr;
+        index_[region.region_id()] = ptr - ((char const *) mem_file_.data());
     });
 
     float const seconds = stop_watch.get();

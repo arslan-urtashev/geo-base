@@ -96,7 +96,6 @@ cc_library(
         ":geo-base-core",
         ":geo-base-lib",
         ":geo-base-proto-def",
-        ":geo-base-wrappers",
         ":geo-base-proto",
     ],
     includes = ["."],
@@ -137,7 +136,6 @@ cc_library(
         ":geo-base-core",
         ":geo-base-lib",
         ":geo-base-proto-def",
-        ":geo-base-wrappers",
         "//deps/protobuf:protobuf",
         "//deps/jemalloc:jemalloc",
     ],
@@ -166,20 +164,6 @@ cc_library(
 )
 
 cc_library(
-    name = "geo-base-wrappers",
-    hdrs = [
-        "geo_base/wrappers/je_allocator.h",
-        "geo_base/wrappers/std.h",
-    ],
-    deps = [
-        "//deps/jemalloc:jemalloc",
-    ],
-    includes = ["."],
-    copts = CCFLAGS,
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "open-street-map",
     srcs = [
         "geo_base/open_street_map/converter.cpp",
@@ -200,7 +184,6 @@ cc_library(
         ":geo-base-lib",
         ":geo-base-proto",
         ":geo-base-proto-def",
-        ":geo-base-wrappers",
         ":open-street-map-proto",
         "//deps/jemalloc:jemalloc",
         "//deps/protobuf:protobuf",
