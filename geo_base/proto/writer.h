@@ -26,10 +26,11 @@
 #include <geo_base/lib/safe_stream.h>
 
 namespace geo_base {
+namespace proto {
 
-class proto_writer_t {
+class writer_t {
 public:
-    explicit proto_writer_t(char const *path)
+    explicit writer_t(char const *path)
         : file_()
         , output_stream_()
         , safe_output_stream_()
@@ -61,7 +62,8 @@ private:
     file_output_stream_t output_stream_;
     safe_output_stream_t safe_output_stream_;
 
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(proto_writer_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(writer_t);
 };
 
+} // namespace proto
 } // namespace geo_base

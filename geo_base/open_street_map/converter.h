@@ -20,7 +20,7 @@
 
 #include <geo_base/open_street_map/parser.h>
 #include <geo_base/proto/def/region.pb.h>
-#include <geo_base/libpb/proto_writer.h>
+#include <geo_base/proto/writer.h>
 #include <geo_base/wrappers/std.h>
 
 namespace geo_base {
@@ -115,7 +115,7 @@ private:
 
 class converter_t : public parser_t {
 public:
-    converter_t(nodes_map_t const &nodes, ways_map_t const &ways, proto_writer_t *writer,
+    converter_t(nodes_map_t const &nodes, ways_map_t const &ways, ::geo_base::proto::writer_t *writer,
                 allocator_t *allocator)
         : parser_t(allocator)
         , writer_(writer)
@@ -134,7 +134,7 @@ public:
     }
 
 private:
-    proto_writer_t *writer_;
+    ::geo_base::proto::writer_t *writer_;
     ways_map_t const *ways_;
     nodes_map_t const *nodes_;
     size_t regions_number_;

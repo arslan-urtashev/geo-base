@@ -19,13 +19,13 @@
 #include <geo_base/core/geo_data/map.h>
 #include <geo_base/generator/generator.h>
 #include <geo_base/generator/geo_data.h>
-#include <geo_base/generator/mut_geo_data.h>
 #include <geo_base/generator/locations_converter.h>
+#include <geo_base/generator/mut_geo_data.h>
 #include <geo_base/lib/base_allocator.h>
-#include <geo_base/lib/pool_allocator.h>
 #include <geo_base/lib/log.h>
+#include <geo_base/lib/pool_allocator.h>
 #include <geo_base/lib/stop_watch.h>
-#include <geo_base/libpb/proto_reader.h>
+#include <geo_base/proto/reader.h>
 
 namespace geo_base {
 namespace generator {
@@ -339,7 +339,7 @@ void generate(char const *in, char const *out)
 
     generator.init();
 
-    proto_reader_t reader(in);
+    proto::reader_t reader(in);
     reader.each([&] (proto::region_t const &region) {
         generator.update(region);
     });

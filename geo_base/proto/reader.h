@@ -20,16 +20,17 @@
 
 #include <arpa/inet.h>
 #include <geo_base/core/common.h>
-#include <geo_base/proto/def/region.pb.h>
 #include <geo_base/lib/allocator.h>
 #include <geo_base/lib/mem_file.h>
+#include <geo_base/proto/def/region.pb.h>
 #include <geo_base/wrappers/std.h>
 
 namespace geo_base {
+namespace proto {
 
-class proto_reader_t {
+class reader_t {
 public:
-    explicit proto_reader_t(char const *path)
+    explicit reader_t(char const *path)
         : mem_file_()
         , index_()
     {
@@ -94,7 +95,8 @@ private:
     mem_file_t mem_file_;
     map_t<geo_id_t, char const *> index_;
 
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(proto_reader_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(reader_t);
 };
 
+} // namespace proto
 } // namespace geo_base

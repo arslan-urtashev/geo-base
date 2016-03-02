@@ -16,33 +16,4 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/libpb/proto_reader.h>
-#include <geo_base/lib/log.h>
-#include <geo_base/lib/stop_watch.h>
-
-namespace geo_base {
-
-void proto_reader_t::generate_index()
-{
-    if (!index_.empty()) {
-        log_warning("Index already generated!");
-        return;
-    }
-
-    log_debug("Generating proto reader index...");
-
-    stop_watch_t stop_watch;
-    stop_watch.run();
-
-    each_with_ptr([&] (char const *ptr, proto::region_t const &region) {
-        if (index_.find(region.region_id()) != index_.end())
-            log_warning("Region %lu already exists in index", region.region_id());
-        index_[region.region_id()] = ptr;
-    });
-
-    float const seconds = stop_watch.get();
-    log_debug("Proto reader index generated in %.3f seconds (%.3f minutes)",
-        seconds, seconds / 60.0);
-}
-
-} // namespace geo_base
+#include <geo_base/proto/writer.h>

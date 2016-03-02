@@ -16,34 +16,35 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/lib/pool_allocator.h>
-#include <geo_base/open_street_map/converter.h>
 #include <geo_base/proto/reader.h>
-#include <gmock/gmock.h>
-#include <test/geo_base_test.h>
+#include <geo_base/lib/log.h>
+#include <geo_base/lib/stop_watch.h>
 
-using namespace geo_base;
-using namespace open_street_map;
+namespace geo_base {
+namespace proto {
 
-class open_street_map_convert_t : public test_t {
-};
-
-TEST_F(open_street_map_convert_t, convert)
+void reader_t::generate_index()
 {
-    ASSERT_NO_THROW(run_pool_convert("test/andorra-latest.osm.pbf", "andorra-latest.pbf", 2));
+    if (!index_.empty()) {
+        log_warning("Index already generated!");
+        return;
+    }
 
-    ::geo_base::proto::reader_t reader("andorra-latest.pbf");
+    log_debug("Generating proto reader index...");
 
-    size_t regions_number = 0;
-    size_t polygons_number = 0;
+    stop_watch_t stop_watch;
+    stop_watch.run();
 
-    reader.each([&] (::geo_base::proto::region_t const &r) {
-        ++regions_number;
-        polygons_number += r.polygons_size();
+    each_with_ptr([&] (char const *ptr, proto::region_t const &region) {
+        if (index_.find(region.region_id()) != index_.end())
+            log_warning("Region %lu already exists in index", region.region_id());
+        index_[region.region_id()] = ptr;
     });
 
-    EXPECT_EQ(170u, regions_number);
-    EXPECT_EQ(175u, polygons_number);
-
-    remove("andorra-latest.pbf");
+    float const seconds = stop_watch.get();
+    log_debug("Proto reader index generated in %.3f seconds (%.3f minutes)",
+        seconds, seconds / 60.0);
 }
+
+} // namespace proto
+} // namespace geo_base

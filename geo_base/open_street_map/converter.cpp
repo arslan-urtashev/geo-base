@@ -18,11 +18,11 @@
 
 #include <geo_base/core/polygon.h>
 #include <geo_base/core/region.h>
-#include <geo_base/open_street_map/converter.h>
-#include <geo_base/proto/def/region.pb.h>
-#include <geo_base/libpb/proto_writer.h>
 #include <geo_base/lib/pool_allocator.h>
 #include <geo_base/lib/safe_stream.h>
+#include <geo_base/open_street_map/converter.h>
+#include <geo_base/proto/def/region.pb.h>
+#include <geo_base/proto/writer.h>
 
 namespace geo_base {
 namespace open_street_map {
@@ -356,7 +356,7 @@ void run_pool_convert(char const *input_path, char const *output_path, size_t th
     {
         log_info("Convert...");
 
-        proto_writer_t proto_writer(output_path);
+        ::geo_base::proto::writer_t proto_writer(output_path);
 
         std::vector<converter_t> converters;
         for (size_t i = 0; i < threads_number; ++i)
