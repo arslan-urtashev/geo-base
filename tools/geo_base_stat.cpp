@@ -54,10 +54,8 @@ static void show_geo_data(geo_base_t const &geo_base)
     geo_data::show(log_fd(), geo_base.geo_data());
 }
 
-static void show_max_edge_refs(geo_base_t const &geo_base)
+static void show_max_edge_refs(geo_base_t const &geo_base, size_t regions_number)
 {
-    static size_t const REGIONS_NUMBER = 17;
-
     std::unordered_map<geo_id_t, size_t> size;
     
     geo_base.each_polygon([&] (polygon_t const &polygon) {
@@ -73,8 +71,8 @@ static void show_max_edge_refs(geo_base_t const &geo_base)
     std::sort(regions.begin(), regions.end());
     std::reverse(regions.begin(), regions.end());
 
-    for (size_t i = 0; i < std::min(REGIONS_NUMBER, regions.size()); ++i)
-        log_info("(EDGE_REFS_SIZE) %s (%lu) = %.3f Mb", get_output(regions[i].second, geo_base),
+    for (size_t i = 0; i < std::min(regions_number, regions.size()); ++i)
+        log_info("(edge_refs_size) %s (%lu) = %.3f Mb", get_output(regions[i].second, geo_base),
             regions[i].second, regions[i].first / (1024.0 * 1024.0));
 }
 
@@ -114,8 +112,8 @@ static void show_possible_edge_refs_compression(geo_base_t const &geo_base)
 
     uint64_t possible_size = possible_bits_size / 8.0 + 1;
 
-    log_info("(POSSIBLE_EDGE_REFS_SIZE) %.3f Mb", possible_size / (1024.0 * 1024.0));
-    log_info("(POSSIBLE_EDGE_REFS_COMPRESSION) %.2f%%", possible_size * 100.0 / size);
+    log_info("(possible_edge_refs_size) %.3f Mb", possible_size / (1024.0 * 1024.0));
+    log_info("(possible_edge_refs_compression) %.2f%%", possible_size * 100.0 / size);
 }
 
 int main(int argc, char *argv[])
@@ -127,10 +125,14 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    int regions_number = 10;
+    if (argc > 2)
+        regions_number = atoi(argv[2]);
+
     geo_base_t geo_base(argv[1]);
 
     show_geo_data(geo_base);
-    show_max_edge_refs(geo_base);
+    show_max_edge_refs(geo_base, regions_number);
     show_possible_edge_refs_compression(geo_base);
 
     return 0;
