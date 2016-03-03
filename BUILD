@@ -7,6 +7,10 @@ CCFLAGS = [
     "-funroll-loops",
 ]
 
+LINKOPTS = [
+    "-pthread",
+]
+
 cc_library(
     name = "geo-base-library",
     srcs = [
@@ -246,4 +250,5 @@ cc_test(
     size = "small",
     includes = ["."],
     copts = CCFLAGS,
+    linkopts = LINKOPTS,
 )
