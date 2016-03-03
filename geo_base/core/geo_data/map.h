@@ -19,8 +19,8 @@
 #pragma once
 
 #include <geo_base/core/geo_data/geo_data.h>
-#include <geo_base/lib/common.h>
-#include <geo_base/lib/block_allocator.h>
+#include <geo_base/library/common.h>
+#include <geo_base/library/block_allocator.h>
 
 namespace geo_base {
 

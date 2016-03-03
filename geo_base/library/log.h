@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <geo_base/lib/exception.h>
+#include <geo_base/library/exception.h>
 
 #include <cstdio>
 

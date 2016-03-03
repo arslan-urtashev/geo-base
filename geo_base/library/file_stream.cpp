@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,53 +16,34 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
+#include <geo_base/library/file_stream.h>
 
-#include <geo_base/lib/file.h>
-#include <geo_base/lib/mem_guard.h>
-#include <geo_base/lib/memory.h>
+#include <unistd.h>
 
 namespace geo_base {
 
-class mem_file_t : public file_t {
-public:
-    static size_t const DEFAULT_MMAP_SIZE = 16_gb;
-
-    mem_file_t()
-        : mem_guard_()
-    { }
-
-    mem_file_t(mem_file_t &&f)
-        : file_t(std::forward<file_t>(f))
-    {
-        std::swap(mem_guard_, f.mem_guard_);
+bool file_output_stream_t::write(char const *ptr, size_t count)
+{
+    while (count > 0) {
+        ssize_t ret = ::write(fd_, ptr, count);
+        if (ret < 0)
+            return false;
+        ptr += ret;
+        count -= ret;
     }
+    return true;
+}
 
-    mem_file_t &operator = (mem_file_t &&f)
-    {
-        file_t::operator = (std::forward<file_t>(f));
-        std::swap(mem_guard_, f.mem_guard_);
-        return *this;
+bool file_input_stream_t::read(char *ptr, size_t count)
+{
+    while (count > 0) {
+        ssize_t ret = ::read(fd_, ptr, count);
+        if (ret <= 0)
+            return false;
+        ptr += ret;
+        count -= ret;
     }
-
-    void read_open(char const *path);
-
-    void read_write_open(char const *path, size_t mmap_size = DEFAULT_MMAP_SIZE);
-
-    void *data() const
-    {
-        return mem_guard_.data();
-    }
-
-    size_t size() const
-    {
-        return mem_guard_.size();
-    }
-
-private:
-    mem_guard_t mem_guard_;
-
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(mem_file_t);
-};
+    return true;
+}
 
 } // namespace geo_base

@@ -20,10 +20,10 @@
 
 #include <arpa/inet.h>
 #include <geo_base/proto/def/region.pb.h>
-#include <geo_base/lib/dynarray.h>
-#include <geo_base/lib/file.h>
-#include <geo_base/lib/file_stream.h>
-#include <geo_base/lib/safe_stream.h>
+#include <geo_base/library/dynarray.h>
+#include <geo_base/library/file.h>
+#include <geo_base/library/file_stream.h>
+#include <geo_base/library/safe_stream.h>
 
 namespace geo_base {
 namespace proto {

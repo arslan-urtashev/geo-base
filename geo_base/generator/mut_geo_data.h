@@ -19,8 +19,8 @@
 #pragma once
 
 #include <geo_base/generator/geo_data.h>
-#include <geo_base/lib/dynarray.h>
-#include <geo_base/lib/pool_allocator.h>
+#include <geo_base/library/dynarray.h>
+#include <geo_base/library/pool_allocator.h>
 
 #include <vector>
 #include <string>

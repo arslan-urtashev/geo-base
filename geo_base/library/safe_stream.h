@@ -16,35 +16,54 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/proto/reader.h>
-#include <geo_base/library/log.h>
-#include <geo_base/library/stop_watch.h>
+#pragma once
+
+#include <geo_base/library/io_stream.h>
+#include <mutex>
+#include <algorithm>
 
 namespace geo_base {
-namespace proto {
 
-void reader_t::generate_index()
-{
-    if (!index_.empty()) {
-        log_warning("Index already generated!");
-        return;
+class safe_output_stream_t : public output_stream_t {
+public:
+    safe_output_stream_t()
+        : mutex_()
+        , output_stream_(nullptr)
+    { }
+
+    explicit safe_output_stream_t(output_stream_t *output_stream)
+        : mutex_()
+        , output_stream_(output_stream)
+    { }
+
+    safe_output_stream_t(safe_output_stream_t &&s)
+        : mutex_()
+        , output_stream_(nullptr)
+    {
+        std::lock_guard<std::mutex> lock1(mutex_);
+        std::lock_guard<std::mutex> lock2(s.mutex_);
+        std::swap(output_stream_, s.output_stream_);
     }
 
-    log_debug("Generating proto reader index...");
+    safe_output_stream_t &operator = (safe_output_stream_t &&s)
+    {
+        std::lock_guard<std::mutex> lock1(mutex_);
+        std::lock_guard<std::mutex> lock2(s.mutex_);
+        std::swap(output_stream_, s.output_stream_);
+        return *this;
+    }
 
-    stop_watch_t stop_watch;
-    stop_watch.run();
+    bool write(char const *ptr, size_t count) override
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        return output_stream_->write(ptr, count);
+    }
 
-    each_with_ptr([&] (char const *ptr, proto::region_t const &region) {
-        if (index_.find(region.region_id()) != index_.end())
-            log_warning("Region %lu already exists in index", region.region_id());
-        index_[region.region_id()] = ptr - ((char const *) mem_file_.data());
-    });
+private:
+    std::mutex mutex_;
+    output_stream_t *output_stream_;
 
-    float const seconds = stop_watch.get();
-    log_debug("Proto reader index generated in %.3f seconds (%.3f minutes)",
-        seconds, seconds / 60.0);
-}
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(safe_output_stream_t);
+};
 
-} // namespace proto
 } // namespace geo_base

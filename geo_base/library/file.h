@@ -16,34 +16,44 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/lib/file_stream.h>
+#pragma once
 
-#include <unistd.h>
+#include <geo_base/library/fd_guard.h>
+#include <geo_base/library/common.h>
 
 namespace geo_base {
 
-bool file_output_stream_t::write(char const *ptr, size_t count)
-{
-    while (count > 0) {
-        ssize_t ret = ::write(fd_, ptr, count);
-        if (ret < 0)
-            return false;
-        ptr += ret;
-        count -= ret;
-    }
-    return true;
-}
+class file_t {
+public:
+    file_t()
+        : fd_guard_()
+    { }
 
-bool file_input_stream_t::read(char *ptr, size_t count)
-{
-    while (count > 0) {
-        ssize_t ret = ::read(fd_, ptr, count);
-        if (ret <= 0)
-            return false;
-        ptr += ret;
-        count -= ret;
+    file_t(file_t &&f)
+        : fd_guard_()
+    {
+        std::swap(fd_guard_, f.fd_guard_);
     }
-    return true;
-}
+
+    file_t &operator = (file_t &&f)
+    {
+        std::swap(fd_guard_, f.fd_guard_);
+        return *this;
+    }
+
+    void read_open(char const *path);
+
+    void read_write_open(char const *path);
+
+    int fd() const
+    {
+        return fd_guard_.fd();
+    }
+
+private:
+    fd_guard_t fd_guard_;
+
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(file_t);
+};
 
 } // namespace geo_base

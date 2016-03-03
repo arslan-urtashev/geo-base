@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,50 +16,37 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
+#include <geo_base/library/mem_file.h>
 
-#include <geo_base/lib/io_stream.h>
+#include <errno.h>
+#include <sys/stat.h>
 
 namespace geo_base {
 
-class file_output_stream_t : public output_stream_t {
-public:
-    file_output_stream_t()
-        : fd_(-1)
-    { }
+void mem_file_t::read_open(char const *path)
+{
+    file_t::read_open(path);
 
-    explicit file_output_stream_t(int fd)
-        : fd_(fd)
-    { }
+    struct stat buf;
+    if (fstat(fd(), &buf) < 0)
+        throw exception_t("Unable fstat %s: %s", path, strerror(errno));
 
-    file_output_stream_t(file_output_stream_t const &s)
-        : fd_(s.fd_)
-    { }
+    void *memory = mmap(nullptr, buf.st_size, PROT_READ, MAP_SHARED, fd(), 0);
+    if (memory == MAP_FAILED)
+        throw exception_t("Unable mmap file %s: %s", path, strerror(errno));
 
-    bool write(char const *ptr, size_t count) override;
+    mem_guard_ = mem_guard_t(memory, buf.st_size);
+}
 
-private:
-    int fd_;
-};
+void mem_file_t::read_write_open(char const *path, size_t mmap_size)
+{
+    file_t::read_write_open(path);
 
-class file_input_stream_t : public input_stream_t {
-public:
-    file_input_stream_t()
-        : fd_(-1)
-    { }
+    void *memory = mmap(nullptr, mmap_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd(), 0);
+    if (memory == MAP_FAILED)
+        throw exception_t("Unable mmap file %s: %s", path, strerror(errno));
 
-    explicit file_input_stream_t(int fd)
-        : fd_(fd)
-    { }
-
-    file_input_stream_t(file_input_stream_t const &s)
-        : fd_(s.fd_)
-    { }
-
-    bool read(char *ptr, size_t count) override;
-
-private:
-    int fd_;
-};
+    mem_guard_ = mem_guard_t(memory, mmap_size);
+}
 
 } // namespace geo_base

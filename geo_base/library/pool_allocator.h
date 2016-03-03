@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Urtashev Arslan. All rights reserved.
+// Copyright (c) 2015 Urtashev Arslan. All rights reserved.
 // Contacts: <urtashev@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,52 +18,37 @@
 
 #pragma once
 
-#include <geo_base/lib/io_stream.h>
-#include <mutex>
-#include <algorithm>
+#include <geo_base/library/block_allocator.h>
+#include <geo_base/library/mem_guard.h>
 
 namespace geo_base {
 
-class safe_output_stream_t : public output_stream_t {
+class pool_allocator_t : public block_allocator_t {
 public:
-    safe_output_stream_t()
-        : mutex_()
-        , output_stream_(nullptr)
+    pool_allocator_t()
+        : mem_guard_()
     { }
 
-    explicit safe_output_stream_t(output_stream_t *output_stream)
-        : mutex_()
-        , output_stream_(output_stream)
-    { }
-
-    safe_output_stream_t(safe_output_stream_t &&s)
-        : mutex_()
-        , output_stream_(nullptr)
+    pool_allocator_t(pool_allocator_t &&a)
+        : block_allocator_t(std::forward<block_allocator_t>(a))
+        , mem_guard_()
     {
-        std::lock_guard<std::mutex> lock1(mutex_);
-        std::lock_guard<std::mutex> lock2(s.mutex_);
-        std::swap(output_stream_, s.output_stream_);
+        std::swap(mem_guard_, a.mem_guard_);
     }
 
-    safe_output_stream_t &operator = (safe_output_stream_t &&s)
+    pool_allocator_t &operator = (pool_allocator_t &&a)
     {
-        std::lock_guard<std::mutex> lock1(mutex_);
-        std::lock_guard<std::mutex> lock2(s.mutex_);
-        std::swap(output_stream_, s.output_stream_);
+        block_allocator_t::operator = (std::forward<block_allocator_t>(a));
+        std::swap(mem_guard_, a.mem_guard_);
         return *this;
     }
 
-    bool write(char const *ptr, size_t count) override
-    {
-        std::lock_guard<std::mutex> lock(mutex_);
-        return output_stream_->write(ptr, count);
-    }
+    explicit pool_allocator_t(size_t pool_size);
 
 private:
-    std::mutex mutex_;
-    output_stream_t *output_stream_;
+    mem_guard_t mem_guard_;
 
-    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(safe_output_stream_t);
+    GEO_BASE_DISALLOW_EVIL_CONSTRUCTORS(pool_allocator_t);
 };
 
 } // namespace geo_base
