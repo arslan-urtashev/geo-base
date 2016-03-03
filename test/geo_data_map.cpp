@@ -24,6 +24,8 @@
 #include <geo_base/library/stop_watch.h>
 #include <test/geo_base_test.h>
 
+#include <utility>
+
 using namespace geo_base;
 
 class geo_data_map_test_t : public test_t {
@@ -96,14 +98,24 @@ TEST_F(geo_data_map_test_t, fake_data_serialize)
     generator::geo_data_test_t geo_data;
     generator::generator_t generator(&geo_data, &allocator);
 
-    dynarray_t<point_t> points(4, &allocator);
-    points.push_back(point_t(to_coordinate(0), to_coordinate(0)));
-    points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
-    points.push_back(point_t(to_coordinate(10), to_coordinate(0)));
-    points.push_back(point_t(to_coordinate(10), to_coordinate(10)));
+    proto::region_t region;
+
+    proto::polygon_t *polygon = region.add_polygons();
+    polygon->set_polygon_id(123);
+
+    using pair_t = std::pair<int, int>;
+    using vector_t = std::vector<pair_t>;
+
+    for (pair_t const &p : vector_t{{0, 0}, {10, 0}, {10, 0}, {10, 10}}) {
+        proto::location_t *l = polygon->add_locations();
+        l->set_lon(p.first);
+        l->set_lat(p.second);
+    }
+
+    region.set_region_id(123);
 
     generator.init();
-    generator.update(123, 123, points, polygon_t::TYPE_OUTER);
+    generator.update(region);
     generator.fini();
 
     geo_data_map_t geo_data_map1(geo_data, &serialize_allocator);
