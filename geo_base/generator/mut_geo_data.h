@@ -22,9 +22,11 @@
 #include <geo_base/library/dynarray.h>
 #include <geo_base/library/pool_allocator.h>
 
-#include <vector>
+#include <cstdlib>
+#include <limits>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace geo_base {
 namespace generator {
@@ -59,6 +61,8 @@ public: \
     } \
     void arr##_append(arr_t const &a) override \
     { \
+        if (arr##_.size() == std::numeric_limits<number_t>::max()) \
+            std::abort(); \
         arr##_.push_back(a); \
     } \
 private: \
