@@ -22,7 +22,7 @@
 #include <geo_base/core/common.h>
 #include <geo_base/library/allocator.h>
 #include <geo_base/library/mem_file.h>
-#include <geo_base/proto/def/region.pb.h>
+#include <geo_base/proto/region.pb.h>
 
 #include <unordered_map>
 

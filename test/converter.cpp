@@ -18,7 +18,7 @@
 
 #include <geo_base/library/pool_allocator.h>
 #include <geo_base/open_street_map/converter.h>
-#include <geo_base/proto/reader.h>
+#include <geo_base/proto_library/reader.h>
 #include <gmock/gmock.h>
 #include <test/geo_base_test.h>
 

@@ -19,7 +19,7 @@
 #pragma once
 
 #include <arpa/inet.h>
-#include <geo_base/proto/def/region.pb.h>
+#include <geo_base/proto/region.pb.h>
 #include <geo_base/library/dynarray.h>
 #include <geo_base/library/file.h>
 #include <geo_base/library/file_stream.h>

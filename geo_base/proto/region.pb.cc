@@ -2,7 +2,7 @@
 // source: geo_base/proto/def/region.proto
 
 #define INTERNAL_SUPPRESS_PROTOBUF_FIELD_DEPRECATION
-#include "geo_base/proto/def/region.pb.h"
+#include "geo_base/proto/region.pb.h"
 
 #include <algorithm>
 

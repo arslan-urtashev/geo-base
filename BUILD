@@ -108,8 +108,8 @@ cc_library(
     deps = [
         ":geo-base-core",
         ":geo-base-library",
-        ":geo-base-proto-def",
         ":geo-base-proto",
+        ":geo-base-proto-library",
     ],
     includes = ["."],
     copts = CCFLAGS,
@@ -117,12 +117,12 @@ cc_library(
 )
 
 cc_library(
-    name = "geo-base-proto-def",
+    name = "geo-base-proto",
     srcs = [
-        "geo_base/proto/def/region.pb.cc",
+        "geo_base/proto/region.pb.cc",
     ],
     hdrs = [
-        "geo_base/proto/def/region.pb.h",
+        "geo_base/proto/region.pb.h",
     ],
     deps = [
         "//deps/protobuf:protobuf",
@@ -136,19 +136,19 @@ cc_library(
 )
 
 cc_library(
-    name = "geo-base-proto",
+    name = "geo-base-proto-library",
     srcs = [
-        "geo_base/proto/reader.cpp",
-        "geo_base/proto/writer.cpp",
+        "geo_base/proto_library/reader.cpp",
+        "geo_base/proto_library/writer.cpp",
     ],
     hdrs = [
-        "geo_base/proto/reader.h",
-        "geo_base/proto/writer.h",
+        "geo_base/proto_library/reader.h",
+        "geo_base/proto_library/writer.h",
     ],
     deps = [
         ":geo-base-core",
         ":geo-base-library",
-        ":geo-base-proto-def",
+        ":geo-base-proto",
         "//deps/protobuf:protobuf",
         "//deps/jemalloc:jemalloc",
     ],
@@ -195,8 +195,8 @@ cc_library(
     deps = [
         ":geo-base-core",
         ":geo-base-library",
+        ":geo-base-proto-library",
         ":geo-base-proto",
-        ":geo-base-proto-def",
         ":open-street-map-proto",
         "//deps/jemalloc:jemalloc",
         "//deps/protobuf:protobuf",
@@ -235,8 +235,8 @@ cc_test(
         ":geo-base-library",
         ":geo-base-core",
         ":geo-base-generator",
+        ":geo-base-proto-library",
         ":geo-base-proto",
-        ":geo-base-proto-def",
         ":open-street-map",
         ":open-street-map-proto",
         "//deps/gmock:gmock",

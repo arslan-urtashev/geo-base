@@ -16,9 +16,9 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/proto/reader.h>
 #include <geo_base/library/log.h>
 #include <geo_base/library/stop_watch.h>
+#include <geo_base/proto_library/reader.h>
 
 namespace geo_base {
 namespace proto {
