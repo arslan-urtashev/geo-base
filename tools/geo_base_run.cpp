@@ -22,8 +22,8 @@
 #include <geo_base/core/geo_data/map.h>
 #include <geo_base/core/location.h>
 #include <geo_base/core/geo_data/debug.h>
-#include <geo_base/lib/log.h>
-#include <geo_base/lib/mem_file.h>
+#include <geo_base/library/log.h>
+#include <geo_base/library/mem_file.h>
 
 using namespace geo_base;
 

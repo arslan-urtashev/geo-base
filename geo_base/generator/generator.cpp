@@ -21,11 +21,11 @@
 #include <geo_base/generator/geo_data.h>
 #include <geo_base/generator/locations_converter.h>
 #include <geo_base/generator/mut_geo_data.h>
-#include <geo_base/lib/base_allocator.h>
-#include <geo_base/lib/log.h>
-#include <geo_base/lib/pool_allocator.h>
-#include <geo_base/lib/stop_watch.h>
-#include <geo_base/proto/reader.h>
+#include <geo_base/library/base_allocator.h>
+#include <geo_base/library/log.h>
+#include <geo_base/library/pool_allocator.h>
+#include <geo_base/library/stop_watch.h>
+#include <geo_base/proto_library/reader.h>
 
 namespace geo_base {
 namespace generator {

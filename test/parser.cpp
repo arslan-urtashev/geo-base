@@ -23,12 +23,12 @@
 #include <geo_base/open_street_map/parser.h>
 #include <geo_base/open_street_map/reader.h>
 #include <geo_base/open_street_map/simple_counter.h>
-#include <geo_base/lib/fd_guard.h>
-#include <geo_base/lib/file.h>
-#include <geo_base/lib/file_stream.h>
-#include <geo_base/lib/io_stream.h>
-#include <geo_base/lib/memory.h>
-#include <geo_base/lib/pool_allocator.h>
+#include <geo_base/library/fd_guard.h>
+#include <geo_base/library/file.h>
+#include <geo_base/library/file_stream.h>
+#include <geo_base/library/io_stream.h>
+#include <geo_base/library/memory.h>
+#include <geo_base/library/pool_allocator.h>
 
 using namespace geo_base;
 using namespace open_street_map;

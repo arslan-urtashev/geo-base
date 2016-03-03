@@ -21,7 +21,7 @@
 #include <memory>
 #include <geo_base/core/geo_data/geo_data.h>
 #include <geo_base/core/geo_data/map.h>
-#include <geo_base/lib/mem_file.h>
+#include <geo_base/library/mem_file.h>
 
 namespace geo_base {
 

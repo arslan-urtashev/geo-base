@@ -28,11 +28,11 @@ cc_binary(
         "geo_base_generate.cpp",
     ],
     deps = [
-        "//:geo-base-lib",
         "//:geo-base-core",
         "//:geo-base-generator",
+        "//:geo-base-library",
         "//:geo-base-proto",
-        "//:geo-base-proto-def",
+        "//:geo-base-proto-library",
     ],
     linkopts = LINKOPTS,
     copts = CCFLAGS,
@@ -44,7 +44,7 @@ cc_binary(
         "geo_base_run.cpp",
     ],
     deps = [
-        "//:geo-base-lib",
+        "//:geo-base-library",
         "//:geo-base-core",
     ],
     linkopts = LINKOPTS,
@@ -57,7 +57,7 @@ cc_binary(
         "geo_base_stat.cpp",
     ],
     deps = [
-        "//:geo-base-lib",
+        "//:geo-base-library",
         "//:geo-base-core",
     ],
     linkopts = LINKOPTS,
@@ -70,7 +70,7 @@ cc_binary(
         "geo_base_benchmark.cpp",
     ],
     deps = [
-        "//:geo-base-lib",
+        "//:geo-base-library",
         "//:geo-base-core",
     ],
     linkopts = LINKOPTS,

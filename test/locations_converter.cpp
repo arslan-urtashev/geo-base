@@ -17,7 +17,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/generator/locations_converter.h>
-#include <geo_base/lib/pool_allocator.h>
+#include <geo_base/library/pool_allocator.h>
 #include <test/geo_base_test.h>
 
 using namespace geo_base;

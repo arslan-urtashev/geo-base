@@ -18,11 +18,11 @@
 
 #include <geo_base/core/polygon.h>
 #include <geo_base/core/region.h>
-#include <geo_base/lib/pool_allocator.h>
-#include <geo_base/lib/safe_stream.h>
+#include <geo_base/library/pool_allocator.h>
+#include <geo_base/library/safe_stream.h>
 #include <geo_base/open_street_map/converter.h>
-#include <geo_base/proto/def/region.pb.h>
-#include <geo_base/proto/writer.h>
+#include <geo_base/proto/region.pb.h>
+#include <geo_base/proto_library/writer.h>
 
 #include <unordered_map>
 #include <unordered_set>
