@@ -33,8 +33,4 @@
 #    define IS_TRIVIALLY_CONSTRUCTIBLE(T) std::is_trivially_constructible<T>::value
 #endif
 
-namespace geo_base {
-
-uint32_t const SYSTEM_ENDIAN_FLAG = htonl(337);
-
-} // namespace geo_base
+#define SYSTEM_ENDIAN_FLAG (htonl(337))

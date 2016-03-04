@@ -53,6 +53,9 @@ void geo_data_map_t::remap()
     if (!header.ParseFromArray(data_ + sizeof(uint64_t), header_size))
         throw exception_t("Unable parse geo_data header");
 
+    if (header.magic() != SYSTEM_ENDIAN_FLAG)
+        throw exception_t("Different endianness in geo_data and host");
+
 #define GEO_BASE_DEF_VAR(var_t, var) \
     var##_ = header.var();
 
@@ -98,6 +101,7 @@ static char const *serialize(geo_data_t const &g, block_allocator_t *allocator, 
     char *data = (char *) allocator->allocate(header_size() + sizeof(uint64_t));
 
     proto::geo_data_t header;
+    header.set_magic(SYSTEM_ENDIAN_FLAG);
 
 #define GEO_BASE_DEF_VAR(var_t, var) \
     header.set_##var(g.var());
