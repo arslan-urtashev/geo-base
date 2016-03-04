@@ -53,6 +53,9 @@ struct polygon_t {
     // Square of polygon. Need for determine which polygon is better. See better member function.
     square_t square;
 
+    // Total points number of given polygon.
+    number_t points_number;
+
     // Fast point in polygon test using persistent scanline. You can see how this data structure
     // generated in geo_base/generator/.
     bool contains(point_t const &point, part_t const *parts, ref_t const *edge_refs,

@@ -79,6 +79,7 @@ void geo_data_map_t::remap()
 static size_t header_size()
 {
     proto::geo_data_t header;
+    header.set_magic(std::numeric_limits<decltype(header.magic())>::max());
 
 #define GEO_BASE_DEF_VAR(var_t, var) \
     header.set_##var(std::numeric_limits<decltype(header.var())>::max());

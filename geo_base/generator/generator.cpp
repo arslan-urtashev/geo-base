@@ -118,6 +118,7 @@ void generator_t::update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<poi
     polygon.square = get_square(points);
     polygon.type = type;
     polygon.rectangle = rectangle_t(points.data(), points.size());
+    polygon.points_number = points.size();
 
     polygon.parts_offset = geo_data_->parts_number();
 
