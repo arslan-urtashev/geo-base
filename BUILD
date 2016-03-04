@@ -88,6 +88,7 @@ cc_library(
     ],
     deps = [
         ":geo-base-library",
+        ":geo-base-proto",
     ],
     includes = ["."],
     copts = CCFLAGS + ["-W"],
@@ -124,9 +125,11 @@ cc_library(
     name = "geo-base-proto",
     srcs = [
         "geo_base/proto/region.pb.cc",
+        "geo_base/proto/geo_data.pb.cc",
     ],
     hdrs = [
         "geo_base/proto/region.pb.h",
+        "geo_base/proto/geo_data.pb.h",
     ],
     deps = [
         "//deps/protobuf:protobuf",

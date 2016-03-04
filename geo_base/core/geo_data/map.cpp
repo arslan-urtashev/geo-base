@@ -16,9 +16,12 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <geo_base/library/system.h>
-#include <geo_base/library/log.h>
 #include <geo_base/core/geo_data/map.h>
+#include <geo_base/library/log.h>
+#include <geo_base/library/system.h>
+#include <geo_base/proto/geo_data.pb.h>
+
+#include <cstdint>
 
 namespace geo_base {
 
@@ -39,129 +42,26 @@ geo_data_map_t::geo_data_map_t()
 #undef GEO_BASE_DEF_ARR
 }
 
-static uint64_t header_space()
-{
-    uint64_t space = 0;
-
-    // Header size.
-    space += sizeof(uint64_t);
-
-    // Endian flag.
-    space += sizeof(SYSTEM_ENDIAN_FLAG);
-
-#define GEO_BASE_DEF_VAR(var_t, var) \
-    space += sizeof(var_t);
-
-#define GEO_BASE_DEF_ARR(arr_t, arr) \
-    space += sizeof(number_t); \
-    space += sizeof(uint64_t);
-
-    GEO_BASE_DEF_GEO_DATA;
-
-#undef GEO_BASE_DEF_VAR
-#undef GEO_BASE_DEF_ARR
-
-    return space;
-}
-
-template<typename value_t>
-static void serialize_value(char **ptr, value_t const &v)
-{
-    *((value_t *) *ptr) = v;
-    *ptr += sizeof(value_t);
-}
-
-template<typename array_t>
-static void serialize_array(char const *begin, char **ptr, array_t const *arr,
-    number_t number, block_allocator_t *allocator)
-{
-    serialize_value(ptr, number);
-    array_t *buf = (array_t *) allocator->allocate(sizeof(array_t) * number);
-    std::copy_n(arr, number, buf);
-    serialize_value(ptr, ((uint64_t) buf) - ((uint64_t) begin));
-}
-
-static char const *serialize(geo_data_t const &geo_data,
-    block_allocator_t *allocator, size_t *size)
-{
-    size_t const pre_allocated_size = allocator->total_allocated_size();
-    char *begin = (char *) allocator->allocate(header_space()), *ptr = begin;
-
-    serialize_value(&ptr, SYSTEM_ENDIAN_FLAG);
-    serialize_value(&ptr, header_space());
-
-#define GEO_BASE_DEF_VAR(var_t, var) \
-    serialize_value(&ptr, geo_data.var());
-
-#define GEO_BASE_DEF_ARR(arr_t, arr) \
-    serialize_array(begin, &ptr, geo_data.arr(), geo_data.arr##_number(), allocator);
-
-    GEO_BASE_DEF_GEO_DATA
-
-#undef GEO_BASE_DEF_VAR
-#undef GEO_BASE_DEF_ARR
-
-    if (size)
-        *size = allocator->total_allocated_size() - pre_allocated_size;
-
-    return begin;
-}
-
-template<typename value_t>
-static bool deserialize_value(char const *end, char const **ptr, value_t *value)
-{
-    if (*ptr + sizeof(value_t) <= end) {
-        *value = *((value_t const *) *ptr);
-        *ptr += sizeof(value_t);
-        return true;
-    }
-    log_warning("Older geo_data version detected");
-    return false;
-}
-
-template<typename array_t>
-static bool deserialize_array(char const *begin, char const *end, char const **ptr,
-    array_t const **arr, number_t *number)
-{
-    if (!deserialize_value(end, ptr, number))
-        return false;
-
-    uint64_t offset = 0;
-    if (!deserialize_value(end, ptr, &offset)) {
-        *number = 0;
-        return false;
-    }
-
-    *arr = (array_t const *) (begin + offset);
-
-    return true;
-}
-
 void geo_data_map_t::remap()
 {
     if (!data_)
         return;
 
-    char const *ptr = data_;
+    uint64_t const header_size = ntohl(*((uint64_t const *) data_));
 
-    uint32_t endian_flag = 0;
-    deserialize_value(data_ + size_, &ptr, &endian_flag);
-
-    if (endian_flag != SYSTEM_ENDIAN_FLAG)
-        throw exception_t("Not compatible flag in serialized data");
-
-    uint64_t header_space = 0;
-    deserialize_value(data_ + size_, &ptr, &header_space);
-
-    char const *end = data_ + header_space;
+    proto::geo_data_t header;
+    if (!header.ParseFromArray(data_ + sizeof(uint64_t), header_size))
+        throw exception_t("Unable parse geo_data header");
 
 #define GEO_BASE_DEF_VAR(var_t, var) \
-    deserialize_value(end, &ptr, &var##_);
+    var##_ = header.var();
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
-    deserialize_array(data_, end, &ptr, &arr##_, &arr##_number_); \
-    if ((uint64_t) (arr##_ + arr##_number_) > (uint64_t) (data_ + size_)) \
-        throw exception_t("%s too big", #arr);
+    GEO_BASE_DEF_VAR(number_t, arr##_number); \
+    do { \
+        intptr_t const offset = header.arr(); \
+        arr##_ = (arr_t *) (((intptr_t) data_) + offset); \
+    } while (false);
 
     GEO_BASE_DEF_GEO_DATA
 
@@ -171,6 +71,58 @@ void geo_data_map_t::remap()
     if (version() != GEO_DATA_CURRENT_VERSION)
         throw exception_t("Unable use version %llu (current version is %llu)",
             version(), GEO_DATA_CURRENT_VERSION);
+}
+
+static size_t header_size()
+{
+    proto::geo_data_t header;
+
+#define GEO_BASE_DEF_VAR(var_t, var) \
+    header.set_##var(std::numeric_limits<decltype(header.var())>::max());
+
+#define GEO_BASE_DEF_ARR(arr_t, arr) \
+    GEO_BASE_DEF_VAR(number_t, arr##_number); \
+    header.set_##arr(std::numeric_limits<decltype(header.arr())>::max());
+
+    GEO_BASE_DEF_GEO_DATA
+
+#undef GEO_BASE_DEF_VAR
+#undef GEO_BASE_DEF_ARR
+    
+    return header.ByteSize();
+}
+
+static char const *serialize(geo_data_t const &g, block_allocator_t *allocator, size_t *size)
+{
+    size_t const pre_allocated_size = allocator->total_allocated_size();
+    char *data = (char *) allocator->allocate(header_size() + sizeof(uint64_t));
+
+    proto::geo_data_t header;
+
+#define GEO_BASE_DEF_VAR(var_t, var) \
+    header.set_##var(g.var());
+
+#define GEO_BASE_DEF_ARR(arr_t, arr) \
+    GEO_BASE_DEF_VAR(number_t, arr##_number); \
+    do { \
+        arr_t *arr = (arr_t *) allocator->allocate(sizeof(arr_t) * g.arr##_number()); \
+        memcpy(arr, g.arr(), sizeof(arr_t) * g.arr##_number()); \
+        header.set_##arr((uint64_t) (((intptr_t) arr) - ((intptr_t) data))); \
+    } while (false);
+
+    GEO_BASE_DEF_GEO_DATA
+
+#undef GEO_BASE_DEF_VAR
+#undef GEO_BASE_DEF_ARR
+
+    auto const str = header.SerializeAsString();
+    *((uint64_t *) data) = (uint64_t) htonl(str.size());
+    memcpy(data + sizeof(uint64_t), str.data(), str.size());
+
+    if (size)
+        *size = allocator->total_allocated_size() - pre_allocated_size;
+
+    return data;
 }
 
 geo_data_map_t::geo_data_map_t(geo_data_t const &geo_data, block_allocator_t *allocator)
