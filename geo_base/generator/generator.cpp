@@ -238,15 +238,7 @@ void generator_t::generate_area_boxes()
 
             std::stable_sort(mut_polygon_refs, mut_polygon_refs_end, [&] (ref_t const &a, ref_t const &b) {
                 return polygons[a].region_id < polygons[b].region_id
-                    || (
-                        polygons[a].region_id == polygons[b].region_id
-                        && polygons[a].type < polygons[b].type
-                    )
-                    || (
-                        polygons[a].region_id == polygons[b].region_id
-                        && polygons[a].type == polygons[b].type
-                        && memcmp(&polygons[a], &polygons[b], sizeof(polygon_t)) < 0   
-                    );
+                    || (polygons[a].region_id == polygons[b].region_id && polygons[a].square < polygons[b].square);
             });
 
             geo_data_->boxes_append(box);

@@ -72,14 +72,18 @@ geo_id_t geo_base_t::lookup(location_t const &location, debug_t *debug) const
         if (polygon_contains(p[refs[l]], point, geo_data)) {
             if (p[refs[l]].type == polygon_t::TYPE_INNER) {
                 // All polygons with same region_id must be skipped if polygon is inner.
-                // In geo_data inner polygons stored before outer polygons.
+                // In geo_data small inner polygons stored before big outer polygons.
                 while (r < refs_offset + refs_number && p[refs[l]].region_id == p[refs[r]].region_id)
                     ++r;
+
             } else {
                 update_answer(&answer, p[refs[l]], geo_data);
 
                 if (debug)
                     debug->push_back(p[refs[l]].region_id);
+
+                while (r < refs_offset + refs_number && p[refs[l]].region_id == p[refs[r]].region_id)
+                    ++r;
             }
         }
     }
