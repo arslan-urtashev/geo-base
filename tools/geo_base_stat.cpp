@@ -57,11 +57,13 @@ static void show_geo_data(geo_base_t const &geo_base)
 static void show_max_edge_refs(geo_base_t const &geo_base, size_t regions_number)
 {
     std::unordered_map<geo_id_t, size_t> size;
+    std::unordered_map<geo_id_t, size_t> points;
     
     geo_base.each_polygon([&] (polygon_t const &polygon) {
         geo_base.each_part(polygon, [&] (part_t const &part, number_t const edge_refs_number) {
             size[polygon.region_id] += edge_refs_number * sizeof(*geo_base.geo_data().edge_refs());
         });
+        points[polygon.region_id] += polygon.points_number;
     });
 
     std::vector<std::pair<size_t, geo_id_t>> regions;
@@ -72,8 +74,8 @@ static void show_max_edge_refs(geo_base_t const &geo_base, size_t regions_number
     std::reverse(regions.begin(), regions.end());
 
     for (size_t i = 0; i < std::min(regions_number, regions.size()); ++i)
-        log_info("(edge_refs_size) %s (%lu) = %.3f Mb", get_output(regions[i].second, geo_base),
-            regions[i].second, regions[i].first / (1024.0 * 1024.0));
+        log_info("(edge_refs_size) %s (%lu) = %.3f Mb (%lu points)", get_output(regions[i].second, geo_base),
+            regions[i].second, regions[i].first / (1024.0 * 1024.0), points[regions[i].second]);
 }
 
 static uint64_t get_bits_number(uint64_t x)
