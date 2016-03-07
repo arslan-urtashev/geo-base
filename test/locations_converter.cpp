@@ -28,27 +28,42 @@ struct location_converter_t : public geo_base_test_t {
 
 TEST_F(location_converter_t, location_converter)
 {
-    std::vector<location_t> raw_locations = {
+    std::vector<location_t> const raw_locations = {
         { 0, 0 },
         { 1, 1 },
         { 2, 2 },
         { 3, 3 },
+        { 3, 0 },
         { 0, 0 },
         { 5, 5 },
         { 6, 6 },
         { 7, 7 },
+        { 7, 5 },
         { 5, 5 },
         { 10, 10 },
         { 11, 11 },
-        { 12, 12 }
+        { 12, 12 },
+        { 12, 10 },
+    };
+
+    std::vector<location_t> const ans_locations = {
+        { 0, 0 },
+        { 3, 3 },
+        { 3, 0 },
+        { 5, 5 },
+        { 7, 7 },
+        { 7, 5 },
+        { 10, 10 },
+        { 12, 12 },
+        { 12, 10 }
     };
 
     std::vector<size_t> offsets = {
-        0, 5, 9
+        0, 3, 6
     };
 
     std::vector<size_t> sizes = {
-        4, 3, 3
+        3, 3, 3
     };
 
     pool_allocator_t allocator(1024);
@@ -57,13 +72,13 @@ TEST_F(location_converter_t, location_converter)
     size_t callbacks_count = 0;
 
     converter.each(raw_locations, [&] (dynarray_t<location_t> const &locations) {
-        ASSERT_EQ(sizes[callbacks_count], locations.size());
+        EXPECT_EQ(sizes[callbacks_count], locations.size());
 
         size_t offset = offsets[callbacks_count];
         size_t size = sizes[callbacks_count];
 
         for (size_t i = offset; i < offset + size; ++i)
-            ASSERT_TRUE(is_equal_locations(raw_locations[i], locations[i - offset]));
+            EXPECT_TRUE(is_equal_locations(ans_locations[i], locations[i - offset]));
 
         ++callbacks_count;
     });

@@ -45,6 +45,7 @@ cc_library(
     ],
     includes = ["."],
     copts = CCFLAGS,
+    linkopts = LINKOPTS,
     visibility = ["//visibility:public"],
 )
 
@@ -92,6 +93,7 @@ cc_library(
     ],
     includes = ["."],
     copts = CCFLAGS + ["-W"],
+    linkopts = LINKOPTS,
     visibility = ["//visibility:public"],
 )
 
@@ -102,12 +104,14 @@ cc_library(
         "geo_base/generator/geo_data.cpp",
         "geo_base/generator/mut_geo_data.cpp",
         "geo_base/generator/locations_converter.cpp",
+        "geo_base/generator/points_converter.cpp",
     ],
     hdrs = [
         "geo_base/generator/generator.h",
         "geo_base/generator/geo_data.h",
         "geo_base/generator/mut_geo_data.h",
         "geo_base/generator/locations_converter.h",
+        "geo_base/generator/points_converter.h",
         "geo_base/generator/storage.h",
     ],
     deps = [
@@ -118,6 +122,7 @@ cc_library(
     ],
     includes = ["."],
     copts = CCFLAGS,
+    linkopts = LINKOPTS,
     visibility = ["//visibility:public"],
 )
 
@@ -139,6 +144,7 @@ cc_library(
         "deps/protobuf"
     ],
     copts = CCFLAGS,
+    linkopts = LINKOPTS,
     visibility = ["//visibility:public"],
 )
 
@@ -160,6 +166,7 @@ cc_library(
     ],
     includes = ["."],
     copts = CCFLAGS,
+    linkopts = LINKOPTS,
     visibility = ["//visibility:public"],
 )
 
@@ -179,6 +186,7 @@ cc_library(
         "deps/protobuf",
     ],
     copts = CCFLAGS,
+    linkopts = LINKOPTS,
     visibility = ["//visibility:public"],
 )
 
@@ -209,6 +217,7 @@ cc_library(
     ],
     includes = ["."],
     copts = CCFLAGS,
+    linkopts = LINKOPTS,
     visibility = ["//visibility:public"],
 )
 
@@ -229,6 +238,7 @@ cc_test(
         "test/geo_data_map.cpp",
         "test/grep_boundary_ways.cpp",
         "test/locations_converter.cpp",
+        "test/points_converter.cpp",
         "test/log.cpp",
         "test/mem_file.cpp",
         "test/parser.cpp",

@@ -20,6 +20,7 @@
 #include <geo_base/generator/generator.h>
 #include <geo_base/generator/geo_data.h>
 #include <geo_base/generator/locations_converter.h>
+#include <geo_base/generator/points_converter.h>
 #include <geo_base/generator/mut_geo_data.h>
 #include <geo_base/library/base_allocator.h>
 #include <geo_base/library/log.h>
@@ -102,13 +103,16 @@ static square_t get_square(dynarray_t<point_t> const &p)
     return s > 0 ? s : -s;
 }
 
-void generator_t::update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<point_t> const &points,
+void generator_t::update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<point_t> const &raw_points,
     polygon_t::type_t type)
 {
-    if (points.size() <= 2) {
+    if (raw_points.size() <= 2) {
         log_warning("Polygon %lu too small (region %lu)", polygon_id, region_id);
         return;
     }
+
+    points_converter_t points_converter(allocator_);
+    dynarray_t<point_t> points = points_converter.convert(raw_points);
 
     polygon_t polygon;
     memset(&polygon, 0, sizeof(polygon));

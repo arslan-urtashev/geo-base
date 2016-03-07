@@ -22,6 +22,8 @@
 #include <geo_base/library/allocator.h>
 #include <geo_base/library/dynarray.h>
 
+#include <iostream>
+
 namespace geo_base {
 namespace generator {
 
@@ -47,8 +49,6 @@ inline double lat(proto::location_t const &l)
     return l.lat();
 }
 
-} // namespace
-
 template<typename a_t, typename b_t>
 bool is_equal_locations(a_t const &a, b_t const &b)
 {
@@ -56,6 +56,17 @@ bool is_equal_locations(a_t const &a, b_t const &b)
     location_t b1(lon(b), lat(b));
     return point_t(a1) == point_t(b1);
 }
+
+template<typename location_t>
+bool on_one_line(location_t const &a0, location_t const &b0, location_t const &c0)
+{
+    point_t const a(a0);
+    point_t const b(b0);
+    point_t const c(c0);
+    return (b - a).cross(c - b) == 0;
+}
+
+} // namespace
 
 class locations_converter_t {
 public:
@@ -71,14 +82,24 @@ public:
             if (locations.empty() || !is_equal_locations(locations.back(), l))
                 locations.push_back(location_t(lon(l), lat(l)));
 
-            if (locations.size() > 3 && is_equal_locations(locations.front(), locations.back())) {
+            if (locations.size() >= 3) {
+                location_t const &a = locations[locations.size() - 3];
+                location_t const &b = locations[locations.size() - 2];
+                location_t const &c = locations[locations.size() - 1];
+                if (on_one_line(a, b, c)) {
+                    locations[locations.size() - 2] = locations[locations.size() - 1];
+                    locations.pop_back();
+                }
+            }
+
+            if (locations.size() >= 3 && is_equal_locations(locations.front(), locations.back())) {
                 locations.pop_back();
                 callback(locations);
                 locations.clear();
             }
         }
 
-        if (locations.size() > 2)
+        if (locations.size() >= 3)
             callback(locations);
     }
 
