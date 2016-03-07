@@ -36,7 +36,7 @@ void protobuf_AssignDesc_geo_5fbase_2fproto_2fgeo_5fdata_2eproto() {
       "geo_base/proto/geo_data.proto");
   GOOGLE_CHECK(file != NULL);
   geo_data_t_descriptor_ = file->message_type(0);
-  static const int geo_data_t_offsets_[22] = {
+  static const int geo_data_t_offsets_[26] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(geo_data_t, magic_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(geo_data_t, version_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(geo_data_t, points_),
@@ -59,6 +59,10 @@ void protobuf_AssignDesc_geo_5fbase_2fproto_2fgeo_5fdata_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(geo_data_t, kvs_number_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(geo_data_t, regions_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(geo_data_t, regions_number_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(geo_data_t, raw_borders_number_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(geo_data_t, raw_borders_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(geo_data_t, raw_edge_refs_number_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(geo_data_t, raw_edge_refs_),
   };
   geo_data_t_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -102,8 +106,8 @@ void protobuf_AddDesc_geo_5fbase_2fproto_2fgeo_5fdata_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\035geo_base/proto/geo_data.proto\022\016geo_bas"
-    "e.proto\"\274\003\n\ngeo_data_t\022\r\n\005magic\030\001 \001(\004\022\017\n"
-    "\007version\030\002 \001(\004\022\016\n\006points\030\003 \001(\004\022\025\n\rpoints"
+    "e.proto\"\242\004\n\ngeo_data_t\022\r\n\005magic\030\001 \002(\004\022\017\n"
+    "\007version\030\002 \002(\004\022\016\n\006points\030\003 \001(\004\022\025\n\rpoints"
     "_number\030\004 \001(\004\022\r\n\005edges\030\005 \001(\004\022\024\n\014edges_nu"
     "mber\030\006 \001(\004\022\021\n\tedge_refs\030\007 \001(\004\022\030\n\020edge_re"
     "fs_number\030\010 \001(\004\022\r\n\005parts\030\t \001(\004\022\024\n\014parts_"
@@ -113,7 +117,9 @@ void protobuf_AddDesc_geo_5fbase_2fproto_2fgeo_5fdata_2eproto() {
     "\004\022\024\n\014boxes_number\030\020 \001(\004\022\r\n\005blobs\030\021 \001(\004\022\024"
     "\n\014blobs_number\030\022 \001(\004\022\013\n\003kvs\030\023 \001(\004\022\022\n\nkvs"
     "_number\030\024 \001(\004\022\017\n\007regions\030\025 \001(\004\022\026\n\016region"
-    "s_number\030\026 \001(\004", 494);
+    "s_number\030\026 \001(\004\022\032\n\022raw_borders_number\030\027 \001"
+    "(\004\022\023\n\013raw_borders\030\030 \001(\004\022\034\n\024raw_edge_refs"
+    "_number\030\031 \001(\004\022\025\n\rraw_edge_refs\030\032 \001(\004", 596);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "geo_base/proto/geo_data.proto", &protobuf_RegisterTypes);
   geo_data_t::default_instance_ = new geo_data_t();
@@ -163,6 +169,10 @@ const int geo_data_t::kKvsFieldNumber;
 const int geo_data_t::kKvsNumberFieldNumber;
 const int geo_data_t::kRegionsFieldNumber;
 const int geo_data_t::kRegionsNumberFieldNumber;
+const int geo_data_t::kRawBordersNumberFieldNumber;
+const int geo_data_t::kRawBordersFieldNumber;
+const int geo_data_t::kRawEdgeRefsNumberFieldNumber;
+const int geo_data_t::kRawEdgeRefsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 geo_data_t::geo_data_t()
@@ -206,6 +216,10 @@ void geo_data_t::SharedCtor() {
   kvs_number_ = GOOGLE_ULONGLONG(0);
   regions_ = GOOGLE_ULONGLONG(0);
   regions_number_ = GOOGLE_ULONGLONG(0);
+  raw_borders_number_ = GOOGLE_ULONGLONG(0);
+  raw_borders_ = GOOGLE_ULONGLONG(0);
+  raw_edge_refs_number_ = GOOGLE_ULONGLONG(0);
+  raw_edge_refs_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -259,9 +273,10 @@ void geo_data_t::Clear() {
   if (_has_bits_[8 / 32] & 65280u) {
     ZR_(parts_, boxes_number_);
   }
-  if (_has_bits_[16 / 32] & 4128768u) {
-    ZR_(blobs_, regions_number_);
+  if (_has_bits_[16 / 32] & 16711680u) {
+    ZR_(blobs_, raw_borders_);
   }
+  ZR_(raw_edge_refs_number_, raw_edge_refs_);
 
 #undef ZR_HELPER_
 #undef ZR_
@@ -282,7 +297,7 @@ bool geo_data_t::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint64 magic = 1;
+      // required uint64 magic = 1;
       case 1: {
         if (tag == 8) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
@@ -296,7 +311,7 @@ bool geo_data_t::MergePartialFromCodedStream(
         break;
       }
 
-      // optional uint64 version = 2;
+      // required uint64 version = 2;
       case 2: {
         if (tag == 16) {
          parse_version:
@@ -607,6 +622,66 @@ bool geo_data_t::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(184)) goto parse_raw_borders_number;
+        break;
+      }
+
+      // optional uint64 raw_borders_number = 23;
+      case 23: {
+        if (tag == 184) {
+         parse_raw_borders_number:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &raw_borders_number_)));
+          set_has_raw_borders_number();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(192)) goto parse_raw_borders;
+        break;
+      }
+
+      // optional uint64 raw_borders = 24;
+      case 24: {
+        if (tag == 192) {
+         parse_raw_borders:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &raw_borders_)));
+          set_has_raw_borders();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(200)) goto parse_raw_edge_refs_number;
+        break;
+      }
+
+      // optional uint64 raw_edge_refs_number = 25;
+      case 25: {
+        if (tag == 200) {
+         parse_raw_edge_refs_number:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &raw_edge_refs_number_)));
+          set_has_raw_edge_refs_number();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(208)) goto parse_raw_edge_refs;
+        break;
+      }
+
+      // optional uint64 raw_edge_refs = 26;
+      case 26: {
+        if (tag == 208) {
+         parse_raw_edge_refs:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &raw_edge_refs_)));
+          set_has_raw_edge_refs();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -636,12 +711,12 @@ failure:
 void geo_data_t::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:geo_base.proto.geo_data_t)
-  // optional uint64 magic = 1;
+  // required uint64 magic = 1;
   if (has_magic()) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->magic(), output);
   }
 
-  // optional uint64 version = 2;
+  // required uint64 version = 2;
   if (has_version()) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->version(), output);
   }
@@ -746,6 +821,26 @@ void geo_data_t::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(22, this->regions_number(), output);
   }
 
+  // optional uint64 raw_borders_number = 23;
+  if (has_raw_borders_number()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(23, this->raw_borders_number(), output);
+  }
+
+  // optional uint64 raw_borders = 24;
+  if (has_raw_borders()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(24, this->raw_borders(), output);
+  }
+
+  // optional uint64 raw_edge_refs_number = 25;
+  if (has_raw_edge_refs_number()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(25, this->raw_edge_refs_number(), output);
+  }
+
+  // optional uint64 raw_edge_refs = 26;
+  if (has_raw_edge_refs()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(26, this->raw_edge_refs(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -756,12 +851,12 @@ void geo_data_t::SerializeWithCachedSizes(
 ::google::protobuf::uint8* geo_data_t::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:geo_base.proto.geo_data_t)
-  // optional uint64 magic = 1;
+  // required uint64 magic = 1;
   if (has_magic()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->magic(), target);
   }
 
-  // optional uint64 version = 2;
+  // required uint64 version = 2;
   if (has_version()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->version(), target);
   }
@@ -866,6 +961,26 @@ void geo_data_t::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(22, this->regions_number(), target);
   }
 
+  // optional uint64 raw_borders_number = 23;
+  if (has_raw_borders_number()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(23, this->raw_borders_number(), target);
+  }
+
+  // optional uint64 raw_borders = 24;
+  if (has_raw_borders()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(24, this->raw_borders(), target);
+  }
+
+  // optional uint64 raw_edge_refs_number = 25;
+  if (has_raw_edge_refs_number()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(25, this->raw_edge_refs_number(), target);
+  }
+
+  // optional uint64 raw_edge_refs = 26;
+  if (has_raw_edge_refs()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(26, this->raw_edge_refs(), target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -874,24 +989,43 @@ void geo_data_t::SerializeWithCachedSizes(
   return target;
 }
 
+int geo_data_t::RequiredFieldsByteSizeFallback() const {
+  int total_size = 0;
+
+  if (has_magic()) {
+    // required uint64 magic = 1;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        this->magic());
+  }
+
+  if (has_version()) {
+    // required uint64 version = 2;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        this->version());
+  }
+
+  return total_size;
+}
 int geo_data_t::ByteSize() const {
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & 255u) {
-    // optional uint64 magic = 1;
-    if (has_magic()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->magic());
-    }
+  if (((_has_bits_[0] & 0x00000003) ^ 0x00000003) == 0) {  // All required fields are present.
+    // required uint64 magic = 1;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        this->magic());
 
-    // optional uint64 version = 2;
-    if (has_version()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->version());
-    }
+    // required uint64 version = 2;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        this->version());
 
+  } else {
+    total_size += RequiredFieldsByteSizeFallback();
+  }
+  if (_has_bits_[2 / 32] & 252u) {
     // optional uint64 points = 3;
     if (has_points()) {
       total_size += 1 +
@@ -993,7 +1127,7 @@ int geo_data_t::ByteSize() const {
     }
 
   }
-  if (_has_bits_[16 / 32] & 4128768u) {
+  if (_has_bits_[16 / 32] & 16711680u) {
     // optional uint64 blobs = 17;
     if (has_blobs()) {
       total_size += 2 +
@@ -1034,6 +1168,36 @@ int geo_data_t::ByteSize() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt64Size(
           this->regions_number());
+    }
+
+    // optional uint64 raw_borders_number = 23;
+    if (has_raw_borders_number()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->raw_borders_number());
+    }
+
+    // optional uint64 raw_borders = 24;
+    if (has_raw_borders()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->raw_borders());
+    }
+
+  }
+  if (_has_bits_[24 / 32] & 50331648u) {
+    // optional uint64 raw_edge_refs_number = 25;
+    if (has_raw_edge_refs_number()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->raw_edge_refs_number());
+    }
+
+    // optional uint64 raw_edge_refs = 26;
+    if (has_raw_edge_refs()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->raw_edge_refs());
     }
 
   }
@@ -1133,6 +1297,20 @@ void geo_data_t::MergeFrom(const geo_data_t& from) {
     if (from.has_regions_number()) {
       set_regions_number(from.regions_number());
     }
+    if (from.has_raw_borders_number()) {
+      set_raw_borders_number(from.raw_borders_number());
+    }
+    if (from.has_raw_borders()) {
+      set_raw_borders(from.raw_borders());
+    }
+  }
+  if (from._has_bits_[24 / 32] & (0xffu << (24 % 32))) {
+    if (from.has_raw_edge_refs_number()) {
+      set_raw_edge_refs_number(from.raw_edge_refs_number());
+    }
+    if (from.has_raw_edge_refs()) {
+      set_raw_edge_refs(from.raw_edge_refs());
+    }
   }
   if (from._internal_metadata_.have_unknown_fields()) {
     mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1152,6 +1330,7 @@ void geo_data_t::CopyFrom(const geo_data_t& from) {
 }
 
 bool geo_data_t::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
@@ -1183,6 +1362,10 @@ void geo_data_t::InternalSwap(geo_data_t* other) {
   std::swap(kvs_number_, other->kvs_number_);
   std::swap(regions_, other->regions_);
   std::swap(regions_number_, other->regions_number_);
+  std::swap(raw_borders_number_, other->raw_borders_number_);
+  std::swap(raw_borders_, other->raw_borders_);
+  std::swap(raw_edge_refs_number_, other->raw_edge_refs_number_);
+  std::swap(raw_edge_refs_, other->raw_edge_refs_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -1199,7 +1382,7 @@ void geo_data_t::InternalSwap(geo_data_t* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // geo_data_t
 
-// optional uint64 magic = 1;
+// required uint64 magic = 1;
 bool geo_data_t::has_magic() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1223,7 +1406,7 @@ void geo_data_t::clear_magic() {
   // @@protoc_insertion_point(field_set:geo_base.proto.geo_data_t.magic)
 }
 
-// optional uint64 version = 2;
+// required uint64 version = 2;
 bool geo_data_t::has_version() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1725,6 +1908,102 @@ void geo_data_t::clear_regions_number() {
   set_has_regions_number();
   regions_number_ = value;
   // @@protoc_insertion_point(field_set:geo_base.proto.geo_data_t.regions_number)
+}
+
+// optional uint64 raw_borders_number = 23;
+bool geo_data_t::has_raw_borders_number() const {
+  return (_has_bits_[0] & 0x00400000u) != 0;
+}
+void geo_data_t::set_has_raw_borders_number() {
+  _has_bits_[0] |= 0x00400000u;
+}
+void geo_data_t::clear_has_raw_borders_number() {
+  _has_bits_[0] &= ~0x00400000u;
+}
+void geo_data_t::clear_raw_borders_number() {
+  raw_borders_number_ = GOOGLE_ULONGLONG(0);
+  clear_has_raw_borders_number();
+}
+ ::google::protobuf::uint64 geo_data_t::raw_borders_number() const {
+  // @@protoc_insertion_point(field_get:geo_base.proto.geo_data_t.raw_borders_number)
+  return raw_borders_number_;
+}
+ void geo_data_t::set_raw_borders_number(::google::protobuf::uint64 value) {
+  set_has_raw_borders_number();
+  raw_borders_number_ = value;
+  // @@protoc_insertion_point(field_set:geo_base.proto.geo_data_t.raw_borders_number)
+}
+
+// optional uint64 raw_borders = 24;
+bool geo_data_t::has_raw_borders() const {
+  return (_has_bits_[0] & 0x00800000u) != 0;
+}
+void geo_data_t::set_has_raw_borders() {
+  _has_bits_[0] |= 0x00800000u;
+}
+void geo_data_t::clear_has_raw_borders() {
+  _has_bits_[0] &= ~0x00800000u;
+}
+void geo_data_t::clear_raw_borders() {
+  raw_borders_ = GOOGLE_ULONGLONG(0);
+  clear_has_raw_borders();
+}
+ ::google::protobuf::uint64 geo_data_t::raw_borders() const {
+  // @@protoc_insertion_point(field_get:geo_base.proto.geo_data_t.raw_borders)
+  return raw_borders_;
+}
+ void geo_data_t::set_raw_borders(::google::protobuf::uint64 value) {
+  set_has_raw_borders();
+  raw_borders_ = value;
+  // @@protoc_insertion_point(field_set:geo_base.proto.geo_data_t.raw_borders)
+}
+
+// optional uint64 raw_edge_refs_number = 25;
+bool geo_data_t::has_raw_edge_refs_number() const {
+  return (_has_bits_[0] & 0x01000000u) != 0;
+}
+void geo_data_t::set_has_raw_edge_refs_number() {
+  _has_bits_[0] |= 0x01000000u;
+}
+void geo_data_t::clear_has_raw_edge_refs_number() {
+  _has_bits_[0] &= ~0x01000000u;
+}
+void geo_data_t::clear_raw_edge_refs_number() {
+  raw_edge_refs_number_ = GOOGLE_ULONGLONG(0);
+  clear_has_raw_edge_refs_number();
+}
+ ::google::protobuf::uint64 geo_data_t::raw_edge_refs_number() const {
+  // @@protoc_insertion_point(field_get:geo_base.proto.geo_data_t.raw_edge_refs_number)
+  return raw_edge_refs_number_;
+}
+ void geo_data_t::set_raw_edge_refs_number(::google::protobuf::uint64 value) {
+  set_has_raw_edge_refs_number();
+  raw_edge_refs_number_ = value;
+  // @@protoc_insertion_point(field_set:geo_base.proto.geo_data_t.raw_edge_refs_number)
+}
+
+// optional uint64 raw_edge_refs = 26;
+bool geo_data_t::has_raw_edge_refs() const {
+  return (_has_bits_[0] & 0x02000000u) != 0;
+}
+void geo_data_t::set_has_raw_edge_refs() {
+  _has_bits_[0] |= 0x02000000u;
+}
+void geo_data_t::clear_has_raw_edge_refs() {
+  _has_bits_[0] &= ~0x02000000u;
+}
+void geo_data_t::clear_raw_edge_refs() {
+  raw_edge_refs_ = GOOGLE_ULONGLONG(0);
+  clear_has_raw_edge_refs();
+}
+ ::google::protobuf::uint64 geo_data_t::raw_edge_refs() const {
+  // @@protoc_insertion_point(field_get:geo_base.proto.geo_data_t.raw_edge_refs)
+  return raw_edge_refs_;
+}
+ void geo_data_t::set_raw_edge_refs(::google::protobuf::uint64 value) {
+  set_has_raw_edge_refs();
+  raw_edge_refs_ = value;
+  // @@protoc_insertion_point(field_set:geo_base.proto.geo_data_t.raw_edge_refs)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

@@ -16,33 +16,4 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package geo_base.proto;
-
-message geo_data_t {
-    required uint64 magic = 1;
-    required uint64 version = 2;
-    optional uint64 points = 3;
-    optional uint64 points_number = 4;
-    optional uint64 edges = 5;
-    optional uint64 edges_number = 6;
-    optional uint64 edge_refs = 7;
-    optional uint64 edge_refs_number = 8;
-    optional uint64 parts = 9;
-    optional uint64 parts_number = 10;
-    optional uint64 polygons = 11;
-    optional uint64 polygons_number = 12;
-    optional uint64 polygon_refs = 13;
-    optional uint64 polygon_refs_number = 14;
-    optional uint64 boxes = 15;
-    optional uint64 boxes_number = 16;
-    optional uint64 blobs = 17;
-    optional uint64 blobs_number = 18;
-    optional uint64 kvs = 19;
-    optional uint64 kvs_number = 20;
-    optional uint64 regions = 21;
-    optional uint64 regions_number = 22;
-	optional uint64 raw_borders_number = 23;
-	optional uint64 raw_borders = 24;
-	optional uint64 raw_edge_refs_number = 25;
-	optional uint64 raw_edge_refs = 26;
-};
+#include <geo_base/core/raw_border.h>

@@ -23,14 +23,20 @@ namespace generator {
 
 void raw_borders_handler_t::init()
 {
+    if (!config_.save_raw_borders)
+        return;
 }
 
 void raw_borders_handler_t::update(proto::region_t const &)
 {
+    if (!config_.save_raw_borders)
+        return;
 }
 
 void raw_borders_handler_t::fini()
 {
+    if (!config_.save_raw_borders)
+        return;
 }
 
 } // namespace generator

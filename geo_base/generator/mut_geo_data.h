@@ -74,8 +74,7 @@ private: \
 #undef GEO_BASE_DEF_ARR
 
 public:
-    mut_geo_data_t()
-    { }
+    mut_geo_data_t();
 
     ref_t insert(point_t const &p) override
     {

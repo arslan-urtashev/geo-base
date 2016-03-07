@@ -17,3 +17,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <geo_base/generator/mut_geo_data.h>
+
+namespace geo_base {
+namespace generator {
+
+mut_geo_data_t::mut_geo_data_t()
+{
+#define GEO_BASE_DEF_VAR(var_t, var) \
+    var##_ = var_t();
+
+#define GEO_BASE_DEF_ARR(arr_t, arr) \
+    // undef
+
+    GEO_BASE_DEF_GEO_DATA
+
+#undef GEO_BASE_DEF_VAR
+#undef GEO_BASE_DEF_ARR
+}
+
+} // namespace generator
+} // namespace geo_base

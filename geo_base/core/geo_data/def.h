@@ -26,6 +26,7 @@
 #include <geo_base/core/point.h>
 #include <geo_base/core/polygon.h>
 #include <geo_base/core/region.h>
+#include <geo_base/core/raw_border.h>
 
 namespace geo_base {
 
@@ -46,6 +47,9 @@ version_t const GEO_DATA_CURRENT_VERSION = GEO_DATA_VERSION_1;
     GEO_BASE_DEF_ARR(area_box_t, boxes); \
     GEO_BASE_DEF_ARR(char, blobs); \
     GEO_BASE_DEF_ARR(kv_t, kvs); \
-    GEO_BASE_DEF_ARR(region_t, regions);
+    GEO_BASE_DEF_ARR(region_t, regions); \
+    GEO_BASE_DEF_ARR(raw_border_t, raw_borders); \
+    GEO_BASE_DEF_ARR(ref_t, raw_edge_refs); \
+// #define GEO_BASE_DEF_GEO_DATA
 
 } // namespace geo_base

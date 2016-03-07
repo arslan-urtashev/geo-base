@@ -68,6 +68,7 @@ cc_library(
         "geo_base/core/polygon.cpp",
         "geo_base/core/rectangle.cpp",
         "geo_base/core/region.cpp",
+        "geo_base/core/raw_border.cpp",
     ],
     hdrs = [
         "geo_base/core/area_box.h",
@@ -86,6 +87,7 @@ cc_library(
         "geo_base/core/polygon.h",
         "geo_base/core/rectangle.h",
         "geo_base/core/region.h",
+        "geo_base/core/raw_border.h",
     ],
     deps = [
         ":geo-base-library",
