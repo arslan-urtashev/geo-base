@@ -95,6 +95,8 @@ public:
     }
 
 private:
+    void init();
+
     void remap();
 
     char const *data_;

@@ -25,9 +25,7 @@
 
 namespace geo_base {
 
-geo_data_map_t::geo_data_map_t()
-    : data_(nullptr)
-    , size_(0)
+void geo_data_map_t::init()
 {
 #define GEO_BASE_DEF_VAR(var_t, var) \
     var##_ = var_t();
@@ -42,8 +40,17 @@ geo_data_map_t::geo_data_map_t()
 #undef GEO_BASE_DEF_ARR
 }
 
+geo_data_map_t::geo_data_map_t()
+    : data_(nullptr)
+    , size_(0)
+{
+    init();
+}
+
 void geo_data_map_t::remap()
 {
+    init();
+
     if (!data_)
         return;
 
@@ -61,7 +68,7 @@ void geo_data_map_t::remap()
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
     GEO_BASE_DEF_VAR(number_t, arr##_number); \
-    do { \
+    if (arr##_number() > 0) { \
         intptr_t const offset = header.arr(); \
         arr##_ = (arr_t *) (((intptr_t) data_) + offset); \
     } while (false);
@@ -109,11 +116,11 @@ static char const *serialize(geo_data_t const &g, block_allocator_t *allocator, 
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
     GEO_BASE_DEF_VAR(number_t, arr##_number); \
-    do { \
+    if (g.arr##_number() > 0) { \
         arr_t *arr = (arr_t *) allocator->allocate(sizeof(arr_t) * g.arr##_number()); \
         memcpy(arr, g.arr(), sizeof(arr_t) * g.arr##_number()); \
         header.set_##arr((uint64_t) (((intptr_t) arr) - ((intptr_t) data))); \
-    } while (false);
+    };
 
     GEO_BASE_DEF_GEO_DATA
 
