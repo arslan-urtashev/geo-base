@@ -37,6 +37,12 @@ public:
     void update(proto::region_t const &region) override;
 
     void fini() override;
+
+private:
+    void update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<point_t> const &raw_points,
+        polygon_t::type_t type);
+
+    void update(geo_id_t region_id, proto::polygon_t const &polygon);
 };
 
 } // namespace generator

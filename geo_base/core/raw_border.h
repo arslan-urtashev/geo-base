@@ -19,12 +19,27 @@
 #pragma once
 
 #include <geo_base/core/common.h>
+#include <geo_base/core/polygon.h>
 
 namespace geo_base {
 
 struct raw_border_t {
+    using type_t = polygon_t::type_t;
+    
+    // INNER/OUTER type. See polygon.h for details.
+    type_t type;
+
+    // Geographical data indetifiers.
     geo_id_t region_id;
     geo_id_t polygon_id;
+
+    // Rectangle in which lies that raw polygon border.
+    rectangle_t rectangle;
+
+    // Square of raw polygon border.
+    square_t square;
+
+    // Raw border edge refs.
     number_t edge_refs_offset;
     number_t edge_refs_number;
 };

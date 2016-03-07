@@ -16,7 +16,10 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include <geo_base/generator/locations_converter.h>
+#include <geo_base/generator/points_converter.h>
 #include <geo_base/generator/raw_borders_handler.h>
+#include <geo_base/library/log.h>
 
 namespace geo_base {
 namespace generator {
@@ -27,10 +30,46 @@ void raw_borders_handler_t::init()
         return;
 }
 
-void raw_borders_handler_t::update(proto::region_t const &)
+void raw_borders_handler_t::update(geo_id_t region_id, geo_id_t polygon_id,
+    dynarray_t<point_t> const &raw_points, polygon_t::type_t type)
+{
+    if (raw_points.size() <= 2) {
+        log_warning("Polygon %lu too small (region %lu)", polygon_id, region_id);
+        return;
+    }
+
+    points_converter_t points_converter(allocator_);
+    dynarray_t<point_t> points = points_converter.convert(raw_points);
+
+    raw_border_t border;
+    border.type = type;
+    border.region_id = region_id;
+    border.polygon_id = polygon_id;
+    border.edge_refs_offset = geo_data_->raw_edge_refs_number();
+
+    border.edge_refs_number = geo_data_->raw_edge_refs_number() - border.edge_refs_offset;
+    geo_data_->raw_borders_append(border);
+}
+
+
+void raw_borders_handler_t::update(geo_id_t region_id, proto::polygon_t const &polygon)
+{
+    locations_converter_t converter(allocator_);
+    converter.each(polygon.locations(), [&] (dynarray_t<location_t> const &locations) {
+        dynarray_t<point_t> points(locations.size(), allocator_);
+        for (location_t const &l : locations)
+            points.push_back(point_t(l));
+        update(region_id, polygon.polygon_id(), points, (polygon_t::type_t) polygon.type());
+    });
+}
+
+void raw_borders_handler_t::update(proto::region_t const &region)
 {
     if (!config_.save_raw_borders)
         return;
+
+    for (proto::polygon_t const &polygon : region.polygons())
+        update(region.region_id(), polygon);
 }
 
 void raw_borders_handler_t::fini()
