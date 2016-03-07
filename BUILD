@@ -111,6 +111,7 @@ cc_library(
         "geo_base/generator/mut_geo_data.cpp",
         "geo_base/generator/locations_converter.cpp",
         "geo_base/generator/points_converter.cpp",
+        "geo_base/generator/common.cpp",
     ],
     hdrs = [
         "geo_base/generator/generator.h",
@@ -123,6 +124,7 @@ cc_library(
         "geo_base/generator/locations_converter.h",
         "geo_base/generator/points_converter.h",
         "geo_base/generator/storage.h",
+        "geo_base/generator/common.h",
     ],
     deps = [
         ":geo-base-core",

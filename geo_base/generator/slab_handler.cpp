@@ -20,6 +20,7 @@
 #include <geo_base/generator/gen_geo_data.h>
 #include <geo_base/generator/points_converter.h>
 #include <geo_base/generator/locations_converter.h>
+#include <geo_base/generator/common.h>
 #include <geo_base/library/stop_watch.h>
 #include <geo_base/library/log.h>
 
@@ -31,42 +32,6 @@ struct check_point_t {
     number_t idx;
     bool is_start;
 };
-
-static bool is_bad_edge(edge_t const &e, point_t const *p)
-{
-    return abs(p[e.beg].x - p[e.end].x) > to_coordinate(300.0);
-}
-
-static dynarray_t<edge_t> make_edges(dynarray_t<point_t> const &points, gen_geo_data_t *geo_data,
-    allocator_t *allocator)
-{
-    dynarray_t<edge_t> edges(points.size(), allocator);
-    for (number_t i = 0; i < points.size(); ++i) {
-        number_t j = (i + 1 == points.size() ? 0 : i + 1);
-
-        if (points[i] == points[j])
-            continue;
-
-        ref_t const &p1 = geo_data->insert(points[i]);
-        ref_t const &p2 = geo_data->insert(points[j]);
-        edge_t e(p1, p2);
-
-        point_t const *p = geo_data->points();
-        if (p[e.beg].x > p[e.end].x)
-            std::swap(e.beg, e.end);
-
-        if (is_bad_edge(e, p)) {
-            log_warning("Bad edge (%f, %f)=>(%f, %f)",
-                to_double(p[e.beg].x), to_double(p[e.beg].y),
-                to_double(p[e.end].x), to_double(p[e.end].y));
-            continue;
-        }
-
-        edges.push_back(e);
-    }
-
-    return edges;
-}
 
 static dynarray_t<check_point_t> make_check_points(dynarray_t<edge_t> const &e,
     gen_geo_data_t *geo_data, allocator_t *allocator)
@@ -86,16 +51,6 @@ static dynarray_t<check_point_t> make_check_points(dynarray_t<edge_t> const &e,
     );
 
     return check_points;
-}
-
-static square_t get_square(dynarray_t<point_t> const &p)
-{
-    square_t s = 0;
-    for (number_t i = 0; i < p.size(); ++i) {
-        number_t j = (i + 1 == p.size() ? 0 : i + 1);
-        s += p[i].cross(p[j]);
-    }
-    return s > 0 ? s : -s;
 }
 
 void slab_handler_t::update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<point_t> const &raw_points,
