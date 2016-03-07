@@ -16,6 +16,7 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include <geo_base/generator/common.h>
 #include <geo_base/generator/locations_converter.h>
 #include <geo_base/generator/points_converter.h>
 #include <geo_base/generator/raw_borders_handler.h>
@@ -42,15 +43,21 @@ void raw_borders_handler_t::update(geo_id_t region_id, geo_id_t polygon_id,
     dynarray_t<point_t> points = points_converter.convert(raw_points);
 
     raw_border_t border;
-    border.type = type;
     border.region_id = region_id;
     border.polygon_id = polygon_id;
+    border.square = get_square(points);
+    border.type = type;
+    border.rectangle = rectangle_t(points.data(), points.size());
+
     border.edge_refs_offset = geo_data_->raw_edge_refs_number();
+
+    dynarray_t<edge_t> const edges = make_edges(points, geo_data_, allocator_);
+    for (number_t i = 0; i < edges.size(); ++i)
+        geo_data_->raw_edge_refs_append(geo_data_->insert(edges[i]));
 
     border.edge_refs_number = geo_data_->raw_edge_refs_number() - border.edge_refs_offset;
     geo_data_->raw_borders_append(border);
 }
-
 
 void raw_borders_handler_t::update(geo_id_t region_id, proto::polygon_t const &polygon)
 {
