@@ -171,6 +171,8 @@ void slab_handler_t::generate_area_boxes()
         for (coordinate_t x0 = x1; x0 <= x2 + area_box::delta_x; x0 += area_box::delta_x) {
             for (coordinate_t y0 = y1; y0 <= y2 + area_box::delta_y; y0 += area_box::delta_y) {
                 ref_t const box = lookup_area_box(point_t(x0, y0));
+                if (box >= rectangles.size() || box >= area_boxes.size())
+                    continue;
                 if (polygons[i].rectangle.has_intersection(rectangles[box]))
                     area_boxes[box].push_back(i);
             }

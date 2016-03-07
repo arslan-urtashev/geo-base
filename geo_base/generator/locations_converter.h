@@ -94,7 +94,8 @@ public:
 
             if (locations.size() >= 3 && is_equal_locations(locations.front(), locations.back())) {
                 locations.pop_back();
-                callback(locations);
+                if (locations.size() >= 3)
+                    callback(locations);
                 locations.clear();
             }
         }
