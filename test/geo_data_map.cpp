@@ -96,7 +96,7 @@ TEST_F(geo_data_map_test_t, fake_data_serialize)
     pool_allocator_t serialize_allocator(64_mb);
 
     generator::geo_data_test_t geo_data;
-    generator::generator_t generator(&geo_data, &allocator);
+    generator::generator_t generator(generator::config_t(), &geo_data, &allocator);
 
     proto::region_t region;
 

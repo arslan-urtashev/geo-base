@@ -18,42 +18,12 @@
 
 #pragma once
 
-#include <geo_base/core/geo_data/geo_data.h>
-#include <geo_base/library/allocator.h>
-#include <geo_base/proto/region.pb.h>
-#include <geo_base/generator/gen_geo_data.h>
-#include <geo_base/generator/config.h>
-
-#include <memory>
-
 namespace geo_base {
 namespace generator {
 
-class handler_t {
-public:
-    handler_t(config_t const &config, gen_geo_data_t *geo_data, allocator_t *allocator)
-        : geo_data_(geo_data)
-        , allocator_(allocator)
-        , config_(config)
-    { }
-
-    virtual void init() = 0;
-
-    virtual void update(proto::region_t const &region) = 0;
-
-    virtual void fini() = 0;
-
-    virtual ~handler_t()
-    { }
-
-protected:
-    gen_geo_data_t *geo_data_;
-    allocator_t *allocator_;
-    config_t config_;
+struct config_t {
+    bool save_raw_borders = false;
 };
-
-using handler_ptr_t = std::shared_ptr<handler_t>;
-using handler_ptrs_t = std::vector<handler_ptr_t>;
 
 } // namespace generator
 } // namespace geo_base

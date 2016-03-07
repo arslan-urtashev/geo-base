@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <geo_base/generator/config.h>
 #include <geo_base/generator/handler.h>
 #include <geo_base/generator/gen_geo_data.h>
 #include <geo_base/library/dynarray.h>
@@ -28,8 +29,8 @@ namespace generator {
 
 class slab_handler_t : public handler_t {
 public:
-    slab_handler_t(gen_geo_data_t *geo_data, allocator_t *allocator)
-        : handler_t(geo_data, allocator)
+    slab_handler_t(config_t const &config, gen_geo_data_t *geo_data, allocator_t *allocator)
+        : handler_t(config, geo_data, allocator)
     { }
 
     void init() override;

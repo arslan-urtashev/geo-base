@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <geo_base/generator/config.h>
 #include <geo_base/generator/gen_geo_data.h>
 #include <geo_base/generator/handler.h>
 #include <geo_base/proto/region.pb.h>
@@ -30,7 +31,7 @@ namespace generator {
 
 class generator_t {
 public:
-    generator_t(gen_geo_data_t *geo_data, allocator_t *allocator);
+    generator_t(config_t const &config, gen_geo_data_t *geo_data, allocator_t *allocator);
 
     void init();
 
@@ -42,6 +43,7 @@ private:
     gen_geo_data_t *geo_data_;
     allocator_t *allocator_;
     handler_ptrs_t handlers_;
+    config_t config_;
 };
 
 void generate(char const *in, char const *out);

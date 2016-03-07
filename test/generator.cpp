@@ -37,7 +37,7 @@ TEST_F(generator_test_t, generator_test)
     pool_allocator_t allocator(1_mb);
 
     generator::geo_data_test_t geo_data;
-    generator::generator_t generator(&geo_data, &allocator);
+    generator::generator_t generator(generator::config_t(), &geo_data, &allocator);
 
     proto::region_t region;
 

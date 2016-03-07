@@ -102,7 +102,9 @@ cc_library(
     srcs = [
         "geo_base/generator/generator.cpp",
         "geo_base/generator/handler.cpp",
+        "geo_base/generator/config.cpp",
         "geo_base/generator/slab_handler.cpp",
+        "geo_base/generator/raw_borders_handler.cpp",
         "geo_base/generator/gen_geo_data.cpp",
         "geo_base/generator/mut_geo_data.cpp",
         "geo_base/generator/locations_converter.cpp",
@@ -111,7 +113,9 @@ cc_library(
     hdrs = [
         "geo_base/generator/generator.h",
         "geo_base/generator/handler.h",
+        "geo_base/generator/config.h",
         "geo_base/generator/slab_handler.h",
+        "geo_base/generator/raw_borders_handler.h",
         "geo_base/generator/gen_geo_data.h",
         "geo_base/generator/mut_geo_data.h",
         "geo_base/generator/locations_converter.h",

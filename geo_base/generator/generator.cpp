@@ -19,26 +19,26 @@
 #include <geo_base/core/geo_data/map.h>
 #include <geo_base/generator/generator.h>
 #include <geo_base/generator/gen_geo_data.h>
-#include <geo_base/generator/locations_converter.h>
-#include <geo_base/generator/points_converter.h>
 #include <geo_base/generator/mut_geo_data.h>
 #include <geo_base/generator/slab_handler.h>
-#include <geo_base/library/base_allocator.h>
+#include <geo_base/generator/raw_borders_handler.h>
 #include <geo_base/library/log.h>
 #include <geo_base/library/pool_allocator.h>
-#include <geo_base/library/stop_watch.h>
+#include <geo_base/library/base_allocator.h>
 #include <geo_base/proto_library/reader.h>
 
 namespace geo_base {
 namespace generator {
 
-generator_t::generator_t(gen_geo_data_t *geo_data, allocator_t *allocator)
+generator_t::generator_t(config_t const &config, gen_geo_data_t *geo_data, allocator_t *allocator)
     : geo_data_(geo_data)
     , allocator_(allocator)
     , handlers_()
+    , config_(config)
 {
     handlers_ = handler_ptrs_t{
-        handler_ptr_t(new slab_handler_t(geo_data_, allocator_)),
+        handler_ptr_t(new slab_handler_t(config_, geo_data_, allocator_)),
+        handler_ptr_t(new raw_borders_handler_t(config_, geo_data_, allocator_)),
     };
 }
 
@@ -65,7 +65,7 @@ void generate(char const *in, char const *out)
     pool_allocator_t allocator(128_mb);
 
     mut_geo_data_t geo_data;
-    generator_t generator(&geo_data, &allocator);
+    generator_t generator(config_t(), &geo_data, &allocator);
 
     generator.init();
 
