@@ -16,35 +16,4 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
-
 #include <geo_base/generator/gen_geo_data.h>
-#include <geo_base/generator/handler.h>
-#include <geo_base/proto/region.pb.h>
-#include <geo_base/library/allocator.h>
-#include <geo_base/library/dynarray.h>
-#include <geo_base/library/stop_watch.h>
-
-namespace geo_base {
-namespace generator {
-
-class generator_t {
-public:
-    generator_t(gen_geo_data_t *geo_data, allocator_t *allocator);
-
-    void init();
-
-    void update(proto::region_t const &region);
-
-    void fini();
-
-private:
-    gen_geo_data_t *geo_data_;
-    allocator_t *allocator_;
-    handler_ptrs_t handlers_;
-};
-
-void generate(char const *in, char const *out);
-
-} // namespace generator
-} // namespace geo_base

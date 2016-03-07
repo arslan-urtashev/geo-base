@@ -18,33 +18,38 @@
 
 #pragma once
 
-#include <geo_base/generator/gen_geo_data.h>
 #include <geo_base/generator/handler.h>
-#include <geo_base/proto/region.pb.h>
-#include <geo_base/library/allocator.h>
+#include <geo_base/generator/gen_geo_data.h>
 #include <geo_base/library/dynarray.h>
 #include <geo_base/library/stop_watch.h>
 
 namespace geo_base {
 namespace generator {
 
-class generator_t {
+class slab_handler_t : public handler_t {
 public:
-    generator_t(gen_geo_data_t *geo_data, allocator_t *allocator);
+    slab_handler_t(gen_geo_data_t *geo_data, allocator_t *allocator)
+        : handler_t(geo_data, allocator)
+    { }
 
-    void init();
+    void init() override;
 
-    void update(proto::region_t const &region);
+    void update(proto::region_t const &region) override;
 
-    void fini();
+    void fini() override;
 
 private:
-    gen_geo_data_t *geo_data_;
-    allocator_t *allocator_;
-    handler_ptrs_t handlers_;
-};
+    void update(geo_id_t region_id, proto::polygon_t const &polygon);
 
-void generate(char const *in, char const *out);
+    void update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<point_t> const &points,
+        polygon_t::type_t type);
+
+    void generate_area_boxes();
+
+    void final_update_regions();
+
+    stop_watch_t stop_watch_;
+};
 
 } // namespace generator
 } // namespace geo_base

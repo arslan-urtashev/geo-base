@@ -20,7 +20,7 @@
 
 #include <geo_base/core/edge.h>
 #include <geo_base/core/geo_data/geo_data.h>
-#include <geo_base/generator/geo_data.h>
+#include <geo_base/generator/gen_geo_data.h>
 #include <geo_base/library/log.h>
 
 namespace geo_base {
@@ -131,7 +131,7 @@ public:
 
 namespace generator {
 
-class geo_data_test_t : public geo_data_t {
+class geo_data_test_t : public gen_geo_data_t {
 #define GEO_BASE_DEF_VAR(var_t, var) \
 public: \
     var_t const &var() const override \

@@ -19,7 +19,7 @@
 #include <geo_base/core/geo_base.h>
 #include <geo_base/core/geo_data/debug.h>
 #include <geo_base/generator/generator.h>
-#include <geo_base/generator/geo_data.h>
+#include <geo_base/generator/gen_geo_data.h>
 #include <geo_base/library/memory.h>
 #include <geo_base/library/pool_allocator.h>
 #include <geo_base/open_street_map/converter.h>

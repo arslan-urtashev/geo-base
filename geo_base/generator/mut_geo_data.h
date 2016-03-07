@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <geo_base/generator/geo_data.h>
+#include <geo_base/generator/gen_geo_data.h>
 #include <geo_base/library/dynarray.h>
 #include <geo_base/library/pool_allocator.h>
 
@@ -31,7 +31,7 @@
 namespace geo_base {
 namespace generator {
 
-class mut_geo_data_t : public geo_data_t {
+class mut_geo_data_t : public gen_geo_data_t {
 #define GEO_BASE_DEF_VAR(var_t, var) \
 public: \
     var_t const &var() const override \

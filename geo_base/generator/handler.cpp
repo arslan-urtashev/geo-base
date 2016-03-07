@@ -16,36 +16,4 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
-
-#include <geo_base/core/geo_data/geo_data.h>
-
-namespace geo_base {
-namespace generator {
-
-class geo_data_t : public geo_base::geo_data_t {
-#define GEO_BASE_DEF_VAR(var_t, var) \
-    virtual void set_##var(var_t const &var) = 0;
-
-#define GEO_BASE_DEF_ARR(arr_t, arr) \
-    virtual arr_t *mut_##arr() = 0; \
-    virtual void arr##_append(arr_t const &arr) = 0;
-
-public:
-    GEO_BASE_DEF_GEO_DATA
-
-#undef GEO_BASE_DEF_VAR
-#undef GEO_BASE_DEF_ARR
-
-    // Insert unique point into points array.
-    virtual ref_t insert(point_t const &p) = 0;
-
-    // Insert unique edge into edges array.
-    virtual ref_t insert(edge_t const &e) = 0;
-
-    // Inser unique blob into blobs array.
-    virtual ref_t insert(std::string const &s) = 0;
-};
-
-} // namespace generator
-} // namespace geo_base
+#include <geo_base/generator/handler.h>
