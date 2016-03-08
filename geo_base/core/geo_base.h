@@ -63,6 +63,8 @@ public:
 
     geo_id_t lookup(location_t const &location, debug_t *debug = nullptr) const;
 
+    geo_id_t raw_lookup(location_t const &location, debug_t *debug = nullptr) const;
+
     bool each_kv(geo_id_t region_id, kv_callback_t callback) const;
 
     void each_polygon(polygon_callback_t callback) const;

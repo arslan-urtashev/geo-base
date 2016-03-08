@@ -24,7 +24,11 @@
 namespace geo_base {
 
 struct raw_border_t {
-    using type_t = polygon_t::type_t;
+    enum type_t {
+        TYPE_UNKNOWN = polygon_t::TYPE_UNKNOWN,
+        TYPE_INNER   = polygon_t::TYPE_INNER,
+        TYPE_OUTER   = polygon_t::TYPE_OUTER,
+    };
     
     // INNER/OUTER type. See polygon.h for details.
     type_t type;

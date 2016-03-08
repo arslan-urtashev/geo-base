@@ -32,7 +32,7 @@ void raw_borders_handler_t::init()
 }
 
 void raw_borders_handler_t::update(geo_id_t region_id, geo_id_t polygon_id,
-    dynarray_t<point_t> const &raw_points, polygon_t::type_t type)
+    dynarray_t<point_t> const &raw_points, raw_border_t::type_t type)
 {
     if (raw_points.size() <= 2) {
         log_warning("Polygon %lu too small (region %lu)", polygon_id, region_id);
@@ -66,7 +66,7 @@ void raw_borders_handler_t::update(geo_id_t region_id, proto::polygon_t const &p
         dynarray_t<point_t> points(locations.size(), allocator_);
         for (location_t const &l : locations)
             points.push_back(point_t(l));
-        update(region_id, polygon.polygon_id(), points, (polygon_t::type_t) polygon.type());
+        update(region_id, polygon.polygon_id(), points, (raw_border_t::type_t) polygon.type());
     });
 }
 
@@ -83,6 +83,13 @@ void raw_borders_handler_t::fini()
 {
     if (!config_.save_raw_borders)
         return;
+
+    raw_border_t *beg = geo_data_->mut_raw_borders();
+    raw_border_t *end = beg + geo_data_->raw_borders_number();
+
+    std::stable_sort(beg, end, [] (raw_border_t const &a, raw_border_t const &b) {
+        return a.region_id < b.region_id || a.square < b.square;
+    });
 }
 
 } // namespace generator

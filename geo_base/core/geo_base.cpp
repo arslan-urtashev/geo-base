@@ -32,7 +32,8 @@ static bool polygon_contains(polygon_t const &p, point_t const &point, geo_data_
     return p.contains(point, parts, edge_refs, edges, points);
 }
 
-static void update_answer(polygon_t const **answer, polygon_t const &polygon,
+template<typename answer_t>
+static void update_answer(answer_t const **answer, answer_t const &polygon,
     geo_data_t const &geo_data)
 {
     if (!*answer) {
@@ -43,6 +44,18 @@ static void update_answer(polygon_t const **answer, polygon_t const &polygon,
         if (!(*answer)->better(polygon, regions, regions_number))
             *answer = &polygon;
     }
+}
+
+static void sort_debug(geo_base_t::debug_t *debug, geo_data_t const &geo_data)
+{
+    region_t const *regions = geo_data.regions();
+    number_t const regions_number = geo_data.regions_number();
+
+    std::sort(debug->begin(), debug->end(), [&] (geo_id_t const &a, geo_id_t const &b) {
+        region_t const *r1 = std::lower_bound(regions, regions + regions_number, a);
+        region_t const *r2 = std::lower_bound(regions, regions + regions_number, b);
+        return r1->better(*r2);
+    });
 }
 
 geo_id_t geo_base_t::lookup(location_t const &location, debug_t *debug) const
@@ -88,16 +101,55 @@ geo_id_t geo_base_t::lookup(location_t const &location, debug_t *debug) const
         }
     }
 
-    if (debug) {
-        region_t const *regions = geo_data.regions();
-        number_t const regions_number = geo_data.regions_number();
+    if (debug)
+        sort_debug(debug, geo_data);
 
-        std::sort(debug->begin(), debug->end(), [&] (geo_id_t const &a, geo_id_t const &b) {
-            region_t const *r1 = std::lower_bound(regions, regions + regions_number, a);
-            region_t const *r2 = std::lower_bound(regions, regions + regions_number, b);
-            return r1->better(*r2);
-        });
+    return answer ? answer->region_id : UNKNOWN_GEO_ID;
+}
+
+geo_id_t geo_base_t::raw_lookup(location_t const &location, debug_t *debug) const
+{
+    geo_data_t const &geo_data = *geo_data_proxy_->geo_data();
+
+    if (debug)
+        debug->clear();
+
+    point_t const point(location);
+    
+    raw_border_t const *borders = geo_data.raw_borders();
+    number_t const borders_number = geo_data.raw_borders_number();
+
+    raw_border_t const *answer = nullptr;
+
+    number_t i = 0;
+    while (i < borders_number) {
+        if (borders[i].contains(point, geo_data.raw_edge_refs(), geo_data.edges(), geo_data.points())) {
+            if (borders[i].type == raw_border_t::TYPE_INNER) {
+                number_t j = i + 1;
+                while (j < borders_number && borders[i].region_id == borders[j].region_id)
+                    ++j;
+
+                i = j;
+
+            } else {
+                update_answer(&answer, borders[i], geo_data);
+
+                if (debug)
+                    debug->push_back(borders[i].region_id);
+
+                number_t j = i + 1;
+                while (j < borders_number && borders[i].region_id == borders[j].region_id)
+                    ++j;
+
+                i = j;
+            }
+        } else {
+            ++i;
+        }
     }
+
+    if (debug)
+        sort_debug(debug, geo_data);
 
     return answer ? answer->region_id : UNKNOWN_GEO_ID;
 }
