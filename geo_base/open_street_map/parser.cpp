@@ -18,8 +18,6 @@
 
 #include <zlib.h>
 
-#include <google/protobuf/arena.h>
-
 #include <geo_base/open_street_map/parser.h>
 #include <geo_base/library/dynarray.h>
 #include <geo_base/library/file.h>
@@ -194,79 +192,35 @@ void parser_t::process_basic_groups(proto::basic_block_t const &block)
     }
 }
 
-template<typename message_t>
-message_t *create_message(google::protobuf::Arena *arena)
-{
-    return google::protobuf::Arena::CreateMessage<message_t>(arena);
-}
-
-#ifndef __APPLE__
-// Protobuf arena block_alloc and block_dealloc can't be customized yet. Create C like functions
-// for allocate/deallocate memory from preallocated buffer per thread.
-namespace arena_hack {
-
-static thread_local allocator_t *allocator = nullptr;
-
-static void *block_alloc(size_t n)
-{
-    return allocator->allocate(n);
-}
-
-static void block_dealloc(void *ptr, size_t n)
-{
-    allocator->deallocate(ptr, n);
-}
-
-static google::protobuf::ArenaOptions get_arena_options(allocator_t *allocator_)
-{
-    google::protobuf::ArenaOptions opts;
-
-    allocator = allocator_;
-    opts.block_dealloc = block_dealloc;
-    opts.block_alloc = block_alloc;
-
-    return opts;
-}
-
-} // namespace protobuf_arena_hack
-#endif
-
 void parser_t::parse(reader_t *reader)
 {
-#ifndef __APPLE__
-    google::protobuf::Arena arena(arena_hack::get_arena_options(allocator_));
-#else
-    google::protobuf::Arena arena;
-#endif
+    proto::blob_header_t header;
+    proto::blob_t blob;
+    proto::basic_block_t block;
 
     while (true) {
-        proto::blob_header_t *header = create_message<proto::blob_header_t>(&arena);
-        proto::blob_t *blob = create_message<proto::blob_t>(&arena);
-        proto::basic_block_t *block = create_message<proto::basic_block_t>(&arena);
 
-        if (!reader->read(header, blob, allocator_))
+        if (!reader->read(&header, &blob, allocator_))
             break;
 
-        if (header->type() == "OSMHeader")
+        if (header.type() == "OSMHeader")
             continue;
 
-        if (header->type() != "OSMData")
+        if (header.type() != "OSMData")
             continue;
 
-        if (blob->has_raw())
+        if (blob.has_raw())
             throw exception_t("Unable parse raw data");
 
-        if (blob->has_lzma_data())
+        if (blob.has_lzma_data())
             throw exception_t("Unable parse lzma data");
 
-        if (!parse_basic_block(*blob, block, allocator_))
+        if (!parse_basic_block(blob, &block, allocator_))
             throw exception_t("Unable parse block");
 
-        process_basic_groups(*block);
+        process_basic_groups(block);
 
         ++blocks_processed_;
-
-        arena.Reset();
     }
 }
 
