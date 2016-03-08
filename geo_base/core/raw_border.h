@@ -42,6 +42,11 @@ struct raw_border_t {
     // Raw border edge refs.
     number_t edge_refs_offset;
     number_t edge_refs_number;
+
+    bool contains(point_t const &point, ref_t const *edge_refs, edge_t const *edges,
+        point_t const *points) const;
+
+    bool better(raw_border_t const &b, region_t const *regions, number_t regions_number) const;
 };
 
 } // namespace geo_base

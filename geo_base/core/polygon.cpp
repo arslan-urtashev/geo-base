@@ -63,7 +63,13 @@ bool polygon_t::better(polygon_t const &p, region_t const *regions, number_t reg
         region_t const *r1 = std::lower_bound(begin, end, region_id);
         region_t const *r2 = std::lower_bound(begin, end, p.region_id);
 
-        return r1 && r2 && r1->better(*r2);
+        if (r1 == end || r1->region_id != region_id)
+            return false;
+
+        if (r2 == end || r2->region_id != p.region_id)
+            return false;
+
+        return r1->better(*r2);
     }
 
     return false;

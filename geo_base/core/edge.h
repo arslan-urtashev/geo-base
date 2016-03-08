@@ -83,6 +83,19 @@ struct edge_t {
         }
     }
 
+    // Checks that current edge lying lower then given point. Edge and point must have a common X
+    // values, otherwise the behavior is undefined.
+    bool lower(point_t const &p, point_t const *points) const
+    {
+        if (contains(p, points))
+            return false;
+
+        point_t const &a = points[beg];
+        point_t const &b = points[end];
+
+        return (b - a).cross(p - a) > 0;
+    }
+
     bool contains(point_t const &p, point_t const *points) const
     {
         point_t const &a = points[beg];
