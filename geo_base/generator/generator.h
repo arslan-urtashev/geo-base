@@ -46,7 +46,7 @@ private:
     config_t config_;
 };
 
-void generate(char const *in, char const *out);
+void generate(char const *in, char const *out, config_t const &config = config_t());
 
 } // namespace generator
 } // namespace geo_base

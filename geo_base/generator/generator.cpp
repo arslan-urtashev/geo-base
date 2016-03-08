@@ -67,12 +67,12 @@ void generator_t::fini()
         h->fini();
 }
 
-void generate(char const *in, char const *out)
+void generate(char const *in, char const *out, config_t const &config)
 {
     pool_allocator_t allocator(128_mb);
 
     mut_geo_data_t geo_data;
-    generator_t generator(config_t(), &geo_data, &allocator);
+    generator_t generator(config, &geo_data, &allocator);
 
     generator.init();
 

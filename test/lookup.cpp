@@ -26,13 +26,15 @@
 #include <test/geo_base_test.h>
 
 #include <utility>
+#include <sstream>
+#include <iomanip>
 
 using namespace geo_base;
 
 class lookup_test_t : public test_t {
 };
 
-TEST_F(lookup_test_t, generator_test)
+TEST_F(lookup_test_t, raw_lookup_test)
 {
     pool_allocator_t allocator(1_mb);
 
@@ -69,4 +71,68 @@ TEST_F(lookup_test_t, generator_test)
     EXPECT_EQ(UNKNOWN_GEO_ID, geo_base.raw_lookup(location_t(0, 3)));
     EXPECT_EQ(123ull, geo_base.raw_lookup(location_t(4, 0)));
     EXPECT_EQ(123ull, geo_base.raw_lookup(location_t(5, 5)));
+}
+
+std::string to_string(std::vector<geo_id_t> const &a)
+{
+    std::stringstream out;
+    out << "[";
+    for (size_t i = 0; i < a.size(); ++i) {
+        if (i > 0)
+            out << ", ";
+        out << a[i];
+    }
+    out << "]";
+    return out.str();
+}
+
+std::string to_string(location_t const &l)
+{
+    std::stringstream out;
+    out << std::fixed << std::setprecision(6);
+    out << "(" << l.lat << ", " << l.lon << ")";
+    return out.str();
+}
+
+TEST_F(lookup_test_t, b2b)
+{
+    ASSERT_NO_THROW(open_street_map::run_pool_convert("test/andorra-latest.osm.pbf", "andorra-latest.pbf", 1));
+
+    generator::config_t config;
+    config.save_raw_borders = true;
+
+    ASSERT_NO_THROW(generator::generate("andorra-latest.pbf", "andorra-latest.dat", config));
+
+    geo_base_t geo_base("andorra-latest.dat");
+
+    geo_data_t const &geo_data = geo_base.geo_data();
+
+    static coordinate_t const COORDINATE_DIFF = 10;
+
+    geo_base_t::debug_t lookup_debug;
+    geo_base_t::debug_t raw_lookup_debug;
+
+    for (size_t i = 0; i < geo_data.points_number(); ++i) {
+        point_t const &p = geo_data.points()[i];
+        
+        for (coordinate_t x = -COORDINATE_DIFF; x <= COORDINATE_DIFF; ++x) {
+            for (coordinate_t y = -COORDINATE_DIFF; y <= COORDINATE_DIFF; ++y) {
+                location_t location(to_double(p.x + x), to_double(p.y + y));
+
+                geo_id_t const lookup_id = geo_base.lookup(location, &lookup_debug);
+                geo_id_t const raw_lookup_id = geo_base.raw_lookup(location, &raw_lookup_debug);
+
+                EXPECT_EQ(raw_lookup_id, lookup_id)
+                    << to_string(location)
+                    << " " << to_string(lookup_debug)
+                    << " " << to_string(raw_lookup_debug);
+
+                EXPECT_EQ(raw_lookup_debug.size(), lookup_debug.size());
+
+                if (raw_lookup_debug.size() == lookup_debug.size())
+                    for (size_t i = 0; i < raw_lookup_debug.size(); ++i)
+                        EXPECT_EQ(raw_lookup_debug[i], lookup_debug[i]);
+            }
+        }
+    }
 }
