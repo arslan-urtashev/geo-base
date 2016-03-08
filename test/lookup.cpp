@@ -107,32 +107,39 @@ TEST_F(lookup_test_t, b2b)
 
     geo_data_t const &geo_data = geo_base.geo_data();
 
-    static coordinate_t const COORDINATE_DIFF = 10;
+    static size_t const X_GRID = 1000;
+    static size_t const Y_GRID = 1000;
 
     geo_base_t::debug_t lookup_debug;
     geo_base_t::debug_t raw_lookup_debug;
 
-    for (size_t i = 0; i < geo_data.points_number(); ++i) {
-        point_t const &p = geo_data.points()[i];
-        
-        for (coordinate_t x = -COORDINATE_DIFF; x <= COORDINATE_DIFF; ++x) {
-            for (coordinate_t y = -COORDINATE_DIFF; y <= COORDINATE_DIFF; ++y) {
-                location_t location(to_double(p.x + x), to_double(p.y + y));
+    rectangle_t const box = rectangle_t(geo_data.points(), geo_data.points_number());
 
-                geo_id_t const lookup_id = geo_base.lookup(location, &lookup_debug);
-                geo_id_t const raw_lookup_id = geo_base.raw_lookup(location, &raw_lookup_debug);
+    for (size_t x = 0; x < X_GRID; ++x) {
+        for (size_t y = 0; y < Y_GRID; ++y) {
+            location_t location;
 
-                EXPECT_EQ(raw_lookup_id, lookup_id)
-                    << to_string(location)
-                    << " " << to_string(lookup_debug)
-                    << " " << to_string(raw_lookup_debug);
+            location.lon = to_double(box.x1);
+            location.lat = to_double(box.y1);
 
-                EXPECT_EQ(raw_lookup_debug.size(), lookup_debug.size());
+            location.lon += to_double(box.x2 - box.x1) * x / X_GRID;
+            location.lat += to_double(box.y2 - box.y1) * y / Y_GRID;
 
-                if (raw_lookup_debug.size() == lookup_debug.size())
-                    for (size_t i = 0; i < raw_lookup_debug.size(); ++i)
-                        EXPECT_EQ(raw_lookup_debug[i], lookup_debug[i]);
-            }
+            geo_id_t const lookup_id = geo_base.lookup(location, &lookup_debug);
+            geo_id_t const raw_lookup_id = geo_base.raw_lookup(location, &raw_lookup_debug);
+
+            EXPECT_EQ(raw_lookup_id, lookup_id)
+                << to_string(location)
+                    << " "
+                << to_string(lookup_debug)
+                    << " "
+                << to_string(raw_lookup_debug);
+
+            EXPECT_EQ(raw_lookup_debug.size(), lookup_debug.size());
+
+            if (raw_lookup_debug.size() == lookup_debug.size())
+                for (size_t i = 0; i < raw_lookup_debug.size(); ++i)
+                    EXPECT_EQ(raw_lookup_debug[i], lookup_debug[i]);
         }
     }
 }

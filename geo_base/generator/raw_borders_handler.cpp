@@ -88,7 +88,7 @@ void raw_borders_handler_t::fini()
     raw_border_t *end = beg + geo_data_->raw_borders_number();
 
     std::stable_sort(beg, end, [] (raw_border_t const &a, raw_border_t const &b) {
-        return a.region_id < b.region_id || a.square < b.square;
+        return a.region_id < b.region_id || (a.region_id == b.region_id && a.square < b.square);
     });
 }
 

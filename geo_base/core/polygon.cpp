@@ -20,6 +20,13 @@
 
 namespace geo_base {
 
+static bool check(part_t const *part, point_t const &point, ref_t const *edge_refs,
+    edge_t const *edges, point_t const *points)
+{
+    number_t const edge_refs_number = (part + 1)->edge_refs_offset - part->edge_refs_offset;
+    return part->contains(point, edge_refs_number, edge_refs, edges, points);
+}
+
 bool polygon_t::contains(point_t const &point, part_t const *parts, ref_t const *edge_refs,
     edge_t const *edges, point_t const *points) const
 {
@@ -31,24 +38,25 @@ bool polygon_t::contains(point_t const &point, part_t const *parts, ref_t const 
 
     // Find lower bound part, which can contains given point.
     part_t const *part = std::lower_bound(parts, parts_end, point,
-        [&] (part_t const &a, point_t const &b)
-        {
+        [&] (part_t const &a, point_t const &b) {
             return a.coordinate < b.x;
         }
     );
 
-    if (part == parts)
-        return false;
-
-    --part;
-    if (part + 1 == parts + parts_number)
-        return false;
+    if (part->coordinate > point.x) {
+        if (part == parts)
+            return false;
+        --part;
+    }
 
     if (point.x < part->coordinate || point.x > (part + 1)->coordinate)
         return false;
 
-    number_t const edge_refs_number = (part + 1)->edge_refs_offset - part->edge_refs_offset;
-    return part->contains(point, edge_refs_number, edge_refs, edges, points);
+    if (point.x == part->coordinate)
+        if (part != parts && check(part - 1, point, edge_refs, edges, points))
+            return true;
+        
+    return check(part, point, edge_refs, edges, points);
 };
 
 bool polygon_t::better(polygon_t const &p, region_t const *regions, number_t regions_number) const

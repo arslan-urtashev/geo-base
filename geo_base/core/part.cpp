@@ -29,17 +29,12 @@ bool part_t::contains(point_t const &point, number_t edge_refs_number, ref_t con
 
     // Find lower bound edge, which lying below given point.
     ref_t const *edge_ref = std::lower_bound(edge_refs, edge_refs_end, point,
-        [&] (ref_t const &e, point_t const &p)
-        {
-            if (edges[e].contains(p, points))
-                return false;
-            point_t const &a = points[edges[e].beg];
-            point_t const &b = points[edges[e].end];
-            return (b - a).cross(p - a) > 0;
+        [&] (ref_t const &e, point_t const &p) {
+            return edges[e].lower(p, points);
         }
     );
 
-    if (edge_ref == edge_refs + edge_refs_number)
+    if (edge_ref == edge_refs_end)
         return false;
 
     if (edges[*edge_ref].contains(point, points))
