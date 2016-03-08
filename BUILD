@@ -259,6 +259,7 @@ cc_test(
         "test/part.cpp",
         "test/pool_allocator.cpp",
         "test/run_test.cpp",
+        "test/lookup.cpp",
     ],
     deps = [
         ":geo-base-library",
