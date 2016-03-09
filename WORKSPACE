@@ -22,7 +22,7 @@ bind(
 	actual = "@protobuf_repository//:protobuf",
 )
 
-#bind(
-#	name = "protoc",
-#	actual = "@protobuf_repository//:protoc",
-#)
+bind(
+	name = "protoc",
+	actual = "@protobuf_repository//:protoc",
+)
