@@ -269,7 +269,7 @@ cc_test(
         ":geo-base-proto",
         ":open-street-map",
         ":open-street-map-proto",
-        "//deps/gmock:gmock",
+        "//external:gmock",
     ],
     data = [
         "test/andorra-latest.osm.pbf",
