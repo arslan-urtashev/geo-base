@@ -35,8 +35,11 @@ bool raw_border_t::contains(point_t const &point, ref_t const *edge_refs, edge_t
         if (e.contains(point, points))
             return true;
 
-        point_t const &a = points[e.beg];
-        point_t const &b = points[e.end];
+        point_t a = points[e.beg];
+        point_t b = points[e.end];
+
+        if (a.x > b.x)
+            std::swap(a, b);
 
         if (a.x < point.x && b.x >= point.x && e.lower(point, points))
             ++intersections;

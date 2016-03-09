@@ -21,6 +21,9 @@
 #include <geo_base/core/common.h>
 #include <geo_base/core/point.h>
 
+#include <cassert>
+#include <algorithm>
+
 namespace geo_base {
 
 // edge_t is a type, which represent polygon edge, beg/end refers on begin/end edge points in
@@ -61,6 +64,8 @@ struct edge_t {
         if (*this == e)
             return false;
 
+        assert(a1.x <= a2.x && b1.x <= b2.x);
+
         point_t const &a1 = points[beg];
         point_t const &a2 = points[end];
         point_t const &b1 = points[e.beg];
@@ -90,18 +95,26 @@ struct edge_t {
         if (contains(p, points))
             return false;
 
-        point_t const &a = points[beg];
-        point_t const &b = points[end];
+        point_t a = points[beg];
+        point_t b = points[end];
+
+        if (a.x > b.x)
+            std::swap(a, b);
 
         return (b - a).cross(p - a) > 0;
     }
 
     bool contains(point_t const &p, point_t const *points) const
     {
-        point_t const &a = points[beg];
-        point_t const &b = points[end];
+        point_t a = points[beg];
+        point_t b = points[end];
+
+        if (a.x > b.x)
+            std::swap(a, b);
+
         if (p.x < a.x || p.x > b.x)
             return false;
+
         return (b - a).cross(p - a) == 0;
     }
 };

@@ -42,7 +42,7 @@ static bool is_bad_edge(edge_t const &e, point_t const *p)
 }
 
 dynarray_t<edge_t> make_edges(dynarray_t<point_t> const &points, gen_geo_data_t *geo_data,
-    allocator_t *allocator)
+    allocator_t *allocator, bool change_direction)
 {
     dynarray_t<edge_t> edges(points.size(), allocator);
     for (number_t i = 0; i < points.size(); ++i) {
@@ -56,7 +56,7 @@ dynarray_t<edge_t> make_edges(dynarray_t<point_t> const &points, gen_geo_data_t 
         edge_t e(p1, p2);
 
         point_t const *p = geo_data->points();
-        if (p[e.beg].x > p[e.end].x)
+        if (p[e.beg].x > p[e.end].x && change_direction)
             std::swap(e.beg, e.end);
 
         if (is_bad_edge(e, p)) {

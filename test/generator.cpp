@@ -71,7 +71,11 @@ TEST_F(generator_test_t, generator_test)
 TEST_F(generator_test_t, dump)
 {
     ASSERT_NO_THROW(open_street_map::run_pool_convert("test/andorra-latest.osm.pbf", "andorra-latest.pbf", 1));
-    ASSERT_NO_THROW(generator::generate("andorra-latest.pbf", "andorra-latest.dat.test"));
+
+    generator::config_t config;
+    config.save_raw_borders = true;
+
+    ASSERT_NO_THROW(generator::generate("andorra-latest.pbf", "andorra-latest.dat.test", config));
 
     mem_file_t pre;
     pre.read_open("test/andorra-latest.dat.pre");

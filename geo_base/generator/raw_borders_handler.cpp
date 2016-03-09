@@ -51,7 +51,9 @@ void raw_borders_handler_t::update(geo_id_t region_id, geo_id_t polygon_id,
 
     border.edge_refs_offset = geo_data_->raw_edge_refs_number();
 
-    dynarray_t<edge_t> const edges = make_edges(points, geo_data_, allocator_);
+    dynarray_t<edge_t> const edges = make_edges(points, geo_data_,
+        allocator_, /* change_direction = */ false);
+
     for (number_t i = 0; i < edges.size(); ++i)
         geo_data_->raw_edge_refs_append(geo_data_->insert(edges[i]));
 

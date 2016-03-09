@@ -31,7 +31,7 @@ namespace generator {
 square_t get_square(dynarray_t<point_t> const &p);
 
 dynarray_t<edge_t> make_edges(dynarray_t<point_t> const &points, gen_geo_data_t *geo_data,
-    allocator_t *allocator);
+    allocator_t *allocator, bool change_direction = true);
 
 } // namespace generator
 } // namespace geo_base
