@@ -11,7 +11,7 @@ bind(
 )
 
 git_repository(
-	name = "protobuf_repository",
+	name = "protobuf_repo",
 	remote = "https://github.com/google/protobuf.git",
 	commit = "48ebb29a8ec118bf6b9ee39f6be42b57321c099a",
 	init_submodules = 1,
@@ -19,12 +19,12 @@ git_repository(
 
 bind(
 	name = "protobuf",
-	actual = "@protobuf_repository//:protobuf",
+	actual = "@protobuf_repo//:protobuf",
 )
 
 bind(
 	name = "protoc",
-	actual = "@protobuf_repository//:protoc",
+	actual = "@protobuf_repo//:protoc",
 )
 
 new_http_archive(
@@ -37,4 +37,17 @@ new_http_archive(
 bind(
 	name = "zlib",
 	actual = "@zlib_archive//:zlib",
+)
+
+new_git_repository(
+	name = "jemalloc_repo",
+	remote = "https://github.com/jemalloc/jemalloc.git",
+	tag = "4.1.0",
+	init_submodules = 1,
+	build_file = "bazel/jemalloc.BUILD",
+)
+
+bind(
+	name = "jemalloc",
+	actual = "@jemalloc_repo//:jemalloc",
 )
