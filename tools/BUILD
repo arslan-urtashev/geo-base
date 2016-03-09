@@ -1,6 +1,5 @@
 CCFLAGS = [
     "-DNDEBUG",
-    "-O3",
     "-Wall",
     "-Werror",
     "-funroll-loops",

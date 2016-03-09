@@ -10,6 +10,13 @@ LINKOPTS = [
     "-pthread",
 ]
 
+load(
+    ":bazel/protobuf.bzl",
+    "cc_proto_library",
+    "py_proto_library",
+    "internal_protobuf_py_tests",
+)
+
 cc_library(
     name = "geo-base-library",
     srcs = [
@@ -139,22 +146,15 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
-cc_library(
+cc_proto_library(
     name = "geo-base-proto",
     srcs = [
-        "geo_base/proto/region.pb.cc",
-        "geo_base/proto/geo_data.pb.cc",
+        "geo_base/proto/region.proto",
+        "geo_base/proto/geo_data.proto",
     ],
-    hdrs = [
-        "geo_base/proto/region.pb.h",
-        "geo_base/proto/geo_data.pb.h",
-    ],
-    deps = [
-        "//external:protobuf",
-    ],
-    includes = [
-        ".",
-    ],
+    default_runtime = "//external:protobuf",
+    protoc = "//external:protoc",
+    include = ".",
     copts = CCFLAGS,
     linkopts = LINKOPTS,
     visibility = ["//visibility:public"],
@@ -182,20 +182,14 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
-cc_library(
+cc_proto_library(
     name = "open-street-map-proto",
     srcs = [
-        "geo_base/open_street_map/proto/open_street_map.pb.cc",
+        "geo_base/open_street_map/proto/open_street_map.proto",
     ],
-    hdrs = [
-        "geo_base/open_street_map/proto/open_street_map.pb.h",
-    ],
-    deps = [
-        "//external:protobuf",
-    ],
-    includes = [
-        ".",
-    ],
+    default_runtime = "//external:protobuf",
+    protoc = "//external:protoc",
+    include = ".",
     copts = CCFLAGS,
     linkopts = LINKOPTS,
     visibility = ["//visibility:public"],
