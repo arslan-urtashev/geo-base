@@ -218,7 +218,7 @@ cc_library(
         ":geo-base-proto",
         ":open-street-map-proto",
         "//external:protobuf",
-        "//deps/zlib:zlib",
+        "//external:zlib",
     ],
     includes = ["."],
     copts = CCFLAGS,

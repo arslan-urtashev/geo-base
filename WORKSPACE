@@ -26,3 +26,15 @@ bind(
 	name = "protoc",
 	actual = "@protobuf_repository//:protoc",
 )
+
+new_http_archive(
+	name = "zlib_archive",
+	url = "http://zlib.net/zlib128.zip",
+	sha256 = "879d73d8cd4d155f31c1f04838ecd567d34bebda780156f0e82a20721b3973d5",
+	build_file = "bazel/zlib.BUILD",
+)
+
+bind(
+	name = "zlib",
+	actual = "@zlib_archive//:zlib",
+)
