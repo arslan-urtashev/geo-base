@@ -9,3 +9,20 @@ bind(
 	name = "gmock",
 	actual = "@gmock_archive//:gmock",
 )
+
+git_repository(
+	name = "protobuf_repository",
+	remote = "https://github.com/google/protobuf.git",
+	commit = "48ebb29a8ec118bf6b9ee39f6be42b57321c099a",
+	init_submodules = 1,
+)
+
+bind(
+	name = "protobuf",
+	actual = "@protobuf_repository//:protobuf",
+)
+
+#bind(
+#	name = "protoc",
+#	actual = "@protobuf_repository//:protoc",
+#)

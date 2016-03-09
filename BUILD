@@ -151,11 +151,10 @@ cc_library(
         "geo_base/proto/geo_data.pb.h",
     ],
     deps = [
-        "//deps/protobuf:protobuf",
+        "//external:protobuf",
     ],
     includes = [
         ".",
-        "deps/protobuf"
     ],
     copts = CCFLAGS,
     linkopts = LINKOPTS,
@@ -176,7 +175,7 @@ cc_library(
         ":geo-base-core",
         ":geo-base-library",
         ":geo-base-proto",
-        "//deps/protobuf:protobuf",
+        "//external:protobuf",
     ],
     includes = ["."],
     copts = CCFLAGS,
@@ -193,11 +192,10 @@ cc_library(
         "geo_base/open_street_map/proto/open_street_map.pb.h",
     ],
     deps = [
-        "//deps/protobuf:protobuf",
+        "//external:protobuf",
     ],
     includes = [
         ".",
-        "deps/protobuf",
     ],
     copts = CCFLAGS,
     linkopts = LINKOPTS,
@@ -226,7 +224,7 @@ cc_library(
         ":geo-base-proto-library",
         ":geo-base-proto",
         ":open-street-map-proto",
-        "//deps/protobuf:protobuf",
+        "//external:protobuf",
         "//deps/zlib:zlib",
     ],
     includes = ["."],
