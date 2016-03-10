@@ -38,6 +38,6 @@ jdk:
 
 # TODO: Install buck on linux
 script: 
-  - bazel build :all
+  - bazel build :all -c opt
   - ./bazel-bin/geo_base_test
   - if [ $TRAVIS_OS_NAME == "linux" ]; then valgrind --error-exitcode=1 ./bazel-bin/geo_base_test; fi
