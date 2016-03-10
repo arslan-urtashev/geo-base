@@ -47,6 +47,34 @@ geo_data_map_t::geo_data_map_t()
     init();
 }
 
+static bool check_memory_consistency(proto::geo_data_t const &g)
+{
+    std::vector<std::pair<intptr_t, intptr_t>> segments;
+
+#define GEO_BASE_DEF_VAR(var_t, var) \
+    // undef
+
+#define GEO_BASE_DEF_ARR(arr_t, arr) \
+    if (g.arr##_number() > 0) { \
+        intptr_t const beg = g.arr(); \
+        intptr_t const end = g.arr() + g.arr##_number() * sizeof(arr_t); \
+        segments.emplace_back(beg, end); \
+    }
+
+    GEO_BASE_DEF_GEO_DATA
+
+#undef GEO_BASE_DEF_VAR
+#undef GEO_BASE_DEF_ARR
+
+    std::sort(segments.begin(), segments.end());
+
+    for (size_t i = 0; i + 1 < segments.size(); ++i)
+        if (segments[i].second > segments[i + 1].first)
+            return false;
+
+    return true;
+}
+
 void geo_data_map_t::remap()
 {
     init();
@@ -62,6 +90,9 @@ void geo_data_map_t::remap()
 
     if (header.magic() != SYSTEM_ENDIAN_FLAG)
         throw exception_t("Different endianness in geo_data and host");
+    
+    if (!check_memory_consistency(header))
+        throw exception_t("Memory is not consistent!");
 
 #define GEO_BASE_DEF_VAR(var_t, var) \
     var##_ = header.var();

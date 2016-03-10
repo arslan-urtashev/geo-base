@@ -74,7 +74,6 @@ cc_library(
         "geo_base/core/polygon.cpp",
         "geo_base/core/rectangle.cpp",
         "geo_base/core/region.cpp",
-        "geo_base/core/raw_border.cpp",
     ],
     hdrs = [
         "geo_base/core/area_box.h",
@@ -93,7 +92,6 @@ cc_library(
         "geo_base/core/polygon.h",
         "geo_base/core/rectangle.h",
         "geo_base/core/region.h",
-        "geo_base/core/raw_border.h",
     ],
     deps = [
         ":geo-base-library",
@@ -112,7 +110,7 @@ cc_library(
         "geo_base/generator/handler.cpp",
         "geo_base/generator/config.cpp",
         "geo_base/generator/slab_handler.cpp",
-        "geo_base/generator/raw_borders_handler.cpp",
+        "geo_base/generator/raw_handler.cpp",
         "geo_base/generator/regions_handler.cpp",
         "geo_base/generator/gen_geo_data.cpp",
         "geo_base/generator/mut_geo_data.cpp",
@@ -124,7 +122,7 @@ cc_library(
         "geo_base/generator/handler.h",
         "geo_base/generator/config.h",
         "geo_base/generator/slab_handler.h",
-        "geo_base/generator/raw_borders_handler.h",
+        "geo_base/generator/raw_handler.h",
         "geo_base/generator/regions_handler.h",
         "geo_base/generator/gen_geo_data.h",
         "geo_base/generator/mut_geo_data.h",

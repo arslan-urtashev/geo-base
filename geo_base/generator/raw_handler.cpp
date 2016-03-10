@@ -18,27 +18,27 @@
 
 #include <geo_base/generator/common.h>
 #include <geo_base/generator/locations_converter.h>
-#include <geo_base/generator/raw_borders_handler.h>
+#include <geo_base/generator/raw_handler.h>
 #include <geo_base/library/log.h>
 
 namespace geo_base {
 namespace generator {
 
-void raw_borders_handler_t::init()
+void raw_handler_t::init()
 {
     if (!config_.save_raw_borders)
         return;
 }
 
-void raw_borders_handler_t::update(geo_id_t region_id, geo_id_t polygon_id,
-    dynarray_t<point_t> const &points, raw_border_t::type_t type)
+void raw_handler_t::update(geo_id_t region_id, geo_id_t polygon_id,
+    dynarray_t<point_t> const &points, raw_polygon_t::type_t type)
 {
     if (points.size() <= 2) {
         log_warning("Polygon %lu too small (region %lu)", polygon_id, region_id);
         return;
     }
 
-    raw_border_t border;
+    raw_polygon_t border;
     memset(&border, 0, sizeof(border));
 
     border.region_id = region_id;
@@ -56,21 +56,21 @@ void raw_borders_handler_t::update(geo_id_t region_id, geo_id_t polygon_id,
         geo_data_->raw_edge_refs_append(geo_data_->insert(edges[i]));
 
     border.edge_refs_number = geo_data_->raw_edge_refs_number() - border.edge_refs_offset;
-    geo_data_->raw_borders_append(border);
+    geo_data_->raw_polygons_append(border);
 }
 
-void raw_borders_handler_t::update(geo_id_t region_id, proto::polygon_t const &polygon)
+void raw_handler_t::update(geo_id_t region_id, proto::polygon_t const &polygon)
 {
     locations_converter_t converter(allocator_);
     converter.each(polygon.locations(), [&] (dynarray_t<location_t> const &locations) {
         dynarray_t<point_t> points(locations.size(), allocator_);
         for (location_t const &l : locations)
             points.push_back(point_t(l));
-        update(region_id, polygon.polygon_id(), points, (raw_border_t::type_t) polygon.type());
+        update(region_id, polygon.polygon_id(), points, (raw_polygon_t::type_t) polygon.type());
     });
 }
 
-void raw_borders_handler_t::update(proto::region_t const &region)
+void raw_handler_t::update(proto::region_t const &region)
 {
     if (!config_.save_raw_borders)
         return;
@@ -79,15 +79,15 @@ void raw_borders_handler_t::update(proto::region_t const &region)
         update(region.region_id(), polygon);
 }
 
-void raw_borders_handler_t::fini()
+void raw_handler_t::fini()
 {
     if (!config_.save_raw_borders)
         return;
 
-    raw_border_t *beg = geo_data_->mut_raw_borders();
-    raw_border_t *end = beg + geo_data_->raw_borders_number();
+    raw_polygon_t *beg = geo_data_->mut_raw_polygons();
+    raw_polygon_t *end = beg + geo_data_->raw_polygons_number();
 
-    std::stable_sort(beg, end, [] (raw_border_t const &a, raw_border_t const &b) {
+    std::stable_sort(beg, end, [] (raw_polygon_t const &a, raw_polygon_t const &b) {
         return a.region_id < b.region_id || (a.region_id == b.region_id && a.square < b.square);
     });
 }

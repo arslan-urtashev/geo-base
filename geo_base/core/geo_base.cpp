@@ -116,15 +116,15 @@ geo_id_t geo_base_t::raw_lookup(location_t const &location, debug_t *debug) cons
 
     point_t const point(location);
     
-    raw_border_t const *borders = geo_data.raw_borders();
-    number_t const borders_number = geo_data.raw_borders_number();
+    raw_polygon_t const *borders = geo_data.raw_polygons();
+    number_t const borders_number = geo_data.raw_polygons_number();
 
-    raw_border_t const *answer = nullptr;
+    raw_polygon_t const *answer = nullptr;
 
     number_t i = 0;
     while (i < borders_number) {
         if (borders[i].contains(point, geo_data.raw_edge_refs(), geo_data.edges(), geo_data.points())) {
-            if (borders[i].type == raw_border_t::TYPE_INNER) {
+            if (borders[i].type == raw_polygon_t::TYPE_INNER) {
                 number_t j = i + 1;
                 while (j < borders_number && borders[i].region_id == borders[j].region_id)
                     ++j;

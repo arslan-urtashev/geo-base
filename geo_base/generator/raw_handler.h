@@ -26,9 +26,9 @@
 namespace geo_base {
 namespace generator {
 
-class raw_borders_handler_t : public handler_t {
+class raw_handler_t : public handler_t {
 public:
-    raw_borders_handler_t(config_t const &config, gen_geo_data_t *geo_data, allocator_t *allocator)
+    raw_handler_t(config_t const &config, gen_geo_data_t *geo_data, allocator_t *allocator)
         : handler_t(config, geo_data, allocator)
     { }
 
@@ -40,7 +40,7 @@ public:
 
 private:
     void update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<point_t> const &raw_points,
-        raw_border_t::type_t type);
+        raw_polygon_t::type_t type);
 
     void update(geo_id_t region_id, proto::polygon_t const &polygon);
 };

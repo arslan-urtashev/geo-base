@@ -21,7 +21,7 @@
 #include <geo_base/generator/gen_geo_data.h>
 #include <geo_base/generator/mut_geo_data.h>
 #include <geo_base/generator/slab_handler.h>
-#include <geo_base/generator/raw_borders_handler.h>
+#include <geo_base/generator/raw_handler.h>
 #include <geo_base/generator/regions_handler.h>
 #include <geo_base/library/log.h>
 #include <geo_base/library/pool_allocator.h>
@@ -42,7 +42,7 @@ generator_t::generator_t(config_t const &config, gen_geo_data_t *geo_data, alloc
 
     handlers_ = handler_ptrs_t{
         HANDLER(slab_handler_t),
-        HANDLER(raw_borders_handler_t),
+        HANDLER(raw_handler_t),
         HANDLER(regions_handler_t),
     };
 
