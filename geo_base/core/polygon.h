@@ -22,7 +22,7 @@
 #include <geo_base/core/edge.h>
 #include <geo_base/core/part.h>
 #include <geo_base/core/point.h>
-#include <geo_base/core/rectangle.h>
+#include <geo_base/core/bbox.h>
 #include <geo_base/core/region.h>
 
 namespace geo_base {
@@ -43,7 +43,7 @@ struct polygon_base_t {
     geo_id_t polygon_id;
 
     // Rectangle in which lies that polygon.
-    rectangle_t rectangle;
+    bbox_t bbox;
 
     // Square of polygon. Need for determine which polygon is better. See better member function.
     square_t square;

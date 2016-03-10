@@ -45,7 +45,7 @@ void raw_handler_t::update(geo_id_t region_id, geo_id_t polygon_id,
     border.polygon_id = polygon_id;
     border.square = get_square(points);
     border.type = type;
-    border.rectangle = rectangle_t(points.data(), points.size());
+    border.bbox = bbox_t(points.data(), points.size());
 
     border.edge_refs_offset = geo_data_->raw_edge_refs_number();
 

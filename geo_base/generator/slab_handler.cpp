@@ -67,7 +67,7 @@ void slab_handler_t::update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<
     polygon.polygon_id = polygon_id;
     polygon.square = get_square(points);
     polygon.type = type;
-    polygon.rectangle = rectangle_t(points.data(), points.size());
+    polygon.bbox = bbox_t(points.data(), points.size());
     polygon.points_number = points.size();
 
     polygon.parts_offset = geo_data_->parts_number();
@@ -134,7 +134,7 @@ static void sort_polygons(gen_geo_data_t *g)
     polygon_t *end = begin + g->polygons_number();
 
     std::stable_sort(begin, end, [] (polygon_t const &a, polygon_t const &b) {
-        return a.rectangle.x2 < b.rectangle.x2;
+        return a.bbox.x2 < b.bbox.x2;
     });
 }
 
@@ -149,27 +149,27 @@ void slab_handler_t::generate_area_boxes()
 
     std::vector<std::vector<ref_t>> area_boxes(area_box::number);
 
-    std::vector<rectangle_t> rectangles;
-    rectangles.reserve(area_box::number);
+    std::vector<bbox_t> bboxes;
+    bboxes.reserve(area_box::number);
 
     for (coordinate_t x0 = area_box::lower_x; x0 < area_box::upper_x; x0 += area_box::delta_x)
         for (coordinate_t y0 = area_box::lower_y; y0 < area_box::upper_y; y0 += area_box::delta_y)
-            rectangles.emplace_back(x0, y0, x0 + area_box::delta_x, y0 + area_box::delta_y);
+            bboxes.emplace_back(x0, y0, x0 + area_box::delta_x, y0 + area_box::delta_y);
 
     number_t const polygons_number = geo_data_->polygons_number();
     polygon_t const *polygons = geo_data_->polygons();
 
     for (number_t i = 0; i < polygons_number; ++i) {
-        coordinate_t const x1 = polygons[i].rectangle.x1;
-        coordinate_t const y1 = polygons[i].rectangle.y1;
-        coordinate_t const x2 = polygons[i].rectangle.x2;
-        coordinate_t const y2 = polygons[i].rectangle.y2;
+        coordinate_t const x1 = polygons[i].bbox.x1;
+        coordinate_t const y1 = polygons[i].bbox.y1;
+        coordinate_t const x2 = polygons[i].bbox.x2;
+        coordinate_t const y2 = polygons[i].bbox.y2;
         for (coordinate_t x0 = x1; x0 <= x2 + area_box::delta_x; x0 += area_box::delta_x) {
             for (coordinate_t y0 = y1; y0 <= y2 + area_box::delta_y; y0 += area_box::delta_y) {
                 ref_t const box = lookup_area_box(point_t(x0, y0));
-                if (box >= rectangles.size() || box >= area_boxes.size())
+                if (box >= bboxes.size() || box >= area_boxes.size())
                     continue;
-                if (polygons[i].rectangle.has_intersection(rectangles[box]))
+                if (polygons[i].bbox.has_intersection(bboxes[box]))
                     area_boxes[box].push_back(i);
             }
         }

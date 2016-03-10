@@ -30,7 +30,7 @@ static bool check(part_t const *part, point_t const &point, ref_t const *edge_re
 bool polygon_t::contains(point_t const &point, part_t const *parts, ref_t const *edge_refs,
     edge_t const *edges, point_t const *points) const
 {
-    if (!rectangle.contains(point))
+    if (!bbox.contains(point))
         return false;
 
     parts += parts_offset;
@@ -87,7 +87,7 @@ bool polygon_base_t::better(polygon_base_t const &p, region_t const *regions,
 bool raw_polygon_t::contains(point_t const &point, ref_t const *edge_refs, edge_t const *edges,
     point_t const *points) const
 {
-    if (!rectangle.contains(point))
+    if (!bbox.contains(point))
         return false;
 
     edge_refs += edge_refs_offset;

@@ -25,27 +25,27 @@
 
 namespace geo_base {
 
-struct rectangle_t {
+struct bbox_t {
     coordinate_t x1;
     coordinate_t y1;
     coordinate_t x2;
     coordinate_t y2;
 
-    rectangle_t()
+    bbox_t()
         : x1(0)
         , y1(0)
         , x2(0)
         , y2(0)
     { }
 
-    rectangle_t(coordinate_t x1, coordinate_t y1, coordinate_t x2, coordinate_t y2)
+    bbox_t(coordinate_t x1, coordinate_t y1, coordinate_t x2, coordinate_t y2)
         : x1(x1)
         , y1(y1)
         , x2(x2)
         , y2(y2)
     { }
 
-    rectangle_t(point_t const *points, number_t number)
+    bbox_t(point_t const *points, number_t number)
     {
         init();
         for (number_t i = 0; i < number; ++i)
@@ -68,7 +68,7 @@ struct rectangle_t {
         y2 = std::max(y2, p.y);
     }
 
-    bool has_intersection(rectangle_t const &r) const
+    bool has_intersection(bbox_t const &r) const
     {
         if (x1 > r.x2 || x2 < r.x1 || y1 > r.y2 || y2 < r.y1)
             return false;

@@ -72,7 +72,7 @@ cc_library(
         "geo_base/core/part.cpp",
         "geo_base/core/point.cpp",
         "geo_base/core/polygon.cpp",
-        "geo_base/core/rectangle.cpp",
+        "geo_base/core/bbox.cpp",
         "geo_base/core/region.cpp",
     ],
     hdrs = [
@@ -90,7 +90,7 @@ cc_library(
         "geo_base/core/part.h",
         "geo_base/core/point.h",
         "geo_base/core/polygon.h",
-        "geo_base/core/rectangle.h",
+        "geo_base/core/bbox.h",
         "geo_base/core/region.h",
     ],
     deps = [

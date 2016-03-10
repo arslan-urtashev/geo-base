@@ -113,7 +113,7 @@ TEST_F(lookup_test_t, b2b)
     geo_base_t::debug_t lookup_debug;
     geo_base_t::debug_t raw_lookup_debug;
 
-    rectangle_t const box = rectangle_t(geo_data.points(), geo_data.points_number());
+    bbox_t const box = bbox_t(geo_data.points(), geo_data.points_number());
 
     for (size_t x = 0; x < X_GRID; ++x) {
         for (size_t y = 0; y < Y_GRID; ++y) {

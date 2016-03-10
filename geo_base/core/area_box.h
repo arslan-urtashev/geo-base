@@ -38,7 +38,7 @@ coordinate_t const number = number_x * number_y;
 } // namespace area_box
 
 // Area of geo territory. Variable polygon_refs_offset refers to the polygons lying inside this
-// area. Geo map is divided into equal rectangles from (area_box::lower_x, area_box::lower_y) to
+// area. Geo map is divided into equal bboxes from (area_box::lower_x, area_box::lower_y) to
 // (area_box::upper_x, area_box::upper_y) with delta_x and delta_y sizes. Logic of filling is in
 // generator.
 struct area_box_t {
