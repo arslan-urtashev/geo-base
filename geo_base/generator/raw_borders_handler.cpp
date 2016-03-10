@@ -18,7 +18,6 @@
 
 #include <geo_base/generator/common.h>
 #include <geo_base/generator/locations_converter.h>
-#include <geo_base/generator/points_converter.h>
 #include <geo_base/generator/raw_borders_handler.h>
 #include <geo_base/library/log.h>
 
@@ -32,15 +31,12 @@ void raw_borders_handler_t::init()
 }
 
 void raw_borders_handler_t::update(geo_id_t region_id, geo_id_t polygon_id,
-    dynarray_t<point_t> const &raw_points, raw_border_t::type_t type)
+    dynarray_t<point_t> const &points, raw_border_t::type_t type)
 {
-    if (raw_points.size() <= 2) {
+    if (points.size() <= 2) {
         log_warning("Polygon %lu too small (region %lu)", polygon_id, region_id);
         return;
     }
-
-    points_converter_t points_converter(allocator_);
-    dynarray_t<point_t> points = points_converter.convert(raw_points);
 
     raw_border_t border;
     memset(&border, 0, sizeof(border));

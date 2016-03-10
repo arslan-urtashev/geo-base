@@ -18,7 +18,6 @@
 
 #include <geo_base/generator/slab_handler.h>
 #include <geo_base/generator/gen_geo_data.h>
-#include <geo_base/generator/points_converter.h>
 #include <geo_base/generator/locations_converter.h>
 #include <geo_base/generator/common.h>
 #include <geo_base/library/stop_watch.h>
@@ -53,16 +52,13 @@ static dynarray_t<check_point_t> make_check_points(dynarray_t<edge_t> const &e,
     return check_points;
 }
 
-void slab_handler_t::update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<point_t> const &raw_points,
+void slab_handler_t::update(geo_id_t region_id, geo_id_t polygon_id, dynarray_t<point_t> const &points,
     polygon_t::type_t type)
 {
-    if (raw_points.size() <= 2) {
+    if (points.size() <= 2) {
         log_warning("Polygon %lu too small (region %lu)", polygon_id, region_id);
         return;
     }
-
-    points_converter_t points_converter(allocator_);
-    dynarray_t<point_t> points = points_converter.convert(raw_points);
 
     polygon_t polygon;
     memset(&polygon, 0, sizeof(polygon));
