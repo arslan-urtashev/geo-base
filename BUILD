@@ -27,6 +27,7 @@ cc_library(
         "geo_base/library/log.cpp",
         "geo_base/library/mem_file.cpp",
         "geo_base/library/pool_allocator.cpp",
+        "geo_base/library/crc32.cpp",
     ],
     hdrs = [
         "geo_base/library/algo.h",
@@ -48,6 +49,7 @@ cc_library(
         "geo_base/library/safe_stream.h",
         "geo_base/library/stop_watch.h",
         "geo_base/library/system.h",
+        "geo_base/library/crc32.h",
     ],
     includes = ["."],
     copts = CCFLAGS,

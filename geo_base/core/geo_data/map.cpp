@@ -19,11 +19,14 @@
 #include <geo_base/core/geo_data/map.h>
 #include <geo_base/library/log.h>
 #include <geo_base/library/system.h>
+#include <geo_base/library/crc32.h>
 #include <geo_base/proto/geo_data.pb.h>
 
 #include <cstdint>
 
 namespace geo_base {
+
+static size_t const CRC_SIZE = 512;
 
 void geo_data_map_t::init()
 {
@@ -102,6 +105,9 @@ void geo_data_map_t::remap()
     if (arr##_number() > 0) { \
         intptr_t const offset = header.arr(); \
         arr##_ = (arr_t *) (((intptr_t) data_) + offset); \
+        uint32_t const hash = crc32(arr##_, std::min(arr##_number_ * sizeof(arr_t), CRC_SIZE)); \
+        if (hash != header.arr##_crc32()) \
+            throw exception_t("Wrong crc32 for %s", #arr); \
     } while (false);
 
     GEO_BASE_DEF_GEO_DATA
@@ -124,7 +130,8 @@ static size_t header_size()
 
 #define GEO_BASE_DEF_ARR(arr_t, arr) \
     GEO_BASE_DEF_VAR(number_t, arr##_number); \
-    header.set_##arr(std::numeric_limits<decltype(header.arr())>::max());
+    header.set_##arr(std::numeric_limits<decltype(header.arr())>::max()); \
+    header.set_##arr##_crc32(std::numeric_limits<decltype(header.arr##_crc32())>::max());
 
     GEO_BASE_DEF_GEO_DATA
 
@@ -151,6 +158,7 @@ static char const *serialize(geo_data_t const &g, block_allocator_t *allocator, 
         arr_t *arr = (arr_t *) allocator->allocate(sizeof(arr_t) * g.arr##_number()); \
         memcpy(arr, g.arr(), sizeof(arr_t) * g.arr##_number()); \
         header.set_##arr((uint64_t) (((intptr_t) arr) - ((intptr_t) data))); \
+        header.set_##arr##_crc32(crc32(arr, std::min(g.arr##_number() * sizeof(arr_t), CRC_SIZE))); \
     };
 
     GEO_BASE_DEF_GEO_DATA

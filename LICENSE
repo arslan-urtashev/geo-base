@@ -1,24 +1,7 @@
 This license applies to all parts of geo-base except the following:
 
-  - Google Protocol Buffers library and compiler, located in deps/protobuf.
-    Files in this folder copyrighted by Google Inc (except for some listed below).
-
-  - Atomicops support for AIX/POWER (Google Protocol Buffers), located in
-    deps/protobuf/google/protobuf/stubs/atomicops_internals_power.h.
-    This file is copyrighted by Bloomberg Finance LP.
-
-  - Atomicops support for generic gcc (Google Protocol Buffers), located in
-    deps/protobuf/google/protobuf/stubs/atomicops_internals_generic_gcc.h.
-    This file is copyrighted by Red Hat Inc.
-
-  - Google Mocking Framework, located in deps/gmock.
-    Files in this folder copyrighted by Google Inc.
-
-  - Jemalloc - general purpose memory allocation functions, located in deps/jemalloc.
-    Files in this folder copyrighted by Jason Evans, Mozilla Foundation and Facebook Inc.
-
-  - Zlib - general purpose compression library, located in deps/zlib.
-    Files in this folder copyrighted by Jean-loup Gailly and Mark Adler.
+  - CRC32 code, located in geo_base/library/crc32.cpp
+    This file is copyrighted by Gary S. Brown.
 
 Copyright (c) 2016 Urtashev Arslan. All rights reserved.
 Contacts: <urtashev@gmail.com>
