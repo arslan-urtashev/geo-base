@@ -43,6 +43,8 @@ void raw_borders_handler_t::update(geo_id_t region_id, geo_id_t polygon_id,
     dynarray_t<point_t> points = points_converter.convert(raw_points);
 
     raw_border_t border;
+    memset(&border, 0, sizeof(border));
+
     border.region_id = region_id;
     border.polygon_id = polygon_id;
     border.square = get_square(points);

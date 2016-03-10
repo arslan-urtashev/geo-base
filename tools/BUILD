@@ -16,7 +16,6 @@ cc_binary(
     ],
     deps = [
         "//:open-street-map",
-        "//external:jemalloc",
     ],
     linkopts = LINKOPTS,
     copts = CCFLAGS,
@@ -33,7 +32,6 @@ cc_binary(
         "//:geo-base-library",
         "//:geo-base-proto",
         "//:geo-base-proto-library",
-        "//external:jemalloc",
     ],
     linkopts = LINKOPTS,
     copts = CCFLAGS,
@@ -47,7 +45,6 @@ cc_binary(
     deps = [
         "//:geo-base-library",
         "//:geo-base-core",
-        "//external:jemalloc",
     ],
     linkopts = LINKOPTS,
     copts = CCFLAGS,
@@ -61,7 +58,6 @@ cc_binary(
     deps = [
         "//:geo-base-library",
         "//:geo-base-core",
-        "//external:jemalloc",
     ],
     linkopts = LINKOPTS,
     copts = CCFLAGS,
@@ -75,7 +71,6 @@ cc_binary(
     deps = [
         "//:geo-base-library",
         "//:geo-base-core",
-        "//external:jemalloc",
     ],
     linkopts = LINKOPTS,
     copts = CCFLAGS,
