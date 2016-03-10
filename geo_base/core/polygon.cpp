@@ -59,7 +59,8 @@ bool polygon_t::contains(point_t const &point, part_t const *parts, ref_t const 
     return check(part, point, edge_refs, edges, points);
 };
 
-bool polygon_t::better(polygon_t const &p, region_t const *regions, number_t regions_number) const
+bool polygon_base_t::better(polygon_base_t const &p, region_t const *regions,
+    number_t regions_number) const
 {
     if (square < p.square)
         return true;
@@ -81,6 +82,34 @@ bool polygon_t::better(polygon_t const &p, region_t const *regions, number_t reg
     }
 
     return false;
+}
+
+bool raw_polygon_t::contains(point_t const &point, ref_t const *edge_refs, edge_t const *edges,
+    point_t const *points) const
+{
+    if (!rectangle.contains(point))
+        return false;
+
+    edge_refs += edge_refs_offset;
+    
+    number_t intersections = 0;
+    for (number_t i = 0; i < edge_refs_number; ++i) {
+        edge_t const &e = edges[edge_refs[i]];
+
+        if (e.contains(point, points))
+            return true;
+
+        point_t a = points[e.beg];
+        point_t b = points[e.end];
+
+        if (a.x > b.x)
+            std::swap(a, b);
+
+        if (a.x < point.x && b.x >= point.x && e.lower(point, points))
+            ++intersections;
+    }
+
+    return intersections % 2 == 1;
 }
 
 } // namespace geo_base

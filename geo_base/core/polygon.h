@@ -27,8 +27,7 @@
 
 namespace geo_base {
 
-// Polygon is a representation of persistent scanline data structure.
-struct polygon_t {
+struct polygon_base_t {
     enum type_t {
         TYPE_UNKNOWN = 0,
         TYPE_INNER   = 1,
@@ -43,10 +42,6 @@ struct polygon_t {
     geo_id_t region_id;
     geo_id_t polygon_id;
 
-    // Versions of persistent scanline.
-    number_t parts_offset;
-    number_t parts_number;
-
     // Rectangle in which lies that polygon.
     rectangle_t rectangle;
 
@@ -56,14 +51,31 @@ struct polygon_t {
     // Total points number of given polygon.
     number_t points_number;
 
+    // Check that this polygon better then given polygon, which means that this polygons lying
+    // deeper then given in polygons hierarchy.
+    bool better(polygon_base_t const &p, region_t const *regions, number_t regions_number) const;
+};
+
+// Polygon is a representation of persistent scanline data structure.
+struct polygon_t : public polygon_base_t {
+    // Versions of persistent scanline.
+    number_t parts_offset;
+    number_t parts_number;
+
     // Fast point in polygon test using persistent scanline. You can see how this data structure
     // generated in geo_base/generator/.
     bool contains(point_t const &point, part_t const *parts, ref_t const *edge_refs,
         edge_t const *edges, point_t const *points) const;
+};
 
-    // Check that this polygon better then given polygon, which means that this polygons lying
-    // deeper then given in polygons hierarchy.
-    bool better(polygon_t const &p, region_t const *regions, number_t regions_number) const;
+// Raw polygon is a polygon representation for slow tests.
+struct raw_polygon_t : public polygon_base_t {
+    // Raw polygon edge refs.
+    number_t edge_refs_offset;
+    number_t edge_refs_number;
+
+    bool contains(point_t const &point, ref_t const *edge_refs, edge_t const *edges,
+        point_t const *points) const;
 };
 
 } // namespace geo_base
