@@ -26,7 +26,7 @@
 
 namespace geo_base {
 
-static size_t const CRC_SIZE = 512;
+static number_t const CRC_SIZE = 3;
 
 void geo_data_map_t::init()
 {
@@ -105,7 +105,7 @@ void geo_data_map_t::remap()
     if (arr##_number() > 0) { \
         intptr_t const offset = header.arr(); \
         arr##_ = (arr_t *) (((intptr_t) data_) + offset); \
-        uint32_t const hash = crc32(arr##_, std::min(arr##_number_ * sizeof(arr_t), CRC_SIZE)); \
+        uint32_t const hash = crc32(arr##_, std::min(arr##_number_, CRC_SIZE) * sizeof(arr_t)); \
         if (hash != header.arr##_crc32()) \
             throw exception_t("Wrong crc32 for %s", #arr); \
     } while (false);
@@ -158,7 +158,7 @@ static char const *serialize(geo_data_t const &g, block_allocator_t *allocator, 
         arr_t *arr = (arr_t *) allocator->allocate(sizeof(arr_t) * g.arr##_number()); \
         memcpy(arr, g.arr(), sizeof(arr_t) * g.arr##_number()); \
         header.set_##arr((uint64_t) (((intptr_t) arr) - ((intptr_t) data))); \
-        header.set_##arr##_crc32(crc32(arr, std::min(g.arr##_number() * sizeof(arr_t), CRC_SIZE))); \
+        header.set_##arr##_crc32(crc32(arr, std::min(g.arr##_number(), CRC_SIZE) * sizeof(arr_t))); \
     };
 
     GEO_BASE_DEF_GEO_DATA
